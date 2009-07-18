@@ -1,0 +1,116 @@
+<div class="${cssId}-container">	
+
+   $vertragAnzeigePanel
+   	
+    #if($tarifwechselErlaubt)    
+	<div class="form-section">
+		<div class="form-section-title">Tarifwechsel beauftragen</div>
+			
+		#if($upgradeErlaubt)
+		<div class="form-row" style="padding-top:20px; padding-bottom:20px;">
+			<div class="form-info" style="color:#333;">
+				Jetzt in einen Tarif mit mehr Leistungen wechseln.
+			</div>
+			<div class="form-info-button">
+				<a href="$upgradeUrl" class="link-button">
+					<span class="ui-icon ui-icon-arrowthick-1-e"></span><b>Mehr Leistung...</b>
+				</a>
+			</div>
+		</div>
+		#end
+		#if($downgradeErlaubt)		
+		<div class="form-row" style="padding-top:20px; padding-bottom:20px;">
+			<div class="form-info">
+				Zum Laufzeitende des bestehenden Vertrages in einen Tarif mit weniger Leistungen wechseln.
+			</div>
+			<div class="form-info-button">
+				<a href="$downgradeUrl" class="link-button">
+					<span class="ui-icon ui-icon-arrowthick-1-e"></span>Weniger Leistung...
+				</a>
+			</div>
+		</div>
+		#end
+		<div class="form-row" style="padding-top:20px; padding-bottom:20px;">
+			<div class="form-info">
+				Zum Laufzeitende des bestehenden Vertrages kündigen.
+			</div>
+			<div class="form-info-button">
+				<a class="link-button" href="$kuendigenUrl">Kündigen...</a>
+			</div>
+		</div>
+	</div>	
+	#end
+	
+	#if(!$auftragRows.empty)
+	<div class="form-section">
+		<div class="form-section-title">Ihre bisherigen Tarifwechselaufträge</div>
+		<div class="form-row">
+			<div id="${cssId}-auftraege">
+				<table>
+					<tr>
+						<th></th>
+						<th>Tarifwechsel</th>
+						<th>zum</th>
+						<th>Status</th>
+						<!-- th>seit</th-->
+					</tr>
+					#foreach($row in $auftragRows)
+					<tr>
+						<td #if($row.storniert)style="text-decoration:line-through;"#end>$row.erstelltDt.text</td>					
+						<td #if($row.storniert)style="text-decoration:line-through;"#end>$row.wechselTarif</td>					
+						<td #if($row.storniert)style="text-decoration:line-through;"#end>$row.gueltigAbDt</td>					
+						<td>$row.state</td>
+						<!-- td>$row.geaendertDt</td -->					
+					</tr>
+					#end
+				</table>
+			</div>
+		</div>		
+		#if(!$tarifwechselErlaubt)
+		<div class="form-row">
+			<div class="form-section-info">
+				Ihr letzter Auftrag wurde noch nicht ausgeführt. Bevor Sie einen Tarifwechsel 
+				beauftragen können müssen Sie diesen Auftrag stornieren.
+			</div>
+			<div class="form-info-button">
+				<a  class="link-button" id="stornierenBtn">
+					<span class="ui-icon ui-icon-arrowthick-1-e"></span>Letzten Auftrag stornieren
+				</a>
+			</div>
+		</div>
+		#end		
+	</div>
+	#end	
+
+</div>
+
+
+<div id="stornierenConfirmDialog">
+	Wollen Sie den Auftrag wirklich stornieren?
+</div>
+
+<script type="text/javascript">
+	$(function() {
+		$('#stornierenBtn').click(function() {			
+		    $('#stornierenConfirmDialog').dialog('open');
+		});
+	});
+
+	$('#stornierenConfirmDialog').dialog({
+		autoOpen: false,
+		width: 400,
+		height: 150,
+		modal: true,			
+		buttons: {
+		"Nein": function() {
+			$(this).dialog("close");
+		},			
+		"Ja": function() {
+			$(this).dialog("close");
+			document.location.href = "$stornierenUrl";
+			}
+		}
+	});
+
+</script>
+

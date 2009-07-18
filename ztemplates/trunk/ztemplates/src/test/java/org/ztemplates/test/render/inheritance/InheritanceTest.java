@@ -1,0 +1,85 @@
+/*
+ * Copyright 2007 Gerd Ziegler (www.gerdziegler.de)
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ * 22.09.2007
+ * @author www.gerdziegler.de
+ */
+package org.ztemplates.test.render.inheritance;
+
+import java.util.Map;
+
+import junit.framework.TestCase;
+
+import org.apache.log4j.Logger;
+import org.zclasspath.ZIClassRepository;
+import org.ztemplates.render.impl.ZIRenderContext;
+import org.ztemplates.render.impl.ZRenderEngine;
+import org.ztemplates.render.velocity.ZVelocityRendererFactory;
+import org.ztemplates.test.ZMavenClassRepository;
+import org.ztemplates.test.ZTestApplication;
+import org.ztemplates.web.application.ZApplication;
+
+public class InheritanceTest extends TestCase
+{
+  static Logger log = Logger.getLogger(InheritanceTest.class);
+
+  private ZApplication application;
+
+
+  protected void setUp() throws Exception
+  {
+    super.setUp();
+    ZIClassRepository classRepository = ZMavenClassRepository.create(InheritanceTest.class);
+    application = ZTestApplication.create(classRepository);
+  }
+
+
+  protected void tearDown() throws Exception
+  {
+    super.tearDown();
+    application = null;
+  }
+
+
+  public void testExposed() throws Exception
+  {
+    ZIRenderContext ctx = ZVelocityRendererFactory.createStandaloneRenderEngine(application
+        .getRenderApplication());
+    ExtensionClass1 ext1 = new ExtensionClass1();
+    ZRenderEngine re = new ZRenderEngine();
+    Map<String, Object> exposed = re.getExposed(ext1, ctx);
+    assertEquals("val1", exposed.get("prop1"));
+    assertEquals("val2", exposed.get("prop2"));
+  }
+
+
+  public void testRenderedExtensionClass() throws Exception
+  {
+    ZIRenderContext ctx = ZVelocityRendererFactory.createStandaloneRenderEngine(application
+        .getRenderApplication());
+    ExtensionClass1 ext1 = new ExtensionClass1();
+    ZRenderEngine re = new ZRenderEngine();
+    String rendered = re.render(ext1, ctx);
+    assertTrue(rendered.indexOf("val1") >= 0);
+    assertTrue(rendered.indexOf("val2") >= 0);
+  }
+
+
+  public void testRenderedBaseClass() throws Exception
+  {
+    ZIRenderContext ctx = ZVelocityRendererFactory.createStandaloneRenderEngine(application
+        .getRenderApplication());
+    ZRenderEngine re = new ZRenderEngine();
+    BaseClass base = new BaseClass();
+    String rendered = re.render(base, ctx);
+    assertTrue(rendered.indexOf("val1") >= 0);
+  }
+}
