@@ -1,0 +1,62 @@
+<html>
+
+<head>
+	$zscript
+</head>
+
+<body class="yui-skin-sam ${cssId}-body">
+
+<table>
+	<tr>
+		<td style="width:300px;vertical-align:top; padding:20px;">
+			<div class="${cssId}-description">
+				This sample demonstrates a complex AJAX form with dependencies between the fields.
+				<p>
+				Business logic and validation is performed on the server <b>and</b> on the client.
+			<ul>
+				<li>Enter 'f' as a <b>name</b>. This will set the prename to Maria.</li>
+				<li>Maria as a <b>name</b> leads to gender 'female'.</li>
+				<li>Enter 'm' as a <b>name</b>. This will set the prename to Marc and make the surname readonly and set gender 'male'.</li>
+				<li>Marc as a <b>name</b> leads to supplimentary data is unchecked and made writable.</li>
+				<li><b>Date of birth</b> checks the dateformat <b>validation occurs on the client</b></li>
+				<li><b>Occupation</b> is autocomplete, enter 3 characters to see it work (dummy data).</li>
+				<li><b>Tax rate</b> checks the bounds.</li>
+				<li><b>Country</b> is enabled only if there is a selection in the continent.
+					If no continent selection then it is disabled and cleared. Content depends on Continent.
+				</li>
+				<li><b>City</b> is enabled only if there is a selection in country. If no country selection then it is cleared. This is cascading, unsetting the continent will also clear the city.</li>
+			</ul>
+			</div>
+		</td>
+		<td  style="padding:20px; border:1px solid #000;">
+			<div id="formStateDisplay"></div>
+
+				$formState
+
+				$formStateHighlight
+			
+				<form method="post" id="${formId}">
+			
+					$formScript						
+			
+					$person
+			
+					$cascading
+			
+					<div>
+						<table>
+							<tr>
+								<td class="${cssId}-input">$submit</td>
+								<td class="${cssId}-error">$submitState</td>
+							</tr>
+						</table>
+					</div>
+			
+				</form>
+		</td>
+	</tr>
+</table>
+
+</body>
+
+</html>

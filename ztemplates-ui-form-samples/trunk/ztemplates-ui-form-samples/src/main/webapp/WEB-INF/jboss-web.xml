@@ -1,0 +1,4 @@
+<jboss-web>
+  <context-root>/samples-form</context-root>
+  <virtual-host>ztemplates</virtual-host>
+</jboss-web>
