@@ -1,0 +1,49 @@
+.${cssId}-state {	
+	background-image:url('ztemplates-ui-form/state/assets/empty.png');	
+	width:16px;
+	height:16px;
+}
+
+.${cssId}-state_ok {
+	/*background-image:url('ztemplates-ui-form/state/assets/accept.png');*/
+	background-image:url('ztemplates-ui-form/state/assets/empty.png');	
+	background-position:right center;
+	background-repeat:no-repeat;
+}
+
+.${cssId}-state_error {
+	background-image:url('ztemplates-ui-form/state/assets/alert.png');
+	background-position:right center;
+	background-repeat:no-repeat;
+}
+
+.${cssId}-state.reloadState {
+	background-image:url('ztemplates-ui-form/state/assets/reloadState.png');
+	background-position:right center;
+	background-repeat:no-repeat;
+}
+
+.${cssId}-state.reloadStateFailure {
+	background-image:url('ztemplates-ui-form/state/assets/reloadStateFailure.png');
+	background-position:right center;
+	background-repeat:no-repeat;
+}
+
+.${cssId}-box {
+	position:relative;
+}
+
+.${cssId}-text {
+	/*background: url(ztemplates-ui-form/state/assets/hover.png) no-repeat;*/
+	width: 180px;
+	position: absolute;
+	top: 0px;
+	left: 50px;
+	text-align: center;
+	padding: 10px;
+	font-style: normal;
+	z-index: 2;
+	display: none;
+	border:1px solid #bbb;
+	background-color: #ffe;
+}

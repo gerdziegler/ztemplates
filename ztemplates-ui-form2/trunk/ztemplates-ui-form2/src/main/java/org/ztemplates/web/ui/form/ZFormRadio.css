@@ -1,0 +1,6 @@
+.${cssId}-input {
+}
+
+.${cssId}-input_required {
+	background-color: #ffc;
+}

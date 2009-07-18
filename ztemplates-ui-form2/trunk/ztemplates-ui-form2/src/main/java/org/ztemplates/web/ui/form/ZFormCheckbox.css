@@ -1,0 +1,12 @@
+.${cssId}-input {
+}
+
+.${cssId}-input_readonly {
+}
+
+.${cssId}-input_required {
+	background-color: #ffc;
+}
+
+.${cssId}-input_error {
+}

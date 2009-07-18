@@ -1,0 +1,10 @@
+<script type="text/javascript">
+$("#${formId}").addClass("ztemplates-form");
+ZTEMPLATES.forms.${formId} = new Object();
+ZTEMPLATES.forms.${formId}.ajaxUrl = "${ajaxUrl}";
+ZTEMPLATES.forms.${formId}.ajaxPropertyNames = ${ajaxPropertyNamesJson};
+ZTEMPLATES.forms.${formId}.state = ${formJson};
+
+#if(${beforeunloadMessage})ZTEMPLATES.form.initBeforeUnload("${formId}", "${beforeunloadMessage}");#end
+</script>
+<input type="hidden" name="zformscriptHidden" value="$!{hiddenParameterValue}"></input>

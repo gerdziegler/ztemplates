@@ -1,0 +1,4 @@
+<div class="ZFormInputState-box">
+	<div id="${inputId}" class="ZFormInputState-state" propertynames="${propertyNames}"></div>
+	<span id="${inputId}Text"  class="ZFormInputState-text"></span>
+</div>

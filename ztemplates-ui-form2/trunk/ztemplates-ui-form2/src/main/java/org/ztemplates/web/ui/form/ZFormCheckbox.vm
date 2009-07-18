@@ -1,0 +1,2 @@
+<a name="${propertyName}"></a>
+<input type="checkbox" id="${checkboxId}" name="${propertyName}" value="true" cssid="$cssId" $!{htmlAttributes}></input>

@@ -1,0 +1,13 @@
+<script type="text/javascript">
+ZTEMPLATES.highlightPropertyInputBackgroundRunning=false; 
+$(function(){$(".ZFormState").click(function() {
+	if(ZTEMPLATES.highlightPropertyInputBackgroundRunning){
+		return;
+	}
+	ZTEMPLATES.highlightPropertyInputBackgroundRunning = true;
+		ZTEMPLATES.highlightPropertyInputBackground($(this).attr("name").substring(4), "${backgroundColor}", function(){
+		    ZTEMPLATES.highlightPropertyInputBackgroundRunning = false;
+		});
+	});
+});
+</script>

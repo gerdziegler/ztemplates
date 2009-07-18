@@ -1,0 +1,2 @@
+<a name="${propertyName}"></a>
+<input type="text" id="${inputId}" class="${cssId}-input" name="${propertyName}" value="$!{value}" $!{htmlAttributes} cssid="${cssId}"></input>

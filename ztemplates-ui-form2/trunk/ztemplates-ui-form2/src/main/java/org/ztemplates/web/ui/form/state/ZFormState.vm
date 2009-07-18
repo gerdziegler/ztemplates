@@ -1,0 +1,35 @@
+<script type="text/javascript">
+$(function() {
+	var form = ZTEMPLATES.forms["${formId}"];
+	var displayProxy = $("#${displayId}");
+    var s ="<table>";
+	for ( var i = 0; i < form.state.ztemplates.properties.length; i++) {
+		var propertyName = form.state.ztemplates.properties[i];
+		var prop = ZTEMPLATES.getProperty("${formId}", propertyName);
+		if(prop.error) {
+			s+= "<tr><th><a class=\"ZFormState\" name=\"err." + propertyName + "\" href=\"#" + propertyName + "\">"
+			if(prop.label) {
+				 s+= prop.label;				
+			}  else {
+				s+= propertyName;
+			}
+			s+="</a></th><td>" + prop.state.text + "</td></tr>";
+		}			
+	}
+	for ( var i = 0; i < form.state.ztemplates.operations.length; i++) {
+		var propertyName = form.state.ztemplates.operations[i];
+		var prop = ZTEMPLATES.getProperty("${formId}", propertyName);
+		if(prop.error) {
+			s+= "<tr><th><a class=\"ZFormState\" name=\"err." + propertyName + "\" href=\"#" + propertyName + "\">"
+			if(prop.label) {
+				 s+= prop.label;				
+			}  else {
+				s+= propertyName;
+			}
+			s+="</a></th><td>" + prop.state.text + "</td></tr>";
+		}			
+	}
+	s+="</table>"
+	displayProxy.html(s);
+});
+</script>

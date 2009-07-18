@@ -1,0 +1,21 @@
+.${cssId}-input {	
+	background-color: #ffe;
+	border: 1px solid #bbb;
+	background-image:url('ztemplates-ui-form/assets/background.png');
+	background-position:top left;
+	background-repeat:repeat-x;
+}
+
+.${cssId}-input_readonly {
+	background-color: #fff;
+	border: 1px dotted #ddd;
+}
+
+.${cssId}-input_required {
+	background-color: #ffe;
+}
+
+.${cssId}-input_error {
+	background-color: #fee;
+}
+

@@ -1,0 +1,10 @@
+<div class="${cssId}-title">State of form "${formName}"</div>
+<pre id="formDebug-${formName}">
+${formJson}
+</pre>
+<script language="Javascript" type="text/javascript">
+ZTEMPLATES.forms.${formName}.onFormChanged.subscribe(function(type, args) {
+	document.getElementById("formDebug-${formName}").innerHTML = ZTEMPLATES.forms.${formName}.stateText;
+});
+</script>
+

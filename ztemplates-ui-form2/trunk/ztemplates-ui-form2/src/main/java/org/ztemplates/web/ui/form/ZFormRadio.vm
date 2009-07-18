@@ -1,0 +1,6 @@
+<a name="${propertyName}"></a>
+<span class="${cssId}-container" id="${id}">
+#foreach($item in $items)
+<input type="radio" name="${propertyName}" id="${item.id}" class="${cssId}-input" value="${item.key}" $!{htmlAttributes} cssid="${cssId}"></input><span class="${cssId}-item-text">${item.value}</span>#if($vertical)<br/>#end
+#end
+</span>
