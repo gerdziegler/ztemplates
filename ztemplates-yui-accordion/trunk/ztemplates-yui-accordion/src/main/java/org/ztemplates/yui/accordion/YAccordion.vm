@@ -1,0 +1,17 @@
+<dl class="accordion-menu">
+
+#foreach($panel in $panels)
+
+	<dt class="a-m-t #if($panel.expanded)a-m-t-expand#end">
+		$renderService.render($panel.header)
+	</dt>
+
+	<dd class="a-m-d #if($panel.expanded)a-m-d-expand#end">
+		<div class="bd">
+			$renderService.render($panel.content)
+		</div>
+	</dd>
+
+#end
+
+</dl>

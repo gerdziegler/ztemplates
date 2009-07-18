@@ -1,0 +1,66 @@
+dl.accordion-menu {
+}
+
+dl.accordion-menu dt.a-m-t {
+	margin: 0;
+	padding: 0.3em 1em;
+	color: #444444;
+	border: 1px solid #ccc;
+	background:url(../ztemplates/yui/assets/skins/sam/sprite.png) repeat-x scroll 0pt -200px;
+}
+
+dl.accordion-menu dt.a-m-t-hover{
+	background:url(../ztemplates/yui/assets/skins/sam/sprite.png) repeat-x scroll 0pt -1700px;
+}
+
+
+dl.accordion-menu dt.a-m-t-down{
+	/*border: 1px solid #ccc;	*/
+}
+
+
+html.accordion-menu-js dt.a-m-t{
+	cursor:pointer;
+	zoom:1;
+	border: 1px solid #ccc;
+}
+
+dl.accordion-menu dd.a-m-d {
+	margin: 0;
+	padding: 0;
+	padding:0;
+}
+
+html.accordion-menu-js dd.a-m-d{
+	display:none;
+}
+
+
+html.accordion-menu-js dd.a-m-d-expand {
+	display:block;
+	overflow: hidden;
+}
+
+html.accordion-menu-js dd.a-m-d-before-expand {
+	display:block;
+	position:relative;
+	z-index:-1;
+	opacity:0;
+	height:auto !important;
+	visibility: hidden;
+	/*overflow:visible;*/
+}
+
+
+html.accordion-menu-js dt.a-m-t-expand {
+}
+
+html.accordion-menu-js dd.a-m-d-anim {
+    display:block;
+    overflow:hidden;
+}
+
+dl.accordion-menu dd.a-m-d .bd{
+	padding:0.5em;
+	border: 1px solid #ccc;
+}
