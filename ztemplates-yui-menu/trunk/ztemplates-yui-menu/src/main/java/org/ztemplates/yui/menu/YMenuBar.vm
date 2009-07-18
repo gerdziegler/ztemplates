@@ -1,0 +1,42 @@
+#macro(yuiMenuItem $item)
+
+	<li class="yuimenuitem">
+	  <a class="yuimenuitemlabel" href="$!item.href"><span class="$item.contentClass">$!item.content</span></a>
+
+#if(!$item.menuItems.empty)
+
+	<div class="yuimenu">
+	   <div class="bd">
+	       <ul class="first-of-type">
+
+#foreach($child in $item.menuItems)
+#yuiMenuItem($child)
+#end
+
+			</ul>
+	  	</div>
+	</div>
+
+#end
+
+	</li>
+#end
+
+<div id="$id" class="yuimenubar yuimenubarnav">
+    <div class="bd">
+        <ul class="first-of-type">
+
+#foreach($item in $menuItems)
+#yuiMenuItem($item)
+#end
+
+        </ul>
+    </div>
+</div>
+
+<script language="Javascript" type="text/javascript">
+YAHOO.util.Event.onContentReady("${id}", function () {
+    var ${id}Var = new YAHOO.widget.MenuBar("${id}", ${properties});
+    ${id}Var.render();
+});
+</script>
