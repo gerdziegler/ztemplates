@@ -1,0 +1,140 @@
+package org.ztemplates.codegen;
+
+import org.apache.log4j.Logger;
+
+import java.util.*;
+
+import org.ztemplates.render.*;
+import org.ztemplates.render.impl.*;
+
+public class ZTemplatesRenderEngine implements ZIRenderEngine
+{
+  protected static Logger log = Logger.getLogger(ZRenderEngine.class);
+
+  private final ZIRenderContext ctx;
+
+
+  public ZTemplatesRenderEngine(ZIRenderContext ctx)
+  {
+    this.ctx = ctx;
+  }
+
+
+  public String render(Object obj) throws Exception
+  {
+    if (obj == null)
+    {
+      return null;
+    }
+
+    ctx.incRenderCallCounter();
+
+    // always compute this to get script
+    Map<String, Object> exposed = getExposed(obj);
+
+    // register scripts from annotation
+    ctx.registerScripts(obj, exposed);
+
+    ZRenderer rendererAnnot = obj.getClass().getAnnotation(ZRenderer.class);
+    if (rendererAnnot == null)
+    {
+      return obj.toString();
+    }
+
+    if (rendererAnnot.cssId() && exposed.get("cssId") == null)
+    {
+      String cssId = ctx.getCssIdRepository().getCssId(obj.getClass());
+      exposed.put("cssId", cssId);
+    }
+
+    if (rendererAnnot.contextPath() && exposed.get("contextPath") == null)
+    {
+      exposed.put("contextPath", ctx.getContextPath());
+    }
+
+    if (rendererAnnot.zscript() && exposed.get("zscript") == null)
+    {
+      if (ctx.getScriptExposedBy() != null)
+      {
+        throw new Exception("zscript can only be exposed once per request, but is exposed by \n"
+            + ctx.getScriptExposedBy() + "\n" + computeZscriptExposedBy(obj));
+      }
+      ctx.setScriptExposedBy(computeZscriptExposedBy(obj));
+
+      String zscript = ctx.computeHtmlScriptTags();
+      exposed.put("zscript", zscript);
+    }
+
+    if (rendererAnnot.renderService() && exposed.get("renderService") == null)
+    {
+      //zscript masks renderService, only write warning if really used in template
+      if (rendererAnnot.zscript())
+      {
+        String msg = "[" + obj.getClass().getName() + " --- invalid values in annotation "
+            + ZRenderer.class.getSimpleName()
+            + " --- cannot expose both 'zscript' and 'renderService']";
+        exposed.put("renderService", msg);
+      }
+      else
+      {
+        exposed.put("renderService", this);
+      }
+    }
+
+    ZIRenderer renderer = ctx.getRenderer(rendererAnnot.value());
+    long time = System.currentTimeMillis();
+    String ret = renderer.render(obj.getClass(), exposed);
+    long delta = System.currentTimeMillis() - time;
+    if (delta > 15)
+    {
+      log.info("    engine " + obj.getClass().getName() + " [" + delta + " ms]");
+    }
+    return ret;
+  }
+
+
+  private static String computeZscriptExposedBy(Object obj)
+  {
+    return obj.getClass().getSimpleName() + "[" + obj + "]";
+  }
+
+
+  public Map<String, Object> getExposed(Object obj) throws Exception
+  {
+    Map<String, Object> values = new HashMap<String, Object>();
+
+    List<ZExposedMethod> exposedMethods = ctx.getExposedMethods(obj.getClass());
+
+    for (ZExposedMethod m : exposedMethods)
+    {
+      ZExpose exp = m.getMethod().getAnnotation(ZExpose.class);
+      Object val = m.getMethod().invoke(obj);
+      if (exp.render())
+      {
+        if (val instanceof Collection)
+        {
+          Collection oldVal = (Collection) val;
+          Collection newVal = new ArrayList();
+          for (Object crt : oldVal)
+          {
+            newVal.add(render(crt));
+          }
+          val = newVal;
+        }
+        else
+        {
+          val = render(val);
+        }
+      }
+      values.put(m.getName(), val);
+    }
+
+    return values;
+  }
+
+
+  public int getRenderCnt()
+  {
+    return ctx.getRenderCallCounter();
+  }
+}
