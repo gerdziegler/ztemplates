@@ -28,6 +28,8 @@ import org.json.JSONObject;
 import org.zdependency.ZIDependencyManager;
 import org.zdependency.util.ZDependencyUtils;
 import org.ztemplates.actions.ZGetter;
+import org.ztemplates.actions.util.ZReflectionUtil;
+import org.ztemplates.form.ZDependencyFormWorkflow;
 import org.ztemplates.form.ZFormElementMirror;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormUtils;
@@ -64,9 +66,9 @@ public class ZFormScript
 
   private final static Logger log = Logger.getLogger(ZFormScript.class);
 
-//  private final static String onChangeParameterName = "zformscript.changed";
+  //  private final static String onChangeParameterName = "zformscript.changed";
 
-//  private final ZIFormElement form;
+  //  private final ZIFormElement form;
 
   private final String formId;
 
@@ -93,7 +95,7 @@ public class ZFormScript
       Set<String> ajaxPropertyNames) throws Exception
   {
     super();
-//    this.form = form;
+    //    this.form = form;
     this.formId = formId;
     this.ajaxUrl = ajaxUrl;
     this.ajaxPropertyNames = ajaxPropertyNames;
@@ -105,18 +107,35 @@ public class ZFormScript
     hiddenParameterValue = ZDependencyUtils.encodeValues(values);
   }
 
-//  public ZFormScript(String formId,
-//      ZIFormElement form,
-//      String ajaxUrl,
-//      Set<ZProperty> ajaxPropertyNames) throws Exception
-//  {
-//    this(formId, form, ajaxUrl, getAjaxPropertyNames(dependencyManager));
-//  }
+
+  //  public ZFormScript(String formId,
+  //      ZIFormElement form,
+  //      String ajaxUrl,
+  //      Set<ZProperty> ajaxPropertyNames) throws Exception
+  //  {
+  //    this(formId, form, ajaxUrl, getAjaxPropertyNames(dependencyManager));
+  //  }
 
   public ZFormScript(String formId, ZIFormElement form) throws Exception
   {
-    this(formId, form, (String)null, (Set<String>)null);
+    this(formId, form, (String) null, (Set<String>) null);
   }
+
+
+  public static <T extends ZIFormElement> ZDependencyFormWorkflow<T> createDependencyFormWorkflow(
+      T form) throws Exception
+  {
+    ZDependencyFormWorkflow<T> workflow = new ZDependencyFormWorkflow<T>(form)
+    {
+      @Override
+      public Set<ZProperty> computeChangedProperties() throws Exception
+      {
+        return ZFormScript.getChangedProperties(this.form);
+      }
+    };
+    return workflow;
+  }
+
 
   private static JSONObject computeFormJson(ZIFormElement form) throws Exception
   {
@@ -160,8 +179,6 @@ public class ZFormScript
   }
 
 
-
-
   private String computeAjaxPropertyNamesJson()
   {
     if (ajaxPropertyNames == null)
@@ -181,20 +198,16 @@ public class ZFormScript
   }
 
 
-
-
   /**
    * returns the name of the request parameter that contains the name of the property changed in this ajax call
    * @param form
    * @return
    * @throws Exception
    */
-//  private static String getOnChangeParameterName()
-//  {
-//    return onChangeParameterName;
-//  }
-
-
+  //  private static String getOnChangeParameterName()
+  //  {
+  //    return onChangeParameterName;
+  //  }
   /**
    * convenience method, returns the name of the property that was changed in this ajax call
    * @param form
@@ -204,11 +217,22 @@ public class ZFormScript
    */
   private static Set<String> getChangedPropertyNames(ZIFormElement form) throws Exception
   {
-    ZIServletService ss = ZTemplates.getServletService();
-    String hiddenParam = ss.getRequest().getParameter(hiddenParameterName);
-    Map<String, String> oldValues = ZDependencyUtils.decodeValues(hiddenParam);
+    Map<String, String> oldValues = getPreviousFormState();
     Map<String, String> newValues = ZFormUtils.computeValues(form);
     return ZDependencyUtils.computeChangedValues(oldValues, newValues);
+  }
+
+
+  private static Map<String, String> getPreviousFormState()
+  {
+    ZIServletService ss = ZTemplates.getServletService();
+    String hiddenParam = ss.getRequest().getParameter(hiddenParameterName);
+    if (hiddenParam == null)
+    {
+      return new HashMap<String, String>();
+    }
+    Map<String, String> oldValues = ZDependencyUtils.decodeValues(hiddenParam);
+    return oldValues;
   }
 
 
@@ -220,17 +244,37 @@ public class ZFormScript
    */
   public static Set<ZProperty> getChangedProperties(ZIFormElement form) throws Exception
   {
-    ZIFormService formService = ZTemplates.getFormService();
     Set<String> changedPropertyNames = getChangedPropertyNames(form);
-    Set<ZProperty> ret = formService.getPropertiesByName(form, changedPropertyNames);
+    Set<ZProperty> ret = getPropertiesByName(form, changedPropertyNames);
     return ret;
   }
 
-  
+
+  private static Set<ZProperty> getPropertiesByName(ZIFormElement form, Set<String> propNames)
+      throws Exception
+  {
+    Set<ZProperty> ret = new HashSet<ZProperty>();
+    for (String propName : propNames)
+    {
+      try
+      {
+        Object prop = ZReflectionUtil.getObjectByBeanPath(form, propName);
+        ret.add((ZProperty) prop);
+      }
+      catch (Exception e)
+      {
+        log.error("error while reading property " + propName + " from " + form, e);
+      }
+    }
+    return ret;
+  }
+
+
   public static Set<String> getAjaxPropertyNames(ZIDependencyManager<ZProperty> dependencyManager)
   {
     return getPropertyNames(dependencyManager.getTriggerNodes());
   }
+
 
   public static Set<String> getPropertyNames(Set<ZProperty> props)
   {
@@ -241,7 +285,7 @@ public class ZFormScript
     }
     return ret;
   }
-  
+
 
   @ZGetter("runtimeScripts")
   public ZScriptDependency getRuntimeScripts() throws Exception
