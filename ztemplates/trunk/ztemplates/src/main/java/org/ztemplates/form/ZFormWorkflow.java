@@ -69,8 +69,7 @@ public abstract class ZFormWorkflow<T extends ZIFormElement> implements ZIFormWo
   public ZOperation assign() throws Exception
   {
     ZIServletService ss = ZTemplates.getServletService();
-    final Map<String, String[]> parameters = new HashMap<String, String[]>(ss.getRequest()
-        .getParameterMap());
+    final Map<String, String[]> parameters = new HashMap<String, String[]>(ss.getRequest().getParameterMap());
     
     final List<ZOperation> operations = new ArrayList<ZOperation>();
 

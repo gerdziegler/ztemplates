@@ -25,6 +25,13 @@ public class Form implements ZIFormElement
   private int revalidateCalledOp1 = 0;
 
   private int updateCalled = 0;
+  
+  
+  private final ZStringProperty predefined = new ZStringProperty() {
+    {
+      setName("predefined");
+    }
+  };
 
   private final ZStringProperty prop1 = new ZStringProperty()
   {
@@ -118,5 +125,10 @@ public class Form implements ZIFormElement
   public int getRevalidateCalledOp1()
   {
     return revalidateCalledOp1;
+  }
+
+  public ZStringProperty getPredefined()
+  {
+    return predefined;
   }
 }
