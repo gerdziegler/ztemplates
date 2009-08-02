@@ -14,17 +14,13 @@
  */
 package org.ztemplates.web.ui.form.samples.actions;
 
-import java.io.PrintWriter;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.zdependency.ZIDependencyContext;
-import org.zdependency.impl.ZDependencyManager;
-import org.zdependency.output.ZINodeLabeler;
-import org.zdependency.output.xml.ZDependencyXMLWriter;
 import org.ztemplates.actions.ZMatch;
+import org.ztemplates.form.ZDependencyFormWorkflow;
 import org.ztemplates.property.ZProperty;
-import org.ztemplates.web.ZIFormService;
 import org.ztemplates.web.ZTemplates;
 import org.ztemplates.web.ui.form.samples.id.ContinentId;
 import org.ztemplates.web.ui.form.samples.id.CountryId;
@@ -66,30 +62,12 @@ public class FormTutorialAJAX
       {
         return service.getCountries(continent);
       }
-    };
+    };    
     
-    SampleFormElement form = new SampleFormElement(cascadingFormElementContext);
-    ZIFormService formService = ZTemplates.getFormService();
-    formService.process(form);    
-   
-    ZDependencyManager<ZProperty> dependencyManager = createDependencyManager(form);
-    ZIDependencyContext<ZProperty> ctx = dependencyManager.process(ZFormScript.getChangedProperties(form));
-    formService.update(form);
-    ZFormScript.sendAjaxResponse(form);
-    
-    ZDependencyXMLWriter.toXML(dependencyManager, ctx, new ZINodeLabeler<ZProperty>() {
-      @Override
-      public String getLabel(ZProperty node)
-      {
-        return node.getName();
-      }
-    }, new PrintWriter(System.out));
-  }
-
-
-  public static ZDependencyManager<ZProperty> createDependencyManager(final SampleFormElement form) throws Exception
-  {
-    ZDependencyManager<ZProperty> dependencies = new ZDependencyManager<ZProperty>(form);    
-    return dependencies;
+    SampleFormElement form = new SampleFormElement(cascadingFormElementContext);    
+    ZDependencyFormWorkflow<SampleFormElement> workflow = ZFormScript.createDependencyFormWorkflow(form);
+    workflow.execute();    
+    workflow.printRuntimeInfo();
+    ZFormScript.sendAjaxResponse(form);    
   }
 }
