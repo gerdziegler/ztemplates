@@ -153,23 +153,23 @@ public class ZFormServiceImpl implements ZIFormService
 //  }
   
   
-  public Set<ZProperty> getPropertiesByName(ZIFormElement form, Set<String> propNames) throws Exception
-  {
-    Set<ZProperty> ret = new HashSet<ZProperty>();
-    for (String propName : propNames)
-    {
-      try
-      {
-        Object prop = ZReflectionUtil.getObjectByBeanPath(form, propName);
-        ret.add((ZProperty)prop);
-      }
-      catch(Exception e)
-      {
-        log.error("error while reading property " + propName + " from " + form, e);        
-      }
-    }
-    return ret;
-  }
+//  public Set<ZProperty> getPropertiesByName(ZIFormElement form, Set<String> propNames) throws Exception
+//  {
+//    Set<ZProperty> ret = new HashSet<ZProperty>();
+//    for (String propName : propNames)
+//    {
+//      try
+//      {
+//        Object prop = ZReflectionUtil.getObjectByBeanPath(form, propName);
+//        ret.add((ZProperty)prop);
+//      }
+//      catch(Exception e)
+//      {
+//        log.error("error while reading property " + propName + " from " + form, e);        
+//      }
+//    }
+//    return ret;
+//  }
 
 
 

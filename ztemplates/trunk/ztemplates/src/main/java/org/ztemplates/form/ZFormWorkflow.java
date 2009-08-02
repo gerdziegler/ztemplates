@@ -14,28 +14,148 @@
  */
 package org.ztemplates.form;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.ztemplates.property.ZError;
+import org.ztemplates.property.ZOperation;
+import org.ztemplates.property.ZProperty;
+import org.ztemplates.web.ZIServletService;
+import org.ztemplates.web.ZTemplates;
 
 /**
- * default form processing workflow. Lives for one thread/one request.
+ * infrastructure for form processing workflows. extend to create your own workflow.
  * 
  * @author www.gerdziegler.de
  */
-public class ZFormWorkflow extends ZFormWorkflowBase
+public abstract class ZFormWorkflow<T extends ZIFormElement> implements ZIFormWorkflow<T>
 {
-  public ZFormWorkflow(ZIFormElement form) throws Exception
+  protected final T form;
+
+  protected ZFormElementMirror mirr;
+
+  protected final List<ZError> errors = new ArrayList<ZError>();
+  
+  protected ZOperation operation;
+  
+
+  public ZFormWorkflow(T form) throws Exception
   {
-    super(form);
+    this.form = form;
+    this.mirr = new ZFormElementMirror(form);
   }
 
 
-  public void process() throws Exception
+
+  public void update() throws Exception
   {
-    init();
+    mirr.update();
+  }
 
-    assign();
 
-    update();
+  public void revalidate() throws Exception
+  {
+    mirr.revalidate();
+    List<ZProperty> errProps = mirr.getPropertiesWithError();
+    for (ZProperty prop : errProps)
+    {
+      errors.add((ZError) prop.getState());
+    }
+  }
 
-    revalidate();
+
+  public ZOperation assign() throws Exception
+  {
+    ZIServletService ss = ZTemplates.getServletService();
+    final Map<String, String[]> parameters = new HashMap<String, String[]>(ss.getRequest()
+        .getParameterMap());
+    
+    final List<ZOperation> operations = new ArrayList<ZOperation>();
+
+    ZIFormVisitor visitor = new ZIFormVisitor()
+    {
+      public void visit(ZProperty prop) throws Exception
+      {
+        String name = prop.getName();
+        String[] param = parameters.get(name);
+        if (param != null)
+        {
+          prop.setStringValue(param[0]);
+          parameters.remove(name);
+        }
+      }
+
+
+      public void visit(ZOperation op) throws Exception
+      {
+        String name = op.getName();
+        String[] param = parameters.get(name);
+        if (param != null)
+        {
+          operations.add(op);
+        }
+      }
+    };
+
+    mirr.visitDepthFirst(visitor);
+
+    if (operations.size() > 1)
+    {
+      throw new Exception("Only one operation call per request allowed: " + operations);
+    }
+    else if (operations.size() == 1)
+    {
+      ZOperation op = operations.get(0);
+      String name = op.getName();
+      String[] param = parameters.get(name);
+      op.setStringValue(param[0]);
+      parameters.remove(name);
+      this.operation = op;      
+    }
+    else
+    {
+      this.operation = null;
+    }
+    
+    return operation;
+  }
+
+  public void beforeUpdate()
+  {
+  }
+
+
+  public void afterUpdate()
+  {
+  }
+
+  public void beforeRevalidate()
+  {
+  }
+
+
+  public void afterRevalidate()
+  {
+  }
+
+
+  public T getForm()
+  {
+    return form;
+  }
+
+
+  public List<ZError> getErrors()
+  {
+    return errors;
+  }
+
+
+
+  public ZOperation getOperation()
+  {
+    return operation;
   }
 }

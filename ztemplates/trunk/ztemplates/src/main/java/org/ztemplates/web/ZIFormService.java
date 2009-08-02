@@ -16,7 +16,6 @@ package org.ztemplates.web;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 import org.json.JSONObject;
 import org.ztemplates.form.ZFormMembers;
@@ -59,14 +58,14 @@ public interface ZIFormService
 //      throws Exception;
 
 
-  /**
-   * returns all properties from the form with the provided names
-   * @param form
-   * @param propNames
-   * @return
-   * @throws Exception
-   */
-  public Set<ZProperty> getPropertiesByName(ZIFormElement form, Set<String> propNames) throws Exception;
+//  /**
+//   * returns all properties from the form with the provided names
+//   * @param form
+//   * @param propNames
+//   * @return
+//   * @throws Exception
+//   */
+//  public Set<ZProperty> getPropertiesByName(ZIFormElement form, Set<String> propNames) throws Exception;
 
 //  /**
 //   * convenience method, reads the value of the specified request parameter and returns the property object that corresponds to 

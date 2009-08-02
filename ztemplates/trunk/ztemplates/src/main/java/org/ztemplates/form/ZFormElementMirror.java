@@ -43,11 +43,13 @@ public class ZFormElementMirror implements ZIFormVisitable
 
   private final List<ZFormElementMirror> formElements = new ArrayList<ZFormElementMirror>();
 
+
   public ZFormElementMirror(ZIFormElement obj) throws Exception
-  {    
+  {
     this(obj, "");
   }
-  
+
+
   private ZFormElementMirror(ZIFormElement obj, String prefix) throws Exception
   {
     super();
@@ -67,16 +69,22 @@ public class ZFormElementMirror implements ZIFormVisitable
         if (ZOperation.class.isAssignableFrom(returnType))
         {
           ZOperation op = (ZOperation) m.invoke(obj);
-          String opName = ZReflectionUtil.removePrefixName("get", m.getName());
-          op.setName(prefix + opName);
+          if (op.getName() == null)
+          {
+            String opName = ZReflectionUtil.removePrefixName("get", m.getName());
+            op.setName(prefix + opName);
+          }
           operations.add(op);
         }
         // second
         else if (ZProperty.class.isAssignableFrom(returnType))
         {
           ZProperty prop = (ZProperty) m.invoke(obj);
-          String propName = ZReflectionUtil.removePrefixName("get", m.getName());
-          prop.setName(prefix + propName);
+          if (prop.getName() == null)
+          {
+            String propName = ZReflectionUtil.removePrefixName("get", m.getName());
+            prop.setName(prefix + propName);
+          }
           properties.add(prop);
         }
         // third
@@ -88,113 +96,115 @@ public class ZFormElementMirror implements ZIFormVisitable
             throw new Exception("null formelement " + m);
           }
           String feName = ZReflectionUtil.removePrefixName("get", m.getName());
-//          initPropertyNames(formData, prefix + propName + ".");
+          //          initPropertyNames(formData, prefix + propName + ".");
           formElements.add(new ZFormElementMirror(fe, prefix + feName + "."));
         }
       }
     }
   }
 
-//  private static void initPropertyNames(ZIFormElement formElement, String prefix) throws Exception
-//  {
-//    for (Method m : formElement.getClass().getMethods())
-//    {
-//      if (m.getName().startsWith("get") && m.getParameterTypes().length == 0)
-//      {
-//        Class type = m.getReturnType();
-//
-//        if (ZOperation.class.isAssignableFrom(type))
-//        {
-//          ZOperation op = (ZOperation) m.invoke(formElement);
-//          String opName = ZReflectionUtil.removePrefixName("get", m.getName());
-//          op.setName(prefix + opName);
-//        }
-//        else if (ZProperty.class.isAssignableFrom(type))
-//        {
-//          ZProperty prop = (ZProperty) m.invoke(formElement);
-//          String propName = ZReflectionUtil.removePrefixName("get", m.getName());
-//          prop.setName(prefix + propName);
-//        }
-//        else if (ZIFormElement.class.isAssignableFrom(type))
-//        {
-//          ZIFormElement formData = (ZIFormElement) m.invoke(formElement);
-//          String propName = ZReflectionUtil.removePrefixName("get", m.getName());
-//          initPropertyNames(formData, prefix + propName + ".");
-//        }
-//        //        else if (List.class.isAssignableFrom(type))
-//        //        {
-//        //          List list = (List) m.invoke(form);
-//        //          if (list != null && !list.isEmpty())
-//        //          {
-//        //            Object first = list.get(0);
-//        //            if (first instanceof ZIFormElement)
-//        //            {
-//        //              String propName = ZReflectionUtil.removePrefixName("get", m.getName());
-//        //              for (int i = 0; i < list.size(); i++)
-//        //              {
-//        //                initFormPropertyNames((ZIFormElement) list.get(i), prefix + propName + "[" + i
-//        //                    + "].");
-//        //              }
-//        //            }
-//        //          }
-//        //        }
-//        //        else if (type.isArray() && ZIFormElement.class.isAssignableFrom(type.getComponentType()))
-//        //        {
-//        //          Object arr = m.invoke(form);
-//        //          if (arr != null)
-//        //          {
-//        //            String propName = ZReflectionUtil.removePrefixName("get", m.getName());
-//        //            for (int i = 0; i < Array.getLength(arr); i++)
-//        //            {
-//        //              initFormPropertyNames((ZIFormElement) Array.get(arr, i), prefix + propName + "[" + i
-//        //                  + "].");
-//        //            }
-//        //          }
-//        //        }
-//      }
-//    }
-//  }
 
+  //  private static void initPropertyNames(ZIFormElement formElement, String prefix) throws Exception
+  //  {
+  //    for (Method m : formElement.getClass().getMethods())
+  //    {
+  //      if (m.getName().startsWith("get") && m.getParameterTypes().length == 0)
+  //      {
+  //        Class type = m.getReturnType();
+  //
+  //        if (ZOperation.class.isAssignableFrom(type))
+  //        {
+  //          ZOperation op = (ZOperation) m.invoke(formElement);
+  //          String opName = ZReflectionUtil.removePrefixName("get", m.getName());
+  //          op.setName(prefix + opName);
+  //        }
+  //        else if (ZProperty.class.isAssignableFrom(type))
+  //        {
+  //          ZProperty prop = (ZProperty) m.invoke(formElement);
+  //          String propName = ZReflectionUtil.removePrefixName("get", m.getName());
+  //          prop.setName(prefix + propName);
+  //        }
+  //        else if (ZIFormElement.class.isAssignableFrom(type))
+  //        {
+  //          ZIFormElement formData = (ZIFormElement) m.invoke(formElement);
+  //          String propName = ZReflectionUtil.removePrefixName("get", m.getName());
+  //          initPropertyNames(formData, prefix + propName + ".");
+  //        }
+  //        //        else if (List.class.isAssignableFrom(type))
+  //        //        {
+  //        //          List list = (List) m.invoke(form);
+  //        //          if (list != null && !list.isEmpty())
+  //        //          {
+  //        //            Object first = list.get(0);
+  //        //            if (first instanceof ZIFormElement)
+  //        //            {
+  //        //              String propName = ZReflectionUtil.removePrefixName("get", m.getName());
+  //        //              for (int i = 0; i < list.size(); i++)
+  //        //              {
+  //        //                initFormPropertyNames((ZIFormElement) list.get(i), prefix + propName + "[" + i
+  //        //                    + "].");
+  //        //              }
+  //        //            }
+  //        //          }
+  //        //        }
+  //        //        else if (type.isArray() && ZIFormElement.class.isAssignableFrom(type.getComponentType()))
+  //        //        {
+  //        //          Object arr = m.invoke(form);
+  //        //          if (arr != null)
+  //        //          {
+  //        //            String propName = ZReflectionUtil.removePrefixName("get", m.getName());
+  //        //            for (int i = 0; i < Array.getLength(arr); i++)
+  //        //            {
+  //        //              initFormPropertyNames((ZIFormElement) Array.get(arr, i), prefix + propName + "[" + i
+  //        //                  + "].");
+  //        //            }
+  //        //          }
+  //        //        }
+  //      }
+  //    }
+  //  }
 
   public void readParameters() throws Exception
   {
     ZIServletService ss = ZTemplates.getServletService();
     final Map<String, String[]> parameters = new HashMap<String, String[]>(ss.getRequest()
-        .getParameterMap());    
-    
+        .getParameterMap());
+
     final List<ZOperation> operations = new ArrayList<ZOperation>();
 
-    ZIFormVisitor visitor = new ZIFormVisitor(){
+    ZIFormVisitor visitor = new ZIFormVisitor()
+    {
       public void visit(ZProperty prop) throws Exception
       {
         String name = prop.getName();
         String[] param = parameters.get(name);
-        if(param!=null)
+        if (param != null)
         {
           prop.setStringValue(param[0]);
           parameters.remove(name);
         }
       }
 
+
       public void visit(ZOperation op) throws Exception
       {
         String name = op.getName();
         String[] param = parameters.get(name);
-        if(param!=null)
+        if (param != null)
         {
           operations.add(op);
         }
       }
-    };    
-    
+    };
+
     visitDepthFirst(visitor);
     revalidate();
 
-    if(operations.size()>1)
+    if (operations.size() > 1)
     {
       throw new Exception("Only one operation call per request allowed: " + operations);
     }
-    else if(operations.size()==1)
+    else if (operations.size() == 1)
     {
       ZOperation op = operations.get(0);
       String name = op.getName();
@@ -205,65 +215,64 @@ public class ZFormElementMirror implements ZIFormVisitable
   }
 
 
-//  public void readParameters() throws Exception
-//  {
-//    ZIServletService ss = ZTemplates.getServletService();
-//    Map<String, String[]> parameters = new HashMap<String, String[]>(ss.getRequest()
-//        .getParameterMap());
-//
-//    ZOperation operation = null;
-//
-//    List<Map.Entry<String, String[]>> remove = new ArrayList<Map.Entry<String, String[]>>();
-//    for (Map.Entry<String, String[]> en : parameters.entrySet())
-//    {
-//      String name = en.getKey();
-//      String[] value = en.getValue();
-//      try
-//      {
-//        ZProperty assignedProp = setParameter(formElement, name, value);
-//        if (assignedProp instanceof ZOperation)
-//        {
-//          if (operation != null)
-//          {
-//            throw new Exception("Only one operation call per request allowed: " + operation + " "
-//                + assignedProp);
-//          }
-//          operation = (ZOperation) assignedProp;
-//        }
-//        remove.add(en);
-//      }
-//      catch (Exception ex)
-//      {
-//        // OK, parameter must not be assignable to this object
-//      }
-//    }
-//    // eat the parameters
-//    parameters.entrySet().removeAll(remove);
-//
-////    String propertyChanged = getNameOfPropertyChangedAndRemoveFromMap(parameters);
-////    if (propertyChanged != null)
-////    {
-////      fireAjaxChangeListener(propertyChanged);
-////    }
-//  }
+  //  public void readParameters() throws Exception
+  //  {
+  //    ZIServletService ss = ZTemplates.getServletService();
+  //    Map<String, String[]> parameters = new HashMap<String, String[]>(ss.getRequest()
+  //        .getParameterMap());
+  //
+  //    ZOperation operation = null;
+  //
+  //    List<Map.Entry<String, String[]>> remove = new ArrayList<Map.Entry<String, String[]>>();
+  //    for (Map.Entry<String, String[]> en : parameters.entrySet())
+  //    {
+  //      String name = en.getKey();
+  //      String[] value = en.getValue();
+  //      try
+  //      {
+  //        ZProperty assignedProp = setParameter(formElement, name, value);
+  //        if (assignedProp instanceof ZOperation)
+  //        {
+  //          if (operation != null)
+  //          {
+  //            throw new Exception("Only one operation call per request allowed: " + operation + " "
+  //                + assignedProp);
+  //          }
+  //          operation = (ZOperation) assignedProp;
+  //        }
+  //        remove.add(en);
+  //      }
+  //      catch (Exception ex)
+  //      {
+  //        // OK, parameter must not be assignable to this object
+  //      }
+  //    }
+  //    // eat the parameters
+  //    parameters.entrySet().removeAll(remove);
+  //
+  ////    String propertyChanged = getNameOfPropertyChangedAndRemoveFromMap(parameters);
+  ////    if (propertyChanged != null)
+  ////    {
+  ////      fireAjaxChangeListener(propertyChanged);
+  ////    }
+  //  }
 
-//  private static final Object PROPERTY_CHANGED = "ztemplates.onChange";
-//
-//
-//  private static String getNameOfPropertyChangedAndRemoveFromMap(Map<String, String[]> parameters)
-//  {
-//    String[] changed = parameters.get(PROPERTY_CHANGED);
-//    if (changed != null)
-//    {
-//      parameters.remove(PROPERTY_CHANGED);
-//      return changed[0];
-//    }
-//    else
-//    {
-//      return null;
-//    }
-//  }
-
+  //  private static final Object PROPERTY_CHANGED = "ztemplates.onChange";
+  //
+  //
+  //  private static String getNameOfPropertyChangedAndRemoveFromMap(Map<String, String[]> parameters)
+  //  {
+  //    String[] changed = parameters.get(PROPERTY_CHANGED);
+  //    if (changed != null)
+  //    {
+  //      parameters.remove(PROPERTY_CHANGED);
+  //      return changed[0];
+  //    }
+  //    else
+  //    {
+  //      return null;
+  //    }
+  //  }
 
   private static ZProperty setParameter(ZIFormElement obj, String paramName, String[] paramValue)
       throws Exception
@@ -289,27 +298,26 @@ public class ZFormElementMirror implements ZIFormVisitable
   }
 
 
-//  public void fireAjaxChangeListener(String propertyChanged) throws Exception
-//  {
-//    ZIFormVisitor visitor = new ZIFormVisitor()
-//    {
-//      public void visit(ZProperty prop) throws Exception
-//      {
-//        prop.setEnableChangeListeners(true);
-//      }
-//
-//
-//      public void visit(ZOperation op) throws Exception
-//      {
-//        op.setEnableChangeListeners(true);
-//      }
-//    };
-//    visitDepthFirst(visitor);
-//
-//    ZProperty prop = (ZProperty) ZReflectionUtil.getObjectByBeanPath(formElement, propertyChanged);
-//    prop.fireChangeListeners();
-//  }
-
+  //  public void fireAjaxChangeListener(String propertyChanged) throws Exception
+  //  {
+  //    ZIFormVisitor visitor = new ZIFormVisitor()
+  //    {
+  //      public void visit(ZProperty prop) throws Exception
+  //      {
+  //        prop.setEnableChangeListeners(true);
+  //      }
+  //
+  //
+  //      public void visit(ZOperation op) throws Exception
+  //      {
+  //        op.setEnableChangeListeners(true);
+  //      }
+  //    };
+  //    visitDepthFirst(visitor);
+  //
+  //    ZProperty prop = (ZProperty) ZReflectionUtil.getObjectByBeanPath(formElement, propertyChanged);
+  //    prop.fireChangeListeners();
+  //  }
 
   public void revalidate() throws Exception
   {
@@ -337,18 +345,16 @@ public class ZFormElementMirror implements ZIFormVisitable
    */
   public ZFormState process() throws Exception
   {
-//    ZFormElementMirror.initPropertyNames(formElement, "");
+    //    ZFormElementMirror.initPropertyNames(formElement, "");
     //validates required
     //revalidate();
     readParameters();
-    
+
     update();
-    
+
     List<ZState> errors = new ArrayList<ZState>();
-    return new ZFormState(errors);    
+    return new ZFormState(errors);
   }
-
-
 
 
   public List<ZFormElementMirror> getFormElements()
@@ -431,12 +437,11 @@ public class ZFormElementMirror implements ZIFormVisitable
   //    }
   //  }
 
-//  public JSONObject computeJson() throws Exception
-//  {
-//    JSONObject formJson = ZJsonUtil.computeJSON(formElement);
-//    return formJson;
-//  }
-
+  //  public JSONObject computeJson() throws Exception
+  //  {
+  //    JSONObject formJson = ZJsonUtil.computeJSON(formElement);
+  //    return formJson;
+  //  }
 
   /**
    * recursively finds all properties for the given object

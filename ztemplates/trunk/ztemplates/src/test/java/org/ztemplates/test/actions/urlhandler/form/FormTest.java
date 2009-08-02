@@ -35,6 +35,8 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
+import org.ztemplates.form.ZDefaultFormWorkflow;
+import org.ztemplates.form.ZFormWorkflow;
 import org.ztemplates.form.ZIFormElement;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
 import org.ztemplates.test.mock.ZMock;
@@ -594,6 +596,8 @@ public class FormTest extends TestCase
     });
 
     FormAction2 obj = (FormAction2) up.process("/act2", param);
+    ZDefaultFormWorkflow<Form> wf = new ZDefaultFormWorkflow<Form>(obj.getForm());
+    wf.assign();
     assertEquals("val1", obj.getForm().getTopSection().getField1().getStringValue());
     assertEquals("val2", obj.getForm().getTopSection().getField2().getStringValue());
     assertEquals("getUpdateCalled", 1, obj.getForm().getUpdateCalled());

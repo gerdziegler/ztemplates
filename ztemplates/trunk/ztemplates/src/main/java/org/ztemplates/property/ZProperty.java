@@ -106,7 +106,20 @@ public abstract class ZProperty<T>
     this.required = required;
     if (changed)
     {
-      revalidate();
+      updateRequiredState();
+    }
+  }
+
+
+  private void updateRequiredState()
+  {
+    if (required && stringValue == null)
+    {
+      setState(new ZErrorRequired(getRequiredMessage()));
+    }
+    else if (!required && stringValue != null && state instanceof ZErrorRequired)
+    {
+      setState(null);
     }
   }
 
@@ -171,7 +184,7 @@ public abstract class ZProperty<T>
       {
         this.stringValue = newStringValue;
       }
-      
+
       revalidate();
     }
 
@@ -227,7 +240,7 @@ public abstract class ZProperty<T>
 
 
   /**
-   * this should be called whenever 'required' or 'stringValue' changes
+   * 
    */
   public void revalidate()
   {
@@ -246,10 +259,6 @@ public abstract class ZProperty<T>
     {
       try
       {
-        //    if (state != null)
-        //    {
-        //      return;
-        //    }
         setState(validate());
       }
       catch (Exception e)

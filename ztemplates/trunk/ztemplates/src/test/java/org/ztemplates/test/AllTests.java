@@ -18,7 +18,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.zdependency.test.ZDependencyManagerTest;
 import org.ztemplates.form.ZFormElementMirrorTest;
 import org.ztemplates.form.ZSerializeUtilTest;
 import org.ztemplates.render.script.ZScriptRepositoryTest;
@@ -133,7 +132,6 @@ public class AllTests extends TestSuite
     suite.addTestSuite(ZSerializeUtilTest.class);
     suite.addTestSuite(ZScriptRepositoryTest.class);
     suite.addTestSuite(VariableNamesScriptTest.class);
-    suite.addTestSuite(ZDependencyManagerTest.class);
     
 
     // suite.addTestSuite(ZTemplatesInternalArchitectureTest.class);
