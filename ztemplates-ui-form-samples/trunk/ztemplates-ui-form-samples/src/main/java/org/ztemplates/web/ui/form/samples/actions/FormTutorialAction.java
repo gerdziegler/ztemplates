@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.zdependency.ZIDependencyManager;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.form.ZDependencyFormWorkflow;
+import org.ztemplates.form.zdependency.ZDependencyFormWorkflow;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.web.ZTemplates;
 import org.ztemplates.web.ui.form.samples.id.ContinentId;
@@ -41,11 +41,14 @@ public class FormTutorialAction
     };
 
     SampleFormElement form = new SampleFormElement(cascadingFormElementContext);
+
     //init your form here    
-    ZDependencyFormWorkflow<SampleFormElement> workflow = ZFormScript
-        .createDependencyFormWorkflow(form);
+    ZDependencyFormWorkflow<SampleFormElement> workflow = new ZDependencyFormWorkflow<SampleFormElement>(form,
+        ZFormScript.formStateParameterName);
     workflow.printGraphML(new FileWriter("c:/tmp/test.graphml"));
-    workflow.execute();
+
+    workflow.execIn();
+
     workflow.printRuntimeInfo();
 
     if (form.getSubmit() == workflow.getOperation())
@@ -54,14 +57,17 @@ public class FormTutorialAction
       {
         //handle errors here
         log.error("ERRORS");
+        showView(workflow);
       }
-
-      //handle submit here, maybe navigate to next view
-      showView(workflow);
+      else
+      {
+        //handle submit here, maybe navigate to next view
+        showView(workflow);
+      }
     }
     else
     {
-      //no submit
+      //no submit, just show view
       showView(workflow);
     }
   }
@@ -69,6 +75,8 @@ public class FormTutorialAction
 
   private void showView(ZDependencyFormWorkflow<SampleFormElement> workflow) throws Exception
   {
+    workflow.execOut();
+
     String ajaxUrl = FormTutorialAJAX.createUrl();
     String autocompleteQueryUrl = AutocompleteAction.createUrl();
     JSONObject autocompleteQuerySchema = AutocompleteAction.getSchema();

@@ -19,7 +19,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.form.ZDependencyFormWorkflow;
+import org.ztemplates.form.zdependency.ZDependencyFormWorkflow;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.web.ZTemplates;
 import org.ztemplates.web.ui.form.samples.id.ContinentId;
@@ -65,7 +65,7 @@ public class FormTutorialAJAX
     };    
     
     SampleFormElement form = new SampleFormElement(cascadingFormElementContext);    
-    ZDependencyFormWorkflow<SampleFormElement> workflow = ZFormScript.createDependencyFormWorkflow(form);
+    ZDependencyFormWorkflow<SampleFormElement> workflow = new ZDependencyFormWorkflow<SampleFormElement>(form, ZFormScript.formStateParameterName);
     workflow.execute();    
     workflow.printRuntimeInfo();
     ZFormScript.sendAjaxResponse(form);    
