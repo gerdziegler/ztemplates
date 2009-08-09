@@ -12,7 +12,7 @@
  * 
  * @author www.gerdziegler.de
  */
-package org.ztemplates.form;
+package org.ztemplates.form.zdependency;
 
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -24,6 +24,8 @@ import org.zdependency.impl.ZDependencyManager;
 import org.zdependency.output.ZINodeLabeler;
 import org.zdependency.output.graphml.ZDependencyGraphMLWriter;
 import org.zdependency.output.xml.ZDependencyXMLWriter;
+import org.ztemplates.form.ZFormWorkflow;
+import org.ztemplates.form.ZIFormElement;
 import org.ztemplates.property.ZProperty;
 
 /**
@@ -31,67 +33,60 @@ import org.ztemplates.property.ZProperty;
  * 
  * @author www.gerdziegler.de
  */
-public abstract class ZDependencyFormWorkflow<T extends ZIFormElement> extends ZFormWorkflow<T>
+public class ZDependencyFormWorkflow<T extends ZIFormElement> extends ZFormWorkflow<T>
 {
   private final ZDependencyManager<ZProperty> dependencyManager;
 
   private ZIDependencyContext<ZProperty> dependencyContext;
 
+  private final ZIChangedProperties inputProvider;
 
-  public ZDependencyFormWorkflow(T form, ZDependencyManager<ZProperty> dependencyManager)
-      throws Exception
+
+  public ZDependencyFormWorkflow(T form,
+      ZDependencyManager<ZProperty> dependencyManager,
+      ZIChangedProperties inputProvider) throws Exception
   {
     super(form);
     this.dependencyManager = dependencyManager;
+    this.inputProvider = inputProvider;
   }
 
 
-  public ZDependencyFormWorkflow(T form) throws Exception
+  public ZDependencyFormWorkflow(T form, String parameterName) throws Exception
   {
     super(form);
     this.dependencyManager = new ZDependencyManager<ZProperty>((ZIDependencyManaged<ZProperty>) form);
+    this.inputProvider = new ZChangedPropertiesFromParameter(mirr, parameterName);
   }
-
-
-  public abstract Set<ZProperty> computeChangedProperties() throws Exception;
 
 
   public ZIDependencyContext<ZProperty> updateDependencies() throws Exception
   {
-    Set<ZProperty> changed = computeChangedProperties();
+    Set<ZProperty> changed = inputProvider.getChangedProperties();
     return dependencyManager.process(changed);
   }
+  
+  public void execIn()
+  {
+    // TODO Auto-generated method stub
+    
+  }
 
+  public void execOut()
+  {
+    // TODO Auto-generated method stub
+    
+  }
 
   public void execute() throws Exception
   {
     assign();
 
     dependencyContext = updateDependencies();
-    
-    update();
-    
-    revalidate();
 
-//    if (operation != null)
-//    {
-//      if (!getErrors().isEmpty())
-//      {
-//        //handle errors here
-//        onErrors();
-//      }
-//      
-//      //handle submit here, maybe navigate to next view
-//      execCommand();
-//      
-//      //
-//      showView(workflow);
-//    }
-//    else
-//    {
-//      execShow();
-//      updateView();
-//    }
+    update();
+
+    revalidate();
   }
 
 
@@ -118,6 +113,7 @@ public abstract class ZDependencyFormWorkflow<T extends ZIFormElement> extends Z
     }, new PrintWriter(System.out));
   }
 
+
   public void printStructureInfo() throws Exception
   {
     ZDependencyXMLWriter.toXML(dependencyManager, new ZINodeLabeler<ZProperty>()
@@ -128,6 +124,7 @@ public abstract class ZDependencyFormWorkflow<T extends ZIFormElement> extends Z
       }
     }, new PrintWriter(System.out));
   }
+
 
   public void printInfo() throws Exception
   {
@@ -140,14 +137,18 @@ public abstract class ZDependencyFormWorkflow<T extends ZIFormElement> extends Z
     }, new PrintWriter(System.out));
   }
 
+
   public void printGraphML(Writer w) throws Exception
   {
-    ZDependencyGraphMLWriter.toGraphML(dependencyManager, dependencyContext, new ZINodeLabeler<ZProperty>()
-    {
-      public String getLabel(ZProperty node)
-      {
-        return node.getName();
-      }
-    }, w);
+    ZDependencyGraphMLWriter.toGraphML(dependencyManager,
+        dependencyContext,
+        new ZINodeLabeler<ZProperty>()
+        {
+          public String getLabel(ZProperty node)
+          {
+            return node.getName();
+          }
+        },
+        w);
   }
 }

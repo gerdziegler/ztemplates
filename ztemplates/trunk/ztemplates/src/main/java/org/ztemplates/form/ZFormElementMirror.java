@@ -17,8 +17,10 @@ package org.ztemplates.form;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.util.ZReflectionUtil;
@@ -101,6 +103,18 @@ public class ZFormElementMirror implements ZIFormVisitable
         }
       }
     }
+  }
+
+
+  public Set<ZProperty> getPropertiesByName(Set<String> propNames) throws Exception
+  {
+    Set<ZProperty> ret = new HashSet<ZProperty>();
+    for (String propName : propNames)
+    {
+      Object prop = ZReflectionUtil.getObjectByBeanPath(formElement, propName);
+      ret.add((ZProperty) prop);
+    }
+    return ret;
   }
 
 
@@ -212,6 +226,21 @@ public class ZFormElementMirror implements ZIFormVisitable
       op.setStringValue(param[0]);
       parameters.remove(name);
     }
+  }
+
+
+  public HashMap<String, String> getStringValues() throws Exception
+  {
+    ZFormMembers members = getFormMembers();
+    HashMap<String, String> values = new HashMap<String, String>();
+    for (ZProperty prop : members.getProperties())
+    {
+      if (!prop.isEmpty())
+      {
+        values.put(prop.getName(), prop.getStringValue());
+      }
+    }
+    return values;
   }
 
 
