@@ -7,4 +7,4 @@ ZTEMPLATES.forms.${formId}.state = ${formJson};
 
 #if(${beforeunloadMessage})ZTEMPLATES.form.initBeforeUnload("${formId}", "${beforeunloadMessage}");#end
 </script>
-<input type="hidden" name="zformscriptHidden" value="$!{hiddenParameterValue}"></input>
+<input type="hidden" name="zformscriptHidden" value="$!{formStateParameterValue}" />
