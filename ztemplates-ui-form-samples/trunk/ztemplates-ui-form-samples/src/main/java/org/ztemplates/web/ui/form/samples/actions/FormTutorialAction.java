@@ -48,6 +48,8 @@ public class FormTutorialAction
     workflow.printGraphML(new FileWriter("c:/tmp/test.graphml"));
 
     workflow.execIn();
+    
+    workflow.execute();
 
     workflow.printRuntimeInfo();
 
