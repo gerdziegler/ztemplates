@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ztemplates.form.ZFormMembers;
-import org.ztemplates.form.ZIFormElement;
+import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZError;
 import org.ztemplates.property.ZProperty;
@@ -34,12 +34,12 @@ import org.ztemplates.web.ui.form.validation.assets.ZOperationValidatorScriptLoa
 })
 public class ZOperationValidator implements ZIJavaScriptValidator
 {
-  private final ZIFormElement[] properties;
+  private final ZIFormModel[] properties;
 
   private final String message;
 
 
-  public ZOperationValidator(String message, ZIFormElement... properties)
+  public ZOperationValidator(String message, ZIFormModel... properties)
   {
     super();
     this.message = message;
@@ -51,7 +51,7 @@ public class ZOperationValidator implements ZIJavaScriptValidator
   {
     try
     {
-      for (ZIFormElement fe : properties)
+      for (ZIFormModel fe : properties)
       {
         if (fe instanceof ZProperty)
         {
@@ -83,7 +83,7 @@ public class ZOperationValidator implements ZIJavaScriptValidator
   public List<String> getPropertyNames() throws Exception
   {
     List<String> ret = new ArrayList<String>();
-    for (ZIFormElement fe : properties)
+    for (ZIFormModel fe : properties)
     {
       if (fe instanceof ZProperty)
       {

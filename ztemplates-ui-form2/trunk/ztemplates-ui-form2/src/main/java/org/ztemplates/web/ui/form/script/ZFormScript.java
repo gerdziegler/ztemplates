@@ -14,7 +14,6 @@
  */
 package org.ztemplates.web.ui.form.script;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,13 +23,11 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.zdependency.ZIDependencyManager;
-import org.zdependency.util.ZDependencyUtils;
 import org.ztemplates.actions.ZGetter;
-import org.ztemplates.form.ZFormElementMirror;
 import org.ztemplates.form.ZFormMembers;
-import org.ztemplates.form.ZIFormElement;
-import org.ztemplates.form.zdependency.ZDependencyFormWorkflow;
+import org.ztemplates.form.ZFormMirror;
+import org.ztemplates.form.ZFormValues;
+import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.jquery.JQueryLoaderAction;
 import org.ztemplates.json.ZJsonUtil;
 import org.ztemplates.property.ZOperation;
@@ -50,22 +47,13 @@ import org.ztemplates.web.ui.form.script.assets.ZFormScriptLoaderAction;
 @ZScript(javaScript =
 {
     @ZJavaScript(prefix = JQueryLoaderAction.LOADER_URL_PREFIX, value = JQueryLoaderAction.JQUERY_MIN_JS, standalone = JQueryLoaderAction.STANDALONE, merge = JQueryLoaderAction.MERGE),
-    @ZJavaScript(prefix = ZFormScriptLoaderAction.PREFIX, value = ZFormScriptLoaderAction.FORM_SCRIPT),
-    @ZJavaScript(prefix = ZFormScriptLoaderAction.PREFIX, value = ZFormScriptLoaderAction.FORM_TEXT_SCRIPT),
-    @ZJavaScript(prefix = ZFormScriptLoaderAction.PREFIX, value = ZFormScriptLoaderAction.FORM_CHECKBOX_SCRIPT),
-    @ZJavaScript(prefix = ZFormScriptLoaderAction.PREFIX, value = ZFormScriptLoaderAction.FORM_RADIO_SCRIPT),
-    @ZJavaScript(prefix = ZFormScriptLoaderAction.PREFIX, value = ZFormScriptLoaderAction.FORM_SUBMIT_SCRIPT),
-    @ZJavaScript(prefix = ZFormScriptLoaderAction.PREFIX, value = ZFormScriptLoaderAction.FORM_SELECT_SCRIPT)
+    @ZJavaScript(prefix = ZFormScriptLoaderAction.PREFIX, value = ZFormScriptLoaderAction.FORM_SCRIPT)
 }, property = "runtimeScripts")
 public class ZFormScript
 {
   private static final String UTF8 = "UTF-8";
 
   private final static Logger log = Logger.getLogger(ZFormScript.class);
-
-  //  private final static String onChangeParameterName = "zformscript.changed";
-
-  //  private final ZIFormElement form;
 
   private final String formId;
 
@@ -86,45 +74,33 @@ public class ZFormScript
   private final ZScriptDependency runtimeScripts;
 
 
-  public ZFormScript(String formId,
-      ZIFormElement form,
-      String ajaxUrl,
-      Set<String> ajaxPropertyNames) throws Exception
+  public ZFormScript(String formId, Object form, String ajaxUrl, Set<String> ajaxPropertyNames)
+      throws Exception
   {
     super();
-    //    this.form = form;
     this.formId = formId;
     this.ajaxUrl = ajaxUrl;
     this.ajaxPropertyNames = ajaxPropertyNames;
     ajaxPropertyNamesJson = computeAjaxPropertyNamesJson();
     ZIFormService formService = ZTemplates.getFormService();
-    ZFormElementMirror mirr = new ZFormElementMirror(form);
+    ZFormMirror mirr = new ZFormMirror(form);
     formJson = computeFormJson(mirr).toString(1);
     runtimeScripts = formService.getJavaScriptDependency(form);
-    HashMap<String, String> values = mirr.getStringValues();
-    formStateParameterValue = ZDependencyUtils.encodeValues(values);
+    
+    ZFormValues values = new ZFormValues(form);
+    formStateParameterValue = values.encode();
   }
 
 
-  //  public ZFormScript(String formId,
-  //      ZIFormElement form,
-  //      String ajaxUrl,
-  //      Set<ZProperty> ajaxPropertyNames) throws Exception
-  //  {
-  //    this(formId, form, ajaxUrl, getAjaxPropertyNames(dependencyManager));
-  //  }
-
-  public ZFormScript(String formId, ZIFormElement form) throws Exception
+  public ZFormScript(String formId, ZIFormModel form) throws Exception
   {
     this(formId, form, (String) null, (Set<String>) null);
   }
 
 
-
-
-  private static JSONObject computeFormJson(ZFormElementMirror mirr) throws Exception
+  private static JSONObject computeFormJson(ZFormMirror mirr) throws Exception
   {
-    JSONObject json = ZJsonUtil.computeJSON(mirr.getFormElement());
+    JSONObject json = ZJsonUtil.computeJSON(mirr.getFormModel());
 
     ZFormMembers members = mirr.getFormMembers();
     JSONObject ztemplatesJson = new JSONObject();
@@ -141,8 +117,8 @@ public class ZFormScript
     ztemplatesJson.put("properties", propertiesJson);
     ztemplatesJson.put("operations", operationsJson);
 
-    HashMap<String, String> valueMap = mirr.getStringValues();
-    String hiddenParameterValue = ZDependencyUtils.encodeValues(valueMap);
+    ZFormValues values = new ZFormValues(mirr.getFormModel());
+    String hiddenParameterValue = values.encode();
     ztemplatesJson.put(formStateParameterName, hiddenParameterValue);
 
     json.put("ztemplates", ztemplatesJson);
@@ -151,9 +127,9 @@ public class ZFormScript
   }
 
 
-  public static void sendAjaxResponse(ZIFormElement form) throws Exception
+  public static void sendAjaxResponse(ZIFormModel form) throws Exception
   {
-    ZFormElementMirror mirr = new ZFormElementMirror(form);
+    ZFormMirror mirr = new ZFormMirror(form);
     JSONObject json = computeFormJson(mirr);
     String ret = json.toString(2);
     ZIServletService servletService = ZTemplates.getServletService();
@@ -180,18 +156,6 @@ public class ZFormScript
       log.error("", e);
       return e.getMessage();
     }
-  }
-
-
-
-
-
-
-
-
-  public static Set<String> getAjaxPropertyNames(ZIDependencyManager<ZProperty> dependencyManager)
-  {
-    return getPropertyNames(dependencyManager.getTriggerNodes());
   }
 
 
