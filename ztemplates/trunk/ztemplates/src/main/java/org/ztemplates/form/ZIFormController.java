@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Gerd Ziegler (www.gerdziegler.de)
+ * Copyright 2006 Gerd Ziegler (www.gerdziegler.de)
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -9,23 +9,22 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- * 
- * @author www.gerdziegler.de
+ *
+ *
+ * www.gerdziegler.de
  */
 package org.ztemplates.form;
 
-/**
- * default (empty) implementation of the ZIFormElement Interface
- * @author www.gerdziegler.de
- */
-public abstract class ZFormElement<T> implements ZIFormElement<T>
+public interface ZIFormController
 {
-  public void revalidate() throws Exception
-  {
-  }
+//  public T getForm();
 
 
-  public void update() throws Exception
-  {
-  }
+  public void adjust() throws Exception;
+
+
+  public void validate() throws Exception;
+
+
+  public void update() throws Exception;
 }

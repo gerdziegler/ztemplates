@@ -14,17 +14,17 @@
  */
 package org.ztemplates.test.actions.urlhandler.form;
 
-import org.ztemplates.form.ZIFormElement;
+import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZStringProperty;
 
-public class Form implements ZIFormElement
+public class Form implements ZIFormModel
 {
   private int revalidateCalledProp1 = 0;
 
   private int revalidateCalledOp1 = 0;
 
-  private int updateCalled = 0;
+  int updateCalled = 0;
   
   
   private final ZStringProperty predefined = new ZStringProperty() {
@@ -78,36 +78,6 @@ public class Form implements ZIFormElement
   }
 
 
-  public void update() throws Exception
-  {
-    updateCalled++;
-    if (getTopSection().getUpdateCalled() != 1)
-    {
-      throw new RuntimeException("call update for nested objects first "
-          + getTopSection().getUpdateCalled());
-    }
-
-    if (updateCalled != 1)
-    {
-      throw new RuntimeException("call update before revalidate " + updateCalled);
-    }
-
-    if (revalidateCalledProp1 != 1)
-    {
-      throw new RuntimeException("call revalidate for prop first " + revalidateCalledProp1);
-    }
-  }
-
-
-  public Object getValue() throws Exception
-  {
-    return null;
-  }
-
-
-  public void setValue(Object t)
-  {
-  }
 
 
   public int getUpdateCalled()

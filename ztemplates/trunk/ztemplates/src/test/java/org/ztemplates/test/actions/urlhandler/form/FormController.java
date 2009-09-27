@@ -12,13 +12,34 @@
  * 
  * @author www.gerdziegler.de
  */
-package org.ztemplates.form.zdependency;
+package org.ztemplates.test.actions.urlhandler.form;
 
-import java.util.Set;
+import org.ztemplates.form.ZFormController;
 
-import org.ztemplates.property.ZProperty;
-
-public interface ZIChangedProperties
+public class FormController extends ZFormController<Form>
 {
-  public Set<ZProperty> getChangedProperties() throws Exception;
+
+  public FormController(Form form)
+  {
+    super(form);
+  }
+
+
+  @Override
+  public void adjust() throws Exception
+  {
+    Form form = getForm();
+
+    if (form.getUpdateCalled() != 1)
+    {
+      throw new RuntimeException("call update before revalidate " + form.getUpdateCalled());
+    }
+
+    if (form.getRevalidateCalledProp1() != 1)
+    {
+      throw new RuntimeException("call revalidate for prop first "
+          + form.getRevalidateCalledProp1());
+    }
+  }
+
 }

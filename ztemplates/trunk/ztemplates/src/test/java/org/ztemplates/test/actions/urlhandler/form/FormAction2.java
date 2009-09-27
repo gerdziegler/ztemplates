@@ -7,9 +7,10 @@ import org.ztemplates.actions.ZMatch;
 @ZMatch(value = "/act2")
 public class FormAction2
 {
-  private Form form = new Form();
+  private FormController form = new FormController(new Form());
 
-  public Form getForm()
+
+  public FormController getForm()
   {
     return form;
   }

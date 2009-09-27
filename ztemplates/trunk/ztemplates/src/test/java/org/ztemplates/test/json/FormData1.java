@@ -17,11 +17,11 @@ package org.ztemplates.test.json;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ztemplates.form.ZIFormElement;
+import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZStringProperty;
 
-public class FormData1 implements ZIFormElement
+public class FormData1 implements ZIFormModel
 {
   private final ZStringProperty stringProp = new ZStringProperty();
 
@@ -57,23 +57,5 @@ public class FormData1 implements ZIFormElement
   public List<FormData2> getCollection2()
   {
     return collection2;
-  }
-
-//  @Override
-  public void update() throws Exception
-  {
-  }
-
-
-  //  @Override
-  public Object getValue() throws Exception
-  {
-    return null;
-  }
-
-
-  //@Override
-  public void setValue(Object t)
-  {
   }
 }

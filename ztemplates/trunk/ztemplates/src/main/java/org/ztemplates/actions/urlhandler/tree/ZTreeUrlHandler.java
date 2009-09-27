@@ -33,6 +33,8 @@ import org.ztemplates.actions.urlhandler.tree.term.ZTreeTail;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeTerm;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeVariable;
 import org.ztemplates.actions.util.ZReflectionUtil;
+import org.ztemplates.form.ZFormMirror;
+import org.ztemplates.form.ZFormValues;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 
@@ -73,17 +75,17 @@ public class ZTreeUrlHandler implements ZIUrlHandler
   {
     ZUrl zurl = parse(url);
     zurl.getParameterMap().putAll(paramMap);
-//    for (Map.Entry<String, String[]> en : paramMap.entrySet())
-//    {
-//      String key = en.getKey();
-//      String[] val = en.getValue();
-////      String[] val = new String[oldVal.length];
-////      for (int i = 0; i < oldVal.length; i++)
-////      {
-////        val[i] = oldVal[i];//URLDecoder.decode(oldVal[i]/* , ENCODING */);
-////      }
-//      zurl.getParameterMap().put(key, val);
-//    }
+    //    for (Map.Entry<String, String[]> en : paramMap.entrySet())
+    //    {
+    //      String key = en.getKey();
+    //      String[] val = en.getValue();
+    ////      String[] val = new String[oldVal.length];
+    ////      for (int i = 0; i < oldVal.length; i++)
+    ////      {
+    ////        val[i] = oldVal[i];//URLDecoder.decode(oldVal[i]/* , ENCODING */);
+    ////      }
+    //      zurl.getParameterMap().put(key, val);
+    //    }
     return process(zurl);
   }
 
@@ -351,13 +353,13 @@ public class ZTreeUrlHandler implements ZIUrlHandler
     return new ZUrl(url, parameterMap, null);
   }
 
-  // ***************************************************************************************************
-  // ***************************************************************************************************
-  // ***************************************************************************************************
-  // ***************************************************************************************************
-  // ***************************************************************************************************
-  // ***************************************************************************************************
 
+  // ***************************************************************************************************
+  // ***************************************************************************************************
+  // ***************************************************************************************************
+  // ***************************************************************************************************
+  // ***************************************************************************************************
+  // ***************************************************************************************************
 
   private static void update(Object pojo, Map<String, String[]> parameters) throws Exception
   {
@@ -381,21 +383,22 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       parameters.remove(name);
     }
 
-//    String form = zmatch.form();
-//    if (form.length() > 0)
-//    {
-//      ZReflectionUtil.callBeforeForm(pojo, form);
-//      ZIFormElement formElement = ZReflectionUtil.callFormGetter(pojo, form);
-//      ZFormElementMirror mirr = new ZFormElementMirror(formElement);
-//      mirr.process();      
-//      ZReflectionUtil.callAfterForm(pojo, form);
-//    }
+    String formName = zmatch.form();
+    if (formName.length() > 0)
+    {
+      ZReflectionUtil.callBeforeForm(pojo, formName);
+      Object form = ZReflectionUtil.callFormGetter(pojo, formName);
 
-//    ZActionPojoMirror pojoMirr = new ZActionPojoMirror(pojo);
-//    pojoMirr.update();
+      ZFormValues formValues = new ZFormValues();
+      formValues.getValues().putAll(parameters);
+      ZFormMirror mirr = new ZFormMirror(form);
+      mirr.setStringValues(formValues);
+      ZReflectionUtil.callAfterForm(pojo, formName);
+    }
+
+    //    ZActionPojoMirror pojoMirr = new ZActionPojoMirror(pojo);
+    //    pojoMirr.update();
   }
-
-
 
   //  private static void updateOnAJAXCall(ZIFormElement form, String propertyChanged,
   //      Set<ZProperty> properties, Set<ZOperation> operations) throws Exception

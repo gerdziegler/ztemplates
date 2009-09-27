@@ -25,7 +25,6 @@ import org.ztemplates.actions.ZBefore;
 import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZInit;
 import org.ztemplates.actions.ZSetter;
-import org.ztemplates.form.ZIFormElement;
 import org.ztemplates.property.ZProperty;
 
 public class ZReflectionUtil
@@ -322,7 +321,7 @@ public class ZReflectionUtil
   }
 
 
-  public static ZIFormElement callFormGetter(Object obj, String name) throws Exception
+  public static Object callFormGetter(Object obj, String name) throws Exception
   {
     String formGetter = computePrefixName("get", name);
     Method m = obj.getClass().getMethod(formGetter);
@@ -331,7 +330,7 @@ public class ZReflectionUtil
       throw new Exception("form getter not found: '" + name + "' in " + obj.getClass().getName());
     }
 
-    ZIFormElement ret = (ZIFormElement) invoke(m, obj);
+    Object ret = invoke(m, obj);
     return ret;
   }
 

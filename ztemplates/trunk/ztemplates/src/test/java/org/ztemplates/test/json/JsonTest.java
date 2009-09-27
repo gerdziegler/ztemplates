@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.ztemplates.json.ZJsonUtil;
 import org.ztemplates.test.mock.ZMock;
-import org.ztemplates.web.ZTemplates;
 
 public class JsonTest extends TestCase
 {
@@ -57,7 +56,7 @@ public class JsonTest extends TestCase
     fd2.getStringProp().setValue("fd2-sv2");
     dataWrite.getCollection2().add(fd2);
 
-    ZTemplates.getFormService().process(dataWrite);
+    //    ZTemplates.getFormService().process(dataWrite);
     JSONObject json = ZJsonUtil.computeJSON(dataWrite);
 
     String ret = json.toString(4);

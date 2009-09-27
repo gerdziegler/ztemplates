@@ -14,7 +14,38 @@
  */
 package org.ztemplates.form;
 
-public interface ZIFormWorkflow<T extends ZIFormElement>
+/**
+ * default (empty) implementation of the ZIFormElement Interface
+ * @author www.gerdziegler.de
+ */
+public abstract class ZFormController<T> implements ZIFormController
 {
-  public void execute() throws Exception;
+  private final T form;
+
+
+  public ZFormController(T form)
+  {
+    this.form = form;
+  }
+
+
+  public void adjust() throws Exception
+  {
+  }
+
+
+  public void validate() throws Exception
+  {
+  }
+
+
+  public void update() throws Exception
+  {
+  }
+
+
+  public T getForm()
+  {
+    return form;
+  }
 }

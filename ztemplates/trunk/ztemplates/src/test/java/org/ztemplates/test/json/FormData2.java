@@ -14,11 +14,11 @@
  */
 package org.ztemplates.test.json;
 
-import org.ztemplates.form.ZIFormElement;
+import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZStringProperty;
 
-public class FormData2 implements ZIFormElement
+public class FormData2 implements ZIFormModel
 {
   private final ZStringProperty stringProp = new ZStringProperty();
 
@@ -27,21 +27,5 @@ public class FormData2 implements ZIFormElement
   public ZStringProperty getStringProp()
   {
     return stringProp;
-  }
-
-
-  public void update() throws Exception
-  {
-  }
-
-
-  public Object getValue() throws Exception
-  {
-    return null;
-  }
-
-
-  public void setValue(Object t)
-  {
   }
 }

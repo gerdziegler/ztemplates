@@ -14,17 +14,13 @@
  */
 package org.ztemplates.test.actions.urlhandler.form;
 
-import org.ztemplates.form.ZIFormElement;
+import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.property.ZError;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZStringProperty;
 
-public class TopSection implements ZIFormElement
+public class TopSection implements ZIFormModel
 {
-  private int updateCalled = 0;
-
-  private ZError error;
-
   private final ZOperation op1 = new ZOperation("submit")
   {
     @Override
@@ -37,13 +33,6 @@ public class TopSection implements ZIFormElement
   private final ZStringProperty field1 = new ZStringProperty();
 
   private final ZStringProperty field2 = new ZStringProperty();
-
-
-  public void update()
-  {
-    updateCalled++;
-    error = new ZError("maus");
-  }
 
 
   public ZStringProperty getField1()
@@ -61,28 +50,5 @@ public class TopSection implements ZIFormElement
   public ZOperation getOp1()
   {
     return op1;
-  }
-
-
-  public ZError getError()
-  {
-    return error;
-  }
-
-
-  public Object getValue() throws Exception
-  {
-    return null;
-  }
-
-
-  public void setValue(Object t)
-  {
-  }
-
-
-  public int getUpdateCalled()
-  {
-    return updateCalled;
   }
 }

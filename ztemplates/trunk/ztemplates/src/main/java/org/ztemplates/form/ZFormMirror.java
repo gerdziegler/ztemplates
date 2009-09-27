@@ -15,8 +15,8 @@
 package org.ztemplates.form;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -26,40 +26,39 @@ import org.apache.log4j.Logger;
 import org.ztemplates.actions.util.ZReflectionUtil;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
-import org.ztemplates.property.ZState;
 import org.ztemplates.property.validator.ZIStringValidator;
 import org.ztemplates.render.ZScript;
 import org.ztemplates.render.ZScriptDependency;
-import org.ztemplates.web.ZIServletService;
-import org.ztemplates.web.ZTemplates;
 
-public class ZFormElementMirror implements ZIFormVisitable
+public class ZFormMirror implements ZIFormVisitable
 {
-  static final Logger log = Logger.getLogger(ZFormElementMirror.class);
+  static final Logger log = Logger.getLogger(ZFormMirror.class);
 
-  private final ZIFormElement formElement;
+  private final Object formModel;
 
   private final List<ZProperty> properties = new ArrayList<ZProperty>();
 
   private final List<ZOperation> operations = new ArrayList<ZOperation>();
 
-  private final List<ZFormElementMirror> formElements = new ArrayList<ZFormElementMirror>();
+  private final List<ZFormMirror> subModels = new ArrayList<ZFormMirror>();
 
 
-  public ZFormElementMirror(ZIFormElement obj) throws Exception
+  public ZFormMirror(Object obj) throws Exception
   {
     this(obj, "");
   }
 
 
-  private ZFormElementMirror(ZIFormElement obj, String prefix) throws Exception
+  private ZFormMirror(Object obj, String prefix) throws Exception
   {
     super();
-    this.formElement = obj;
+    this.formModel = obj;
 
     for (Method m : obj.getClass().getMethods())
     {
-      if (m.getName().startsWith("get") && m.getParameterTypes().length == 0)
+      if (m.getName().startsWith("get") && m.getParameterTypes().length == 0
+          && Modifier.isPublic(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())
+          && !m.getName().equals("getClass"))
       {
         Class returnType = m.getReturnType();
         /*
@@ -90,16 +89,17 @@ public class ZFormElementMirror implements ZIFormVisitable
           properties.add(prop);
         }
         // third
-        else if (ZIFormElement.class.isAssignableFrom(returnType))
+        else
+        /*if (ZIFormModel.class.isAssignableFrom(returnType))*/
         {
-          ZIFormElement fe = (ZIFormElement) m.invoke(obj);
+          Object fe = (Object) m.invoke(obj);
           if (fe == null)
           {
-            throw new Exception("null formelement " + m);
+            throw new Exception("null form model " + m);
           }
           String feName = ZReflectionUtil.removePrefixName("get", m.getName());
           //          initPropertyNames(formData, prefix + propName + ".");
-          formElements.add(new ZFormElementMirror(fe, prefix + feName + "."));
+          subModels.add(new ZFormMirror(fe, prefix + feName + "."));
         }
       }
     }
@@ -111,7 +111,7 @@ public class ZFormElementMirror implements ZIFormVisitable
     Set<ZProperty> ret = new HashSet<ZProperty>();
     for (String propName : propNames)
     {
-      Object prop = ZReflectionUtil.getObjectByBeanPath(formElement, propName);
+      Object prop = ZReflectionUtil.getObjectByBeanPath(formModel, propName);
       ret.add((ZProperty) prop);
     }
     return ret;
@@ -178,24 +178,19 @@ public class ZFormElementMirror implements ZIFormVisitable
   //    }
   //  }
 
-  public void readParameters() throws Exception
+  public void setStringValues(ZFormValues formValues) throws Exception
   {
-    ZIServletService ss = ZTemplates.getServletService();
-    final Map<String, String[]> parameters = new HashMap<String, String[]>(ss.getRequest()
-        .getParameterMap());
-
-    final List<ZOperation> operations = new ArrayList<ZOperation>();
-
+    final Map<String, String[]> values = formValues.getValues();
     ZIFormVisitor visitor = new ZIFormVisitor()
     {
       public void visit(ZProperty prop) throws Exception
       {
         String name = prop.getName();
-        String[] param = parameters.get(name);
+        String[] param = values.get(name);
         if (param != null)
         {
           prop.setStringValue(param[0]);
-          parameters.remove(name);
+          values.remove(name);
         }
       }
 
@@ -203,44 +198,16 @@ public class ZFormElementMirror implements ZIFormVisitable
       public void visit(ZOperation op) throws Exception
       {
         String name = op.getName();
-        String[] param = parameters.get(name);
+        String[] param = values.get(name);
         if (param != null)
         {
-          operations.add(op);
+          op.setStringValue(param[0]);
+          values.remove(name);
         }
       }
     };
 
     visitDepthFirst(visitor);
-    revalidate();
-
-    if (operations.size() > 1)
-    {
-      throw new Exception("Only one operation call per request allowed: " + operations);
-    }
-    else if (operations.size() == 1)
-    {
-      ZOperation op = operations.get(0);
-      String name = op.getName();
-      String[] param = parameters.get(name);
-      op.setStringValue(param[0]);
-      parameters.remove(name);
-    }
-  }
-
-
-  public HashMap<String, String> getStringValues() throws Exception
-  {
-    ZFormMembers members = getFormMembers();
-    HashMap<String, String> values = new HashMap<String, String>();
-    for (ZProperty prop : members.getProperties())
-    {
-      if (!prop.isEmpty())
-      {
-        values.put(prop.getName(), prop.getStringValue());
-      }
-    }
-    return values;
   }
 
 
@@ -303,29 +270,28 @@ public class ZFormElementMirror implements ZIFormVisitable
   //    }
   //  }
 
-  private static ZProperty setParameter(ZIFormElement obj, String paramName, String[] paramValue)
-      throws Exception
-  {
-    // get form if existent
-    Object crtObj;
-    String crtName;
-    int idx = paramName.lastIndexOf('.');
-    if (idx >= 0)
-    {
-      crtName = paramName.substring(idx + 1);
-      String beanPath = paramName.substring(0, idx);
-      crtObj = ZReflectionUtil.getObjectByBeanPath(obj, beanPath);
-      idx = crtName.indexOf('.');
-    }
-    else
-    {
-      crtObj = obj;
-      crtName = paramName;
-    }
-
-    return ZReflectionUtil.callParameterSetter(crtObj, crtName, paramValue);
-  }
-
+  //  private static ZProperty setParameter(ZIFormModel obj, String paramName, String[] paramValue)
+  //      throws Exception
+  //  {
+  //    // get form if existent
+  //    Object crtObj;
+  //    String crtName;
+  //    int idx = paramName.lastIndexOf('.');
+  //    if (idx >= 0)
+  //    {
+  //      crtName = paramName.substring(idx + 1);
+  //      String beanPath = paramName.substring(0, idx);
+  //      crtObj = ZReflectionUtil.getObjectByBeanPath(obj, beanPath);
+  //      idx = crtName.indexOf('.');
+  //    }
+  //    else
+  //    {
+  //      crtObj = obj;
+  //      crtName = paramName;
+  //    }
+  //
+  //    return ZReflectionUtil.callParameterSetter(crtObj, crtName, paramValue);
+  //  }
 
   //  public void fireAjaxChangeListener(String propertyChanged) throws Exception
   //  {
@@ -348,7 +314,7 @@ public class ZFormElementMirror implements ZIFormVisitable
   //    prop.fireChangeListeners();
   //  }
 
-  public void revalidate() throws Exception
+  public void validate() throws Exception
   {
     ZIFormVisitor visitor = new ZIFormVisitor()
     {
@@ -367,28 +333,31 @@ public class ZFormElementMirror implements ZIFormVisitable
   }
 
 
-  /**
-   * 
-   * @param formElement
-   * @throws Exception
-   */
-  public ZFormState process() throws Exception
+  //  /**
+  //   * 
+  //   * @param formElement
+  //   * @throws Exception
+  //   */
+  //  public ZFormState process() throws Exception
+  //  {
+  //    //    ZFormElementMirror.initPropertyNames(formElement, "");
+  //    //validates required
+  //    //revalidate();
+  //    ZOperation op = assign();
+  //    adjustValues();
+  //    //validate only on submit by user
+  //    if (op != null)
+  //    {
+  //      validate();
+  //    }
+  //
+  //    List<ZState> errors = new ArrayList<ZState>();
+  //    return new ZFormState(errors);
+  //  }
+
+  public List<ZFormMirror> getFormModels()
   {
-    //    ZFormElementMirror.initPropertyNames(formElement, "");
-    //validates required
-    //revalidate();
-    readParameters();
-
-    update();
-
-    List<ZState> errors = new ArrayList<ZState>();
-    return new ZFormState(errors);
-  }
-
-
-  public List<ZFormElementMirror> getFormElements()
-  {
-    return formElements;
+    return subModels;
   }
 
 
@@ -404,15 +373,15 @@ public class ZFormElementMirror implements ZIFormVisitable
   }
 
 
-  public ZIFormElement getFormElement()
+  public Object getFormModel()
   {
-    return formElement;
+    return formModel;
   }
 
 
   public void visitDepthFirst(ZIFormVisitor vis) throws Exception
   {
-    for (ZFormElementMirror formElem : formElements)
+    for (ZFormMirror formElem : subModels)
     {
       formElem.visitDepthFirst(vis);
     }
@@ -435,17 +404,26 @@ public class ZFormElementMirror implements ZIFormVisitable
 
   /**
    */
-  public void update() throws Exception
-  {
-    //depth first
-    for (ZFormElementMirror formElem : formElements)
-    {
-      formElem.update();
-    }
-    formElement.update();
-  }
-
-
+  //  public void adjustValues() throws Exception
+  //  {
+  //    //depth first
+  //    for (ZFormMirror formElem : formElements)
+  //    {
+  //      formElem.adjustValues();
+  //    }
+  //    formElement.adjust();
+  //  }
+  //
+  //
+  //  public void updateNonValues() throws Exception
+  //  {
+  //    //depth first
+  //    for (ZFormMirror formElem : formElements)
+  //    {
+  //      formElem.updateNonValues();
+  //    }
+  //    formElement.update();
+  //  }
   //  public void revalidate() throws Exception
   //  {
   //    //depth first
@@ -465,13 +443,11 @@ public class ZFormElementMirror implements ZIFormVisitable
   //      op.revalidate();
   //    }
   //  }
-
   //  public JSONObject computeJson() throws Exception
   //  {
   //    JSONObject formJson = ZJsonUtil.computeJSON(formElement);
   //    return formJson;
   //  }
-
   /**
    * recursively finds all properties for the given object
    * 

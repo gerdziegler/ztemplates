@@ -16,10 +16,11 @@ package org.ztemplates.web;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONObject;
 import org.ztemplates.form.ZFormMembers;
-import org.ztemplates.form.ZIFormElement;
+import org.ztemplates.form.ZFormValues;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZScriptDependency;
 
@@ -30,14 +31,14 @@ import org.ztemplates.render.ZScriptDependency;
 public interface ZIFormService
 {
   /**
-   * Initializes the form, reads the parameters from the request, sets the property names and revalidates each property.
-   * You normally call init() for each request before doing anything with the form.
-   * Also see update() method.
-   * @see update()
-   * @param form
+   * Assigns the form values from the request parameters, sets the property names and validates each property,
+   * Use this to initialize a form by hand, Has exactly the same effect as declaring the form in the @ZMatch annotation. 
+   * 
+   * @see @ZMatch
+   * @param form the form object to be initialized
    * @throws Exception
    */
-  public void process(ZIFormElement form) throws Exception;
+  public void process(Object form) throws Exception;
 
 
   /**
@@ -45,40 +46,35 @@ public interface ZIFormService
    * @param form
    * @throws Exception
    */
-  public void readParameters(ZIFormElement form) throws Exception;
+  //  public void assign(ZIForm form) throws Exception;
+  //  /**
+  //   * returns the property object that corresponds to this name
+  //   * @param form
+  //   * @param parameterName
+  //   * @throws Exception if the parameter name provided is invalid 
+  //   */
+  //  public ZProperty getPropertyByName(ZIFormElement form, String propertyName)
+  //      throws Exception;
+  /**
+  * returns all properties from the form with the provided names
+  * @param form
+  * @param propNames
+  * @return
+  * @throws Exception
+  */
+  public Set<ZProperty> getPropertiesByName(Object form, Set<String> propNames) throws Exception;
 
 
-//  /**
-//   * returns the property object that corresponds to this name
-//   * @param form
-//   * @param parameterName
-//   * @throws Exception if the parameter name provided is invalid 
-//   */
-//  public ZProperty getPropertyByName(ZIFormElement form, String propertyName)
-//      throws Exception;
-
-
-//  /**
-//   * returns all properties from the form with the provided names
-//   * @param form
-//   * @param propNames
-//   * @return
-//   * @throws Exception
-//   */
-//  public Set<ZProperty> getPropertiesByName(ZIFormElement form, Set<String> propNames) throws Exception;
-
-//  /**
-//   * convenience method, reads the value of the specified request parameter and returns the property object that corresponds to 
-//   * this name, or null if parameter not set
-//   * @see getPropertyByName
-//   * @param form
-//   * @param parameterName the name of the request parameter that contains the property name
-//   * @throws Exception if the parameter name provided is invalid 
-//   */
-//  public <T> ZProperty<T> getPropertyByParameterName(ZIFormElement form, String parameterName)
-//      throws Exception;
-
-
+  //  /**
+  //   * convenience method, reads the value of the specified request parameter and returns the property object that corresponds to 
+  //   * this name, or null if parameter not set
+  //   * @see getPropertyByName
+  //   * @param form
+  //   * @param parameterName the name of the request parameter that contains the property name
+  //   * @throws Exception if the parameter name provided is invalid 
+  //   */
+  //  public <T> ZProperty<T> getPropertyByParameterName(ZIFormElement form, String parameterName)
+  //      throws Exception;
   /**
    * Calls the update methods of the form depth first (subsidiarity). A update() method should therefore only access properties
    * from the same object or a nested object, never from a parent. 
@@ -87,16 +83,14 @@ public interface ZIFormService
    * @param form
    * @throws Exception
    */
-  public void update(ZIFormElement form) throws Exception;
-
-
+  //  public void adjustValues(ZIForm form) throws Exception;
   /**
    * sets all Properties in a form to writeable b
    * @param form
    * @param b
    * @throws Exception
    */
-  public void setWriteable(ZIFormElement form, boolean b) throws Exception;
+  public void setWriteable(Object form, boolean b) throws Exception;
 
 
   /**
@@ -105,7 +99,7 @@ public interface ZIFormService
    * @param b
    * @throws Exception
    */
-  public void setReadable(ZIFormElement form, boolean b) throws Exception;
+  public void setReadable(Object form, boolean b) throws Exception;
 
 
   /**
@@ -114,7 +108,7 @@ public interface ZIFormService
    * @return
    * @throws Exception
    */
-  public List<ZProperty> getPropertiesWithError(ZIFormElement form) throws Exception;
+  public List<ZProperty> getPropertiesWithError(Object form) throws Exception;
 
 
   /**
@@ -123,7 +117,7 @@ public interface ZIFormService
    * @return
    * @throws Exception
    */
-  public ZFormMembers getFormMembers(ZIFormElement form) throws Exception;
+  public ZFormMembers getFormMembers(Object form) throws Exception;
 
 
   /**
@@ -132,17 +126,16 @@ public interface ZIFormService
    * @return
    * @throws Exception
    */
-  public JSONObject computeJson(ZIFormElement form) throws Exception;
+  public JSONObject computeJson(Object form) throws Exception;
 
 
-//  /**
-//   * convenience method, computes a JSON representation of a form and renders it to the response
-//   * @see computeJson
-//   * @param form
-//   * @throws Exception
-//   */
-//  public void sendJsonResponse(ZIFormElement form) throws Exception;
-
+  //  /**
+  //   * convenience method, computes a JSON representation of a form and renders it to the response
+  //   * @see computeJson
+  //   * @param form
+  //   * @throws Exception
+  //   */
+  //  public void sendJsonResponse(ZIFormElement form) throws Exception;
 
   /**
    * serializes some object to a form that can be put into a hidden form parameter
@@ -163,10 +156,26 @@ public interface ZIFormService
 
 
   /**
+   * use this to get the form string values for storage in the session
+   * @return
+   * @throws Exception
+   */
+  public ZFormValues getStringValues(Object form) throws Exception;
+
+
+  /**
+   * use this to set the form string values yourself
+   * @return
+   * @throws Exception
+   */
+  public void setStringValues(Object form, ZFormValues values) throws Exception;
+
+
+  /**
    * returns the JavaScript needed by the form, typically by StringValidators in Properties.
    * @param form
    * @return
    * @throws Exception
    */
-  public ZScriptDependency getJavaScriptDependency(ZIFormElement form) throws Exception;
+  public ZScriptDependency getJavaScriptDependency(Object form) throws Exception;
 }

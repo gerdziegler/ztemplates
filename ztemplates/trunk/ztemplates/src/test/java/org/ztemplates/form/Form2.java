@@ -16,7 +16,7 @@ package org.ztemplates.form;
 
 import org.ztemplates.property.ZStringProperty;
 
-public class Form2 implements ZIFormElement
+public class Form2 implements ZIFormModel
 {
   private final ZStringProperty prop = new ZStringProperty()
   {
@@ -26,22 +26,6 @@ public class Form2 implements ZIFormElement
   };
 
   private final ZStringProperty prop1 = new ZStringProperty();
-
-  
-  public Object getValue() throws Exception
-  {
-    return null;
-  }
-
-
-  public void setValue(Object val)
-  {
-  }
-
-
-  public void update() throws Exception
-  {
-  }
 
 
   public ZStringProperty getProp()

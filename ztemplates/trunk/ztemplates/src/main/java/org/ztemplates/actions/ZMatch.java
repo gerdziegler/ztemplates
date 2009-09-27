@@ -49,11 +49,11 @@ public @interface ZMatch
   /**
    * parameters are mapped by reflection to the form accessible through a bean
    * property with this name. Example: form=xxx needs a getter getXxx()
-   * returning a instanceof ZIFormData
+   * returning a instance of ZIForm
    * 
    * @return
    */
-//  String form() default "";
+   String form() default "";
 
  
   /**

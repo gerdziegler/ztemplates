@@ -31,13 +31,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ztemplates.form.ZIFormElement;
 import org.ztemplates.web.ZIServletService;
 
 public class ZMockServletService implements ZIServletService
 {
   public Map parameterMap = new HashMap();
-  
+
+
   public String createExternalUrl(Object action)
   {
     // TODO Auto-generated method stub
@@ -472,7 +472,7 @@ public class ZMockServletService implements ZIServletService
   }
 
 
-  public void renderFormJson(ZIFormElement form) throws Exception
+  public void renderFormJson(Object form) throws Exception
   {
     // TODO Auto-generated method stub
 
