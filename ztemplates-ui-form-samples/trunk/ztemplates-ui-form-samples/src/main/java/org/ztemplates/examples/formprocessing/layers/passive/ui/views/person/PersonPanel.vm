@@ -1,0 +1,64 @@
+<div class="${cssId}-title">
+	Person
+</div>
+<div id="${contentId}" class="${cssId}-content">
+	<table>
+		<tr>
+			<td class="${cssId}-label">Name</td>
+			<td class="${cssId}-input">$nameInput</td>
+			<td class="${cssId}-error">$nameState</td>
+		</tr>
+		<tr>
+			<td class="${cssId}-label">Prename</td>
+			<td class="${cssId}-input">$prenameInput</td>
+			<td class="${cssId}-error">$prenameState</td>
+		</tr>
+		<tr>
+			<td class="${cssId}-label">Date from</td>
+			<td class="${cssId}-input">$dateFromInput</td>
+			<td class="${cssId}-error">$dateFromState</td>
+		</tr>
+		<tr>
+			<td class="${cssId}-label">Date to</td>
+			<td class="${cssId}-input">$dateToInput</td>
+			<td class="${cssId}-error">$dateToState</td>
+		</tr>
+		<tr>
+			<td class="${cssId}-label">Gender</td>
+			<td class="${cssId}-input">$genderInput</td>
+			<td class="${cssId}-error">$genderState</td>
+		</tr>
+		<tr>
+			<td class="${cssId}-label">Occupation (enter at least 3 characters)</td>
+			<td class="${cssId}-input"><div>$occupationInput $occupationAutocomplete</div></td>
+			<td class="${cssId}-error">$occupationState</td>
+		</tr>
+		<tr>
+			<td class="${cssId}-label">Password</td>
+			<td class="${cssId}-input">$passwordInput</td>
+			<td class="${cssId}-error"></td>
+		</tr>
+		<tr>
+			<td class="${cssId}-label">Text</td>
+			<td class="${cssId}-input">$textInput</td>
+			<td class="${cssId}-error"></td>
+		</tr>		
+		<tr>
+			<td class="${cssId}-label">Tax rate</td>
+			<td class="${cssId}-input">$taxRate</td>
+			<td class="${cssId}-error">$taxRateState</td>
+		</tr>
+		<tr>
+			<td class="${cssId}-label">married</td>
+			<td class="${cssId}-input">$married</td>
+			<td class="${cssId}-error">$marriedState</td>
+		</tr>
+		<tr>
+			<td class="${cssId}-label">noAjax</td>
+			<td class="${cssId}-input">$noAjax</td>
+			<td class="${cssId}-error">$noAjaxState</td>
+		</tr>		
+	</table>
+</div>
+
+

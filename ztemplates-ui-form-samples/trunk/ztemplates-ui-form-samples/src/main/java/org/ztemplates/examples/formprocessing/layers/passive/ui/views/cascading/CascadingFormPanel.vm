@@ -1,0 +1,25 @@
+<div class="${cssId}-title">
+	Cascading selects
+</div>
+
+<div class="${cssId}-content">
+	<table>
+		<tr>
+			<td class="${cssId}-label">Continent</td>
+			<td class="${cssId}-input">$continent</td>
+			<td class="${cssId}-error">$continentState</td>
+		</tr>
+		<tr>
+			<td class="${cssId}-label">Country</td>
+			<td class="${cssId}-input">$country</td>
+			<td class="${cssId}-error">$countryState</td>
+		</tr>
+		<tr>
+			<td class="${cssId}-label">City</td>
+			<td class="${cssId}-input">$city</td>
+			<td class="${cssId}-error">$cityState</td>
+		</tr>
+	</table>
+</div>
+
+
