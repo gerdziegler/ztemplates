@@ -16,10 +16,10 @@ package org.ztemplates.test.actions.urlhandler.form;
 
 import org.ztemplates.form.ZFormController;
 
-public class FormController extends ZFormController<Form>
+public class FormController extends ZFormController<FormModel>
 {
 
-  public FormController(Form form)
+  public FormController(FormModel form)
   {
     super(form);
   }
@@ -28,7 +28,7 @@ public class FormController extends ZFormController<Form>
   @Override
   public void adjust() throws Exception
   {
-    Form form = getForm();
+    FormModel form = getForm();
 
     if (form.getUpdateCalled() != 1)
     {

@@ -178,7 +178,7 @@ public class ZFormMirror implements ZIFormVisitable
   //    }
   //  }
 
-  public void setStringValues(ZFormValues formValues) throws Exception
+  public void setFormValues(ZFormValues formValues) throws Exception
   {
     final Map<String, String[]> values = formValues.getValues();
     ZIFormVisitor visitor = new ZIFormVisitor()

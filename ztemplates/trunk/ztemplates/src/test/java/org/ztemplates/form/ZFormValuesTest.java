@@ -52,10 +52,10 @@ public class ZFormValuesTest extends TestCase
     ZFormValues values = new ZFormValues();
     values.getValues().putAll(map);
 
-    String enc = values.encode();
+    String enc = values.writeToString();
 
     ZFormValues values2 = new ZFormValues();
-    values2.decode(enc);
+    values2.readFromString(enc);
 
     assertEquals(values.getValues(), values2.getValues());
   }
@@ -106,7 +106,7 @@ public class ZFormValuesTest extends TestCase
     ZFormValues val2 = new ZFormValues();
     val2.getValues().putAll(newValues);
 
-    Set<String> changed = val1.getChangedPropertyNames(val2);
+    Set<String> changed = ZFormValues.computeChangedPropertyNames(val1, val2);
 
     assertFalse(changed.toString(), changed.contains("unchanged-not-null"));
     assertFalse(changed.toString(), changed.contains("unchanged-null"));

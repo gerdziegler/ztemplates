@@ -18,7 +18,7 @@ import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZStringProperty;
 
-public class Form implements ZIFormModel
+public class FormModel implements ZIFormModel
 {
   private int revalidateCalledProp1 = 0;
 
@@ -57,7 +57,7 @@ public class Form implements ZIFormModel
     }
   };
 
-  private final TopSection topSection = new TopSection();
+  private final TopSectionFormModel topSection = new TopSectionFormModel();
 
 
 
@@ -66,7 +66,7 @@ public class Form implements ZIFormModel
     return prop1;
   }
 
-  public TopSection getTopSection()
+  public TopSectionFormModel getTopSection()
   {
     return topSection;
   }

@@ -48,7 +48,7 @@ public class ZFormServiceImpl implements ZIFormService
     ZFormMirror mirr = new ZFormMirror(form);
     ZFormValues formValues = new ZFormValues();
     formValues.getValues().putAll(servletService.getRequest().getParameterMap());
-    mirr.setStringValues(formValues);
+    mirr.setFormValues(formValues);
 
     //    ZFormProcessor proc = new ZFormProcessor<T>(controller);
     //    ZOperation op = proc.assign();
@@ -133,7 +133,8 @@ public class ZFormServiceImpl implements ZIFormService
 
   public ZFormValues getStringValues(Object form) throws Exception
   {
-    ZFormValues ret = new ZFormValues(form);
+    ZFormValues ret = new ZFormValues();
+    ret.readFromForm(form);
     return ret;
   }
 
@@ -141,7 +142,7 @@ public class ZFormServiceImpl implements ZIFormService
   public void setStringValues(Object form, ZFormValues values) throws Exception
   {
     ZFormMirror mirr = new ZFormMirror(form);
-    mirr.setStringValues(values);
+    mirr.setFormValues(values);
   }
 
 

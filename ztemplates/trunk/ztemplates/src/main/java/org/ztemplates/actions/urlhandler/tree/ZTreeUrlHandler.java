@@ -392,7 +392,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       ZFormValues formValues = new ZFormValues();
       formValues.getValues().putAll(parameters);
       ZFormMirror mirr = new ZFormMirror(form);
-      mirr.setStringValues(formValues);
+      mirr.setFormValues(formValues);
       ZReflectionUtil.callAfterForm(pojo, formName);
     }
 

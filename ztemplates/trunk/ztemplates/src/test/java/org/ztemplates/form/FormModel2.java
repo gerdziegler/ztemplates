@@ -14,34 +14,28 @@
  */
 package org.ztemplates.form;
 
-import org.ztemplates.actions.ZMatch;
-import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZStringProperty;
 
-@ZMatch(value = "/Action")
-public class Action
+public class FormModel2 implements ZIFormModel
 {
+  private final ZStringProperty prop = new ZStringProperty()
+  {
+    {
+      setName("myName");
+    }
+  };
+
   private final ZStringProperty prop1 = new ZStringProperty();
 
-  private final ZOperation op1 = new ZOperation("submit");
 
-  private final FormModel formElement = new FormModel();
+  public ZStringProperty getProp()
+  {
+    return prop;
+  }
 
 
   public ZStringProperty getProp1()
   {
     return prop1;
-  }
-
-
-  public ZOperation getOp1()
-  {
-    return op1;
-  }
-
-
-  public FormModel getFormElement()
-  {
-    return formElement;
   }
 }

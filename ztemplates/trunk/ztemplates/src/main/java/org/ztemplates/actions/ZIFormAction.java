@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Gerd Ziegler (www.gerdziegler.de)
+ * Copyright 2009 Gerd Ziegler (www.gerdziegler.de)
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -9,33 +9,21 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
+ * 
  * @author www.gerdziegler.de
  */
-package org.ztemplates.form;
+package org.ztemplates.actions;
 
-import org.ztemplates.property.ZStringProperty;
-
-public class Form2 implements ZIFormModel
+/**
+ * Tagging interface for form actions, makes it more improbable to forget the right way of doing this.
+ * It is NOT required for an action to implement this, but its easier to understand 
+ * your code if actions implement it.
+ * @author www.gerdziegler.de
+ */
+public interface ZIFormAction<T> extends ZIAction
 {
-  private final ZStringProperty prop = new ZStringProperty()
-  {
-    {
-      setName("myName");
-    }
-  };
-
-  private final ZStringProperty prop1 = new ZStringProperty();
+  public T getForm() throws Exception;
 
 
-  public ZStringProperty getProp()
-  {
-    return prop;
-  }
-
-
-  public ZStringProperty getProp1()
-  {
-    return prop1;
-  }
+  public void beforeForm() throws Exception;
 }

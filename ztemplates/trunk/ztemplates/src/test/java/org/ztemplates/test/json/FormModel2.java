@@ -12,34 +12,20 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.form;
+package org.ztemplates.test.json;
 
-import org.ztemplates.property.ZOperation;
+import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZStringProperty;
 
-public class FormElement implements ZIFormModel
+public class FormModel2 implements ZIFormModel
 {
-  private final ZStringProperty prop1 = new ZStringProperty();
-
-  private final ZOperation op1 = new ZOperation("submit");
-
-  private final TopSection topSection = new TopSection();
+  private final ZStringProperty stringProp = new ZStringProperty();
 
 
-  public ZStringProperty getProp1()
+  @ZExposeJson
+  public ZStringProperty getStringProp()
   {
-    return prop1;
-  }
-
-
-  public TopSection getTopSection()
-  {
-    return topSection;
-  }
-
-
-  public ZOperation getOp1()
-  {
-    return op1;
+    return stringProp;
   }
 }

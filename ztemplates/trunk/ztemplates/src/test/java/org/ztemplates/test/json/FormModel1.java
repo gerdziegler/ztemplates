@@ -14,18 +14,48 @@
  */
 package org.ztemplates.test.json;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZStringProperty;
 
-public class FormData2 implements ZIFormModel
+public class FormModel1 implements ZIFormModel
 {
   private final ZStringProperty stringProp = new ZStringProperty();
+
+  private final FormModel2 formData2 = new FormModel2();
+
+  private final List<String> collection = new ArrayList<String>();
+
+  private final List<FormModel2> collection2 = new ArrayList<FormModel2>();
 
 
   @ZExposeJson
   public ZStringProperty getStringProp()
   {
     return stringProp;
+  }
+
+
+  @ZExposeJson
+  public FormModel2 getFormData2()
+  {
+    return formData2;
+  }
+
+
+  @ZExposeJson
+  public List<String> getCollection()
+  {
+    return collection;
+  }
+
+
+  @ZExposeJson
+  public List<FormModel2> getCollection2()
+  {
+    return collection2;
   }
 }

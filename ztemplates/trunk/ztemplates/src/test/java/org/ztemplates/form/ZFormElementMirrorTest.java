@@ -16,13 +16,13 @@ package org.ztemplates.form;
 
 import junit.framework.TestCase;
 
-import org.ztemplates.test.actions.urlhandler.form.Form;
+import org.ztemplates.test.actions.urlhandler.form.FormModel;
 
 public class ZFormElementMirrorTest extends TestCase
 {
   public void testFormElementMirror() throws Exception
   {
-    Form f = new Form();
+    FormModel f = new FormModel();
     ZFormMirror mirr = new ZFormMirror(f);
     assertEquals(1, mirr.getProperties().size());
     assertEquals(1, mirr.getOperations().size());
@@ -35,7 +35,7 @@ public class ZFormElementMirrorTest extends TestCase
 
   public void testPredefinedPropertyNames() throws Exception
   {
-    Form2 f = new Form2();
+    FormModel2 f = new FormModel2();
     ZFormMirror mirr = new ZFormMirror(f);
     assertEquals("myName", f.getProp().getName());
     assertEquals("prop1", f.getProp1().getName());

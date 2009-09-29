@@ -28,68 +28,11 @@ public class ZFormValues implements Serializable
   private HashMap<String, String[]> values = new HashMap<String, String[]>();
 
 
-  public ZFormValues()
+  public static Set<String> computeChangedPropertyNames(ZFormValues oldFormValues,
+      ZFormValues newFormValues)
   {
-  }
-
-
-  public ZFormValues(Object form) throws Exception
-  {
-    loadFrom(form);
-  }
-
-
-  public void loadFrom(Object form) throws Exception
-  {
-    ZFormMirror mirr = new ZFormMirror(form);
-    ZFormMembers members = mirr.getFormMembers();
-    for (ZProperty prop : members.getProperties())
-    {
-      if (!prop.isEmpty())
-      {
-        values.put(prop.getName(), new String[]
-        {
-          prop.getStringValue()
-        });
-      }
-    }
-  }
-
-
-  public HashMap<String, String[]> getValues()
-  {
-    return values;
-  }
-
-
-  /**
-   * encodes values to a string that it can be uses as value in a hidden form parameter
-   * @param values
-   * @return
-   */
-  public String encode()
-  {
-    String base64 = ZBase64Util.encodeObject(values, ZBase64Util.GZIP
-        | ZBase64Util.DONT_BREAK_LINES);
-    return base64;
-  }
-
-
-  /**
-   * decodes the values previously encoded by encodeValues
-   * @param base64
-   * @return
-   */
-  public void decode(String base64)
-  {
-    this.values = (HashMap<String, String[]>) ZBase64Util.decodeToObject(base64);
-  }
-
-
-  public Set<String> getChangedPropertyNames(ZFormValues old)
-  {
-    Map<String, String[]> oldValues = old.getValues();
-    Map<String, String[]> newValues = values;
+    Map<String, String[]> oldValues = oldFormValues.getValues();
+    Map<String, String[]> newValues = newFormValues.getValues();
 
     Set<String> ret = new HashSet<String>();
     Set<String> names = new HashSet<String>(oldValues.keySet());
@@ -107,4 +50,80 @@ public class ZFormValues implements Serializable
     }
     return ret;
   }
+
+
+  public static ZFormValues createFromForm(Object form) throws Exception
+  {
+    ZFormValues ret = new ZFormValues();
+    ret.readFromForm(form);
+    return ret;
+  }
+
+
+  public static ZFormValues createFromString(String encoded) throws Exception
+  {
+    ZFormValues ret = new ZFormValues();
+    ret.readFromString(encoded);
+    return ret;
+  }
+
+
+  public ZFormValues()
+  {
+  }
+
+
+  public void readFromForm(Object form) throws Exception
+  {
+    ZFormMirror mirr = new ZFormMirror(form);
+    ZFormMembers members = mirr.getFormMembers();
+    for (ZProperty prop : members.getProperties())
+    {
+      if (!prop.isEmpty())
+      {
+        values.put(prop.getName(), new String[]
+        {
+          prop.getStringValue()
+        });
+      }
+    }
+  }
+
+
+  public void writeToForm(Object form) throws Exception
+  {
+    ZFormMirror mirr = new ZFormMirror(form);
+    mirr.setFormValues(this);
+  }
+
+
+  public HashMap<String, String[]> getValues()
+  {
+    return values;
+  }
+
+
+  /**
+   * encodes values to a string that it can be uses as value in a hidden form parameter
+   * @param values
+   * @return
+   */
+  public String writeToString()
+  {
+    String base64 = ZBase64Util.encodeObject(values, ZBase64Util.GZIP
+        | ZBase64Util.DONT_BREAK_LINES);
+    return base64;
+  }
+
+
+  /**
+   * decodes the values previously encoded by encodeValues
+   * @param base64
+   * @return
+   */
+  public void readFromString(String base64)
+  {
+    this.values = (HashMap<String, String[]>) ZBase64Util.decodeToObject(base64);
+  }
+
 }

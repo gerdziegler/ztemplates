@@ -12,50 +12,43 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.test.json;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.ztemplates.test.actions.urlhandler.form;
 
 import org.ztemplates.form.ZIFormModel;
-import org.ztemplates.json.ZExposeJson;
+import org.ztemplates.property.ZError;
+import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZStringProperty;
 
-public class FormData1 implements ZIFormModel
+public class TopSectionFormModel implements ZIFormModel
 {
-  private final ZStringProperty stringProp = new ZStringProperty();
-
-  private final FormData2 formData2 = new FormData2();
-
-  private final List<String> collection = new ArrayList<String>();
-
-  private final List<FormData2> collection2 = new ArrayList<FormData2>();
-
-
-  @ZExposeJson
-  public ZStringProperty getStringProp()
+  private final ZOperation op1 = new ZOperation("submit")
   {
-    return stringProp;
+    @Override
+    public ZError validate()
+    {
+      return new ZError("katze");
+    }
+  };
+
+  private final ZStringProperty field1 = new ZStringProperty();
+
+  private final ZStringProperty field2 = new ZStringProperty();
+
+
+  public ZStringProperty getField1()
+  {
+    return field1;
   }
 
 
-  @ZExposeJson
-  public FormData2 getFormData2()
+  public ZStringProperty getField2()
   {
-    return formData2;
+    return field2;
   }
 
 
-  @ZExposeJson
-  public List<String> getCollection()
+  public ZOperation getOp1()
   {
-    return collection;
-  }
-
-
-  @ZExposeJson
-  public List<FormData2> getCollection2()
-  {
-    return collection2;
+    return op1;
   }
 }

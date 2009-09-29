@@ -12,38 +12,29 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.test.actions.urlhandler.form;
+package org.ztemplates.form;
 
-import org.ztemplates.form.ZIFormModel;
-import org.ztemplates.property.ZError;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZStringProperty;
 
-public class TopSection implements ZIFormModel
+public class FormModel implements ZIFormModel
 {
-  private final ZOperation op1 = new ZOperation("submit")
+  private final ZStringProperty prop1 = new ZStringProperty();
+
+  private final ZOperation op1 = new ZOperation("submit");
+
+  private final TopSectionFormModel topSection = new TopSectionFormModel();
+
+
+  public ZStringProperty getProp1()
   {
-    @Override
-    public ZError validate()
-    {
-      return new ZError("katze");
-    }
-  };
-
-  private final ZStringProperty field1 = new ZStringProperty();
-
-  private final ZStringProperty field2 = new ZStringProperty();
-
-
-  public ZStringProperty getField1()
-  {
-    return field1;
+    return prop1;
   }
 
 
-  public ZStringProperty getField2()
+  public TopSectionFormModel getTopSection()
   {
-    return field2;
+    return topSection;
   }
 
 

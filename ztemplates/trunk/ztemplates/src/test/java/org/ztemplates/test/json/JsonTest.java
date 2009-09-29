@@ -41,7 +41,7 @@ public class JsonTest extends TestCase
 
   public void test1() throws Exception
   {
-    FormData1 dataWrite = new FormData1();
+    FormModel1 dataWrite = new FormModel1();
     dataWrite.getStringProp().setValue("stringValue");
     dataWrite.getStringProp().setDescription("stringDescription");
     dataWrite.getFormData2().getStringProp().setValue("formData2-stringValue");
@@ -49,10 +49,10 @@ public class JsonTest extends TestCase
     dataWrite.getCollection().add("collection-string1");
     dataWrite.getCollection().add("collection-string2");
 
-    FormData2 fd = new FormData2();
+    FormModel2 fd = new FormModel2();
     fd.getStringProp().setValue("fd2-sv1");
     dataWrite.getCollection2().add(fd);
-    FormData2 fd2 = new FormData2();
+    FormModel2 fd2 = new FormModel2();
     fd2.getStringProp().setValue("fd2-sv2");
     dataWrite.getCollection2().add(fd2);
 
@@ -70,7 +70,7 @@ public class JsonTest extends TestCase
     {
       assertTrue(ret, ret.indexOf(s) >= 0);
     }
-    for (FormData2 s : dataWrite.getCollection2())
+    for (FormModel2 s : dataWrite.getCollection2())
     {
       assertTrue(ret, ret.indexOf(s.getStringProp().getStringValue()) >= 0);
     }
