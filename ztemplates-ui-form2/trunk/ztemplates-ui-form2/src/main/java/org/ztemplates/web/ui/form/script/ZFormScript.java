@@ -87,8 +87,9 @@ public class ZFormScript
     formJson = computeFormJson(mirr).toString(1);
     runtimeScripts = formService.getJavaScriptDependency(form);
     
-    ZFormValues values = new ZFormValues(form);
-    formStateParameterValue = values.encode();
+    ZFormValues values = new ZFormValues();
+    values.readFromForm(form);
+    formStateParameterValue = values.writeToString();
   }
 
 
@@ -117,8 +118,9 @@ public class ZFormScript
     ztemplatesJson.put("properties", propertiesJson);
     ztemplatesJson.put("operations", operationsJson);
 
-    ZFormValues values = new ZFormValues(mirr.getFormModel());
-    String hiddenParameterValue = values.encode();
+    ZFormValues values = new ZFormValues();
+    values.readFromForm(mirr.getFormModel());
+    String hiddenParameterValue = values.writeToString();
     ztemplatesJson.put(formStateParameterName, hiddenParameterValue);
 
     json.put("ztemplates", ztemplatesJson);
