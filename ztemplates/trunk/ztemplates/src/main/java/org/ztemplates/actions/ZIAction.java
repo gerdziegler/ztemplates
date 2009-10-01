@@ -22,4 +22,5 @@ package org.ztemplates.actions;
  */
 public interface ZIAction
 {
+  public void after() throws Exception;
 }

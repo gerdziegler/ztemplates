@@ -64,6 +64,18 @@ public interface ZIServletService extends ZIService
   public void render(Object obj, String mimeType) throws Exception;
 
 
+  /**
+   * renders the object to the response, with specified mime type and encoding
+   * 
+   * @param obj
+   *          object to render
+   * @param mimeType
+   *          mime type to use
+   * @param mimeType
+   *          encoding to use
+   */
+  public void render(Object obj, String mimeType, String encoding) throws Exception;
+
 
   /**
    * creates a url that calls the referenced action

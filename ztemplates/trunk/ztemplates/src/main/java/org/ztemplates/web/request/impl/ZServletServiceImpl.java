@@ -27,7 +27,6 @@ public class ZServletServiceImpl implements ZIServletService
 {
   static final Logger log = Logger.getLogger(ZServletServiceImpl.class);
 
-
   private final HttpServletRequest request;
 
   private final HttpServletResponse response;
@@ -70,13 +69,19 @@ public class ZServletServiceImpl implements ZIServletService
 
   public void render(Object obj) throws Exception
   {
-    render(obj, "text/html");
+    render(obj, "text/html", null);
   }
 
 
   public void render(Object obj, String mimeType) throws Exception
   {
-    String html = obj == null ? null : renderService.render(obj);
+    render(obj, mimeType, null);
+  }
+
+
+  public void render(Object obj, String mimeType, String encoding) throws Exception
+  {
+    String value = obj == null ? null : renderService.render(obj);
     if (obj != null)
     {
       ZHttpHeaders headers = obj.getClass().getAnnotation(ZHttpHeaders.class);
@@ -88,8 +93,15 @@ public class ZServletServiceImpl implements ZIServletService
         }
       }
     }
-    response.setContentType(mimeType);
-    response.getWriter().print(html);
+    if (encoding != null)
+    {
+      response.setCharacterEncoding(encoding);
+    }
+    if (mimeType != null)
+    {
+      response.setContentType(mimeType);
+    }
+    response.getWriter().print(value);
   }
 
 

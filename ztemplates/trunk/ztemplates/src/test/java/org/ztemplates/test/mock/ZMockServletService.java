@@ -485,4 +485,9 @@ public class ZMockServletService implements ZIServletService
 
   }
 
+
+  public void render(Object obj, String mimeType, String encoding) throws Exception
+  {
+    // TODO Auto-generated method stub    
+  }
 }
