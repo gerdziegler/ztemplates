@@ -67,7 +67,7 @@ public class ZFormScript
 
   private String beforeunloadMessage;
 
-  public static final String formStateParameterName = "zformscriptHidden";
+  private static final String formStateParameterName = "zformscriptHidden";
 
   private final String formStateParameterValue;
 
@@ -86,7 +86,7 @@ public class ZFormScript
     ZFormMirror mirr = new ZFormMirror(form);
     formJson = computeFormJson(mirr).toString(1);
     runtimeScripts = formService.getJavaScriptDependency(form);
-    
+
     ZFormValues values = new ZFormValues();
     values.readFromForm(form);
     formStateParameterValue = values.writeToString();
@@ -96,6 +96,54 @@ public class ZFormScript
   public ZFormScript(String formId, ZIFormModel form) throws Exception
   {
     this(formId, form, (String) null, (Set<String>) null);
+  }
+
+
+  /**
+   * utility that reads the old form values from a hidden request parameter
+   * managed by zformscript.
+   * @return
+   * @throws Exception
+   */
+  public static ZFormValues computeOldFormValuesFromRequest() throws Exception
+  {
+    String oldValuesEncoded = ZTemplates.getServletService().getRequest()
+        .getParameter(ZFormScript.formStateParameterName);
+    ZFormValues values = ZFormValues.createFromString(oldValuesEncoded);
+    return values;
+  }
+
+
+  /**
+   * utility that computes the names of the form property changed by user in this submit. 
+   * Old values are contained in hidden parameter that is managed by zformscript, so you have to 
+   * use ZFormScript in your view to get theis feature. 
+   * @param form
+   * @return
+   * @throws Exception
+   */
+  public static Set<String> computeChangedFormPropertyNames(Object form) throws Exception
+  {
+    ZFormValues newValues = ZFormValues.createFromForm(form);
+    ZFormValues oldValues = ZFormScript.computeOldFormValuesFromRequest();
+    Set<String> changedNames = ZFormValues.computeChangedPropertyNames(oldValues, newValues);
+    return changedNames;
+  }
+
+
+  /**
+   * utility that computes the form properties changed by user in this submit. 
+   * Old values are contained in hidden parameter that is managed by zformscript, so you have to 
+   * use ZFormScript in your view to get theis feature. 
+   * @param form
+   * @return
+   * @throws Exception
+   */
+  public static Set<ZProperty> computeChangedFormProperties(Object form) throws Exception
+  {
+    Set<String> changedNames = ZFormScript.computeChangedFormPropertyNames(form);
+    Set<ZProperty> changed = ZTemplates.getFormService().getPropertiesByName(form, changedNames);
+    return changed;
   }
 
 
