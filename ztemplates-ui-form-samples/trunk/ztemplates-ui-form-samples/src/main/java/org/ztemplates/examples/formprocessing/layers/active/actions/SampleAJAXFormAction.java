@@ -22,7 +22,12 @@ import org.ztemplates.examples.formprocessing.layers.passive.ui.views.SampleForm
 import org.ztemplates.web.ZTemplates;
 import org.ztemplates.web.ui.form.script.ZFormScript;
 
-@ZMatch(value = "/ajax", form = "form")
+/**
+ * implements ZIFormAction, to enable form processing.
+ * 
+ * @author www.gerdziegler.de
+ */
+@ZMatch(value = "/ajax")
 public class SampleAJAXFormAction implements ZIFormAction<SampleFormModel>
 {
   private static final Logger log = Logger.getLogger(SampleAJAXFormAction.class);
@@ -30,34 +35,22 @@ public class SampleAJAXFormAction implements ZIFormAction<SampleFormModel>
   private SampleFormModel form;
 
 
-  public static String createUrl()
-  {
-    SampleAJAXFormAction act = new SampleAJAXFormAction();
-    return ZTemplates.getServletService().createUrl(act);
-  }
-
-
+  /**
+   * private constructor, as there is no need to instantiate this class from 
+   * application code, only ztemplates does it.
+   */
   private SampleAJAXFormAction()
   {
   }
 
 
   /**
-   * This keeps the business logic. Access services to get your data, then create the view objects.
-   * @throws Exception
+   * to create url to this action define one or many static createUrl methods here.  
    */
-  public void after() throws Exception
+  public static String createUrl()
   {
-    SampleFormController controller = new SampleFormController(form);
-
-    controller.adjust();
-    controller.validate();
-    //begin transaction
-    controller.updateValues();
-    //end transaction
-    controller.update();
-
-    ZFormScript.sendAjaxResponse(form);
+    SampleAJAXFormAction act = new SampleAJAXFormAction();
+    return ZTemplates.getServletService().createUrl(act);
   }
 
 
@@ -79,4 +72,24 @@ public class SampleAJAXFormAction implements ZIFormAction<SampleFormModel>
   {
     return form;
   }
+
+
+  /**
+   * This keeps the business logic. Access services to get your data, then create the view objects.
+   * @throws Exception
+   */
+  public void after() throws Exception
+  {
+    SampleFormController controller = new SampleFormController(form);
+
+    controller.adjust();
+    controller.validate();
+    //begin transaction
+    controller.updateValues();
+    //end transaction
+    controller.update();
+
+    ZFormScript.sendAjaxResponse(form);
+  }
+
 }

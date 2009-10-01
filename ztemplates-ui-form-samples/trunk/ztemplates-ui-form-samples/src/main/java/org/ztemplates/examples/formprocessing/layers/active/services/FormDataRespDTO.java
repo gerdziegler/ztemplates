@@ -18,5 +18,4 @@ import java.io.Serializable;
 
 public class FormDataRespDTO implements Serializable
 {
-
 }

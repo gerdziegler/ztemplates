@@ -32,12 +32,10 @@ import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.DateP
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.GenderIdSelectProperty;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.NameProperty;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.views.SampleFormModel;
-import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIFormController;
 import org.ztemplates.property.ZError;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.property.ZStringProperty;
-import org.ztemplates.web.ZTemplates;
 import org.ztemplates.web.ui.form.script.ZFormScript;
 
 public class SampleFormController implements ZIFormController
@@ -225,12 +223,7 @@ public class SampleFormController implements ZIFormController
     final NameProperty name = form.getPerson().getName();
     final GenderIdSelectProperty gender = form.getPerson().getGender();
 
-    ZFormValues newValues = ZFormValues.createFromForm(form);
-    String oldValuesEncoded = ZTemplates.getServletService().getRequest()
-        .getParameter(ZFormScript.formStateParameterName);
-    ZFormValues oldValues = ZFormValues.createFromString(oldValuesEncoded);
-    Set<String> changedNames = ZFormValues.computeChangedPropertyNames(oldValues, newValues);
-    Set<ZProperty> changed = ZTemplates.getFormService().getPropertiesByName(form, changedNames);
+    Set<ZProperty> changed = ZFormScript.computeChangedFormProperties(form);
 
     ZDependencyManager<ZProperty> dependencyManager = createDependencyManager();
     dependencyManager.update(changed);
