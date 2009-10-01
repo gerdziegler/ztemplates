@@ -17,9 +17,6 @@ package org.ztemplates.form;
 
 public interface ZIFormController
 {
-//  public T getForm();
-
-
   public void adjust() throws Exception;
 
 

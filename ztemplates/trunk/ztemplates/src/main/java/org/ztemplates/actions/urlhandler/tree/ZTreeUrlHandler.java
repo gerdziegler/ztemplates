@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.actions.ZIFormAction;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.ZMatch;
 import org.ztemplates.actions.security.ZRoles;
@@ -383,118 +384,33 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       parameters.remove(name);
     }
 
-    String formName = zmatch.form();
+    /*String formName = zmatch.form();
     if (formName.length() > 0)
     {
       ZReflectionUtil.callBeforeForm(pojo, formName);
-      Object form = ZReflectionUtil.callFormGetter(pojo, formName);
 
+      Object form = ZReflectionUtil.callFormGetter(pojo, formName);
       ZFormValues formValues = new ZFormValues();
       formValues.getValues().putAll(parameters);
       ZFormMirror mirr = new ZFormMirror(form);
       mirr.setFormValues(formValues);
+
       ZReflectionUtil.callAfterForm(pojo, formName);
     }
+    else*/
+    if (pojo instanceof ZIFormAction)
+    {
+      ZIFormAction action = (ZIFormAction) pojo;
 
-    //    ZActionPojoMirror pojoMirr = new ZActionPojoMirror(pojo);
-    //    pojoMirr.update();
+      action.beforeForm();
+
+      Object form = action.getForm();
+      ZFormValues formValues = new ZFormValues();
+      formValues.getValues().putAll(parameters);
+      ZFormMirror mirr = new ZFormMirror(form);
+      mirr.setFormValues(formValues);
+
+      ZReflectionUtil.callAfterForm(pojo, "form");
+    }
   }
-
-  //  private static void updateOnAJAXCall(ZIFormElement form, String propertyChanged,
-  //      Set<ZProperty> properties, Set<ZOperation> operations) throws Exception
-  //  {
-  //    for (ZProperty p : properties)
-  //    {
-  //      p.setAjaxCall(true);
-  //    }
-  //    for (ZOperation op : operations)
-  //    {
-  //      op.setAjaxCall(true);
-  //    }
-  //
-  //    ZProperty prop = (ZProperty) ZReflectionUtil.getObjectByBeanPath(form, propertyChanged);
-  //    prop.fireAjaxChangeListeners();
-  //
-  //    for (ZProperty p : properties)
-  //    {
-  //      p.revalidate();
-  //    }
-  //    for (ZOperation op : operations)
-  //    {
-  //      op.revalidate();
-  //    }
-
-  //    Set<ZProperty> notValidatedProperties = new HashSet<ZProperty>(properties);
-  //    DefaultDirectedGraph<ZProperty, ZDependencyEdge> succesorGraph = new DefaultDirectedGraph<ZProperty, ZDependencyEdge>(ZDependencyEdge.class);
-
-  //    succesorGraph.addVertex(prop);
-  //    computeSuccessorDependencyGraph(prop, succesorGraph);
-
-  //    Set<ZProperty> predecessorProperties = new HashSet<ZProperty>(properties);
-  //    predecessorProperties.removeAll(succesorGraph.vertexSet());
-  //    for (ZProperty p : predecessorProperties)
-  //    {
-  //      notValidatedProperties.remove(p);
-  //      p.revalidate();
-  //    }
-  //    notValidatedProperties.remove(prop);
-  //    prop.revalidate();
-  //
-  //    TopologicalOrderIterator<ZProperty, ZDependencyEdge> topologicalOrderIterator = new TopologicalOrderIterator<ZProperty, ZDependencyEdge>(succesorGraph);
-  //    // eat first one
-  //    List<ZProperty> processed = new ArrayList<ZProperty>();
-  //    processed.add(topologicalOrderIterator.next());
-  //    while (topologicalOrderIterator.hasNext())
-  //    {
-  //      ZProperty crtProp = topologicalOrderIterator.next();
-  //      ZDependencyEdge updater = null;
-  //      for (ZProperty crtProcessed : processed)
-  //      {
-  //        if (succesorGraph.containsEdge(crtProcessed, crtProp))
-  //        {
-  //          ZDependencyEdge crtEdge = succesorGraph.getEdge(crtProcessed, crtProp);
-  //          if (updater == null)
-  //          {
-  //            updater = crtEdge;
-  //          }
-  //          else if (updater.getValueUpdater() != crtEdge.getValueUpdater())
-  //          {
-  //            throw new Exception("different valueupdaters on edges " + updater + "  and  " + crtEdge);
-  //          }
-  //        }
-  //      }
-  //      if (log.isDebugEnabled())
-  //      {
-  //        log.debug("calling updater " + updater.getTarget().getName());
-  //      }
-  //      updater.getValueUpdater().updateValue();
-  //      notValidatedProperties.remove(crtProp);
-  //      crtProp.revalidate();
-  //      processed.add(crtProp);
-  //    }
-  //    for (ZProperty p : notValidatedProperties)
-  //    {
-  //      p.revalidate();
-  //    }
-  //    for (ZOperation op : operations)
-  //    {
-  //      op.revalidate();
-  //    }
-  //  }
-
-  //  private static void computeSuccessorDependencyGraph(ZProperty prop,
-  //      DefaultDirectedGraph<ZProperty, ZDependencyEdge> graph) throws Exception
-  //  {
-  //    Set<ZDependencyEdge> depList = prop.getDependenciesOut();
-  //    for (ZDependencyEdge edge : depList)
-  //    {
-  //      if (!graph.containsVertex(edge.getTarget()))
-  //      {
-  //        graph.addVertex(edge.getTarget());
-  //        computeSuccessorDependencyGraph(edge.getTarget(), graph);
-  //      }
-  //      graph.addEdge(edge.getSource(), edge.getTarget(), edge);
-  //    }
-  //  }
-
 }
