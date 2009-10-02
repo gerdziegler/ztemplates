@@ -15,7 +15,7 @@
 package org.ztemplates.form;
 
 /**
- * default (empty) implementation of the ZIFormElement Interface
+ * Default (empty) implementation of the ZIFormElement Interface
  * @author www.gerdziegler.de
  */
 public abstract class ZFormController<T> implements ZIFormController

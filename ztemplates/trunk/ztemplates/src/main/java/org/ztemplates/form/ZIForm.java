@@ -16,10 +16,11 @@
 package org.ztemplates.form;
 
 /**
- * Tagging interface for form models. Form models are required to implement this.
+ * Interface for form models. Form models are required to implement this.
+ * Forms are passive objects, they do not access services.
  * 
  * @author www.gerdziegler.de
  */
-public interface ZIFormModel
+public interface ZIForm
 {
 }

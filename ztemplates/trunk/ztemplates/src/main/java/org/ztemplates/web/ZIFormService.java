@@ -21,7 +21,7 @@ import java.util.Set;
 import org.json.JSONObject;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
-import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.form.ZIForm;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZScriptDependency;
 
@@ -39,7 +39,7 @@ public interface ZIFormService
    * @param form the form object to be initialized
    * @throws Exception
    */
-  public void process(ZIFormModel form) throws Exception;
+  public void process(ZIForm form) throws Exception;
 
 
   /**
@@ -63,7 +63,7 @@ public interface ZIFormService
   * @return
   * @throws Exception
   */
-  public Set<ZProperty> getPropertiesByName(ZIFormModel form, Set<String> propNames) throws Exception;
+  public Set<ZProperty> getPropertiesByName(ZIForm form, Set<String> propNames) throws Exception;
 
 
   //  /**
@@ -91,7 +91,7 @@ public interface ZIFormService
    * @param b
    * @throws Exception
    */
-  public void setWriteable(ZIFormModel form, boolean b) throws Exception;
+  public void setWriteable(ZIForm form, boolean b) throws Exception;
 
 
   /**
@@ -100,7 +100,7 @@ public interface ZIFormService
    * @param b
    * @throws Exception
    */
-  public void setReadable(ZIFormModel form, boolean b) throws Exception;
+  public void setReadable(ZIForm form, boolean b) throws Exception;
 
 
   /**
@@ -109,7 +109,7 @@ public interface ZIFormService
    * @return
    * @throws Exception
    */
-  public List<ZProperty> getPropertiesWithError(ZIFormModel form) throws Exception;
+  public List<ZProperty> getPropertiesWithError(ZIForm form) throws Exception;
 
 
   /**
@@ -118,7 +118,7 @@ public interface ZIFormService
    * @return
    * @throws Exception
    */
-  public ZFormMembers getFormMembers(ZIFormModel form) throws Exception;
+  public ZFormMembers getFormMembers(ZIForm form) throws Exception;
 
 
   /**
@@ -127,7 +127,7 @@ public interface ZIFormService
    * @return
    * @throws Exception
    */
-  public JSONObject computeJson(ZIFormModel form) throws Exception;
+  public JSONObject computeJson(ZIForm form) throws Exception;
 
 
   //  /**
@@ -161,7 +161,7 @@ public interface ZIFormService
    * @return
    * @throws Exception
    */
-  public ZFormValues getStringValues(ZIFormModel form) throws Exception;
+  public ZFormValues getStringValues(ZIForm form) throws Exception;
 
 
   /**
@@ -169,7 +169,7 @@ public interface ZIFormService
    * @return
    * @throws Exception
    */
-  public void setStringValues(ZIFormModel form, ZFormValues values) throws Exception;
+  public void setStringValues(ZIForm form, ZFormValues values) throws Exception;
 
 
   /**
@@ -178,5 +178,5 @@ public interface ZIFormService
    * @return
    * @throws Exception
    */
-  public ZScriptDependency getJavaScriptDependency(ZIFormModel form) throws Exception;
+  public ZScriptDependency getJavaScriptDependency(ZIForm form) throws Exception;
 }
