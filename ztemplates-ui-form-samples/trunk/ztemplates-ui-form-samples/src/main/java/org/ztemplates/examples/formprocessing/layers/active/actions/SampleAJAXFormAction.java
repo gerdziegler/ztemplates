@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.ztemplates.actions.ZIFormAction;
 import org.ztemplates.actions.ZMatch;
 import org.ztemplates.examples.formprocessing.layers.active.form.SampleFormController;
-import org.ztemplates.examples.formprocessing.layers.passive.ui.views.SampleFormModel;
+import org.ztemplates.examples.formprocessing.layers.passive.ui.views.SampleForm;
 import org.ztemplates.web.ZTemplates;
 import org.ztemplates.web.ui.form.script.ZFormScript;
 
@@ -28,11 +28,11 @@ import org.ztemplates.web.ui.form.script.ZFormScript;
  * @author www.gerdziegler.de
  */
 @ZMatch(value = "/ajax")
-public class SampleAJAXFormAction implements ZIFormAction<SampleFormModel>
+public class SampleAJAXFormAction implements ZIFormAction<SampleForm>
 {
   private static final Logger log = Logger.getLogger(SampleAJAXFormAction.class);
 
-  private SampleFormModel form;
+  private SampleForm form;
 
 
   /**
@@ -63,12 +63,12 @@ public class SampleAJAXFormAction implements ZIFormAction<SampleFormModel>
   @Override
   public void beforeForm() throws Exception
   {
-    form = new SampleFormModel();
+    form = new SampleForm();
   }
 
 
   @Override
-  public SampleFormModel getForm()
+  public SampleForm getForm()
   {
     return form;
   }
@@ -78,17 +78,14 @@ public class SampleAJAXFormAction implements ZIFormAction<SampleFormModel>
    * This keeps the business logic. Access services to get your data, then create the view objects.
    * @throws Exception
    */
+  @Override
   public void after() throws Exception
   {
     SampleFormController controller = new SampleFormController(form);
-
-    controller.adjust();
-    controller.validate();
-    //begin transaction
     controller.updateValues();
-    //end transaction
-    controller.update();
-
+    controller.updateRequired();
+    controller.updateValidationState();
+    controller.updateForView();
     ZFormScript.sendAjaxResponse(form);
   }
 

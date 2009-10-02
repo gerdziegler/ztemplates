@@ -47,7 +47,7 @@ public class SampleFormView
 
   private final ZFormStateHighlight formStateHighlight;
 
-  public SampleFormView(SampleFormModel form,
+  public SampleFormView(SampleForm form,
       String ajaxUrl,
       Set<String> ajaxPropertyNames,
       String autocompleteQueryUrl,

@@ -14,30 +14,30 @@
  */
 package org.ztemplates.examples.formprocessing.layers.passive.ui.views;
 
-import org.ztemplates.examples.formprocessing.layers.passive.ui.views.cascading.CascadingFormModel;
-import org.ztemplates.examples.formprocessing.layers.passive.ui.views.person.PersonFormModel;
-import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.examples.formprocessing.layers.passive.ui.views.cascading.CascadingForm;
+import org.ztemplates.examples.formprocessing.layers.passive.ui.views.person.PersonForm;
+import org.ztemplates.form.ZIForm;
 import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZOperation;
 
-public class SampleFormModel implements ZIFormModel
+public class SampleForm implements ZIForm
 {
-  private final PersonFormModel person = new PersonFormModel();
+  private final PersonForm person = new PersonForm();
 
-  private final CascadingFormModel cascading = new CascadingFormModel();
+  private final CascadingForm cascading = new CascadingForm();
 
   private final ZOperation submit = new ZOperation("Submit Form");
 
 
   @ZExposeJson
-  public PersonFormModel getPerson()
+  public PersonForm getPerson()
   {
     return person;
   }
 
 
   @ZExposeJson
-  public CascadingFormModel getCascading()
+  public CascadingForm getCascading()
   {
     return cascading;
   }

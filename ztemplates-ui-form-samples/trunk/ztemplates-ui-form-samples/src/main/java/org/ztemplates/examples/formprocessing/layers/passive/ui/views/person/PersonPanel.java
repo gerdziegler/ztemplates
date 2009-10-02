@@ -76,7 +76,7 @@ public class PersonPanel
   private final ZFormInputState occupationState;
 
 
-  public PersonPanel(String formName, PersonFormModel data, String autocompleteQueryUrl, JSONObject autocompleteQuerySchema) throws Exception
+  public PersonPanel(String formName, PersonForm data, String autocompleteQueryUrl, JSONObject autocompleteQuerySchema) throws Exception
   {
     contentId = ZTemplates.getRenderService().createJavaScriptId();
     occupationInput = new ZFormText(formName, data.getOccupation());

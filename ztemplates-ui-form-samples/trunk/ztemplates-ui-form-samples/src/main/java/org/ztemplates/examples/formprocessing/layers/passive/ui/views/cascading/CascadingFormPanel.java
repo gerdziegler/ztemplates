@@ -24,12 +24,12 @@ import org.ztemplates.web.ui.form.state.ZFormInputState;
 @ZRenderer(value = ZVelocityRenderer.class)
 public class CascadingFormPanel
 {
-  private final CascadingFormModel data;
+  private final CascadingForm data;
 
   private final String formName;
 
 
-  public CascadingFormPanel(String formName, CascadingFormModel data)
+  public CascadingFormPanel(String formName, CascadingForm data)
   {
     this.formName = formName;
     this.data = data;

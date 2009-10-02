@@ -5,7 +5,7 @@ import org.ztemplates.actions.ZIFormAction;
 import org.ztemplates.actions.ZMatch;
 import org.ztemplates.examples.formprocessing.layers.active.form.SampleFormController;
 import org.ztemplates.examples.formprocessing.layers.active.logic.ViewFactory;
-import org.ztemplates.examples.formprocessing.layers.passive.ui.views.SampleFormModel;
+import org.ztemplates.examples.formprocessing.layers.passive.ui.views.SampleForm;
 import org.ztemplates.web.ZTemplates;
 
 /**
@@ -14,11 +14,11 @@ import org.ztemplates.web.ZTemplates;
  * @author www.gerdziegler.de
  */
 @ZMatch(value = "/")
-public class SampleFormAction implements ZIFormAction<SampleFormModel>
+public class SampleFormAction implements ZIFormAction<SampleForm>
 {
   static final Logger log = Logger.getLogger(SampleFormAction.class);
 
-  private SampleFormModel form;
+  private SampleForm form;
 
 
   /**
@@ -49,12 +49,12 @@ public class SampleFormAction implements ZIFormAction<SampleFormModel>
   @Override
   public void beforeForm() throws Exception
   {
-    form = new SampleFormModel();
+    form = new SampleForm();
   }
 
 
   @Override
-  public SampleFormModel getForm()
+  public SampleForm getForm()
   {
     return form;
   }
@@ -66,6 +66,7 @@ public class SampleFormAction implements ZIFormAction<SampleFormModel>
    * 
    * @see org.ztemplates.actions.ZIAction#after()
    */
+  @Override
   public void after() throws Exception
   {
     if (!form.getSubmit().isEmpty())
@@ -81,45 +82,47 @@ public class SampleFormAction implements ZIFormAction<SampleFormModel>
 
   private void onNoSubmit() throws Exception
   {
-    ViewFactory views = new ViewFactory();
-
     SampleFormController controller = new SampleFormController(form);
 
     //transaction begin
     controller.loadInitialData();
     //transaction end
 
-    controller.update();
+    controller.updateRequired();
+    controller.updateForView();
+
+    ViewFactory views = new ViewFactory();
     views.showSampleForm(form, controller.getAjaxProperties());
   }
 
 
   private void onSubmit() throws Exception
   {
-    ViewFactory views = new ViewFactory();
     SampleFormController controller = new SampleFormController(form);
-    //eventually correct values/update required information
-    controller.adjust();
-    //validate locally, without backend access
-    controller.validate();
+    controller.updateValues();
+    controller.updateRequired();
+    controller.updateValidationState();
     if (!ZTemplates.getFormService().getPropertiesWithError(form).isEmpty())
     {
       //transaction begin
       //handle errors here
       //transaction end
 
-      //update the view information like enabled, readable, writeable
-      controller.update();
+      controller.updateForView();
+
+      ViewFactory views = new ViewFactory();
       views.showSampleForm(form, controller.getAjaxProperties());
     }
     else
     {
       //transaction begin
       //evtl. access backend here 
-      controller.updateValues();
+      controller.processDependencies();
       //transaction end
 
-      controller.update();
+      controller.updateForView();
+
+      ViewFactory views = new ViewFactory();
       views.showSampleFormConfirm();
     }
   }

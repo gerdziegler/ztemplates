@@ -31,7 +31,7 @@ import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.Count
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.DateProperty;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.GenderIdSelectProperty;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.NameProperty;
-import org.ztemplates.examples.formprocessing.layers.passive.ui.views.SampleFormModel;
+import org.ztemplates.examples.formprocessing.layers.passive.ui.views.SampleForm;
 import org.ztemplates.form.ZIFormController;
 import org.ztemplates.property.ZError;
 import org.ztemplates.property.ZProperty;
@@ -40,17 +40,17 @@ import org.ztemplates.web.ui.form.script.ZFormScript;
 
 public class SampleFormController implements ZIFormController
 {
-  private final SampleFormModel form;
+  private final SampleForm form;
 
 
-  public SampleFormController(final SampleFormModel form)
+  public SampleFormController(final SampleForm form)
   {
     this.form = form;
   }
 
 
   @Override
-  public void adjust() throws Exception
+  public void updateRequired() throws Exception
   {
     final ContinentIdSelectProperty continent = form.getCascading().getContinent();
     final CountryIdSelectProperty country = form.getCascading().getCountry();
@@ -66,11 +66,8 @@ public class SampleFormController implements ZIFormController
 
 
   @Override
-  public void validate() throws Exception
+  public void updateValidationState() throws Exception
   {
-    final ContinentIdSelectProperty continent = form.getCascading().getContinent();
-    final CountryIdSelectProperty country = form.getCascading().getCountry();
-    final NameProperty name = form.getPerson().getName();
     final DateProperty dateFrom = form.getPerson().getDateFrom();
     final DateProperty dateTo = form.getPerson().getDateTo();
 
@@ -101,8 +98,7 @@ public class SampleFormController implements ZIFormController
   }
 
 
-  @Override
-  public void update() throws Exception
+  public void updateForView() throws Exception
   {
     final IFormTutorialService service = FormTutorialServiceLocator.getService();
     form.getPerson().getEnabled().setValue(true);
@@ -214,20 +210,12 @@ public class SampleFormController implements ZIFormController
   }
 
 
+  @Override
   public void updateValues() throws Exception
   {
-    final ContinentIdSelectProperty continent = form.getCascading().getContinent();
-    final CountryIdSelectProperty country = form.getCascading().getCountry();
-    final ZStringProperty city = form.getCascading().getCity();
     final NameProperty surname = form.getPerson().getSurname();
     final NameProperty name = form.getPerson().getName();
     final GenderIdSelectProperty gender = form.getPerson().getGender();
-
-    Set<ZProperty> changed = ZFormScript.computeChangedFormProperties(form);
-
-    ZDependencyManager<ZProperty> dependencyManager = createDependencyManager();
-    dependencyManager.update(changed);
-
     //apply invariants, means constraints that are always true
     if ("Maria".equals(surname.getStringValue()))
     {
@@ -237,6 +225,14 @@ public class SampleFormController implements ZIFormController
     {
       gender.setValue(GenderId.MALE);
     }
+  }
+
+
+  public void processDependencies() throws Exception
+  {
+    Set<ZProperty> changed = ZFormScript.computeChangedFormProperties(form);
+    ZDependencyManager<ZProperty> dependencyManager = createDependencyManager();
+    dependencyManager.update(changed);
   }
 
 

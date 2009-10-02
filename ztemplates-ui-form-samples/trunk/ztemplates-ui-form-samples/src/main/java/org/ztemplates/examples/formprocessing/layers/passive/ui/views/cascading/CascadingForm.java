@@ -16,11 +16,11 @@ package org.ztemplates.examples.formprocessing.layers.passive.ui.views.cascading
 
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.ContinentIdSelectProperty;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.CountryIdSelectProperty;
-import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.form.ZIForm;
 import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZStringProperty;
 
-public class CascadingFormModel implements ZIFormModel
+public class CascadingForm implements ZIForm
 {
   private final ContinentIdSelectProperty continent = new ContinentIdSelectProperty("Continent");
 
