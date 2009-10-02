@@ -14,13 +14,15 @@
  */
 package org.ztemplates.actions;
 
+import org.ztemplates.form.ZIFormModel;
+
 /**
  * Tagging interface for form actions, makes it more improbable to forget the right way of doing this.
  * It is NOT required for an action to implement this, but its easier to understand 
  * your code if actions implement it.
  * @author www.gerdziegler.de
  */
-public interface ZIFormAction<T> extends ZIAction
+public interface ZIFormAction<T extends ZIFormModel> extends ZIAction
 {
   public T getForm() throws Exception;
 

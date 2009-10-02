@@ -57,7 +57,7 @@ public class FormTest extends TestCase
     ZMockServiceRepository repo = ZMock.getMock();
     repo.setServletService(new ZMockServletService());
 
-    ZTemplates.getFormService().process(ctrl);
+    ZTemplates.getFormService().process(form);
 
     assertEquals("op1", form.getOp1().getName());
     assertEquals("prop1", form.getProp1().getName());

@@ -34,7 +34,7 @@ public class ZFormMirror implements ZIFormVisitable
 {
   static final Logger log = Logger.getLogger(ZFormMirror.class);
 
-  private final Object formModel;
+  private final ZIFormModel formModel;
 
   private final List<ZProperty> properties = new ArrayList<ZProperty>();
 
@@ -43,13 +43,13 @@ public class ZFormMirror implements ZIFormVisitable
   private final List<ZFormMirror> subModels = new ArrayList<ZFormMirror>();
 
 
-  public ZFormMirror(Object obj) throws Exception
+  public ZFormMirror(ZIFormModel obj) throws Exception
   {
     this(obj, "");
   }
 
 
-  private ZFormMirror(Object obj, String prefix) throws Exception
+  private ZFormMirror(ZIFormModel obj, String prefix) throws Exception
   {
     super();
     this.formModel = obj;
@@ -89,15 +89,14 @@ public class ZFormMirror implements ZIFormVisitable
           properties.add(prop);
         }
         // third
-        else
-        /*if (ZIFormModel.class.isAssignableFrom(returnType))*/
+        else if (ZIFormModel.class.isAssignableFrom(returnType))
         {
-          Object fe = (Object) m.invoke(obj);
+          String feName = ZReflectionUtil.removePrefixName("get", m.getName());
+          ZIFormModel fe = (ZIFormModel) m.invoke(obj);
           if (fe == null)
           {
-            throw new Exception("null form model " + m);
+            throw new Exception("null form model " + feName + " returned from " + m);
           }
-          String feName = ZReflectionUtil.removePrefixName("get", m.getName());
           //          initPropertyNames(formData, prefix + propName + ".");
           subModels.add(new ZFormMirror(fe, prefix + feName + "."));
         }
@@ -373,7 +372,7 @@ public class ZFormMirror implements ZIFormVisitable
   }
 
 
-  public Object getFormModel()
+  public ZIFormModel getFormModel()
   {
     return formModel;
   }

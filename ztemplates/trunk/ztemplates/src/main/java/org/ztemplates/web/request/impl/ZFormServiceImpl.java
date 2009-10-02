@@ -24,6 +24,7 @@ import org.ztemplates.actions.util.ZBase64Util;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormMirror;
 import org.ztemplates.form.ZFormValues;
+import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.json.ZJsonUtil;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZScriptDependency;
@@ -43,7 +44,7 @@ public class ZFormServiceImpl implements ZIFormService
   }
 
 
-  public void process(Object form) throws Exception
+  public void process(ZIFormModel form) throws Exception
   {
     ZFormMirror mirr = new ZFormMirror(form);
     ZFormValues formValues = new ZFormValues();
@@ -73,42 +74,42 @@ public class ZFormServiceImpl implements ZIFormService
   //    mirr.adjustValues();
   //  }
 
-  public void setWriteable(Object form, boolean b) throws Exception
+  public void setWriteable(ZIFormModel form, boolean b) throws Exception
   {
     ZFormMirror mirr = new ZFormMirror(form);
     mirr.setWriteable(b);
   }
 
 
-  public void setReadable(Object form, boolean b) throws Exception
+  public void setReadable(ZIFormModel form, boolean b) throws Exception
   {
     ZFormMirror mirr = new ZFormMirror(form);
     mirr.setReadable(b);
   }
 
 
-  public List<ZProperty> getPropertiesWithError(Object form) throws Exception
+  public List<ZProperty> getPropertiesWithError(ZIFormModel form) throws Exception
   {
     ZFormMirror mirr = new ZFormMirror(form);
     return mirr.getPropertiesWithError();
   }
 
 
-  public ZFormMembers getFormMembers(Object form) throws Exception
+  public ZFormMembers getFormMembers(ZIFormModel form) throws Exception
   {
     ZFormMirror mirr = new ZFormMirror(form);
     return mirr.getFormMembers();
   }
 
 
-  public ZScriptDependency getJavaScriptDependency(Object form) throws Exception
+  public ZScriptDependency getJavaScriptDependency(ZIFormModel form) throws Exception
   {
     ZFormMirror mirr = new ZFormMirror(form);
     return mirr.getJavaScriptDependency();
   }
 
 
-  public JSONObject computeJson(Object form) throws Exception
+  public JSONObject computeJson(ZIFormModel form) throws Exception
   {
     JSONObject ret = ZJsonUtil.computeJSON(form);
     return ret;
@@ -131,7 +132,7 @@ public class ZFormServiceImpl implements ZIFormService
   }
 
 
-  public ZFormValues getStringValues(Object form) throws Exception
+  public ZFormValues getStringValues(ZIFormModel form) throws Exception
   {
     ZFormValues ret = new ZFormValues();
     ret.readFromForm(form);
@@ -139,14 +140,14 @@ public class ZFormServiceImpl implements ZIFormService
   }
 
 
-  public void setStringValues(Object form, ZFormValues values) throws Exception
+  public void setStringValues(ZIFormModel form, ZFormValues values) throws Exception
   {
     ZFormMirror mirr = new ZFormMirror(form);
     mirr.setFormValues(values);
   }
 
 
-  public Set<ZProperty> getPropertiesByName(Object form, Set<String> propNames) throws Exception
+  public Set<ZProperty> getPropertiesByName(ZIFormModel form, Set<String> propNames) throws Exception
   {
     ZFormMirror mirr = new ZFormMirror(form);
     Set<ZProperty> ret = mirr.getPropertiesByName(propNames);

@@ -16,8 +16,8 @@
 package org.ztemplates.form;
 
 /**
- * Tagging interface for form models.
- * Form models are NOT required to implement this, but it documents your code.
+ * Tagging interface for form models. Form models are required to implement this.
+ * 
  * @author www.gerdziegler.de
  */
 public interface ZIFormModel
