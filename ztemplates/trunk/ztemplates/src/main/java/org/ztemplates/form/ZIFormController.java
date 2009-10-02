@@ -21,7 +21,4 @@ public interface ZIFormController
 
 
   public void validate() throws Exception;
-
-
-  public void update() throws Exception;
 }

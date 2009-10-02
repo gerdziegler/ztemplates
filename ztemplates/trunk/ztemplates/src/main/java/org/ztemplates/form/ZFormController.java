@@ -39,10 +39,6 @@ public abstract class ZFormController<T> implements ZIFormController
   }
 
 
-  public void update() throws Exception
-  {
-  }
-
 
   public T getForm()
   {
