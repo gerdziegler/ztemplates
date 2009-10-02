@@ -74,7 +74,7 @@ public class ZFormScript
   private final ZScriptDependency runtimeScripts;
 
 
-  public ZFormScript(String formId, Object form, String ajaxUrl, Set<String> ajaxPropertyNames)
+  public ZFormScript(String formId, ZIFormModel form, String ajaxUrl, Set<String> ajaxPropertyNames)
       throws Exception
   {
     super();
@@ -122,7 +122,7 @@ public class ZFormScript
    * @return
    * @throws Exception
    */
-  public static Set<String> computeChangedFormPropertyNames(Object form) throws Exception
+  public static Set<String> computeChangedFormPropertyNames(ZIFormModel form) throws Exception
   {
     ZFormValues newValues = ZFormValues.createFromForm(form);
     ZFormValues oldValues = ZFormScript.computeOldFormValuesFromRequest();
@@ -139,7 +139,7 @@ public class ZFormScript
    * @return
    * @throws Exception
    */
-  public static Set<ZProperty> computeChangedFormProperties(Object form) throws Exception
+  public static Set<ZProperty> computeChangedFormProperties(ZIFormModel form) throws Exception
   {
     Set<String> changedNames = ZFormScript.computeChangedFormPropertyNames(form);
     Set<ZProperty> changed = ZTemplates.getFormService().getPropertiesByName(form, changedNames);
