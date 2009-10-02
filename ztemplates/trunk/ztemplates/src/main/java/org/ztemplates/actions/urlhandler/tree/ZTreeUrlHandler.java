@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 import org.apache.log4j.Logger;
@@ -37,6 +38,7 @@ import org.ztemplates.actions.util.ZReflectionUtil;
 import org.ztemplates.form.ZFormMirror;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.ZIFormController;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 
@@ -406,12 +408,32 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       action.beforeForm();
 
       ZIForm form = action.getForm();
+      ZFormMirror mirr = new ZFormMirror(form);
+
       ZFormValues formValues = new ZFormValues();
       formValues.getValues().putAll(parameters);
-      ZFormMirror mirr = new ZFormMirror(form);
-      mirr.setFormValues(formValues);
+      Set<ZOperation> ops = mirr.setFormValues(formValues);
+      if (ops.size() > 1)
+      {
+        throw new Exception("Only one operation call per request allowed: " + ops);
+      }
 
       ZReflectionUtil.callAfterForm(pojo, "form");
+
+      if (form instanceof ZIFormController)
+      {
+        ZIFormController controller = (ZIFormController) form;
+        if (ops.size() == 1)
+        {
+          controller.updateValues();
+          controller.updateRequired();
+          controller.updateValidationState();
+        }
+        else
+        {
+          controller.updateRequired();
+        }
+      }
     }
   }
 }

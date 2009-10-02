@@ -177,8 +177,9 @@ public class ZFormMirror implements ZIFormVisitable
   //    }
   //  }
 
-  public void setFormValues(ZFormValues formValues) throws Exception
+  public Set<ZOperation> setFormValues(ZFormValues formValues) throws Exception
   {
+    final Set<ZOperation> called = new HashSet<ZOperation>();
     final Map<String, String[]> values = formValues.getValues();
     ZIFormVisitor visitor = new ZIFormVisitor()
     {
@@ -202,11 +203,14 @@ public class ZFormMirror implements ZIFormVisitable
         {
           op.setStringValue(param[0]);
           values.remove(name);
+          called.add(op);
         }
       }
     };
 
     visitDepthFirst(visitor);
+    
+    return called;
   }
 
 

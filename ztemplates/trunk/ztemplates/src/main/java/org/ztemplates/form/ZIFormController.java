@@ -17,8 +17,23 @@ package org.ztemplates.form;
 
 public interface ZIFormController
 {
-  public void adjust() throws Exception;
+  /**
+   * called only after a submit
+   * @throws Exception
+   */
+  public void updateValues() throws Exception;
 
 
-  public void validate() throws Exception;
+  /**
+   * 
+   * @throws Exception
+   */
+  public void updateRequired() throws Exception;
+
+
+  /**
+   * always called, means updateState
+   * @throws Exception
+   */
+  public void updateValidationState() throws Exception;
 }

@@ -29,15 +29,19 @@ public abstract class ZFormController<T> implements ZIFormController
   }
 
 
-  public void adjust() throws Exception
+  public void updateRequired() throws Exception
   {
   }
 
 
-  public void validate() throws Exception
+  public void updateValidationState() throws Exception
   {
   }
 
+
+  public void updateValues() throws Exception
+  {
+  }
 
 
   public T getForm()

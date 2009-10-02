@@ -26,7 +26,7 @@ public class FormController extends ZFormController<FormModel>
 
 
   @Override
-  public void adjust() throws Exception
+  public void updateRequired() throws Exception
   {
     FormModel form = getForm();
 
