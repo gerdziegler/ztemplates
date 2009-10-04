@@ -45,9 +45,10 @@ public class ZMessageService implements ZIMessageService
     }
     catch (Exception e)
     {
-      log.error("Error while reading resource bundle " + bundleName + " " + messageId + " "
-          + locale, e);
-      return e.getMessage();
+      String msg = "Error while reading resource bundle " + bundleName + " " + messageId
+          + " for locale " + locale;
+      log.error(msg, e);
+      return msg + " --- " + e.getMessage();
     }
   }
 

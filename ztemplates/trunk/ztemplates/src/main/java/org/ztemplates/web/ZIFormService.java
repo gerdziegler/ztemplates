@@ -39,7 +39,7 @@ public interface ZIFormService
    * @param form the form object to be initialized
    * @throws Exception
    */
-  public void process(ZIForm form) throws Exception;
+//  public void process(ZIForm form) throws Exception;
 
 
   /**

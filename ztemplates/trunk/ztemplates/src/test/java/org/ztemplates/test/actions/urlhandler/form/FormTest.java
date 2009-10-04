@@ -25,7 +25,6 @@ import org.ztemplates.test.ZTestUrlHandlerFactory;
 import org.ztemplates.test.mock.ZMock;
 import org.ztemplates.test.mock.ZMockServiceRepository;
 import org.ztemplates.test.mock.ZMockServletService;
-import org.ztemplates.web.ZTemplates;
 
 public class FormTest extends TestCase
 {
@@ -55,8 +54,6 @@ public class FormTest extends TestCase
     FormModel form = new FormModel();
     ZMockServiceRepository repo = ZMock.getMock();
     repo.setServletService(new ZMockServletService());
-
-    ZTemplates.getFormService().process(form);
 
     assertEquals("op1", form.getOp1().getName());
     assertEquals("prop1", form.getProp1().getName());
