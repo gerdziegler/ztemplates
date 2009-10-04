@@ -83,11 +83,7 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
   private void onNoSubmit() throws Exception
   {
     SampleFormController controller = new SampleFormController(form);
-
-    //transaction begin
     controller.loadInitialData();
-    //transaction end
-
     controller.updateRequired();
     controller.updateForView();
 
@@ -104,10 +100,6 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
     controller.updateValidationState();
     if (!ZTemplates.getFormService().getPropertiesWithError(form).isEmpty())
     {
-      //transaction begin
-      //handle errors here
-      //transaction end
-
       controller.updateForView();
 
       ViewFactory views = new ViewFactory();
@@ -115,16 +107,13 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
     }
     else
     {
-      //transaction begin
-      //evtl. access backend here 
-      controller.processDependencies();
-      //transaction end
-
+      controller.updateDependencies();
+      controller.updateRequired();
+      controller.updateValidationState();
       controller.updateForView();
 
       ViewFactory views = new ViewFactory();
       views.showSampleFormConfirm();
     }
   }
-
 }

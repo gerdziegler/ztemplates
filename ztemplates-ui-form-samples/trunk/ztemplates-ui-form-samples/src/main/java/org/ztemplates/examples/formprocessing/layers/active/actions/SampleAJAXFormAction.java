@@ -82,6 +82,7 @@ public class SampleAJAXFormAction implements ZIFormAction<SampleForm>
   public void after() throws Exception
   {
     SampleFormController controller = new SampleFormController(form);
+    controller.updateDependencies();
     controller.updateValues();
     controller.updateRequired();
     controller.updateValidationState();

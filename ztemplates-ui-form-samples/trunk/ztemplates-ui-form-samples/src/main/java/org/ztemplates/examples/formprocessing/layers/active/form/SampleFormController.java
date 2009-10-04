@@ -228,7 +228,7 @@ public class SampleFormController implements ZIFormController
   }
 
 
-  public void processDependencies() throws Exception
+  public void updateDependencies() throws Exception
   {
     Set<ZProperty> changed = ZFormScript.computeChangedFormProperties(form);
     ZDependencyManager<ZProperty> dependencyManager = createDependencyManager();
