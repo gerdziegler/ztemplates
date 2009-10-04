@@ -27,7 +27,7 @@ import org.ztemplates.actions.ZGetter;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormMirror;
 import org.ztemplates.form.ZFormValues;
-import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.form.ZIForm;
 import org.ztemplates.jquery.JQueryLoaderAction;
 import org.ztemplates.json.ZJsonUtil;
 import org.ztemplates.property.ZOperation;
@@ -74,7 +74,7 @@ public class ZFormScript
   private final ZScriptDependency runtimeScripts;
 
 
-  public ZFormScript(String formId, ZIFormModel form, String ajaxUrl, Set<String> ajaxPropertyNames)
+  public ZFormScript(String formId, ZIForm form, String ajaxUrl, Set<String> ajaxPropertyNames)
       throws Exception
   {
     super();
@@ -93,7 +93,7 @@ public class ZFormScript
   }
 
 
-  public ZFormScript(String formId, ZIFormModel form) throws Exception
+  public ZFormScript(String formId, ZIForm form) throws Exception
   {
     this(formId, form, (String) null, (Set<String>) null);
   }
@@ -122,7 +122,7 @@ public class ZFormScript
    * @return
    * @throws Exception
    */
-  public static Set<String> computeChangedFormPropertyNames(ZIFormModel form) throws Exception
+  public static Set<String> computeChangedFormPropertyNames(ZIForm form) throws Exception
   {
     ZFormValues newValues = ZFormValues.createFromForm(form);
     ZFormValues oldValues = ZFormScript.computeOldFormValuesFromRequest();
@@ -139,7 +139,7 @@ public class ZFormScript
    * @return
    * @throws Exception
    */
-  public static Set<ZProperty> computeChangedFormProperties(ZIFormModel form) throws Exception
+  public static Set<ZProperty> computeChangedFormProperties(ZIForm form) throws Exception
   {
     Set<String> changedNames = ZFormScript.computeChangedFormPropertyNames(form);
     Set<ZProperty> changed = ZTemplates.getFormService().getPropertiesByName(form, changedNames);
@@ -177,7 +177,7 @@ public class ZFormScript
   }
 
 
-  public static void sendAjaxResponse(ZIFormModel form) throws Exception
+  public static void sendAjaxResponse(ZIForm form) throws Exception
   {
     ZFormMirror mirr = new ZFormMirror(form);
     JSONObject json = computeFormJson(mirr);
