@@ -34,7 +34,7 @@ public class ZFormMirror implements ZIFormVisitable
 {
   static final Logger log = Logger.getLogger(ZFormMirror.class);
 
-  private final ZIForm formModel;
+  private final ZIForm form;
 
   private final List<ZProperty> properties = new ArrayList<ZProperty>();
 
@@ -45,15 +45,57 @@ public class ZFormMirror implements ZIFormVisitable
 
   public ZFormMirror(ZIForm obj) throws Exception
   {
-    this(obj, "");
+    this.form = obj;
+
+    for (Method m : obj.getClass().getMethods())
+    {
+      if (m.getName().startsWith("get") && m.getParameterTypes().length == 0
+          && Modifier.isPublic(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())
+          && !m.getName().equals("getClass"))
+      {
+        Class returnType = m.getReturnType();
+        /*
+         * if (ZForm.class.isAssignableFrom(returnType)) { ZForm form = (ZForm)
+         * m.invoke(obj); forms.add(form); } else
+         */
+        // ORDER given by extends relation
+        // first
+        if (ZOperation.class.isAssignableFrom(returnType))
+        {
+          ZOperation op = (ZOperation) m.invoke(obj);
+          if (op == null)
+          {
+            throw new Exception("null op returned from " + m.getName());
+          }
+          operations.add(op);
+        }
+        // second
+        else if (ZProperty.class.isAssignableFrom(returnType))
+        {
+          ZProperty prop = (ZProperty) m.invoke(obj);
+          if (prop == null)
+          {
+            throw new Exception("null prop returned from " + m.getName());
+          }
+          properties.add(prop);
+        }
+        // third
+        else if (ZIForm.class.isAssignableFrom(returnType))
+        {
+          ZIForm fe = (ZIForm) m.invoke(obj);
+          if (fe == null)
+          {
+            throw new Exception("null form model returned from " + m.getName());
+          }
+          subModels.add(new ZFormMirror(fe));
+        }
+      }
+    }
   }
 
 
-  private ZFormMirror(ZIForm obj, String prefix) throws Exception
+  public static void initPropertyNames(ZIForm obj, String prefix) throws Exception
   {
-    super();
-    this.formModel = obj;
-
     for (Method m : obj.getClass().getMethods())
     {
       if (m.getName().startsWith("get") && m.getParameterTypes().length == 0
@@ -75,7 +117,6 @@ public class ZFormMirror implements ZIFormVisitable
             String opName = ZReflectionUtil.removePrefixName("get", m.getName());
             op.setName(prefix + opName);
           }
-          operations.add(op);
         }
         // second
         else if (ZProperty.class.isAssignableFrom(returnType))
@@ -86,19 +127,13 @@ public class ZFormMirror implements ZIFormVisitable
             String propName = ZReflectionUtil.removePrefixName("get", m.getName());
             prop.setName(prefix + propName);
           }
-          properties.add(prop);
         }
         // third
         else if (ZIForm.class.isAssignableFrom(returnType))
         {
           String feName = ZReflectionUtil.removePrefixName("get", m.getName());
           ZIForm fe = (ZIForm) m.invoke(obj);
-          if (fe == null)
-          {
-            throw new Exception("null form model " + feName + " returned from " + m);
-          }
-          //          initPropertyNames(formData, prefix + propName + ".");
-          subModels.add(new ZFormMirror(fe, prefix + feName + "."));
+          initPropertyNames(fe, prefix + feName + ".");
         }
       }
     }
@@ -110,7 +145,7 @@ public class ZFormMirror implements ZIFormVisitable
     Set<ZProperty> ret = new HashSet<ZProperty>();
     for (String propName : propNames)
     {
-      Object prop = ZReflectionUtil.getObjectByBeanPath(formModel, propName);
+      Object prop = ZReflectionUtil.getObjectByBeanPath(form, propName);
       ret.add((ZProperty) prop);
     }
     return ret;
@@ -209,7 +244,7 @@ public class ZFormMirror implements ZIFormVisitable
     };
 
     visitDepthFirst(visitor);
-    
+
     return called;
   }
 
@@ -376,9 +411,9 @@ public class ZFormMirror implements ZIFormVisitable
   }
 
 
-  public ZIForm getFormModel()
+  public ZIForm getForm()
   {
-    return formModel;
+    return form;
   }
 
 

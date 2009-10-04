@@ -408,10 +408,12 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       action.beforeForm();
 
       ZIForm form = action.getForm();
-      ZFormMirror mirr = new ZFormMirror(form);
+      ZFormMirror.initPropertyNames(form, "");
+      
 
       ZFormValues formValues = new ZFormValues();
       formValues.getValues().putAll(parameters);
+      ZFormMirror mirr = new ZFormMirror(form);
       Set<ZOperation> ops = mirr.setFormValues(formValues);
       if (ops.size() > 1)
       {
