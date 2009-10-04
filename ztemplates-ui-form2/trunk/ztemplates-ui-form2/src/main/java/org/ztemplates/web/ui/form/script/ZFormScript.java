@@ -149,7 +149,7 @@ public class ZFormScript
 
   private static JSONObject computeFormJson(ZFormMirror mirr) throws Exception
   {
-    JSONObject json = ZJsonUtil.computeJSON(mirr.getFormModel());
+    JSONObject json = ZJsonUtil.computeJSON(mirr.getForm());
 
     ZFormMembers members = mirr.getFormMembers();
     JSONObject ztemplatesJson = new JSONObject();
@@ -167,7 +167,7 @@ public class ZFormScript
     ztemplatesJson.put("operations", operationsJson);
 
     ZFormValues values = new ZFormValues();
-    values.readFromForm(mirr.getFormModel());
+    values.readFromForm(mirr.getForm());
     String hiddenParameterValue = values.writeToString();
     ztemplatesJson.put(formStateParameterName, hiddenParameterValue);
 
