@@ -53,7 +53,6 @@ public class FormTest extends TestCase
   public void testNames() throws Exception
   {
     FormModel form = new FormModel();
-    FormController ctrl = new FormController(form);
     ZMockServiceRepository repo = ZMock.getMock();
     repo.setServletService(new ZMockServletService());
 

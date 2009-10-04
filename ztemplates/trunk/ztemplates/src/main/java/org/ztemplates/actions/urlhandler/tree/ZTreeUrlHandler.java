@@ -420,20 +420,20 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
       ZReflectionUtil.callAfterForm(pojo, "form");
 
-      if (form instanceof ZIFormController)
-      {
-        ZIFormController controller = (ZIFormController) form;
-        if (ops.size() == 1)
-        {
-          controller.updateValues();
-          controller.updateRequired();
-          controller.updateValidationState();
-        }
-        else
-        {
-          controller.updateRequired();
-        }
-      }
+//      if (form instanceof ZIFormController)
+//      {
+//        ZIFormController controller = (ZIFormController) form;
+//        if (ops.size() == 1)
+//        {
+//          controller.updateValues();
+//          controller.updateRequired();
+//          controller.updateValidationState();
+//        }
+//        else
+//        {
+//          controller.updateRequired();
+//        }
+//      }
     }
   }
 }
