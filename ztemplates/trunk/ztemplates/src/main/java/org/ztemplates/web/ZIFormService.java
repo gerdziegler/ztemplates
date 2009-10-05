@@ -39,8 +39,7 @@ public interface ZIFormService
    * @param form the form object to be initialized
    * @throws Exception
    */
-//  public void process(ZIForm form) throws Exception;
-
+  //  public void process(ZIForm form) throws Exception;
 
   /**
    * reads the request parameters and assigns matching values to this form
@@ -179,4 +178,13 @@ public interface ZIFormService
    * @throws Exception
    */
   public ZScriptDependency getJavaScriptDependency(ZIForm form) throws Exception;
+
+
+  /**
+   * sets the property names if the form has not been 
+   * processed by a action
+   * @param form
+   * @throws Exception 
+   */
+  public void initPropertyNames(ZIForm form) throws Exception;
 }

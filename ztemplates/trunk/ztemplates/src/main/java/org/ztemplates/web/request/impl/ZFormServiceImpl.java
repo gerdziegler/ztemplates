@@ -154,6 +154,12 @@ public class ZFormServiceImpl implements ZIFormService
     return ret;
   }
 
+
+  public void initPropertyNames(ZIForm form) throws Exception
+  {
+    ZFormMirror.initPropertyNames(form, "");    
+  }
+
   //  public <T> ZProperty<T> getPropertyByParameterName(ZIFormElement form, String parameterName)
   //      throws Exception
   //  {
