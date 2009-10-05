@@ -20,6 +20,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.ztemplates.form.ZIForm;
+import org.ztemplates.property.ZProperty;
 
 public class ZJsonUtil
 {
@@ -39,20 +41,20 @@ public class ZJsonUtil
       return null;
     }
 
+    boolean form = obj instanceof ZIForm;
+
     JSONObject ret = new JSONObject();
     for (Method m : obj.getClass().getMethods())
     {
-      ZExposeJson ann = (ZExposeJson) m.getAnnotation(ZExposeJson.class);
-      if (ann == null)
+      boolean ann = m.isAnnotationPresent(ZExposeJson.class);
+      if (!form && !ann)
       {
         continue;
       }
-      Object value = m.invoke(obj);
-      if (value == null)
+      if (m.getParameterTypes().length != 0)
       {
         continue;
       }
-
       String methodNamePrefix;
       if (m.getName().startsWith("get"))
       {
@@ -64,8 +66,19 @@ public class ZJsonUtil
       }
       else
       {
-        throw new Exception("only methods starting with 'get' and 'is' can be annotated with "
-            + ZExposeJson.class.getName());
+        continue;
+      }
+
+      Class type = m.getReturnType();
+      if (!ann && !ZProperty.class.isAssignableFrom(type) && !ZIForm.class.isAssignableFrom(type))
+      {
+        continue;
+      }
+
+      Object value = m.invoke(obj);
+      if (value == null)
+      {
+        continue;
       }
       String propName = removePrefixName(methodNamePrefix, m.getName());
       Object propValue = computeJSONValue(value, prefix != null ? prefix + "." + propName

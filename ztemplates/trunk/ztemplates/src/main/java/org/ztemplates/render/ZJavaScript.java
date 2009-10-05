@@ -45,8 +45,8 @@ public @interface ZJavaScript
 
 
   /**
-   * If set to false will be NOT merged with other scripts 
+   * If set to true will be merged with other scripts 
    * @return
    */
-  boolean merge() default true;
+  boolean merge() default false;
 }

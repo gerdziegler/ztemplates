@@ -20,6 +20,7 @@ import junit.textui.TestRunner;
 
 import org.ztemplates.form.ZFormElementMirrorTest;
 import org.ztemplates.form.ZSerializeUtilTest;
+import org.ztemplates.json.ZJsonTest;
 import org.ztemplates.render.script.ZScriptRepositoryTest;
 import org.ztemplates.test.actions.classes.test1.ClassesTest;
 import org.ztemplates.test.actions.expression.test1.ExpressionTest;
@@ -132,6 +133,7 @@ public class AllTests extends TestSuite
     suite.addTestSuite(ZSerializeUtilTest.class);
     suite.addTestSuite(ZScriptRepositoryTest.class);
     suite.addTestSuite(VariableNamesScriptTest.class);
+    suite.addTestSuite(ZJsonTest.class);
     
 
     // suite.addTestSuite(ZTemplatesInternalArchitectureTest.class);
