@@ -22,7 +22,6 @@ import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.Gende
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.NameProperty;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.PasswordProperty;
 import org.ztemplates.form.ZIForm;
-import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZBigDecimalProperty;
 import org.ztemplates.property.ZBooleanProperty;
 import org.ztemplates.property.ZError;
@@ -89,86 +88,72 @@ public class PersonForm implements ZIForm
   private final ZBooleanProperty noAjax = new ZBooleanProperty("No Ajax");
 
 
-
-
-  @ZExposeJson
   public CheckboxProperty getEnabled()
   {
     return enabled;
   }
 
 
-  @ZExposeJson
   public DateProperty getDateFrom()
   {
     return dateFrom;
   }
 
 
-  @ZExposeJson
   public DateProperty getDateTo()
   {
     return dateTo;
   }
 
 
-  @ZExposeJson
   public GenderIdSelectProperty getGender()
   {
     return gender;
   }
 
 
-  @ZExposeJson
   public NameProperty getName()
   {
     return name;
   }
 
 
-  @ZExposeJson
   public NameProperty getSurname()
   {
     return surname;
   }
 
 
-  @ZExposeJson
   public ZStringProperty getOccupation()
   {
     return occupation;
   }
 
 
-  @ZExposeJson
   public PasswordProperty getPassword()
   {
     return password;
   }
 
 
-  @ZExposeJson
   public ZStringProperty getText()
   {
     return text;
   }
 
 
-  @ZExposeJson
   public ZBigDecimalProperty getTaxRate()
   {
     return taxRate;
   }
 
 
-  @ZExposeJson
   public ZBooleanProperty getMarried()
   {
     return married;
   }
 
 
-  @ZExposeJson
   public ZBooleanProperty getNoAjax()
   {
     return noAjax;

@@ -17,7 +17,6 @@ package org.ztemplates.examples.formprocessing.layers.passive.ui.views;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.views.cascading.CascadingForm;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.views.person.PersonForm;
 import org.ztemplates.form.ZIForm;
-import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZOperation;
 
 public class SampleForm implements ZIForm
@@ -29,21 +28,18 @@ public class SampleForm implements ZIForm
   private final ZOperation submit = new ZOperation("Submit Form");
 
 
-  @ZExposeJson
   public PersonForm getPerson()
   {
     return person;
   }
 
 
-  @ZExposeJson
   public CascadingForm getCascading()
   {
     return cascading;
   }
 
 
-  @ZExposeJson
   public ZOperation getSubmit()
   {
     return submit;

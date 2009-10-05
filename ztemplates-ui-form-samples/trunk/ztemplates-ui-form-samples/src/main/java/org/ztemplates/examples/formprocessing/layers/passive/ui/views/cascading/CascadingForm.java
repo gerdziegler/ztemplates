@@ -17,7 +17,6 @@ package org.ztemplates.examples.formprocessing.layers.passive.ui.views.cascading
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.ContinentIdSelectProperty;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.CountryIdSelectProperty;
 import org.ztemplates.form.ZIForm;
-import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZStringProperty;
 
 public class CascadingForm implements ZIForm
@@ -29,21 +28,18 @@ public class CascadingForm implements ZIForm
   private final ZStringProperty city = new ZStringProperty();
 
 
-  @ZExposeJson
   public ContinentIdSelectProperty getContinent()
   {
     return continent;
   }
 
 
-  @ZExposeJson
   public CountryIdSelectProperty getCountry()
   {
     return country;
   }
 
 
-  @ZExposeJson
   public ZStringProperty getCity()
   {
     return city;
