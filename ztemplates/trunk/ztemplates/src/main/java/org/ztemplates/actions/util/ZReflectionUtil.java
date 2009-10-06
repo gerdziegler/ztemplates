@@ -386,10 +386,7 @@ public class ZReflectionUtil
     }
     catch (Exception e)
     {
-      e.printStackTrace();
-
-      System.out.println(e);
-      log.error(obj + " " + value, e);
+      log.error("error while calling --- " + method + " --- on object " + obj + " --- with parameters " + value, e);
       throw e;
     }
   }
