@@ -113,13 +113,23 @@ public abstract class ZProperty<T>
 
   private void updateRequiredState()
   {
-    if (required && stringValue == null)
+    if (required)
     {
-      setState(new ZErrorRequired(getRequiredMessage()));
+      if(stringValue == null)
+      {
+        setState(new ZErrorRequired(getRequiredMessage()));
+      }
     }
-    else if (!required && stringValue != null && state instanceof ZErrorRequired)
+    else if (!required)
     {
-      setState(null);
+      if(stringValue != null && state instanceof ZErrorRequired)
+      {
+        setState(null);
+      }
+      else if(stringValue == null)
+      {
+        setState(null);
+      }
     }
   }
 
