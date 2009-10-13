@@ -85,6 +85,10 @@ public class ZRenderServiceImpl implements ZIRenderService
     {
       return null;
     }
+    if(obj instanceof String)
+    {
+      return (String)obj;
+    }
     long time = System.currentTimeMillis();
     String ret = ctx.getRenderEngine(obj).render(obj, ctx);
     long delta = System.currentTimeMillis() - time;
