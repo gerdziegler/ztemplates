@@ -46,11 +46,11 @@ public abstract class ZResourceLoaderAction
     HttpServletResponse response = ZTemplates.getServletService().getResponse();
     if (resource.endsWith(".js"))
     {
-      response.setHeader("Content-Type", "application/x-javascript");
+      response.setContentType("text/javascript");
     }
     else if (resource.endsWith(".css"))
     {
-      response.setHeader("Content-Type", "text/css");
+      response.setContentType("text/css");
     }
     ZHttpUtil.addCachingHeaders(response);
     try
