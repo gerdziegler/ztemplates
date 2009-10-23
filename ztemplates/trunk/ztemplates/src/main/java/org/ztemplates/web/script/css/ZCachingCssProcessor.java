@@ -41,7 +41,7 @@ public class ZCachingCssProcessor implements ZICssProcessor
       }
       else
       {
-        sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "\"></link>");
+        sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "\">");
         sb.append('\n');
       }
     }
@@ -65,7 +65,7 @@ public class ZCachingCssProcessor implements ZICssProcessor
       }
     }
     sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + contextPath + path + "?ver="
-        + digest + "\"></link>");
+        + digest + "\">");
     sb.append('\n');
   }
 }

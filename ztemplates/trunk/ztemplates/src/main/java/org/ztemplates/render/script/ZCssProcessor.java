@@ -28,19 +28,19 @@ public class ZCssProcessor implements ZICssProcessor
       {
         cssPath = contextPath + cssPath;
       }
-      sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + cssPath + "\"></link>");
+      sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + cssPath + "\">");
       sb.append('\n');
     }
 
     if (contextPath != null)
     {
       String path = contextPath + ztemplatesCssUrl;
-      sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "\"></link>\n");
+      sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "\">\n");
     }
     else
     {
       String path = ztemplatesCssUrl;
-      sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "\"></link>\n");
+      sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "\">\n");
     }
 
     return sb.toString();
