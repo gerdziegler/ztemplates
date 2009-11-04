@@ -20,7 +20,7 @@ public class ZLongProperty extends ZProperty<Long>
 
   public Long parse(String formattedValue) throws Exception
   {
-    Long i = Long.parseLong(formattedValue);
+    Long i = Long.valueOf(formattedValue);
     return i;
   }
 

@@ -40,7 +40,7 @@ public class ZBooleanProperty extends ZProperty<Boolean>
   {
     try
     {
-      Boolean i = Boolean.parseBoolean(formattedValue);
+      Boolean i = Boolean.valueOf(formattedValue);
       return i;
     }
     catch (NumberFormatException e)

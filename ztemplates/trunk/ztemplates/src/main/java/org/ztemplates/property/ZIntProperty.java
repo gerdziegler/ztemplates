@@ -31,7 +31,7 @@ public class ZIntProperty extends ZProperty<Integer>
       {
         return null;
       }
-      Integer i = Integer.parseInt(formattedValue);
+      Integer i = Integer.valueOf(formattedValue);
       return i;
     }
     catch (NumberFormatException e)

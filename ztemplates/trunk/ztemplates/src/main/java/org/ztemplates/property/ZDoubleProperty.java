@@ -31,7 +31,7 @@ public class ZDoubleProperty extends ZProperty<Double>
       {
         return null;
       }
-      Double i = Double.parseDouble(formattedValue);
+      Double i = Double.valueOf(formattedValue);
       return i;
     }
     catch (NumberFormatException e)

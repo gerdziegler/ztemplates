@@ -55,9 +55,9 @@ public class ListPropertyTest extends TestCase
   {
     ZIntListProperty p = new ZIntListProperty("-");
     List<Integer> val = new ArrayList<Integer>();
-    val.add(1);
-    val.add(2);
-    val.add(3);
+    val.add(Integer.valueOf(1));
+    val.add(Integer.valueOf(2));
+    val.add(Integer.valueOf(3));
     p.setValue(val);
     assertEquals("1-2-3", p.getStringValue());
 

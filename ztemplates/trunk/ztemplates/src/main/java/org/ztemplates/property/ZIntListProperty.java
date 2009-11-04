@@ -20,7 +20,7 @@ public class ZIntListProperty extends ZListProperty<Integer>
   @Override
   protected Integer parseListElement(String formattedValue) throws Exception
   {
-    Integer i = Integer.parseInt(formattedValue);
+    Integer i = Integer.valueOf(formattedValue);
     return i;
   }
 

@@ -190,7 +190,7 @@ public class ZReflectionUtil
       int openParanth = propName.indexOf('[');
       if (openParanth >= 0)
       {
-        collectionIndex = Integer.valueOf(propName
+        collectionIndex = Integer.parseInt(propName
             .substring(openParanth + 1, propName.length() - 1));
         propName = propName.substring(0, openParanth);
       }

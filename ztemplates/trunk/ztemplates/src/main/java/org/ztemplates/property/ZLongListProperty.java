@@ -21,7 +21,7 @@ public class ZLongListProperty extends ZListProperty<Long>
   @Override
   protected Long parseListElement(String formattedValue) throws Exception
   {
-    Long i = Long.parseLong(formattedValue);
+    Long i = Long.valueOf(formattedValue);
     return i;
   }
 
