@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.render.ZRenderApplication;
+import org.ztemplates.render.ZRenderedObject;
 import org.ztemplates.render.impl.ZIRenderContext;
 import org.ztemplates.render.impl.ZRenderContextImpl;
 import org.ztemplates.render.script.ZICssProcessor;
@@ -89,6 +90,7 @@ public class ZRenderServiceImpl implements ZIRenderService
     {
       return (String)obj;
     }
+    
     long time = System.currentTimeMillis();
     String ret = ctx.getRenderEngine(obj).render(obj, ctx);
     long delta = System.currentTimeMillis() - time;
@@ -99,6 +101,29 @@ public class ZRenderServiceImpl implements ZIRenderService
           + (delta / cnt));
     }
     return ret;
+  }
+  
+  public ZRenderedObject renderToObject(Object obj) throws Exception
+  {
+      if (obj == null)
+      {
+        return null;
+      }
+      if(obj instanceof String)
+      {
+        return new ZRenderedObject((String)obj);
+      }
+      long time = System.currentTimeMillis();
+      String rendered = ctx.getRenderEngine(obj).render(obj, ctx);
+      long delta = System.currentTimeMillis() - time;
+      int cnt = ctx.getRenderCallCounter();
+      if (delta > 20)
+      {
+        log.info("rendered " + obj.getClass().getName() + " [" + delta + " ms] " + cnt + " calls "
+            + (delta / cnt));
+      }      
+      ZRenderedObject ret = new ZRenderedObject(rendered, ctx.getJavaScriptExposed(), ctx.getCssExposed());
+      return ret;      
   }
 
 

@@ -1,6 +1,8 @@
 package org.ztemplates.render.script;
 
-public class ZJavaScriptExposed implements Comparable<ZJavaScriptExposed>
+import java.io.Serializable;
+
+public class ZJavaScriptExposed implements Comparable<ZJavaScriptExposed>, Serializable
 {
   private final int index;
 

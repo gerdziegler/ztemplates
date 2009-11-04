@@ -1,6 +1,8 @@
 package org.ztemplates.render.script;
 
-public class ZCssExposed implements Comparable<ZCssExposed>
+import java.io.Serializable;
+
+public class ZCssExposed implements Comparable<ZCssExposed>, Serializable
 {
   private final int index;
 
