@@ -14,6 +14,8 @@
 
 package org.ztemplates.web;
 
+import org.ztemplates.render.ZRenderedObject;
+
 public interface ZIRenderService extends ZIService
 {
   /**
@@ -22,6 +24,15 @@ public interface ZIRenderService extends ZIService
    * @param obj
    */
   public String render(Object obj) throws Exception;
+
+
+  /**
+   * renders a object to a object that can be cached, just expose the returned object with @ZExpose(render=true).
+   * @param obj
+   * @return
+   * @throws Exception
+   */
+  public ZRenderedObject prerender(Object obj) throws Exception;
 
 
   /**

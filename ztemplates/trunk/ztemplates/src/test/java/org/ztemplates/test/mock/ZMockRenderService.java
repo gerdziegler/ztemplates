@@ -14,6 +14,7 @@
  */
 package org.ztemplates.test.mock;
 
+import org.ztemplates.render.ZRenderedObject;
 import org.ztemplates.web.ZIRenderService;
 
 public class ZMockRenderService implements ZIRenderService
@@ -40,6 +41,12 @@ public class ZMockRenderService implements ZIRenderService
 
 
   public String renderZtemplatesCss() throws Exception
+  {
+    return null;
+  }
+
+
+  public ZRenderedObject prerender(Object obj) throws Exception
   {
     return null;
   }

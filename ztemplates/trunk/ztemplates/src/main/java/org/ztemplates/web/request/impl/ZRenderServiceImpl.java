@@ -103,7 +103,7 @@ public class ZRenderServiceImpl implements ZIRenderService
     return ret;
   }
   
-  public ZRenderedObject renderToObject(Object obj) throws Exception
+  public ZRenderedObject prerender(Object obj) throws Exception
   {
       if (obj == null)
       {
