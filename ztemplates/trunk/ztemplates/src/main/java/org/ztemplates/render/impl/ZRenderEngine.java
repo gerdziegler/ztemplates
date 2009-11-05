@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZIRenderEngine;
 import org.ztemplates.render.ZIRenderer;
+import org.ztemplates.render.ZRenderedObject;
 import org.ztemplates.render.ZRenderer;
 
 public class ZRenderEngine implements ZIRenderEngine
@@ -39,6 +40,14 @@ public class ZRenderEngine implements ZIRenderEngine
     }
 
     ctx.incRenderCallCounter();
+    
+    if(obj instanceof ZRenderedObject)
+    {
+	ZRenderedObject ro = (ZRenderedObject)obj;	
+	ctx.getCssExposed().addAll(ro.getCssExposed());
+	ctx.getJavaScriptExposed().addAll(ro.getJavaScriptExposed());	
+	return ro.getText();
+    }
 
     // always compute this to get script
     Map<String, Object> exposed = getExposed(obj, ctx);
