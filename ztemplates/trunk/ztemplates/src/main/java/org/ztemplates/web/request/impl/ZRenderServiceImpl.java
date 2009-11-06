@@ -15,8 +15,8 @@ package org.ztemplates.web.request.impl;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.render.ZIRenderedObject;
 import org.ztemplates.render.ZRenderApplication;
-import org.ztemplates.render.ZRenderedObject;
 import org.ztemplates.render.impl.ZIRenderContext;
 import org.ztemplates.render.impl.ZRenderContextImpl;
 import org.ztemplates.render.script.ZICssProcessor;
@@ -103,7 +103,7 @@ public class ZRenderServiceImpl implements ZIRenderService
     return ret;
   }
   
-  public ZRenderedObject prerender(Object obj) throws Exception
+  public ZIRenderedObject prerender(Object obj) throws Exception
   {
       if (obj == null)
       {
@@ -122,7 +122,7 @@ public class ZRenderServiceImpl implements ZIRenderService
         log.info("rendered " + obj.getClass().getName() + " [" + delta + " ms] " + cnt + " calls "
             + (delta / cnt));
       }      
-      ZRenderedObject ret = new ZRenderedObject(rendered, ctx.getJavaScriptExposed(), ctx.getCssExposed());
+      ZIRenderedObject ret = new ZRenderedObject(rendered, ctx.getJavaScriptExposed(), ctx.getCssExposed());
       return ret;      
   }
 

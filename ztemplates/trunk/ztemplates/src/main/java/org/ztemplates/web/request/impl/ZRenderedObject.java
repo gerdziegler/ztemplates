@@ -1,13 +1,13 @@
-package org.ztemplates.render;
+package org.ztemplates.web.request.impl;
 
-import java.io.Serializable;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.ztemplates.render.ZIRenderedObject;
 import org.ztemplates.render.script.ZCssExposed;
 import org.ztemplates.render.script.ZJavaScriptExposed;
 
-public class ZRenderedObject implements Serializable {
+class ZRenderedObject implements ZIRenderedObject {
     private final String text;
 
     private final SortedSet<ZJavaScriptExposed> javaScriptExposed;

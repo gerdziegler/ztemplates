@@ -14,7 +14,7 @@
 
 package org.ztemplates.web;
 
-import org.ztemplates.render.ZRenderedObject;
+import org.ztemplates.render.ZIRenderedObject;
 
 public interface ZIRenderService extends ZIService
 {
@@ -32,7 +32,7 @@ public interface ZIRenderService extends ZIService
    * @return
    * @throws Exception
    */
-  public ZRenderedObject prerender(Object obj) throws Exception;
+  public ZIRenderedObject prerender(Object obj) throws Exception;
 
 
   /**
