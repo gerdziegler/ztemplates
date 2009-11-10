@@ -41,6 +41,7 @@ import org.ztemplates.form.ZIForm;
 import org.ztemplates.form.ZIFormController;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
+import org.ztemplates.web.ZIMessageService;
 
 public class ZTreeUrlHandler implements ZIUrlHandler
 {
@@ -387,29 +388,29 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       parameters.remove(name);
     }
 
-    /*String formName = zmatch.form();
-    if (formName.length() > 0)
-    {
+    String formName = zmatch.form();
+    boolean isActionForm = pojo instanceof ZIFormAction;
+    if (formName.length() > 0 || isActionForm)
+    {      
+      if(isActionForm)
+      {
+        if(formName.length()>0)
+        {
+          if(!formName.equals("form"))
+          {
+            throw new Exception("action pojo class [" + pojo.getClass().getName() +  "] implements " + ZIFormAction.class.getName() + " and has wrong value in annotation " + ZMatch.class.getName() + ": form='" + formName + "'. Change to form='form' or do not specify at all (leave empty).");
+          }              
+        }
+        else
+        {
+          formName = "form";
+        }
+      }
+            
       ZReflectionUtil.callBeforeForm(pojo, formName);
-
-      Object form = ZReflectionUtil.callFormGetter(pojo, formName);
-      ZFormValues formValues = new ZFormValues();
-      formValues.getValues().putAll(parameters);
-      ZFormMirror mirr = new ZFormMirror(form);
-      mirr.setFormValues(formValues);
-
-      ZReflectionUtil.callAfterForm(pojo, formName);
-    }
-    else*/
-    if (pojo instanceof ZIFormAction)
-    {
-      ZIFormAction action = (ZIFormAction) pojo;
-
-      action.beforeForm();
-
-      ZIForm form = action.getForm();
-      ZFormMirror.initPropertyNames(form, "");
+      ZIForm form = (ZIForm)ZReflectionUtil.callFormGetter(pojo, formName);
       
+      ZFormMirror.initPropertyNames(form, "");      
 
       ZFormValues formValues = new ZFormValues();
       formValues.getValues().putAll(parameters);
@@ -421,21 +422,6 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       }
 
       ZReflectionUtil.callAfterForm(pojo, "form");
-
-//      if (form instanceof ZIFormController)
-//      {
-//        ZIFormController controller = (ZIFormController) form;
-//        if (ops.size() == 1)
-//        {
-//          controller.updateValues();
-//          controller.updateRequired();
-//          controller.updateValidationState();
-//        }
-//        else
-//        {
-//          controller.updateRequired();
-//        }
-//      }
     }
   }
 }

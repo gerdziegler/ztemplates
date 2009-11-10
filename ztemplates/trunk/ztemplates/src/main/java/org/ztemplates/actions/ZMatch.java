@@ -46,14 +46,20 @@ public @interface ZMatch
   String[] parameters() default {};
 
 
-//  /**
-//   * parameters are mapped by reflection to the form accessible through a bean
-//   * property with this name. Example: form=xxx needs a getter getXxx()
-//   * returning a instance of ZIForm
-//   * 
-//   * @return
-//   */
-//   String form() default "";
+  /**
+   * Request parameters are mapped by reflection to the form object of type ZIForm accessible through a bean
+   * property with name specified in this property. Example: form="xxx" needs a getter getXxx() in the action-pojo
+   * returning a instance of type ZIForm. 
+   * <p>
+   * Alternatively implement ZIFormAction in your action-pojo and leave this value blank. 
+   * <p>
+   * You could also do both, implement ZIFormAction and set form="form"
+   * <p>
+   * Implementing ZIFormAction is NOT required but good style.
+   * 
+   * @return
+   */
+   String form() default "";
 
  
   /**

@@ -17,9 +17,10 @@ package org.ztemplates.actions;
 import org.ztemplates.form.ZIForm;
 
 /**
- * Tagging interface for form actions, makes it more improbable to forget the right way of doing this.
- * It is NOT required for an action to implement this, but its easier to understand 
- * your code if actions implement it.
+ * Tagging interface for form actions, leads to parameter assignment to form properties.
+ * Although it is NOT required for an form action to implement this interface, it is considered good style to do it,
+ * as it leads to better IDE support and standard names for your form properties.
+ * 
  * @author www.gerdziegler.de
  */
 public interface ZIFormAction<T extends ZIForm> extends ZIAction
