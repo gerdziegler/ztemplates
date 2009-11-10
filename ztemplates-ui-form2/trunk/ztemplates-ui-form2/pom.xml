@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.ztemplates</groupId>
-	<artifactId>ztemplates-ui-form2</artifactId>
+	<artifactId>ztemplates-ui-form</artifactId>
 	<packaging>jar</packaging>
 	<version>1.2</version>
-	<name>ztemplates-ui-form2</name>
+	<name>ztemplates-ui-form</name>
 	<url>http://www.ztemplates.org</url>
 	<dependencies>
 		<dependency>

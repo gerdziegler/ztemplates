@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormMirror;
 import org.ztemplates.form.ZFormValues;
@@ -220,7 +219,6 @@ public class ZFormScript
   }
 
 
-  @ZGetter("runtimeScripts")
   public ZScriptDependency getRuntimeScripts() throws Exception
   {
     return runtimeScripts;
