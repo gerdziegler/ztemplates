@@ -26,10 +26,12 @@ public abstract class ZTemplates
   // set the repository to null. stack only pops.
   protected static final ThreadLocal<Stack<ZIServiceRepository>> serviceRepositoryStack = new ThreadLocal<Stack<ZIServiceRepository>>();
 
+  private static final ThreadLocal<ZIServiceRepository> serviceRepository = new ThreadLocal<ZIServiceRepository>();
+
 
   public static ZIServiceRepository getServiceRepository()
   {
-    return ZTemplates.serviceRepositoryStack.get().peek();
+    return serviceRepository.get();
   }
 
 
@@ -45,11 +47,21 @@ public abstract class ZTemplates
     if (repository == null)
     {
       stack.pop();
+      if(stack.isEmpty())
+      {
+        serviceRepository.set(null);
+      }
+      else
+      {
+        serviceRepository.set(stack.peek());
+      }
     }
     else
     {
       stack.push(repository);
-    }
+      serviceRepository.set(repository);
+    }   
+    
     if (log.isDebugEnabled())
     {
       log.debug("serviceRepository.stack.size = " + stack.size());
@@ -59,49 +71,49 @@ public abstract class ZTemplates
 
   public static ZIServletService getServletService()
   {
-    return getServiceRepository().getServletService();
+    return serviceRepository.get().getServletService();
   }
 
 
   public static ZIRenderService getRenderService()
   {
-    return getServiceRepository().getRenderService();
+    return serviceRepository.get().getRenderService();
   }
 
 
   public static ZIEncryptionService getEncryptionService() throws Exception
   {
-    return getServiceRepository().getEncryptionService();
+    return serviceRepository.get().getEncryptionService();
   }
 
 
   public static ZISecurityService getSecurityService() throws Exception
   {
-    return getServiceRepository().getSecurityService();
+    return serviceRepository.get().getSecurityService();
   }
 
 
   public static ZIExceptionService getExceptionService() throws Exception
   {
-    return getServiceRepository().getExceptionService();
+    return serviceRepository.get().getExceptionService();
   }
 
 
   public static ZIApplicationService getApplicationService() throws Exception
   {
-    return getServiceRepository().getApplicationService();
+    return serviceRepository.get().getApplicationService();
   }
 
 
   public static ZIMessageService getMessageService() throws Exception
   {
-    return getServiceRepository().getMessageService();
+    return serviceRepository.get().getMessageService();
   }
 
 
   public static ZIFormService getFormService() throws Exception
   {
-    return getServiceRepository().getFormService();
+    return serviceRepository.get().getFormService();
   }
 
 
@@ -122,6 +134,6 @@ public abstract class ZTemplates
    */
   public <T extends ZIService> T getService(Class<T> type) throws Exception
   {
-    return getServiceRepository().getService(type);
+    return serviceRepository.get().getService(type);
   }
 }
