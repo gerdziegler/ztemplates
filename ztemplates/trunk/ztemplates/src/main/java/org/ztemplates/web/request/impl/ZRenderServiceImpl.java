@@ -38,6 +38,8 @@ public class ZRenderServiceImpl implements ZIRenderService
 
   private final ZIRenderContext ctx;
 
+  private String idPrefix = "zid" + System.currentTimeMillis() + "_";
+
   private int crtId = 0;
 
 
@@ -141,6 +143,6 @@ public class ZRenderServiceImpl implements ZIRenderService
 
   public String createJavaScriptId()
   {
-    return "zid" + (crtId++);
+    return idPrefix + (crtId++);
   }
 }
