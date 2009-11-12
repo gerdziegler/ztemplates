@@ -35,6 +35,7 @@ public class ZServletServiceImpl implements ZIServletService
 
   private final ZIRenderService renderService;
 
+  private final boolean allowRenderInPost;
 
   public ZServletServiceImpl(final HttpServletRequest request,
       final HttpServletResponse response,
@@ -46,6 +47,7 @@ public class ZServletServiceImpl implements ZIServletService
     this.response = response;
     this.actionService = actionService;
     this.renderService = renderService;
+    this.allowRenderInPost = !"false".equals(request.getSession().getServletContext().getInitParameter("allowRenderInPost"));
   }
 
 
@@ -81,6 +83,15 @@ public class ZServletServiceImpl implements ZIServletService
 
   public void render(Object obj, String mimeType, String encoding) throws Exception
   {
+    if(!allowRenderInPost && request.getMethod().equals("POST"))
+    {
+      throw new Exception("RESTful applications should not render in POST, send redirect to another page instead. To allow rendering in POST response set the servlet context init parameter 'allowRenderInPost=true' in WEB-INF/web.xml' like this:" +
+    	"\n<context-param>\n" +
+        "  <description>In RESTful applications make a redirect after POST</description>\n" +
+        "  <param-name>allowRenderInPost</param-name>\n" +
+        "  <param-value>true</param-value>\n" +
+        "</context-param>\n");
+    }
     String value = obj == null ? null : renderService.render(obj);
     if (obj != null)
     {

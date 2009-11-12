@@ -15,6 +15,7 @@
 package org.ztemplates.web.request.impl;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,8 +42,9 @@ public class ZExceptionServiceImpl implements ZIExceptionService
       try
       {
         PrintWriter w = response.getWriter();
+        String txt = t.getMessage();
         w.write("<html><body><pre>");
-        w.write(t.getMessage());
+        w.write(escapeHtml(txt));
         w.write("</pre></body></html>");
       }
       catch (Exception e)
@@ -55,13 +57,17 @@ public class ZExceptionServiceImpl implements ZIExceptionService
     {
       try
       {
-        PrintWriter w = response.getWriter();
-        w.write("<html><body><pre>");
+        StringWriter sw = new StringWriter();
+        PrintWriter sb = new PrintWriter(sw);
         for (Throwable e = t; e != null; e = e.getCause())
         {
-          e.printStackTrace(w);
-          w.write("\n<hr>\n");
+          e.printStackTrace(sb);
+          sb.write("\n<hr>\n");
         }
+        sb.flush();
+        PrintWriter w = response.getWriter();
+        w.write("<html><body><pre>");
+        w.write(escapeHtml(sw.getBuffer().toString()));
         w.write("</pre></body></html>");
       }
       catch (Exception e)
@@ -70,5 +76,14 @@ public class ZExceptionServiceImpl implements ZIExceptionService
         log.error("error while handling exception: ", e);
       }
     }
+  }
+  
+  private static String escapeHtml(String s)
+  {
+    if(s==null)
+    {
+      return s;
+    }
+    return s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
   }
 }
