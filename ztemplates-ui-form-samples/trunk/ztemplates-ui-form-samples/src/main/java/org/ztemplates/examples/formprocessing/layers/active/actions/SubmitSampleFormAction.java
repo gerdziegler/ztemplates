@@ -13,10 +13,10 @@ import org.ztemplates.web.ZTemplates;
  * 
  * @author www.gerdziegler.de
  */
-@ZMatch(value = "/deprecated")
-public class SampleFormAction implements ZIFormAction<SampleForm>
+@ZMatch(value = "/form/submit")
+public class SubmitSampleFormAction implements ZIFormAction<SampleForm>
 {
-  static final Logger log = Logger.getLogger(SampleFormAction.class);
+  static final Logger log = Logger.getLogger(SubmitSampleFormAction.class);
 
   private SampleForm form;
 
@@ -25,7 +25,7 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
    * private constructor, as there is no need to instantiate this class from 
    * application code, only ztemplates does it.
    */
-  private SampleFormAction()
+  private SubmitSampleFormAction()
   {
   }
 
@@ -35,7 +35,7 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
    */
   public static String createUrl()
   {
-    SampleFormAction act = new SampleFormAction();
+    SubmitSampleFormAction act = new SubmitSampleFormAction();
     return ZTemplates.getServletService().createUrl(act);
   }
 

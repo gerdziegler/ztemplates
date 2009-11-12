@@ -13,10 +13,10 @@ import org.ztemplates.web.ZTemplates;
  * 
  * @author www.gerdziegler.de
  */
-@ZMatch(value = "/deprecated")
-public class SampleFormAction implements ZIFormAction<SampleForm>
+@ZMatch(value = "/form/show")
+public class ShowSampleFormAction implements ZIFormAction<SampleForm>
 {
-  static final Logger log = Logger.getLogger(SampleFormAction.class);
+  static final Logger log = Logger.getLogger(ShowSampleFormAction.class);
 
   private SampleForm form;
 
@@ -25,7 +25,7 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
    * private constructor, as there is no need to instantiate this class from 
    * application code, only ztemplates does it.
    */
-  private SampleFormAction()
+  private ShowSampleFormAction()
   {
   }
 
@@ -35,7 +35,7 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
    */
   public static String createUrl()
   {
-    SampleFormAction act = new SampleFormAction();
+    ShowSampleFormAction act = new ShowSampleFormAction();
     return ZTemplates.getServletService().createUrl(act);
   }
 
@@ -69,31 +69,6 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
   @Override
   public void after() throws Exception
   {
-    if (!form.getSubmit().isEmpty())
-    {
-      onSubmit();
-    }
-    else
-    {
-      onNoSubmit();
-    }
-  }
-
-
-  private void onNoSubmit() throws Exception
-  {
-    SampleFormController controller = new SampleFormController(form);
-    controller.loadInitialData();
-    controller.updateRequired();
-    controller.updateForView();
-
-    ViewFactory views = new ViewFactory();
-    views.showSampleForm(form, controller.getAjaxProperties());
-  }
-
-
-  private void onSubmit() throws Exception
-  {
     SampleFormController controller = new SampleFormController(form);
     controller.updateValues();
     controller.updateRequired();
@@ -101,7 +76,6 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
     if (!ZTemplates.getFormService().getPropertiesWithError(form).isEmpty())
     {
       controller.updateForView();
-
       ViewFactory views = new ViewFactory();
       views.showSampleForm(form, controller.getAjaxProperties());
     }
@@ -111,7 +85,6 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
       controller.updateRequired();
       controller.updateValidationState();
       controller.updateForView();
-
       ViewFactory views = new ViewFactory();
       views.showSampleFormConfirm();
     }

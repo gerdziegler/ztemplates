@@ -12,6 +12,12 @@
       <description>Enable template details in output</description>
     </context-param>
 -->
+    <context-param>
+      <description>In RESTful applications should make a redirect after POST</description>
+      <param-name>allowRenderInPost</param-name>
+      <param-value>false</param-value>
+    </context-param>
+
 	<filter>
 		<filter-name>ZTemplatesFilter</filter-name>
 		<filter-class>

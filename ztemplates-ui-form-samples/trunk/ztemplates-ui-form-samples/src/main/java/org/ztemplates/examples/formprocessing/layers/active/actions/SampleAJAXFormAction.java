@@ -27,7 +27,7 @@ import org.ztemplates.web.ui.form.script.ZFormScript;
  * 
  * @author www.gerdziegler.de
  */
-@ZMatch(value = "/ajax")
+@ZMatch(value = "/form/ajax")
 public class SampleAJAXFormAction implements ZIFormAction<SampleForm>
 {
   private static final Logger log = Logger.getLogger(SampleAJAXFormAction.class);
