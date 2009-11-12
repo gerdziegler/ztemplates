@@ -56,6 +56,8 @@ public class ZFormScript
 
   private final String formId;
 
+  private final String submitUrl;
+
   private final String ajaxUrl;
 
   private final String formJson;
@@ -73,11 +75,15 @@ public class ZFormScript
   private final ZScriptDependency runtimeScripts;
 
 
-  public ZFormScript(String formId, ZIForm form, String ajaxUrl, Set<String> ajaxPropertyNames)
-      throws Exception
+  public ZFormScript(String formId,
+      ZIForm form,
+      String submitUrl,
+      String ajaxUrl,
+      Set<String> ajaxPropertyNames) throws Exception
   {
     super();
     this.formId = formId;
+    this.submitUrl = submitUrl;
     this.ajaxUrl = ajaxUrl;
     this.ajaxPropertyNames = ajaxPropertyNames;
     ajaxPropertyNamesJson = computeAjaxPropertyNamesJson();
@@ -90,11 +96,19 @@ public class ZFormScript
     values.readFromForm(form);
     formStateParameterValue = values.writeToString();
   }
+  
+  public ZFormScript(String formId,
+      ZIForm form,
+      String ajaxUrl,
+      Set<String> ajaxPropertyNames) throws Exception
+  {
+    this(formId, form, (String) null, ajaxUrl, ajaxPropertyNames);
+  }
 
 
   public ZFormScript(String formId, ZIForm form) throws Exception
   {
-    this(formId, form, (String) null, (Set<String>) null);
+    this(formId, form, (String) null, (String) null, (Set<String>) null);
   }
 
 
@@ -236,6 +250,13 @@ public class ZFormScript
   public String getFormId()
   {
     return formId;
+  }
+
+
+  @ZExpose
+  public String getSubmitUrl()
+  {
+    return submitUrl;
   }
 
 

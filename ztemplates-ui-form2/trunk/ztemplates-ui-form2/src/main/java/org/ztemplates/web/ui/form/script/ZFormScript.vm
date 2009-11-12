@@ -1,5 +1,5 @@
 <script type="text/javascript">
-$("#${formId}").addClass("ztemplates-form");
+$("#${formId}").addClass("ztemplates-form")#if($submitUrl).attr("action", "$submitUrl")#end;
 ZTEMPLATES.forms.${formId} = new Object();
 ZTEMPLATES.forms.${formId}.ajaxUrl = "${ajaxUrl}";
 ZTEMPLATES.forms.${formId}.ajaxPropertyNames = ${ajaxPropertyNamesJson};
