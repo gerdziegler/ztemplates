@@ -48,6 +48,7 @@ public class SampleFormView
   private final ZFormStateHighlight formStateHighlight;
 
   public SampleFormView(SampleForm form,
+      String submitUrl,
       String ajaxUrl,
       Set<String> ajaxPropertyNames,
       String autocompleteQueryUrl,
@@ -62,7 +63,7 @@ public class SampleFormView
     cascading = new CascadingFormPanel(formId, form.getCascading());
     submit = new ZFormSubmit(formId, form.getSubmit());
     submitState = new ZFormInputState(formId, form.getSubmit());
-    formScript = new ZFormScript(formId, form, ajaxUrl, ajaxPropertyNames);
+    formScript = new ZFormScript(formId, form, submitUrl, ajaxUrl, ajaxPropertyNames);
     formScript.setBeforeunloadMessage("There are unsubmitted changes.");
     formState = new ZFormState(formId, "formStateDisplay");
     formStateHighlight = new ZFormStateHighlight(formState);

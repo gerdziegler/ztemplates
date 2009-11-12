@@ -70,23 +70,10 @@ public class ShowSampleFormAction implements ZIFormAction<SampleForm>
   public void after() throws Exception
   {
     SampleFormController controller = new SampleFormController(form);
-    controller.updateValues();
+    controller.loadInitialData();
     controller.updateRequired();
-    controller.updateValidationState();
-    if (!ZTemplates.getFormService().getPropertiesWithError(form).isEmpty())
-    {
-      controller.updateForView();
-      ViewFactory views = new ViewFactory();
-      views.showSampleForm(form, controller.getAjaxProperties());
-    }
-    else
-    {
-      controller.updateDependencies();
-      controller.updateRequired();
-      controller.updateValidationState();
-      controller.updateForView();
-      ViewFactory views = new ViewFactory();
-      views.showSampleFormConfirm();
-    }
+    controller.updateForView();
+    ViewFactory views = new ViewFactory();
+    views.showSampleForm(form, controller.getAjaxProperties());
   }
 }

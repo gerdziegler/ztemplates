@@ -69,31 +69,6 @@ public class SubmitSampleFormAction implements ZIFormAction<SampleForm>
   @Override
   public void after() throws Exception
   {
-    if (!form.getSubmit().isEmpty())
-    {
-      onSubmit();
-    }
-    else
-    {
-      onNoSubmit();
-    }
-  }
-
-
-  private void onNoSubmit() throws Exception
-  {
-    SampleFormController controller = new SampleFormController(form);
-    controller.loadInitialData();
-    controller.updateRequired();
-    controller.updateForView();
-
-    ViewFactory views = new ViewFactory();
-    views.showSampleForm(form, controller.getAjaxProperties());
-  }
-
-
-  private void onSubmit() throws Exception
-  {
     SampleFormController controller = new SampleFormController(form);
     controller.updateValues();
     controller.updateRequired();

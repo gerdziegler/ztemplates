@@ -19,6 +19,7 @@ import java.util.Set;
 import org.json.JSONObject;
 import org.ztemplates.examples.formprocessing.layers.active.actions.AutocompleteAction;
 import org.ztemplates.examples.formprocessing.layers.active.actions.SampleAJAXFormAction;
+import org.ztemplates.examples.formprocessing.layers.active.actions.SubmitSampleFormAction;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.views.SampleForm;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.views.SampleFormView;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.views.confirm.ConfirmView;
@@ -30,11 +31,13 @@ public class ViewFactory
 {
   public void showSampleForm(SampleForm form, Set<ZProperty> ajaxProperties) throws Exception
   {
+    String submitUrl = SubmitSampleFormAction.createUrl();
     String ajaxUrl = SampleAJAXFormAction.createUrl();
     Set<String> ajaxPropertyNames = ZFormScript.getPropertyNames(ajaxProperties);
     String autocompleteQueryUrl = AutocompleteAction.createUrl();
     JSONObject autocompleteQuerySchema = AutocompleteAction.getSchema();
     SampleFormView view = new SampleFormView(form,
+        submitUrl,
         ajaxUrl,
         ajaxPropertyNames,
         autocompleteQueryUrl,
