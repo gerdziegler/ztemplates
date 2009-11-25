@@ -33,6 +33,6 @@ public class CheckboxProperty extends ZProperty<Boolean>
   @Override
   public Boolean parse(String s) throws Exception
   {
-    return "checked".equals(s);
+    return Boolean.valueOf("checked".equals(s));
   }
 }

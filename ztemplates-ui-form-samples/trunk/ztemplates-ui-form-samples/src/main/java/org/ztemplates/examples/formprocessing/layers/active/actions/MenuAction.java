@@ -3,23 +3,24 @@ package org.ztemplates.examples.formprocessing.layers.active.actions;
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.ZIAction;
 import org.ztemplates.actions.ZMatch;
+import org.ztemplates.examples.formprocessing.layers.passive.ui.views.menu.MenuView;
 import org.ztemplates.web.ZTemplates;
 
 /**
  * 
  * @author www.gerdziegler.de
  */
-@ZMatch(value = "/")
-public class IndexAction implements ZIAction
+@ZMatch(value = "/menu")
+public class MenuAction implements ZIAction
 {
-  static final Logger log = Logger.getLogger(IndexAction.class);
+  static final Logger log = Logger.getLogger(MenuAction.class);
 
 
   /**
    * private constructor, as there is no need to instantiate this class from 
    * application code, only ztemplates does it.
    */
-  private IndexAction()
+  private MenuAction()
   {
   }
 
@@ -29,7 +30,7 @@ public class IndexAction implements ZIAction
    */
   public static String createUrl()
   {
-    IndexAction act = new IndexAction();
+    MenuAction act = new MenuAction();
     return ZTemplates.getServletService().createUrl(act);
   }
 
@@ -43,7 +44,7 @@ public class IndexAction implements ZIAction
   @Override
   public void after() throws Exception
   {
-    String url = SampleFormAction.createUrl();
-    ZTemplates.getServletService().sendRedirect(url);
+    MenuView menuView = new MenuView();
+    ZTemplates.getServletService().render(menuView);
   }
 }

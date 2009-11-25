@@ -14,8 +14,8 @@
  */
 package org.ztemplates.examples.formprocessing.layers.passive.ui.views.person;
 
-import org.json.JSONObject;
 import org.ztemplates.examples.formprocessing.layers.passive.ids.GenderId;
+import org.ztemplates.jquery.menu.JQAutocomplete;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
@@ -26,7 +26,6 @@ import org.ztemplates.web.ui.form.ZFormRadio;
 import org.ztemplates.web.ui.form.ZFormText;
 import org.ztemplates.web.ui.form.ZFormTextArea;
 import org.ztemplates.web.ui.form.state.ZFormInputState;
-import org.ztemplates.yui.autocomplete.ZFormAutocomplete;
 
 @ZRenderer(value = ZVelocityRenderer.class)
 public class PersonPanel
@@ -59,7 +58,7 @@ public class PersonPanel
 
   private final ZFormInputState genderState;
 
-  private final ZFormAutocomplete occupationAutocomplete;
+  private final JQAutocomplete occupationAutocomplete;
 
   private final ZFormText taxRate;
 
@@ -76,7 +75,8 @@ public class PersonPanel
   private final ZFormInputState occupationState;
 
 
-  public PersonPanel(String formName, PersonForm data, String autocompleteQueryUrl, JSONObject autocompleteQuerySchema) throws Exception
+  public PersonPanel(String formName, PersonForm data, String autocompleteQueryUrl)
+      throws Exception
   {
     contentId = ZTemplates.getRenderService().createJavaScriptId();
     occupationInput = new ZFormText(formName, data.getOccupation());
@@ -93,11 +93,11 @@ public class PersonPanel
     genderInput = new ZFormRadio<GenderId>(formName, data.getGender());
     genderState = new ZFormInputState(formName, data.getGender());
     occupationState = new ZFormInputState(formName, data.getOccupation());
-    occupationAutocomplete = new ZFormAutocomplete(occupationInput.getInputId(),
-        autocompleteQueryUrl,
-        autocompleteQuerySchema);
-    occupationAutocomplete.getProperties().put(ZFormAutocomplete.PROP_minQueryLength_int, 3);
-    occupationAutocomplete.getProperties().put(ZFormAutocomplete.PROP_forceSelection_bool, true);
+    occupationAutocomplete = new JQAutocomplete(occupationInput.getInputId(), autocompleteQueryUrl);
+    occupationAutocomplete.getProperties().put(JQAutocomplete.PROP_minChars_number, 1);
+    occupationAutocomplete.getProperties().put(JQAutocomplete.PROP_delay_number, 200);
+    occupationAutocomplete.getProperties().put(JQAutocomplete.PROP_max_number, 12);
+    occupationAutocomplete.getProperties().put(JQAutocomplete.PROP_scroll_boolean, Boolean.FALSE);
     taxRate = new ZFormText(formName, data.getTaxRate());
     taxRateState = new ZFormInputState(formName, data.getTaxRate());
     married = new ZFormCheckbox(formName, data.getMarried());
@@ -192,7 +192,7 @@ public class PersonPanel
 
 
   @ZExpose(render = true)
-  public ZFormAutocomplete getOccupationAutocomplete() throws Exception
+  public JQAutocomplete getOccupationAutocomplete() throws Exception
   {
     return occupationAutocomplete;
   }

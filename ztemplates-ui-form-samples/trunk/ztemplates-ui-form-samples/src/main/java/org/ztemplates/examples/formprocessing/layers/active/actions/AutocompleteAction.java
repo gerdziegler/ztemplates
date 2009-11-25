@@ -20,14 +20,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ztemplates.actions.ZIAction;
 import org.ztemplates.actions.ZMatch;
+import org.ztemplates.property.ZIntProperty;
 import org.ztemplates.web.ZTemplates;
 
-@ZMatch(value = "/autocomplete", parameters = "query")
+@ZMatch(value = "/autocomplete", parameters = {"q", "limit"})
 public class AutocompleteAction implements ZIAction
 {
   static final Logger log = Logger.getLogger(AutocompleteAction.class);
 
-  private String query;
+  private String q;
+
+  private final ZIntProperty limit = new ZIntProperty();
+
+
+  public ZIntProperty getLimit()
+  {
+    return limit;
+  }
 
 
   public static String createUrl()
@@ -37,60 +46,69 @@ public class AutocompleteAction implements ZIAction
   }
 
 
-  public static JSONObject getSchema()
-  {
-    JSONArray fields = new JSONArray();
-    fields.put("name");
-
-    JSONObject ret = new JSONObject();
-    try
-    {
-      JSONObject metaFields = new JSONObject();
-      metaFields.put("totalRecords", "totalRecords");
-      ret.put("resultsList", "results");
-      ret.put("fields", fields);
-      ret.put("metaFields", metaFields);
-    }
-    catch (JSONException e)
-    {
-      log.error("", e);
-    }
-    return ret;
-  }
+//  public static JSONObject getSchema()
+//  {
+//    JSONArray fields = new JSONArray();
+//    fields.put("name");
+//
+//    JSONObject ret = new JSONObject();
+//    try
+//    {
+//      JSONObject metaFields = new JSONObject();
+//      metaFields.put("totalRecords", "totalRecords");
+//      ret.put("resultsList", "results");
+//      ret.put("fields", fields);
+//      ret.put("metaFields", metaFields);
+//    }
+//    catch (JSONException e)
+//    {
+//      log.error("", e);
+//    }
+//    return ret;
+//  }
 
 
   public void after() throws Exception
   {
-    JSONArray arr = new JSONArray();
-    JSONObject crt = new JSONObject();
-    crt.put("name", query);
-    arr.put(crt);
-    for (int i = 0; i < 10; i++)
+    StringBuffer sb = new StringBuffer();
+    int lim = limit.isEmpty() ? 10 : limit.getValue().intValue();
+    for (int i = 0; i < lim; i++)
     {
-      crt = new JSONObject();
-      crt.put("name", query + i);
-      arr.put(crt);
+      sb.append(q + i);
+      sb.append('\n');
     }
 
-    JSONObject ret = new JSONObject();
-    ret.put("results", arr);
-    ret.put("totalRecords", "1000");
-    String s = ret.toString(4);
+    //    JSONArray arr = new JSONArray();
+    //    JSONObject crt = new JSONObject();
+    //    crt.put("name", q);
+    //    arr.put(crt);
+    //    for (int i = 0; i < 10; i++)
+    //    {
+    //      crt = new JSONObject();
+    //      crt.put("name", q + i);
+    //      arr.put(crt);
+    //    }
+    //
+    //    
+    //    
+    //    JSONObject ret = new JSONObject();
+    //    ret.put("results", arr);
+    //    ret.put("totalRecords", "1000");
+    String s = sb.toString();
     log.info(s);
     ZTemplates.getServletService().render(s);
-
   }
 
 
-  public String getQuery()
+  public String getQ()
   {
-    return query;
+    return q;
   }
 
 
-  public void setQuery(String query)
+  public void setQ(String query)
   {
-    this.query = query;
+    this.q = query;
   }
 
 }

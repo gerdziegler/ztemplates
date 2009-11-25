@@ -16,7 +16,6 @@ package org.ztemplates.examples.formprocessing.layers.active.logic;
 
 import java.util.Set;
 
-import org.json.JSONObject;
 import org.ztemplates.examples.formprocessing.layers.active.actions.AutocompleteAction;
 import org.ztemplates.examples.formprocessing.layers.active.actions.SampleAJAXFormAction;
 import org.ztemplates.examples.formprocessing.layers.active.actions.SubmitSampleFormAction;
@@ -35,13 +34,11 @@ public class ViewFactory
     String ajaxUrl = SampleAJAXFormAction.createUrl();
     Set<String> ajaxPropertyNames = ZFormScript.getPropertyNames(ajaxProperties);
     String autocompleteQueryUrl = AutocompleteAction.createUrl();
-    JSONObject autocompleteQuerySchema = AutocompleteAction.getSchema();
     SampleFormView view = new SampleFormView(form,
         submitUrl,
         ajaxUrl,
         ajaxPropertyNames,
-        autocompleteQueryUrl,
-        autocompleteQuerySchema);
+        autocompleteQueryUrl);
 
     ZTemplates.getServletService().render(view);
   }

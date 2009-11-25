@@ -101,7 +101,7 @@ public class SampleFormController implements ZIFormController
   public void updateForView() throws Exception
   {
     final IFormTutorialService service = FormTutorialServiceLocator.getService();
-    form.getPerson().getEnabled().setValue(true);
+    form.getPerson().getEnabled().setValue(Boolean.TRUE);
 
     final ContinentIdSelectProperty continent = form.getCascading().getContinent();
     final CountryIdSelectProperty country = form.getCascading().getCountry();

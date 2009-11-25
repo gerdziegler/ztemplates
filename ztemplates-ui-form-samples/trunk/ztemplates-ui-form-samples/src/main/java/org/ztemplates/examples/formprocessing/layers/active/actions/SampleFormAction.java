@@ -13,7 +13,7 @@ import org.ztemplates.web.ZTemplates;
  * 
  * @author www.gerdziegler.de
  */
-@ZMatch(value = "/deprecated")
+@ZMatch(value = "/sample/form")
 public class SampleFormAction implements ZIFormAction<SampleForm>
 {
   static final Logger log = Logger.getLogger(SampleFormAction.class);
@@ -66,21 +66,7 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
    * 
    * @see org.ztemplates.actions.ZIAction#after()
    */
-  @Override
   public void after() throws Exception
-  {
-    if (!form.getSubmit().isEmpty())
-    {
-      onSubmit();
-    }
-    else
-    {
-      onNoSubmit();
-    }
-  }
-
-
-  private void onNoSubmit() throws Exception
   {
     SampleFormController controller = new SampleFormController(form);
     controller.loadInitialData();
@@ -92,8 +78,8 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
   }
 
 
-  private void onSubmit() throws Exception
-  {
+  public void afterSubmit() throws Exception
+  {    
     SampleFormController controller = new SampleFormController(form);
     controller.updateValues();
     controller.updateRequired();

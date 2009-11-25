@@ -16,7 +16,6 @@ package org.ztemplates.examples.formprocessing.layers.passive.ui.views;
 
 import java.util.Set;
 
-import org.json.JSONObject;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.views.cascading.CascadingFormPanel;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.views.person.PersonPanel;
 import org.ztemplates.render.ZExpose;
@@ -51,15 +50,13 @@ public class SampleFormView
       String submitUrl,
       String ajaxUrl,
       Set<String> ajaxPropertyNames,
-      String autocompleteQueryUrl,
-      JSONObject autocompleteQuerySchema) throws Exception
+      String autocompleteQueryUrl) throws Exception
   {
     super();
-    form.getPerson().getEnabled().setValue(true);
+    form.getPerson().getEnabled().setValue(Boolean.TRUE);
     person = new PersonPanel(formId,
         form.getPerson(),
-        autocompleteQueryUrl,
-        autocompleteQuerySchema);
+        autocompleteQueryUrl);
     cascading = new CascadingFormPanel(formId, form.getCascading());
     submit = new ZFormSubmit(formId, form.getSubmit());
     submitState = new ZFormInputState(formId, form.getSubmit());
