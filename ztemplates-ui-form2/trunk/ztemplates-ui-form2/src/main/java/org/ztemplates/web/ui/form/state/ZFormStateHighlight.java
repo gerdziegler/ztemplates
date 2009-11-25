@@ -26,9 +26,9 @@ import org.ztemplates.web.ui.form.state.assets.ZInputStateLoaderAction;
 @ZRenderer(ZVelocityRenderer.class)
 @ZScript(javaScript =
 {
-    @ZJavaScript(prefix = JQueryLoaderAction.LOADER_URL_PREFIX, value = JQueryLoaderAction.JQUERY_MIN_JS, standalone = JQueryLoaderAction.STANDALONE, merge = JQueryLoaderAction.MERGE),
-    @ZJavaScript(prefix = ZFormScriptLoaderAction.PREFIX, value = ZFormScriptLoaderAction.FORM_SCRIPT),
-    @ZJavaScript(prefix = ZInputStateLoaderAction.LOADER_URL_PREFIX, value = ZInputStateLoaderAction.FORM_STATE_HIGHLIGHT_JS)
+    @ZJavaScript(value = JQueryLoaderAction.JQUERY_MIN_JS, standalone = JQueryLoaderAction.STANDALONE, merge = JQueryLoaderAction.MERGE),
+    @ZJavaScript(ZFormScriptLoaderAction.FORM_SCRIPT),
+    @ZJavaScript(ZInputStateLoaderAction.FORM_STATE_HIGHLIGHT_JS)
 })
 public class ZFormStateHighlight
 {

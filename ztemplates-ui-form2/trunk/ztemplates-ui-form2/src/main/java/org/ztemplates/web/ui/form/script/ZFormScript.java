@@ -45,8 +45,8 @@ import org.ztemplates.web.ui.form.script.assets.ZFormScriptLoaderAction;
 @ZRenderer(ZVelocityRenderer.class)
 @ZScript(javaScript =
 {
-    @ZJavaScript(prefix = JQueryLoaderAction.LOADER_URL_PREFIX, value = JQueryLoaderAction.JQUERY_MIN_JS, standalone = JQueryLoaderAction.STANDALONE, merge = JQueryLoaderAction.MERGE),
-    @ZJavaScript(prefix = ZFormScriptLoaderAction.PREFIX, value = ZFormScriptLoaderAction.FORM_SCRIPT)
+    @ZJavaScript(value = JQueryLoaderAction.JQUERY_MIN_JS, standalone = JQueryLoaderAction.STANDALONE, merge = JQueryLoaderAction.MERGE),
+    @ZJavaScript(ZFormScriptLoaderAction.FORM_SCRIPT)
 }, property = "runtimeScripts")
 public class ZFormScript
 {

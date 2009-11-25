@@ -6,7 +6,7 @@ import org.ztemplates.web.request.actions.ZResourceLoaderAction;
 @ZMatch(ZOperationValidatorScriptLoaderAction.PREFIX + "*{resourcePath}")
 public class ZOperationValidatorScriptLoaderAction extends ZResourceLoaderAction
 {
-  public static final String PREFIX = "/ztemplates-ui-form/property/validator/assets";
+  protected static final String PREFIX = "/ztemplates-ui-form/property/validator/assets";
 
-  public static final String OPERATION_VALIDATOR_JS = "/ZOperationValidatorScript.js";
+  public static final String OPERATION_VALIDATOR_JS = PREFIX + "/ZOperationValidatorScript.js";
 }

@@ -30,7 +30,7 @@ import org.ztemplates.web.ui.form.validation.assets.ZOperationValidatorScriptLoa
 
 @ZScript(javaScript =
 {
-  @ZJavaScript(prefix = ZOperationValidatorScriptLoaderAction.PREFIX, value = ZOperationValidatorScriptLoaderAction.OPERATION_VALIDATOR_JS)
+  @ZJavaScript(ZOperationValidatorScriptLoaderAction.OPERATION_VALIDATOR_JS)
 })
 public class ZOperationValidator implements ZIJavaScriptValidator
 {

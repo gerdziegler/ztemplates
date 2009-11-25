@@ -6,17 +6,17 @@ import org.ztemplates.web.request.actions.ZResourceLoaderAction;
 @ZMatch(ZFormScriptLoaderAction.PREFIX + "*{resourcePath}")
 public class ZFormScriptLoaderAction extends ZResourceLoaderAction
 {
-  public static final String PREFIX = "/ztemplates-ui-form/script/assets";
+  protected static final String PREFIX = "/ztemplates-ui-form/script/assets";
 
-  public static final String FORM_SCRIPT = "/ZFormScript.js";
+  public static final String FORM_SCRIPT = PREFIX + "/ZFormScript.js";
 
-  public static final String FORM_TEXT_SCRIPT = "/ZFormText.js";
+  public static final String FORM_TEXT_SCRIPT = PREFIX + "/ZFormText.js";
 
-  public static final String FORM_SELECT_SCRIPT = "/ZFormSelect.js";
+  public static final String FORM_SELECT_SCRIPT = PREFIX + "/ZFormSelect.js";
 
-  public static final String FORM_CHECKBOX_SCRIPT = "/ZFormCheckbox.js";
+  public static final String FORM_CHECKBOX_SCRIPT = PREFIX + "/ZFormCheckbox.js";
 
-  public static final String FORM_RADIO_SCRIPT = "/ZFormRadio.js";
+  public static final String FORM_RADIO_SCRIPT = PREFIX + "/ZFormRadio.js";
 
-  public static final String FORM_SUBMIT_SCRIPT = "/ZFormSubmit.js";
+  public static final String FORM_SUBMIT_SCRIPT = PREFIX + "/ZFormSubmit.js";
 }
