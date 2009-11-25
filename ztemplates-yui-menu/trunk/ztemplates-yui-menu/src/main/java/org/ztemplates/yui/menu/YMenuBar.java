@@ -30,13 +30,13 @@ import org.ztemplates.yui.ZYuiLoaderAction;
 @ZRenderer(ZVelocityRenderer.class)
 @ZScript(css =
 {
-    @ZCss(prefix = ZYuiLoaderAction.LOADER_URL_PREFIX, value = ZYuiLoaderAction.FONTS_MIN_CSS),
-    @ZCss(prefix = ZYuiLoaderAction.LOADER_URL_PREFIX, value = ZYuiLoaderAction.MENU_SAM_CSS)
+    @ZCss(ZYuiLoaderAction.FONTS_MIN_CSS),
+    @ZCss(ZYuiLoaderAction.MENU_SAM_CSS)
 }, javaScript =
 {
-    @ZJavaScript(prefix = ZYuiLoaderAction.LOADER_URL_PREFIX, value = ZYuiLoaderAction.YAHOO_DOM_EVENT_JS),
-    @ZJavaScript(prefix = ZYuiLoaderAction.LOADER_URL_PREFIX, value = ZYuiLoaderAction.CONTAINER_MIN_JS),
-    @ZJavaScript(prefix = ZYuiLoaderAction.LOADER_URL_PREFIX, value = ZYuiLoaderAction.MENU_MIN_JS)
+    @ZJavaScript(ZYuiLoaderAction.YAHOO_DOM_EVENT_JS),
+    @ZJavaScript(ZYuiLoaderAction.CONTAINER_MIN_JS),
+    @ZJavaScript(ZYuiLoaderAction.MENU_MIN_JS)
 })
 public class YMenuBar
 {
