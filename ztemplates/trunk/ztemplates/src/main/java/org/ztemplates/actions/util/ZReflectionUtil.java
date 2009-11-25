@@ -25,6 +25,7 @@ import org.ztemplates.actions.ZBefore;
 import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZInit;
 import org.ztemplates.actions.ZSetter;
+import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 
 public class ZReflectionUtil
@@ -36,12 +37,50 @@ public class ZReflectionUtil
   // *********************************************************************************
   // *********************************************************************************
 
-  public static void callAfter(Object obj) throws Exception
+  public static void callAfter(Object obj, ZOperation op) throws Exception
   {
-    Method m = getAfter(obj.getClass(), "");
-    if (m != null)
+    if (op != null)
     {
-      invoke(m, obj);
+      //if operation first try op after callback
+      String name = computeCallbackName(op.getName());
+
+      Method m = getAfter(obj.getClass(), name);
+      if (m == null)
+      {
+        if (log.isDebugEnabled())
+        {
+          log.debug("no callback method found in action pojo " + obj.getClass().getName()
+              + " for operation " + name + " --- trying default callback after()");
+        }
+
+        m = getAfter(obj.getClass(), "");
+      }
+      if (m != null)
+      {
+        invoke(m, obj);
+      }
+      else
+      {
+        if (log.isDebugEnabled())
+        {
+          log.debug("no after callback method found in action pojo " + obj.getClass().getName());
+        }
+      }
+    }
+    else
+    {
+      Method m = getAfter(obj.getClass(), "");
+      if (m != null)
+      {
+        invoke(m, obj);
+      }
+      else
+      {
+        if (log.isDebugEnabled())
+        {
+          log.debug("no after callback method found in action pojo " + obj.getClass().getName());
+        }
+      }
     }
   }
 
@@ -190,8 +229,8 @@ public class ZReflectionUtil
       int openParanth = propName.indexOf('[');
       if (openParanth >= 0)
       {
-        collectionIndex = Integer.parseInt(propName
-            .substring(openParanth + 1, propName.length() - 1));
+        collectionIndex = Integer.parseInt(propName.substring(openParanth + 1,
+            propName.length() - 1));
         propName = propName.substring(0, openParanth);
       }
 
@@ -386,7 +425,8 @@ public class ZReflectionUtil
     }
     catch (Exception e)
     {
-      log.error("error while calling --- " + method + " --- on object " + obj + " --- with parameters " + value, e);
+      log.error("error while calling --- " + method + " --- on object " + obj
+          + " --- with parameters " + value, e);
       throw e;
     }
   }
@@ -434,6 +474,26 @@ public class ZReflectionUtil
       sb.setCharAt(prefixLen, Character.toUpperCase(name.charAt(0)));
       return sb.toString();
     }
+  }
+
+
+  private static String computeCallbackName(String name)
+  {
+    int nameLen = name.length();
+    StringBuffer sb = new StringBuffer(nameLen);
+    for (int i = 0; i < nameLen; i++)
+    {
+      if (name.charAt(i) == '.')
+      {
+        i++;
+        sb.append(Character.toUpperCase(name.charAt(i)));
+      }
+      else
+      {
+        sb.append(name.charAt(i));
+      }
+    }
+    return sb.toString();
   }
 
 

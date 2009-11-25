@@ -136,9 +136,11 @@ public class ZTemplatesFilter implements Filter
         long time = System.currentTimeMillis() - begin;
         if (ret)
         {
-          if (time > 20)
+//          if (time > 0)
           {
-            log.info(url + " [" + time + " ms]");
+            String msg = url + " [" + time + " ms]"; 
+            log.info(msg);
+            System.out.println(msg);
           }
         }
       }

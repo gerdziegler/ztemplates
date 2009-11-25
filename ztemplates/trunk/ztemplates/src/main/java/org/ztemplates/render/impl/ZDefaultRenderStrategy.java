@@ -83,22 +83,6 @@ public class ZDefaultRenderStrategy
       exposed.put("zscript", zscript);
     }
 
-    if (rendererAnnot.renderService() && exposed.get("renderService") == null)
-    {
-      //zscript masks renderService, only write warning if really used in template
-      if (rendererAnnot.zscript())
-      {
-        String msg = "[" + obj.getClass().getName() + " --- invalid values in annotation "
-            + ZRenderer.class.getSimpleName()
-            + " --- cannot expose both 'zscript' and 'renderService']";
-        exposed.put("renderService", msg);
-      }
-      else
-      {
-        exposed.put("renderService", this);
-      }
-    }
-
     ZIRenderer renderer = ctx.getRenderer(rendererAnnot.value());
     long time = System.currentTimeMillis();
     String ret = renderer.render(obj.getClass(), exposed);

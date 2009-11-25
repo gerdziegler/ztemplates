@@ -221,8 +221,8 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         Object pojo = pojos.peek();
         ZMatch zmatch = (ZMatch) pojo.getClass().getAnnotation(ZMatch.class);
         ZEndNested v = (ZEndNested) et;
-        update(pojo, parameters);
-        ZReflectionUtil.callAfter(pojo);
+        ZOperation op = update(pojo, parameters);
+        ZReflectionUtil.callAfter(pojo, op);
         pojos.pop();
         pojo = pojos.peek();
         ZReflectionUtil.callAfterReference(pojo, v.getName());
@@ -243,8 +243,8 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         // ZAfterInstruction v = (ZAfterInstruction)et;
         pojos.pop();
         assert pojos.isEmpty() : "should be empty: " + pojos.toString();
-        update(rootPojo, parameters);
-        ZReflectionUtil.callAfter(rootPojo);
+        ZOperation op = update(rootPojo, parameters);
+        ZReflectionUtil.callAfter(rootPojo, op);
       }
       else
       {
@@ -366,7 +366,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
   // ***************************************************************************************************
   // ***************************************************************************************************
 
-  private static void update(Object pojo, Map<String, String[]> parameters) throws Exception
+  private static ZOperation update(Object pojo, Map<String, String[]> parameters) throws Exception
   {
     ZOperation operation = null;
     ZMatch zmatch = (ZMatch) pojo.getClass().getAnnotation(ZMatch.class);
@@ -391,37 +391,53 @@ public class ZTreeUrlHandler implements ZIUrlHandler
     String formName = zmatch.form();
     boolean isActionForm = pojo instanceof ZIFormAction;
     if (formName.length() > 0 || isActionForm)
-    {      
-      if(isActionForm)
+    {
+      if (isActionForm)
       {
-        if(formName.length()>0)
+        if (formName.length() > 0)
         {
-          if(!formName.equals("form"))
+          if (!formName.equals("form"))
           {
-            throw new Exception("action pojo class [" + pojo.getClass().getName() +  "] implements " + ZIFormAction.class.getName() + " and has wrong value in annotation " + ZMatch.class.getName() + ": form='" + formName + "'. Change to form='form' or do not specify at all (leave empty).");
-          }              
+            throw new Exception("action pojo class [" + pojo.getClass().getName() + "] implements "
+                + ZIFormAction.class.getName() + " and has wrong value in annotation "
+                + ZMatch.class.getName() + ": form='" + formName
+                + "'. Change to form='form' or do not specify at all (leave empty).");
+          }
         }
         else
         {
           formName = "form";
         }
       }
-            
+
       ZReflectionUtil.callBeforeForm(pojo, formName);
-      ZIForm form = (ZIForm)ZReflectionUtil.callFormGetter(pojo, formName);
-      
-      ZFormMirror.initPropertyNames(form, "");      
+      ZIForm form = (ZIForm) ZReflectionUtil.callFormGetter(pojo, formName);
+
+      ZFormMirror.initPropertyNames(form, "");
 
       ZFormValues formValues = new ZFormValues();
       formValues.getValues().putAll(parameters);
       ZFormMirror mirr = new ZFormMirror(form);
       Set<ZOperation> ops = mirr.setFormValues(formValues);
-      if (ops.size() > 1)
+      ZOperation op;
+      int opCnt = ops.size();
+      if (opCnt == 0)
+      {
+        op = null;
+      }
+      else if (opCnt == 1)
+      {
+        op = ops.iterator().next();
+      }
+      else
+      //if (opCnt > 1)
       {
         throw new Exception("Only one operation call per request allowed: " + ops);
       }
 
       ZReflectionUtil.callAfterForm(pojo, "form");
+      return op;
     }
+    return null;
   }
 }

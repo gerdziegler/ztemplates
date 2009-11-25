@@ -31,7 +31,7 @@ public @interface ZRenderer
   boolean cssId() default true;
 
 
-  boolean renderService() default true;
+//  boolean renderService() default true;
 
 
   boolean contextPath() default true;
