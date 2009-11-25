@@ -7,7 +7,7 @@ import org.ztemplates.web.request.actions.ZResourceLoaderAction;
 @ZMatch(JQueryLoaderAction.LOADER_URL_PREFIX + "*{resourcePath}")
 public class JQueryLoaderAction extends ZResourceLoaderAction
 {
-  public static final String LOADER_URL_PREFIX = "/ztemplates/jquery";
+  protected static final String LOADER_URL_PREFIX = "/ztemplates/jquery";
 
   protected static Logger log = Logger.getLogger(JQueryLoaderAction.class);
 
@@ -15,7 +15,7 @@ public class JQueryLoaderAction extends ZResourceLoaderAction
 
   public static final boolean MERGE = false;
 
-  public static final String JQUERY_MIN_JS = "/jquery-1.3.2.min.js";
+  public static final String JQUERY_MIN_JS = LOADER_URL_PREFIX + "/jquery-1.3.2.min.js";
 
   public static final String JQUERY_MIN_JS_EXTERNAL = "http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js";
 
