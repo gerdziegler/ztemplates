@@ -15,13 +15,13 @@ import org.ztemplates.yui.accordion.assets.ZAccordionLoaderAction;
 @ZRenderer(ZVelocityRenderer.class)
 @ZScript(css =
 {
-    @ZCss(prefix = ZYuiLoaderAction.LOADER_URL_PREFIX, value = ZYuiLoaderAction.FONTS_MIN_CSS),
-    @ZCss(prefix = ZAccordionLoaderAction.LOADER_URL_PREFIX, value = "/accordion-menu-v2-g.css")
+    @ZCss(value = ZYuiLoaderAction.FONTS_MIN_CSS),
+    @ZCss(ZAccordionLoaderAction.LOADER_URL_PREFIX + "/accordion-menu-v2-g.css")
 }, javaScript =
 {
-    @ZJavaScript(prefix = ZYuiLoaderAction.LOADER_URL_PREFIX, value = ZYuiLoaderAction.YAHOO_DOM_EVENT_JS),
-    @ZJavaScript(prefix = ZYuiLoaderAction.LOADER_URL_PREFIX, value = ZYuiLoaderAction.ANIMATION_MIN_JS),
-    @ZJavaScript("/accordionloader/accordion-menu-v2-g.js")
+    @ZJavaScript(ZYuiLoaderAction.YAHOO_DOM_EVENT_JS),
+    @ZJavaScript(ZYuiLoaderAction.ANIMATION_MIN_JS),
+    @ZJavaScript(ZAccordionLoaderAction.LOADER_URL_PREFIX + "/accordion-menu-v2-g.js")
 })
 public class YAccordion
 {
