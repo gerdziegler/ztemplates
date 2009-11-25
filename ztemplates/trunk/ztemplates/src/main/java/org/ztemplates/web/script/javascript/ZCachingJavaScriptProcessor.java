@@ -59,7 +59,7 @@ public class ZCachingJavaScriptProcessor implements ZIJavaScriptProcessor
       if (group.size() == 1)
       {
         ZJavaScriptExposed exp = group.get(0);
-        String url = exp.getPrefix() + exp.getUrl();
+        String url = exp.getUrl();
         if (url.charAt(0) == '/')
         {
           url = context.getContextPath() + url;
@@ -92,14 +92,14 @@ public class ZCachingJavaScriptProcessor implements ZIJavaScriptProcessor
           ZJavaScriptTag tag = new ZJavaScriptTag(url);
           for (ZJavaScriptExposed exp : cacheEntry.getScripts())
           {
-            tag.getMergedFrom().add(exp.getPrefix() + exp.getUrl());
+            tag.getMergedFrom().add(exp.getUrl());
           }
           ret.add(tag);
         }
         else
         {
           ZJavaScriptExposed exp = group.get(0);
-          String url = exp.getPrefix() + exp.getUrl();
+          String url = exp.getUrl();
           ret.add(new ZJavaScriptTag(url));
         }
       }
@@ -115,7 +115,7 @@ public class ZCachingJavaScriptProcessor implements ZIJavaScriptProcessor
     String contextPath = context.getContextPath();
     for (ZJavaScriptExposed crt : group)
     {
-      String url = crt.getPrefix() + crt.getUrl();
+      String url = crt.getUrl();
       if (contextPath != null)
       {
         url = contextPath + url;
@@ -134,7 +134,7 @@ public class ZCachingJavaScriptProcessor implements ZIJavaScriptProcessor
     List<ZJavaScriptExposed> merge = null;
     for (ZJavaScriptExposed s : javaScriptExposed)
     {
-      String url = s.getPrefix() + s.getUrl();
+      String url = s.getUrl();
       if (url.charAt(0) == '/' && s.isMerge())
       {
         if (merge == null)
@@ -171,7 +171,7 @@ public class ZCachingJavaScriptProcessor implements ZIJavaScriptProcessor
     StringBuffer keyBuff = new StringBuffer();
     for (ZJavaScriptExposed s : merge)
     {
-      keyBuff.append(s.getPrefix() + s.getUrl());
+      keyBuff.append(s.getUrl());
       keyBuff.append('|');
     }
 

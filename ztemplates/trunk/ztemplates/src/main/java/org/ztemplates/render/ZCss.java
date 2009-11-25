@@ -54,14 +54,7 @@ public @interface ZCss
    * <p>
    * "/yuiloader" is mapped to a action that loads the resources associated with
    * this css file.
-   * 
-   * @return the nesting level from which to merge
-   * 
-   */
-  String prefix() default "";
 
-
-  /**
    * if true file will be merged. If false not. reasons for not merging could be
    * resource paths.
    * 

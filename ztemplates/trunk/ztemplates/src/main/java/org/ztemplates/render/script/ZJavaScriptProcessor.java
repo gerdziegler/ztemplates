@@ -20,7 +20,7 @@ public class ZJavaScriptProcessor implements ZIJavaScriptProcessor
 
     for (ZJavaScriptExposed s : javaScriptExposed)
     {
-      String jsPath = s.getPrefix() + s.getUrl();
+      String jsPath = s.getUrl();
       if (contextPath != null && jsPath.startsWith("/"))
       {
         jsPath = contextPath + jsPath;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Gerd Ziegler (www.gerdziegler.de)
+ * Copyright 2009 Gerd Ziegler (www.gerdziegler.de)
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,20 +12,11 @@
  * 
  * @author www.gerdziegler.de
  */
-package org.ztemplates.property.validator;
+package org.ztemplates.render.scriptrepo;
 
-import org.ztemplates.property.validator.assets.ZRegexValidatorScriptLoaderAction;
-import org.ztemplates.render.ZJavaScript;
-import org.ztemplates.render.ZScript;
-
-@ZScript(javaScript =
+public class ZJavaScriptDefinition
 {
-  @ZJavaScript(ZRegexValidatorScriptLoaderAction.REGEX_VALIDATOR_JS)
-})
-public class ZMaxLengthValidator extends ZRegexStringValidator
-{
-  public ZMaxLengthValidator(int maxlength, String message)
-  {
-    super("^.{0," + maxlength + "}$", message);
-  }
+//  private final String id;
+//  private final String version;
+//  private 
 }

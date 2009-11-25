@@ -31,10 +31,6 @@ public class ZCachingCssProcessor implements ZICssProcessor
     for (ZCssExposed css : cssExposed)
     {
       String path = css.getUrl();
-      if (css.getPrefix() != null)
-      {
-        path = css.getPrefix() + path;
-      }
       if (path.startsWith("/"))
       {
         addLink(sb, contextPath, path, path2DigestMap);

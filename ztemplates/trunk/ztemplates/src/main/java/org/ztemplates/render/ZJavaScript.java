@@ -33,10 +33,6 @@ public @interface ZJavaScript
    */
   String value();
 
-
-  String prefix() default "";
-
-
   /**
    * If set to true will be considerered as having no dependency to other javascript files, so order is not important 
    * @return

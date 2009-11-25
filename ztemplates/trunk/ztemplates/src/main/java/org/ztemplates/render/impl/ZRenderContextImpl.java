@@ -189,7 +189,7 @@ public class ZRenderContextImpl implements ZIRenderContext
       String s = css.value();
       int idx = scriptRepository.getCssIndex(css);
       String val = exposed != null ? ZReplaceUtil.replace(s, exposed) : s;
-      addCssExposed(new ZCssExposed(idx, val, css.prefix(), css.merge()));
+      addCssExposed(new ZCssExposed(idx, val, css.merge()));
     }
 
     for (ZJavaScript js : dep.getJavaScript())
@@ -197,7 +197,7 @@ public class ZRenderContextImpl implements ZIRenderContext
       String s = js.value();
       int idx = scriptRepository.getJavaScriptIndex(s);
       String val = exposed != null ? ZReplaceUtil.replace(s, exposed) : s;
-      addJavaScriptExposed(new ZJavaScriptExposed(idx, js.prefix(), val, js.standalone(), js
+      addJavaScriptExposed(new ZJavaScriptExposed(idx, val, js.standalone(), js
           .merge()));
     }
   }

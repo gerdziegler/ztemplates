@@ -8,18 +8,15 @@ public class ZJavaScriptExposed implements Comparable<ZJavaScriptExposed>, Seria
 
   private final String url;
 
-  private final String prefix;
-
   private final boolean standalone;
 
   private final boolean merge;
 
 
-  public ZJavaScriptExposed(int index, String prefix, String url, boolean standalone, boolean merge)
+  public ZJavaScriptExposed(int index, String url, boolean standalone, boolean merge)
   {
     super();
     this.index = index;
-    this.prefix = prefix;
     this.url = url;
     this.standalone = standalone;
     this.merge = merge;
@@ -28,7 +25,7 @@ public class ZJavaScriptExposed implements Comparable<ZJavaScriptExposed>, Seria
 
   public ZJavaScriptExposed(int index, String url)
   {
-    this(index, "", url, false, true);
+    this(index, url, false, true);
   }
 
 
@@ -70,12 +67,6 @@ public class ZJavaScriptExposed implements Comparable<ZJavaScriptExposed>, Seria
   public int hashCode()
   {
     return url.hashCode();
-  }
-
-
-  public String getPrefix()
-  {
-    return prefix;
   }
 
 

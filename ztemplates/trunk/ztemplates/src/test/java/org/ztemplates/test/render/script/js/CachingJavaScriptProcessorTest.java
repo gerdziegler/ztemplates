@@ -114,8 +114,8 @@ public class CachingJavaScriptProcessorTest extends TestCase
   {
     ZCachingJavaScriptProcessor p = new ZCachingJavaScriptProcessor(jsContext);
     SortedSet<ZJavaScriptExposed> scripts = new TreeSet<ZJavaScriptExposed>();
-    scripts.add(new ZJavaScriptExposed(0, "", "http://2", true, true));
-    scripts.add(new ZJavaScriptExposed(0, "", "http://2", true, true));
+    scripts.add(new ZJavaScriptExposed(0, "http://2", true, true));
+    scripts.add(new ZJavaScriptExposed(0, "http://2", true, true));
     List<List<ZJavaScriptExposed>> groups = p.group(scripts);
     assertEquals(1, groups.size());
     assertEquals(1, groups.get(0).size());

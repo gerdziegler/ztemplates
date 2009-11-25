@@ -24,7 +24,7 @@ import org.ztemplates.render.ZScript;
 
 @ZScript(javaScript =
 {
-  @ZJavaScript(prefix = ZRegexValidatorScriptLoaderAction.PREFIX, value = ZRegexValidatorScriptLoaderAction.REGEX_VALIDATOR_JS)
+  @ZJavaScript(ZRegexValidatorScriptLoaderAction.REGEX_VALIDATOR_JS)
 })
 public class ZRegexStringValidator implements ZIJavaScriptValidator
 {

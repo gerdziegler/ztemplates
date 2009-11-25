@@ -8,17 +8,14 @@ public class ZCssExposed implements Comparable<ZCssExposed>, Serializable
 
   private final String url;
 
-  private final String prefix;
-
   private final boolean merge;
 
 
-  public ZCssExposed(int index, String javaScript, String prefix, boolean merge)
+  public ZCssExposed(int index, String javaScript,  boolean merge)
   {
     super();
     this.index = index;
     this.url = javaScript;
-    this.prefix = prefix;
     this.merge = merge;
   }
 
@@ -61,12 +58,6 @@ public class ZCssExposed implements Comparable<ZCssExposed>, Serializable
   public int hashCode()
   {
     return url.hashCode();
-  }
-
-
-  public String getPrefix()
-  {
-    return prefix;
   }
 
 
