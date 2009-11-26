@@ -33,6 +33,7 @@ public @interface ZJavaScript
    */
   String value();
 
+
   /**
    * If set to true will be considerered as having no dependency to other javascript files, so order is not important 
    * @return
@@ -41,8 +42,9 @@ public @interface ZJavaScript
 
 
   /**
-   * If set to true will be merged with other scripts if possible without changing the order
-   * @return
-   */
+  * If set to true will be merged with other scripts if possible without changing the order. reasons for not merging could be
+  * resource paths.
+  * @return
+  */
   boolean merge() default false;
 }

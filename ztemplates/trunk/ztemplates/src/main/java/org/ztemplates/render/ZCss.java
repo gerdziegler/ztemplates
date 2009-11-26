@@ -38,27 +38,4 @@ public @interface ZCss
    * path relative to the contextPath or absolute pointing to scripts
    */
   String value();
-
-
-  /**
-   * css scripts may contain resources like gif that are referenced by relative
-   * paths from the css - to keep the relative paths working, when merging css,
-   * ztemplates will merge only scripts with the same prefix and the same number
-   * of '/' characters in the value. The prefix should reference the servlet or
-   * ztemplates action that loads the resources.
-   * <p>
-   * Example:
-   * <p>
-   * prefix = "/yuiloader" value="/fonts/fonts-min.css" will merge this with all
-   * css with prefix "/yuiloader" AND contain 2 '/' characters in the value
-   * <p>
-   * "/yuiloader" is mapped to a action that loads the resources associated with
-   * this css file.
-
-   * if true file will be merged. If false not. reasons for not merging could be
-   * resource paths.
-   * 
-   * @return
-   */
-  boolean merge() default false;
 }

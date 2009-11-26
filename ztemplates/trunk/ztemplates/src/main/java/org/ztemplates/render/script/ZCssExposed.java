@@ -8,15 +8,15 @@ public class ZCssExposed implements Comparable<ZCssExposed>, Serializable
 
   private final String url;
 
-  private final boolean merge;
+//  private final boolean merge;
 
 
-  public ZCssExposed(int index, String javaScript,  boolean merge)
+  public ZCssExposed(int index, String javaScript/*,  boolean merge*/)
   {
     super();
     this.index = index;
     this.url = javaScript;
-    this.merge = merge;
+//    this.merge = merge;
   }
 
 
@@ -61,8 +61,8 @@ public class ZCssExposed implements Comparable<ZCssExposed>, Serializable
   }
 
 
-  public boolean isMerge()
-  {
-    return merge;
-  }
+//  public boolean isMerge()
+//  {
+//    return merge;
+//  }
 }
