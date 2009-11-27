@@ -37,14 +37,20 @@ public class ZFormPassword
   private String htmlAttributes;
 
 
-  public ZFormPassword(String formId, final ZProperty prop)
+  public ZFormPassword(String formId, String propertyName, String value)
   {
     ZIRenderService rs = ZTemplates.getRenderService();
-    inputId = rs.createJavaScriptId();
-    cssId = rs.getCssId(ZFormText.class);
+    this.inputId = rs.createJavaScriptId();
+    this.cssId = rs.getCssId(ZFormText.class);
     this.formId = formId;
-    propertyName = prop.getName();
-    this.value = prop.getStringValue();
+    this.propertyName = propertyName;
+    this.value = value;
+  }
+
+
+  public ZFormPassword(String formId, final ZProperty prop)
+  {
+    this(formId, prop.getName(), prop.getStringValue());
   }
 
 

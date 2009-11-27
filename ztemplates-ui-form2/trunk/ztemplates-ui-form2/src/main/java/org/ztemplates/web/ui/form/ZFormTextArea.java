@@ -41,16 +41,23 @@ public class ZFormTextArea
   private Integer cols;
 
 
-  public ZFormTextArea(String formId, final ZProperty prop, Integer rows, Integer cols)
+  public ZFormTextArea(String formId, String propertyName, String value, Integer rows, Integer cols)
   {
-    ZIRenderService rs = ZTemplates.getRenderService();
-    inputId = rs.createJavaScriptId();
-    cssId = rs.getCssId(getClass());
     this.formId = formId;
-    propertyName = prop.getName();
+    this.propertyName = propertyName;
+    this.value = value;
     this.rows = rows;
     this.cols = cols;
-    value = prop.getStringValue();
+
+    ZIRenderService rs = ZTemplates.getRenderService();
+    this.inputId = rs.createJavaScriptId();
+    this.cssId = rs.getCssId(getClass());
+  }
+
+
+  public ZFormTextArea(String formId, final ZProperty prop, Integer rows, Integer cols)
+  {
+    this(formId, prop.getName(), prop.getStringValue(), rows, cols);
   }
 
 

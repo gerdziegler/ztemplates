@@ -37,14 +37,20 @@ public class ZFormText
   private String htmlAttributes;
 
 
-  public ZFormText(String formId, final ZProperty prop)
+  public ZFormText(String formId, String propertyName, String value)
   {
     ZIRenderService rs = ZTemplates.getRenderService();
-    inputId = rs.createJavaScriptId();
-    cssId = rs.getCssId(getClass());
+    this.inputId = rs.createJavaScriptId();
+    this.cssId = rs.getCssId(ZFormText.class);
     this.formId = formId;
-    propertyName = prop.getName();
-    value = prop.getStringValue();
+    this.propertyName = propertyName;
+    this.value = value;
+  }
+
+
+  public ZFormText(String formId, final ZProperty prop)
+  {
+    this(formId, prop.getName(), prop.getStringValue());
   }
 
 

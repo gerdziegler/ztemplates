@@ -18,7 +18,6 @@ import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
-import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
@@ -35,13 +34,18 @@ public class ZFormHidden
   private String htmlAttributes;
 
 
+  public ZFormHidden(String formId, String propertyName, String value)
+  {
+    this.inputId = ZTemplates.getRenderService().createJavaScriptId();
+    this.formId = formId;
+    this.propertyName = propertyName;
+    this.value = value;
+  }
+
+
   public ZFormHidden(String formId, final ZProperty prop)
   {
-    ZIRenderService rs = ZTemplates.getRenderService();
-    inputId = rs.createJavaScriptId();
-    this.formId = formId;
-    propertyName = prop.getName();
-    value = prop.getStringValue();
+    this(formId, prop.getName(), prop.getStringValue());
   }
 
 

@@ -37,14 +37,20 @@ public class ZFormCheckbox
   private String htmlAttributes;
 
 
-  public <T> ZFormCheckbox(String formId, final ZProperty<T> prop)
+  public ZFormCheckbox(String formId, String propertyName)
   {
     ZIRenderService rs = ZTemplates.getRenderService();
     checkboxId = rs.createJavaScriptId();
     hiddenId = rs.createJavaScriptId();
     cssId = rs.getCssId(getClass());
     this.formId = formId;
-    propertyName = prop.getName();
+    this.propertyName = propertyName;
+  }
+
+
+  public ZFormCheckbox(String formId, final ZProperty prop)
+  {
+    this(formId, prop.getName());
   }
 
 
