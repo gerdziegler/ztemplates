@@ -15,7 +15,7 @@
 package org.ztemplates.examples.formprocessing.layers.passive.ui.views.person;
 
 import org.ztemplates.examples.formprocessing.layers.passive.ids.GenderId;
-import org.ztemplates.jquery.menu.JQAutocomplete;
+import org.ztemplates.jquery.menu.JQueryAutocomplete;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
@@ -58,7 +58,7 @@ public class PersonPanel
 
   private final ZFormInputState genderState;
 
-  private final JQAutocomplete occupationAutocomplete;
+  private final JQueryAutocomplete occupationAutocomplete;
 
   private final ZFormText taxRate;
 
@@ -93,11 +93,11 @@ public class PersonPanel
     genderInput = new ZFormRadio<GenderId>(formName, data.getGender());
     genderState = new ZFormInputState(formName, data.getGender());
     occupationState = new ZFormInputState(formName, data.getOccupation());
-    occupationAutocomplete = new JQAutocomplete(occupationInput.getInputId(), autocompleteQueryUrl);
-    occupationAutocomplete.getProperties().put(JQAutocomplete.PROP_minChars_number, 1);
-    occupationAutocomplete.getProperties().put(JQAutocomplete.PROP_delay_number, 200);
-    occupationAutocomplete.getProperties().put(JQAutocomplete.PROP_max_number, 12);
-    occupationAutocomplete.getProperties().put(JQAutocomplete.PROP_scroll_boolean, Boolean.FALSE);
+    occupationAutocomplete = new JQueryAutocomplete(occupationInput.getInputId(), autocompleteQueryUrl);
+    occupationAutocomplete.getProperties().put(JQueryAutocomplete.PROP_minChars_number, 1);
+    occupationAutocomplete.getProperties().put(JQueryAutocomplete.PROP_delay_number, 200);
+    occupationAutocomplete.getProperties().put(JQueryAutocomplete.PROP_max_number, 12);
+    occupationAutocomplete.getProperties().put(JQueryAutocomplete.PROP_scroll_boolean, Boolean.FALSE);
     taxRate = new ZFormText(formName, data.getTaxRate());
     taxRateState = new ZFormInputState(formName, data.getTaxRate());
     married = new ZFormCheckbox(formName, data.getMarried());
@@ -192,7 +192,7 @@ public class PersonPanel
 
 
   @ZExpose(render = true)
-  public JQAutocomplete getOccupationAutocomplete() throws Exception
+  public JQueryAutocomplete getOccupationAutocomplete() throws Exception
   {
     return occupationAutocomplete;
   }
