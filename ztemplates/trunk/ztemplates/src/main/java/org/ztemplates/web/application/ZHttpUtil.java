@@ -81,4 +81,13 @@ public class ZHttpUtil
     resp.setHeader("Cache-Control", "max-age=" + limit);// + ",
     // must-revalidate");
   }
+
+
+  public static void addNoCachingHeaders(HttpServletResponse resp)
+  {
+    long now = System.currentTimeMillis();
+    resp.setDateHeader("Expires", now - 10000L);
+    resp.setDateHeader("Last-Modified", now- 10000L);
+    resp.setHeader("Cache-Control", "no-store");    
+  }
 }
