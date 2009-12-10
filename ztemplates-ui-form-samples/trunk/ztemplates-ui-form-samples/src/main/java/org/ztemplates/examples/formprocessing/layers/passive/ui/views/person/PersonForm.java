@@ -21,14 +21,14 @@ import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.DateP
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.GenderIdSelectProperty;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.NameProperty;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.properties.PasswordProperty;
-import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.property.ZBigDecimalProperty;
 import org.ztemplates.property.ZBooleanProperty;
 import org.ztemplates.property.ZError;
 import org.ztemplates.property.ZStringProperty;
 import org.ztemplates.property.validator.ZRegexStringValidator;
 
-public class PersonForm implements ZIForm
+public class PersonForm implements ZIFormModel
 {
   private final CheckboxProperty enabled = new CheckboxProperty();
 

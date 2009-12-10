@@ -16,10 +16,10 @@ package org.ztemplates.examples.formprocessing.layers.passive.ui.views;
 
 import org.ztemplates.examples.formprocessing.layers.passive.ui.views.cascading.CascadingForm;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.views.person.PersonForm;
-import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.property.ZOperation;
 
-public class SampleForm implements ZIForm
+public class SampleForm implements ZIFormModel
 {
   private final PersonForm person = new PersonForm();
 
