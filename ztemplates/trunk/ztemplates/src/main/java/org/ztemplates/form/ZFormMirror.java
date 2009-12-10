@@ -34,7 +34,7 @@ public class ZFormMirror implements ZIFormVisitable
 {
   static final Logger log = Logger.getLogger(ZFormMirror.class);
 
-  private final ZIForm form;
+  private final ZIFormModel form;
 
   private final List<ZProperty> properties = new ArrayList<ZProperty>();
 
@@ -43,7 +43,7 @@ public class ZFormMirror implements ZIFormVisitable
   private final List<ZFormMirror> subModels = new ArrayList<ZFormMirror>();
 
 
-  public ZFormMirror(ZIForm obj) throws Exception
+  public ZFormMirror(ZIFormModel obj) throws Exception
   {
     this.form = obj;
 
@@ -80,9 +80,9 @@ public class ZFormMirror implements ZIFormVisitable
           properties.add(prop);
         }
         // third
-        else if (ZIForm.class.isAssignableFrom(returnType))
+        else if (ZIFormModel.class.isAssignableFrom(returnType))
         {
-          ZIForm fe = (ZIForm) m.invoke(obj);
+          ZIFormModel fe = (ZIFormModel) m.invoke(obj);
           if (fe == null)
           {
             throw new Exception("null form model returned from " + m.getName());
@@ -94,7 +94,7 @@ public class ZFormMirror implements ZIFormVisitable
   }
 
 
-  public static void initPropertyNames(ZIForm obj, String prefix) throws Exception
+  public static void initPropertyNames(ZIFormModel obj, String prefix) throws Exception
   {
     for (Method m : obj.getClass().getMethods())
     {
@@ -129,10 +129,10 @@ public class ZFormMirror implements ZIFormVisitable
           }
         }
         // third
-        else if (ZIForm.class.isAssignableFrom(returnType))
+        else if (ZIFormModel.class.isAssignableFrom(returnType))
         {
           String feName = ZReflectionUtil.removePrefixName("get", m.getName());
-          ZIForm fe = (ZIForm) m.invoke(obj);
+          ZIFormModel fe = (ZIFormModel) m.invoke(obj);
           initPropertyNames(fe, prefix + feName + ".");
         }
       }
@@ -411,7 +411,7 @@ public class ZFormMirror implements ZIFormVisitable
   }
 
 
-  public ZIForm getForm()
+  public ZIFormModel getForm()
   {
     return form;
   }

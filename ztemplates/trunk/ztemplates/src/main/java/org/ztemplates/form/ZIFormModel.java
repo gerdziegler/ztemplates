@@ -21,6 +21,6 @@ package org.ztemplates.form;
  * 
  * @author www.gerdziegler.de
  */
-public interface ZIForm
+public interface ZIFormModel
 {
 }

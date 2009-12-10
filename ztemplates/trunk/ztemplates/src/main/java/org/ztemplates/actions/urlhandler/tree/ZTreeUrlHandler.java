@@ -37,7 +37,7 @@ import org.ztemplates.actions.urlhandler.tree.term.ZTreeVariable;
 import org.ztemplates.actions.util.ZReflectionUtil;
 import org.ztemplates.form.ZFormMirror;
 import org.ztemplates.form.ZFormValues;
-import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.form.ZIFormController;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
@@ -411,7 +411,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       }
 
       ZReflectionUtil.callBeforeForm(pojo, formName);
-      ZIForm form = (ZIForm) ZReflectionUtil.callFormGetter(pojo, formName);
+      ZIFormModel form = (ZIFormModel) ZReflectionUtil.callFormGetter(pojo, formName);
 
       ZFormMirror.initPropertyNames(form, "");
 

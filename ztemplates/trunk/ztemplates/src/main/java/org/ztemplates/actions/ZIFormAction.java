@@ -14,7 +14,7 @@
  */
 package org.ztemplates.actions;
 
-import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.ZIFormModel;
 
 /**
  * Tagging interface for form actions, leads to parameter assignment to form properties.
@@ -23,7 +23,7 @@ import org.ztemplates.form.ZIForm;
  * 
  * @author www.gerdziegler.de
  */
-public interface ZIFormAction<T extends ZIForm> extends ZIAction
+public interface ZIFormAction<T extends ZIFormModel> extends ZIAction
 {
   public T getForm() throws Exception;
 

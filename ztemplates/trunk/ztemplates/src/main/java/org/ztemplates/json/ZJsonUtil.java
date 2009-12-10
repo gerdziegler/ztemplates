@@ -20,7 +20,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.property.ZProperty;
 
 public class ZJsonUtil
@@ -41,7 +41,7 @@ public class ZJsonUtil
       return null;
     }
 
-    boolean form = obj instanceof ZIForm;
+    boolean form = obj instanceof ZIFormModel;
 
     JSONObject ret = new JSONObject();
     for (Method m : obj.getClass().getMethods())
@@ -70,7 +70,7 @@ public class ZJsonUtil
       }
 
       Class type = m.getReturnType();
-      if (!ann && !ZProperty.class.isAssignableFrom(type) && !ZIForm.class.isAssignableFrom(type))
+      if (!ann && !ZProperty.class.isAssignableFrom(type) && !ZIFormModel.class.isAssignableFrom(type))
       {
         continue;
       }

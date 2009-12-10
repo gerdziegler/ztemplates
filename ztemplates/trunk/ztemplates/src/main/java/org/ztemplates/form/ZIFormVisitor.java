@@ -23,6 +23,4 @@ public interface ZIFormVisitor
 
 
   public void visit(ZOperation op) throws Exception;
-
-  //  public boolean visit(ZIFormElement op) throws Exception;
 }

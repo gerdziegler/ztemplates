@@ -18,7 +18,7 @@ import org.ztemplates.property.ZError;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZStringProperty;
 
-public class TopSectionFormModel implements ZIForm
+public class TopSectionFormModel implements ZIFormModel
 {
   private final ZOperation op1 = new ZOperation("submit")
   {
