@@ -70,4 +70,5 @@ public class ZRegexStringValidator implements ZIJavaScriptValidator
   {
     return "zregexValidatorScript";
   }
+  
 }

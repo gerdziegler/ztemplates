@@ -22,10 +22,10 @@ import org.ztemplates.render.ZScript;
 {
   @ZJavaScript(ZRegexValidatorScriptLoaderAction.REGEX_VALIDATOR_JS)
 })
-public class ZMaxLengthValidator extends ZLengthValidator
+public class ZMinLengthValidator extends ZLengthValidator
 {
-  public ZMaxLengthValidator(int maxlength, String message)
+  public ZMinLengthValidator(int minlength, String message)
   {
-    super(0, maxlength, message);
+    super(minlength, 0, message);
   }
 }
