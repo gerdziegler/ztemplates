@@ -169,7 +169,8 @@ public class ZReflectionUtil
       return prop;
     }
 
-    if (m.getParameterTypes()[0].isArray())
+    Class paramType = m.getParameterTypes()[0];
+    if (paramType.isArray())
     {
       invoke(m, obj, (Object) value);
     }
@@ -186,7 +187,14 @@ public class ZReflectionUtil
         {
           val = null;
         }
-        invoke(m, obj, val);
+        if (paramType.isEnum())
+        {
+          invoke(m, obj, Enum.valueOf(paramType, val));
+        }
+        else
+        {
+          invoke(m, obj, val);
+        }
       }
       else
       {
@@ -338,6 +346,13 @@ public class ZReflectionUtil
     if (ret.getClass().isArray())
     {
       return (String[]) ret;
+    }
+    if (ret.getClass().isEnum())
+    {
+      return new String[]
+      {
+        ((Enum) ret).name()
+      };
     }
     return new String[]
     {

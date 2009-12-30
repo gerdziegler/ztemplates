@@ -19,6 +19,12 @@ import java.util.List;
 
 public class TestClass1
 {
+  public enum TestEnum {
+    ENUM1, ENUM2
+  };
+
+  private TestEnum enumVal = TestEnum.ENUM1;
+
   private List<TestClass2> list = new ArrayList<TestClass2>();
 
   private TestClass2[] array = new TestClass2[]
@@ -38,5 +44,17 @@ public class TestClass1
   public TestClass2[] getArray()
   {
     return array;
+  }
+
+
+  public TestEnum getEnumVal()
+  {
+    return enumVal;
+  }
+
+
+  public void setEnumVal(TestEnum enumVal)
+  {
+    this.enumVal = enumVal;
   }
 }

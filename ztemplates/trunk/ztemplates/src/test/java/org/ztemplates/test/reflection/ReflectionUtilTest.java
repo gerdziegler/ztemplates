@@ -45,4 +45,16 @@ public class ReflectionUtilTest extends TestCase
     String s = (String) ZReflectionUtil.getObjectByBeanPath(tc, "list[0].value");
     assertEquals("val1", s);
   }
+
+  public void test2() throws Exception
+  {
+    TestClass1 tc = new TestClass1();
+    String[] vals = ZReflectionUtil.callParameterGetter(tc, "enumVal");
+    assertEquals(TestClass1.TestEnum.ENUM1.name(), vals[0]);
+    ZReflectionUtil.callParameterSetter(tc, "enumVal", new String[]{TestClass1.TestEnum.ENUM2.name()});    
+    assertEquals(TestClass1.TestEnum.ENUM2, tc.getEnumVal());   
+
+    String[] vals2 = ZReflectionUtil.callParameterGetter(tc, "enumVal");
+    assertEquals(TestClass1.TestEnum.ENUM2.name(), vals2[0]);
+  }
 }
