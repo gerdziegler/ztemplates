@@ -39,11 +39,9 @@ public class TreePrintTest extends TestCase
   protected void setUp() throws Exception
   {
     super.setUp();
-    classRepo = ZClassRepository.create(ZMavenClassPath.getItems(), TreePrintTest.class
-        .getPackage().getName());
+    classRepo = ZClassRepository.create(ZMavenClassPath.getItems(), TreePrintTest.class.getPackage().getName());
 
-    proc = new ZTreeUrlHandler(new ZMatchTree(classRepo),
-        ZTestUrlHandlerFactory.defaultSecurityService);
+    proc = new ZTreeUrlHandler(new ZMatchTree(classRepo), ZTestUrlHandlerFactory.defaultSecurityService, ZTestUrlHandlerFactory.defaultSecureUrlDecorator);
   }
 
 

@@ -24,8 +24,5 @@ public interface ZIUrlHandler
   public Object process(String url, Map<String, String[]> paramMap) throws Exception;
 
 
-  public String createUrl(Object action) throws Exception;
-
-
   public void printInfo(StringBuffer sb);
 }

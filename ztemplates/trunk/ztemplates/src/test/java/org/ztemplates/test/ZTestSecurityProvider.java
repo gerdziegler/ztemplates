@@ -14,27 +14,13 @@
  */
 package org.ztemplates.test;
 
-import java.util.Set;
-
 import org.ztemplates.actions.ZISecurityProvider;
 
 public class ZTestSecurityProvider implements ZISecurityProvider
 {
-  public String addSecurityToUrl(String url, Set<String> roles)
-  {
-    return url;
-  }
-
-
   public boolean isUserInRole(String role)
   {
     return true;
-  }
-
-
-  public String removeSecurityFromUrl(String url)
-  {
-    return url;
   }
 
 

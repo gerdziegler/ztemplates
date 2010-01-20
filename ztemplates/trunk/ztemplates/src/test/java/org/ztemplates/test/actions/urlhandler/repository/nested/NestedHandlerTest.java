@@ -17,6 +17,8 @@ package org.ztemplates.test.actions.urlhandler.repository.nested;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.actions.ZIUrlFactory;
+import org.ztemplates.actions.ZUrlFactory;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
 
@@ -50,8 +52,8 @@ public class NestedHandlerTest extends TestCase
 
   public void test2() throws Exception
   {
-    ZIUrlHandler up = ZTestUrlHandlerFactory.create(NestedHandlerTest.class.getPackage().getName(),
-        ZTestUrlHandlerFactory.defaultSecurityService);
+    ZIUrlHandler up = ZTestUrlHandlerFactory.create(NestedHandlerTest.class.getPackage().getName(), ZTestUrlHandlerFactory.defaultSecurityService);
+
     Handler obj = (Handler) up.process("/audiobooks/nested/katzeklo");
     assertNotNull(obj);
     assertEquals("katzeklo", obj.getNested().getValue());
@@ -61,7 +63,9 @@ public class NestedHandlerTest extends TestCase
     assertEquals(1, obj.getAfterNestedCalled());
 
     obj.getNested().setValue("froh");
-    String s = up.createUrl(obj);
+
+    ZIUrlFactory urlFactory = new ZUrlFactory(ZTestUrlHandlerFactory.defaultSecureUrlDecorator);
+    String s = urlFactory.createUrl(obj);
     log.debug(s);
 
     Handler obj2 = (Handler) up.process(s);

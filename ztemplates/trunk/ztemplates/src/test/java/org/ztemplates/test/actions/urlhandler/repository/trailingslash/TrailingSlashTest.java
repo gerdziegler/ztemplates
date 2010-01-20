@@ -17,6 +17,8 @@ package org.ztemplates.test.actions.urlhandler.repository.trailingslash;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.actions.ZIUrlFactory;
+import org.ztemplates.actions.ZUrlFactory;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
 
@@ -25,6 +27,7 @@ public class TrailingSlashTest extends TestCase
   static Logger log = Logger.getLogger(TrailingSlashTest.class);
 
   ZIUrlHandler up;
+  ZIUrlFactory urlFactory;
 
 
   protected void setUp() throws Exception
@@ -32,6 +35,8 @@ public class TrailingSlashTest extends TestCase
     super.setUp();
     up = ZTestUrlHandlerFactory.create(TrailingSlashTest.class.getPackage().getName(),
         ZTestUrlHandlerFactory.defaultSecurityService);
+    urlFactory = new ZUrlFactory(ZTestUrlHandlerFactory.defaultSecureUrlDecorator);
+
   }
 
 
@@ -66,7 +71,7 @@ public class TrailingSlashTest extends TestCase
   public void test4() throws Exception
   {
     Handler1 obj = new Handler1();
-    String url = up.createUrl(obj);
+    String url = urlFactory.createUrl(obj);
     assertEquals("/index", url);
   }
 

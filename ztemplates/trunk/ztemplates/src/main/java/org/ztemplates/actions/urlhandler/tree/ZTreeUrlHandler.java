@@ -1,7 +1,6 @@
 package org.ztemplates.actions.urlhandler.tree;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,14 +10,13 @@ import java.util.Stack;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.ZIFormAction;
+import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.ZMatch;
 import org.ztemplates.actions.security.ZRoles;
 import org.ztemplates.actions.security.ZSecurityException;
-import org.ztemplates.actions.urlhandler.ZIUrlFactory;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.urlhandler.ZUrl;
-import org.ztemplates.actions.urlhandler.ZUrlFactory;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchedUrl;
 import org.ztemplates.actions.urlhandler.tree.process.ZAfterInstruction;
@@ -38,28 +36,27 @@ import org.ztemplates.actions.util.ZReflectionUtil;
 import org.ztemplates.form.ZFormMirror;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIFormModel;
-import org.ztemplates.form.ZIFormController;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
-import org.ztemplates.web.ZIMessageService;
 
 public class ZTreeUrlHandler implements ZIUrlHandler
 {
   static Logger log = Logger.getLogger(ZTreeUrlHandler.class);
 
-  private final ZIUrlFactory urlFactory;
 
   private final ZISecurityProvider security;
+
+  private final ZISecureUrlDecorator secureUrlDecorator;
 
   private final ZMatchTree tree;
 
 
-  public ZTreeUrlHandler(ZMatchTree tree, ZISecurityProvider security)
+  public ZTreeUrlHandler(ZMatchTree tree, ZISecurityProvider security, ZISecureUrlDecorator secureUrlDecorator)
   {
     super();
     this.security = security;
-    urlFactory = new ZUrlFactory();
     this.tree = tree;
+    this.secureUrlDecorator = secureUrlDecorator;
   }
 
 
@@ -80,17 +77,17 @@ public class ZTreeUrlHandler implements ZIUrlHandler
   {
     ZUrl zurl = parse(url);
     zurl.getParameterMap().putAll(paramMap);
-    //    for (Map.Entry<String, String[]> en : paramMap.entrySet())
-    //    {
-    //      String key = en.getKey();
-    //      String[] val = en.getValue();
-    ////      String[] val = new String[oldVal.length];
-    ////      for (int i = 0; i < oldVal.length; i++)
-    ////      {
-    ////        val[i] = oldVal[i];//URLDecoder.decode(oldVal[i]/* , ENCODING */);
-    ////      }
-    //      zurl.getParameterMap().put(key, val);
-    //    }
+    // for (Map.Entry<String, String[]> en : paramMap.entrySet())
+    // {
+    // String key = en.getKey();
+    // String[] val = en.getValue();
+    // // String[] val = new String[oldVal.length];
+    // // for (int i = 0; i < oldVal.length; i++)
+    // // {
+    // // val[i] = oldVal[i];//URLDecoder.decode(oldVal[i]/* , ENCODING */);
+    // // }
+    // zurl.getParameterMap().put(key, val);
+    // }
     return process(zurl);
   }
 
@@ -256,50 +253,6 @@ public class ZTreeUrlHandler implements ZIUrlHandler
   }
 
 
-  public String createUrl(Object action) throws Exception
-  {
-    if (action instanceof String)
-    {
-      return (String) action;
-    }
-
-    ZUrl url = urlFactory.createUrl(action);
-
-    String surl = url.getUrl();
-
-    if (security != null && url.getRoles().isSecure())
-    {
-      surl = security.addSecurityToUrl(surl, url.getRoles().getRoles());
-    }
-
-    StringBuffer sb = new StringBuffer(surl);
-    boolean first = true;
-    for (Map.Entry<String, String[]> en : url.getParameterMap().entrySet())
-    {
-      String name = en.getKey();
-      for (String val : en.getValue())
-      {
-        if (first)
-        {
-          sb.append('?');
-          first = false;
-        }
-        else
-        {
-          sb.append('&');
-        }
-        sb.append(name);
-        sb.append('=');
-        val = URLEncoder.encode(val/* , ENCODING */);
-
-        sb.append(val);
-      }
-    }
-
-    return sb.toString();
-  }
-
-
   public ZUrl parse(String s) throws Exception
   {
     int idx = s.indexOf('?');
@@ -318,7 +271,8 @@ public class ZTreeUrlHandler implements ZIUrlHandler
           String key = item.substring(0, eq);
           if (eq == item.length() - 1)
           {
-            parameterMap.put(key, new String[] {});
+            parameterMap.put(key, new String[]
+            {});
           }
           else
           {
@@ -332,7 +286,8 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         }
         else
         {
-          parameterMap.put(item, new String[] {});
+          parameterMap.put(item, new String[]
+          {});
         }
       }
     }
@@ -344,12 +299,12 @@ public class ZTreeUrlHandler implements ZIUrlHandler
     url = URLDecoder.decode(url/* , ENCODING */);
 
     // remove security
-    if (security != null)
+    if (secureUrlDecorator != null)
     {
-      url = security.removeSecurityFromUrl(url);
+      url = secureUrlDecorator.removeSecurityFromUrl(url);
     }
 
-    //add last cut trailing slash
+    // add last cut trailing slash
     if (url.length() > 1 && url.charAt(url.length() - 1) == '/')
     {
       url = url.substring(0, url.length() - 1);
@@ -379,8 +334,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       {
         if (operation != null)
         {
-          throw new Exception("Only one operation call per request allowed: " + operation + " "
-              + assignedProp);
+          throw new Exception("Only one operation call per request allowed: " + operation + " " + assignedProp);
         }
         operation = (ZOperation) assignedProp;
       }
@@ -398,9 +352,8 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         {
           if (!formName.equals("form"))
           {
-            throw new Exception("action pojo class [" + pojo.getClass().getName() + "] implements "
-                + ZIFormAction.class.getName() + " and has wrong value in annotation "
-                + ZMatch.class.getName() + ": form='" + formName
+            throw new Exception("action pojo class [" + pojo.getClass().getName() + "] implements " + ZIFormAction.class.getName()
+                + " and has wrong value in annotation " + ZMatch.class.getName() + ": form='" + formName
                 + "'. Change to form='form' or do not specify at all (leave empty).");
           }
         }
@@ -430,7 +383,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         op = ops.iterator().next();
       }
       else
-      //if (opCnt > 1)
+      // if (opCnt > 1)
       {
         throw new Exception("Only one operation call per request allowed: " + ops);
       }

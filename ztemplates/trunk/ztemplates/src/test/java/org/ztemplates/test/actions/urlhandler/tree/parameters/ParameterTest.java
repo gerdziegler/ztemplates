@@ -20,6 +20,8 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.actions.ZIUrlFactory;
+import org.ztemplates.actions.ZUrlFactory;
 import org.ztemplates.actions.urlhandler.ZUrl;
 import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
@@ -31,14 +33,15 @@ public class ParameterTest extends TestCase
 
   ZTreeUrlHandler up;
 
+  ZIUrlFactory urlFactory;
+
 
   protected void setUp() throws Exception
   {
     super.setUp();
     ZMock.setUp();
-    up = (ZTreeUrlHandler) ZTestUrlHandlerFactory
-        .create(ParameterTest.class.getPackage().getName(),
-            ZTestUrlHandlerFactory.defaultSecurityService);
+    up = (ZTreeUrlHandler) ZTestUrlHandlerFactory.create(ParameterTest.class.getPackage().getName(), ZTestUrlHandlerFactory.defaultSecurityService);
+    urlFactory = new ZUrlFactory(ZTestUrlHandlerFactory.defaultSecureUrlDecorator);
   }
 
 
@@ -110,7 +113,7 @@ public class ParameterTest extends TestCase
   {
     Handler obj1 = new Handler();
     obj1.setParam1("value1");
-    String surl = up.createUrl(obj1);
+    String surl = urlFactory.createUrl(obj1);
     ZUrl parsedUrl = up.parse(surl);
 
     assertEquals("value1", parsedUrl.getParameterMap().get("param1")[0]);
@@ -124,7 +127,7 @@ public class ParameterTest extends TestCase
     NestedHandler nested = new NestedHandler();
     obj1.setNested(nested);
     nested.setParam1("value1n");
-    String surl = up.createUrl(obj1);
+    String surl = urlFactory.createUrl(obj1);
     ZUrl parsedUrl = up.parse(surl);
 
     assertEquals("value1n", parsedUrl.getParameterMap().get("param1")[0]);
@@ -140,7 +143,7 @@ public class ParameterTest extends TestCase
     nested.setParam1("value1n");
 
     obj1.setNested(nested);
-    String surl = up.createUrl(obj1);
+    String surl = urlFactory.createUrl(obj1);
     ZUrl parsedUrl = up.parse(surl);
 
     assertEquals("value1n", parsedUrl.getParameterMap().get("param1")[0]);
@@ -158,7 +161,7 @@ public class ParameterTest extends TestCase
     nested.setParam3("value3n");
 
     obj1.setNested(nested);
-    String surl = up.createUrl(obj1);
+    String surl = urlFactory.createUrl(obj1);
     ZUrl parsedUrl = up.parse(surl);
 
     assertEquals("value1n", parsedUrl.getParameterMap().get("param1")[0]);
@@ -172,8 +175,7 @@ public class ParameterTest extends TestCase
     Map<String, String[]> param = new HashMap<String, String[]>();
     param.put("paramArr4", new String[]
     {
-        "valueArr1",
-        "valueArr2",
+        "valueArr1", "valueArr2",
     });
 
     Handler obj = (Handler) up.process("/mytext/nested/katzeklo", param);
@@ -187,8 +189,7 @@ public class ParameterTest extends TestCase
     Map<String, String[]> param = new HashMap<String, String[]>();
     param.put("paramArr4", new String[]
     {
-        "valueArr1 val2",
-        "valueArr2 val2",
+        "valueArr1 val2", "valueArr2 val2",
     });
 
     Handler obj = (Handler) up.process("/mytext/nested/katzeklo", param);

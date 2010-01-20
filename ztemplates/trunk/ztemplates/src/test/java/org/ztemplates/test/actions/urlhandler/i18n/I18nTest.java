@@ -17,6 +17,8 @@ package org.ztemplates.test.actions.urlhandler.i18n;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.actions.ZIUrlFactory;
+import org.ztemplates.actions.ZUrlFactory;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
 
@@ -26,12 +28,14 @@ public class I18nTest extends TestCase
 
   ZIUrlHandler up;
 
+  ZIUrlFactory urlFactory;
 
   protected void setUp() throws Exception
   {
     super.setUp();
     up = ZTestUrlHandlerFactory.create(I18nTest.class.getPackage().getName(),
         ZTestUrlHandlerFactory.defaultSecurityService);
+    urlFactory = new ZUrlFactory(ZTestUrlHandlerFactory.defaultSecureUrlDecorator);
   }
 
 
@@ -47,7 +51,7 @@ public class I18nTest extends TestCase
     I18nHandler h1 = new I18nHandler();
     h1.setProp("הצü");
 
-    String url = up.createUrl(h1);
+    String url = urlFactory.createUrl(h1);
     I18nHandler obj = (I18nHandler) up.process(url);
     assertNotNull(obj);
     assertEquals(url, h1.getProp(), obj.getProp());
@@ -58,7 +62,7 @@ public class I18nTest extends TestCase
   {
     I18nHandler h1 = new I18nHandler();
     h1.setParam("הצü");
-    String url = up.createUrl(h1);
+    String url = urlFactory.createUrl(h1);
     I18nHandler obj = (I18nHandler) up.process(url);
     assertNotNull(obj);
     assertEquals(url, h1.getParam(), obj.getParam());

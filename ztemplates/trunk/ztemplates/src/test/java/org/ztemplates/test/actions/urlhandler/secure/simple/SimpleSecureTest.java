@@ -19,12 +19,9 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.ZISecurityProvider;
-import org.ztemplates.actions.urlhandler.ZIUrlFactory;
-import org.ztemplates.actions.urlhandler.ZIUrlHandler;
-import org.ztemplates.actions.urlhandler.ZUrl;
-import org.ztemplates.actions.urlhandler.ZUrlFactory;
-import org.ztemplates.test.ZTestUrlHandlerFactory;
+import org.ztemplates.actions.ZISecureUrlDecorator;
+import org.ztemplates.actions.ZIUrlFactory;
+import org.ztemplates.actions.ZUrlFactory;
 
 public class SimpleSecureTest extends TestCase
 {
@@ -46,16 +43,16 @@ public class SimpleSecureTest extends TestCase
   public void test1() throws Exception
   {
     Handler1 h1 = new Handler1();
-    ZIUrlFactory urlFactory = new ZUrlFactory(/* "utf-8" */);
-    ZUrl url = urlFactory.createUrl(h1);
-    assertEquals("/test", url.getUrl());
+    ZIUrlFactory urlFactory = new ZUrlFactory();
+    String url = urlFactory.createUrl(h1);
+    assertEquals("/test", url);
   }
 
 
   public void test2() throws Exception
   {
     Handler1 h1 = new Handler1();
-    ZISecurityProvider sec = new ZISecurityProvider()
+    ZISecureUrlDecorator sec = new ZISecureUrlDecorator()
     {
       public String addSecurityToUrl(String url, Set<String> roles)
       {
@@ -65,28 +62,14 @@ public class SimpleSecureTest extends TestCase
       }
 
 
-      public boolean isUserInRole(String role)
-      {
-        return false;
-      }
-
-
       public String removeSecurityFromUrl(String url)
       {
         return null;
       }
-
-
-      public String getUserName()
-      {
-        return "defaultUser";
-      }
     };
 
-    ZIUrlHandler up = ZTestUrlHandlerFactory.create(SimpleSecureTest.class.getPackage().getName(),
-        sec);
-
-    String url = up.createUrl(h1);
+    ZIUrlFactory urlFactory = new ZUrlFactory(sec);
+    String url = urlFactory.createUrl(h1);
     assertEquals("/mysec/test", url);
   }
 }

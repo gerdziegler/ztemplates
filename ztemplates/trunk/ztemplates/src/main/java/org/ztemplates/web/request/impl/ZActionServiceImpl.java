@@ -13,6 +13,7 @@ package org.ztemplates.web.request.impl;
 
 import java.util.Map;
 
+import org.ztemplates.actions.ZIUrlFactory;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.web.ZIActionService;
 
@@ -24,12 +25,14 @@ public class ZActionServiceImpl implements ZIActionService
 
   private final ZIUrlHandler urlHandler;
 
+  private final ZIUrlFactory urlFactory;
 
-  public ZActionServiceImpl(ZIUrlHandler urlHandler, String contextPath, String prefix)
+  public ZActionServiceImpl(ZIUrlHandler urlHandler, ZIUrlFactory urlFactory, String contextPath, String prefix)
   {
     this.prefix = prefix;
     this.contextPath = contextPath;
     this.urlHandler = urlHandler;
+    this.urlFactory = urlFactory;
   }
 
 
@@ -61,7 +64,7 @@ public class ZActionServiceImpl implements ZIActionService
       return (String) action;
     }
 
-    String ret = urlHandler.createUrl(action);
+    String ret = urlFactory.createUrl(action);
 
     String prepend;
     if (prefix != null)

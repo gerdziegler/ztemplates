@@ -20,13 +20,14 @@ import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassPathItem;
 import org.zclasspath.ZIClassRepository;
+import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
 
 /**
- * s
+ * 
  * 
  * 
  */
@@ -36,22 +37,9 @@ public class ZTestUrlHandlerFactory
 
   public static final ZISecurityProvider defaultSecurityService = new ZISecurityProvider()
   {
-
-    public String addSecurityToUrl(String url, Set<String> roles)
-    {
-      return url;
-    }
-
-
     public boolean isUserInRole(String role)
     {
       return true;
-    }
-
-
-    public String removeSecurityFromUrl(String url)
-    {
-      return url;
     }
 
 
@@ -59,16 +47,30 @@ public class ZTestUrlHandlerFactory
     {
       return "defaultUser";
     }
+
+  };
+
+  public static final ZISecureUrlDecorator defaultSecureUrlDecorator = new ZISecureUrlDecorator()
+  {
+    public String addSecurityToUrl(String url, Set<String> roles)
+    {
+      return url;
+    }
+
+
+    public String removeSecurityFromUrl(String url)
+    {
+      return url;
+    }
   };
 
 
-  public static ZIUrlHandler create(String pojoPackage, ZISecurityProvider security)
-      throws Exception
+  public static ZIUrlHandler create(String pojoPackage, ZISecurityProvider security) throws Exception
   {
     List<ZIClassPathItem> items = ZMavenClassPath.getItems();
     ZIClassRepository classRepository = ZClassRepository.create(items, pojoPackage);
     ZMatchTree matchTree = new ZMatchTree(classRepository);
-    ZIUrlHandler ret = new ZTreeUrlHandler(matchTree, security);
+    ZIUrlHandler ret = new ZTreeUrlHandler(matchTree, security, defaultSecureUrlDecorator);
     return ret;
   }
 }

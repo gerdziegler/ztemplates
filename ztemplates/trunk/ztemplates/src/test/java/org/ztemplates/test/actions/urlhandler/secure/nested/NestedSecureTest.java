@@ -19,9 +19,9 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.ZISecurityProvider;
-import org.ztemplates.actions.urlhandler.ZIUrlHandler;
-import org.ztemplates.test.ZTestUrlHandlerFactory;
+import org.ztemplates.actions.ZISecureUrlDecorator;
+import org.ztemplates.actions.ZIUrlFactory;
+import org.ztemplates.actions.ZUrlFactory;
 
 public class NestedSecureTest extends TestCase
 {
@@ -32,7 +32,7 @@ public class NestedSecureTest extends TestCase
   {
     Handler h1 = new Handler();
     h1.setNested(new NestedHandler1());
-    ZISecurityProvider sec = new ZISecurityProvider()
+    ZISecureUrlDecorator sec = new ZISecureUrlDecorator()
     {
       public String addSecurityToUrl(String url, Set<String> roles)
       {
@@ -42,27 +42,14 @@ public class NestedSecureTest extends TestCase
       }
 
 
-      public boolean isUserInRole(String role)
-      {
-        return false;
-      }
-
-
       public String removeSecurityFromUrl(String url)
       {
         return null;
       }
-
-
-      public String getUserName()
-      {
-        return "defaultUser";
-      }
     };
 
-    ZIUrlHandler up = ZTestUrlHandlerFactory.create(NestedSecureTest.class.getPackage().getName(),
-        sec);
-    String url = up.createUrl(h1);
+    ZIUrlFactory urlFactory = new ZUrlFactory(sec);
+    String url = urlFactory.createUrl(h1);
     assertEquals("/mysec/test/nested1", url);
   }
 
@@ -72,7 +59,7 @@ public class NestedSecureTest extends TestCase
     Handler h1 = new Handler();
     h1.setNested(new NestedHandler2());
 
-    ZISecurityProvider sec = new ZISecurityProvider()
+    ZISecureUrlDecorator sec = new ZISecureUrlDecorator()
     {
       public String addSecurityToUrl(String url, Set<String> roles)
       {
@@ -81,27 +68,15 @@ public class NestedSecureTest extends TestCase
       }
 
 
-      public boolean isUserInRole(String role)
-      {
-        return false;
-      }
-
-
       public String removeSecurityFromUrl(String url)
       {
         return null;
       }
 
-
-      public String getUserName()
-      {
-        return "defaultUser";
-      }
     };
 
-    ZIUrlHandler up = ZTestUrlHandlerFactory.create(NestedSecureTest.class.getPackage().getName(),
-        sec);
-    String url = up.createUrl(h1);
+    ZIUrlFactory urlFactory = new ZUrlFactory(sec);
+    String url = urlFactory.createUrl(h1);
     assertEquals("/mysec/test/nested2", url);
   }
 
@@ -111,7 +86,7 @@ public class NestedSecureTest extends TestCase
     Handler2 h1 = new Handler2();
     h1.setNested(new NestedHandler2());
 
-    ZISecurityProvider sec = new ZISecurityProvider()
+    ZISecureUrlDecorator sec = new ZISecureUrlDecorator()
     {
       public String addSecurityToUrl(String url, Set<String> roles)
       {
@@ -121,27 +96,15 @@ public class NestedSecureTest extends TestCase
       }
 
 
-      public boolean isUserInRole(String role)
-      {
-        return false;
-      }
-
-
       public String removeSecurityFromUrl(String url)
       {
         return null;
       }
 
-
-      public String getUserName()
-      {
-        return "defaultUser";
-      }
     };
 
-    ZIUrlHandler up = ZTestUrlHandlerFactory.create(NestedSecureTest.class.getPackage().getName(),
-        sec);
-    String url = up.createUrl(h1);
+    ZIUrlFactory urlFactory = new ZUrlFactory(sec);
+    String url = urlFactory.createUrl(h1);
     assertEquals("maus/test2/nested2", url.toString());
   }
 }

@@ -17,9 +17,8 @@ package org.ztemplates.test.actions.urlhandler.repository.simple;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.urlhandler.ZIUrlFactory;
-import org.ztemplates.actions.urlhandler.ZUrl;
-import org.ztemplates.actions.urlhandler.ZUrlFactory;
+import org.ztemplates.actions.ZIUrlFactory;
+import org.ztemplates.actions.ZUrlFactory;
 
 public class ZUrlFactoryTest extends TestCase
 {
@@ -44,8 +43,8 @@ public class ZUrlFactoryTest extends TestCase
     h1.setTitle("my_title");
     h1.setCategoryId("my_category");
     ZIUrlFactory urlFactory = new ZUrlFactory(/* "utf-8" */);
-    ZUrl url = urlFactory.createUrl(h1);
-    assertEquals("/audiobooks/category/my_title_my_category", url.getUrl());
+    String url = urlFactory.createUrl(h1);
+    assertEquals("/audiobooks/category/my_title_my_category", url);
   }
 
 
@@ -56,8 +55,8 @@ public class ZUrlFactoryTest extends TestCase
     h1.setCategoryId("my_category");
     h1.setPageNum("my_page_num");
     ZIUrlFactory urlFactory = new ZUrlFactory(/* "utf-8" */);
-    ZUrl url = urlFactory.createUrl(h1);
-    assertEquals("/audiobooks2/category/my_title/my_category/page/my_page_num", url.getUrl());
+    String url = urlFactory.createUrl(h1);
+    assertEquals("/audiobooks2/category/my_title/my_category/page/my_page_num", url);
   }
 
 
@@ -68,7 +67,7 @@ public class ZUrlFactoryTest extends TestCase
     h1.setCategoryId("my_category");
     h1.setSortBy("my_sortBy");
     ZIUrlFactory urlFactory = new ZUrlFactory(/* "utf-8" */);
-    ZUrl url = urlFactory.createUrl(h1);
-    assertEquals("/audiobooks2/category/my_title/my_category", url.getUrl());
+    String url = urlFactory.createUrl(h1);
+    assertEquals("/audiobooks2/category/my_title/my_category", url);
   }
 }

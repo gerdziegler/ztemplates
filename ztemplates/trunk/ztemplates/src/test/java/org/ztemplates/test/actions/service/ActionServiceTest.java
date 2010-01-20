@@ -19,12 +19,8 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
-import org.ztemplates.actions.ZISecurityProvider;
-import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
-import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
+import org.ztemplates.actions.ZUrlFactory;
 import org.ztemplates.test.ZMavenClassPath;
-import org.ztemplates.test.ZTestSecurityProvider;
-import org.ztemplates.web.request.impl.ZActionServiceImpl;
 
 public class ActionServiceTest extends TestCase
 {
@@ -36,8 +32,7 @@ public class ActionServiceTest extends TestCase
   protected void setUp() throws Exception
   {
     super.setUp();
-    classRepo = ZClassRepository.create(ZMavenClassPath.getItems(), ActionServiceTest.class
-        .getPackage().getName());
+    classRepo = ZClassRepository.create(ZMavenClassPath.getItems(), ActionServiceTest.class.getPackage().getName());
   }
 
 
@@ -50,16 +45,9 @@ public class ActionServiceTest extends TestCase
 
   public void testZActionServiceImpl1() throws Exception
   {
-    ZMatchTree matchTree = new ZMatchTree(classRepo);
-    ZISecurityProvider security = new ZTestSecurityProvider();
-    String contextPath = "/katze";
-    String prefix = "/klo";
-    ZActionServiceImpl service = new ZActionServiceImpl(new ZTreeUrlHandler(matchTree, security),
-        contextPath,
-        prefix);
-
-    String url1 = service.createUrl("/index");
-    String url2 = service.createUrl(url1);
+    ZUrlFactory urlFactory = new ZUrlFactory();
+    String url1 = urlFactory.createUrl("/index");
+    String url2 = urlFactory.createUrl(url1);
 
     assertEquals(url1, url2);
   }

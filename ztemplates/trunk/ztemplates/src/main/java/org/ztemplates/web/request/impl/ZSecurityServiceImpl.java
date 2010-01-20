@@ -5,12 +5,15 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.web.ZISecurityService;
 
 public class ZSecurityServiceImpl implements ZISecurityService
 {
   private ZISecurityProvider securityProvider;
+
+  private ZISecureUrlDecorator secureUrlDecorator;
 
 
   public ZSecurityServiceImpl(final HttpServletRequest request)
@@ -22,6 +25,16 @@ public class ZSecurityServiceImpl implements ZISecurityService
         return request.isUserInRole(role);
       }
 
+
+      public String getUserName()
+      {
+        Principal p = request.getUserPrincipal();
+        return p == null ? null : p.getName();
+      }
+    };
+
+    secureUrlDecorator = new ZISecureUrlDecorator()
+    {
 
       public String removeSecurityFromUrl(String url)
       {
@@ -40,13 +53,6 @@ public class ZSecurityServiceImpl implements ZISecurityService
       {
         return "/secure" + url;
       }
-
-
-      public String getUserName()
-      {
-        Principal p = request.getUserPrincipal();
-        return p == null ? null : p.getName();
-      }
     };
   }
 
@@ -54,5 +60,11 @@ public class ZSecurityServiceImpl implements ZISecurityService
   public ZISecurityProvider getSecurityProvider()
   {
     return securityProvider;
+  }
+
+
+  public ZISecureUrlDecorator getSecureUrlDecorator()
+  {
+    return secureUrlDecorator;
   }
 }

@@ -20,6 +20,8 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.actions.ZIUrlFactory;
+import org.ztemplates.actions.ZUrlFactory;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
 import org.ztemplates.test.mock.ZMock;
@@ -30,13 +32,17 @@ public class PropTest extends TestCase
 
   ZIUrlHandler up;
 
+  ZIUrlFactory urlFactory;
+
 
   protected void setUp() throws Exception
   {
     super.setUp();
     ZMock.setUp();
-    up = ZTestUrlHandlerFactory.create(PropTest.class.getPackage().getName(),
-        ZTestUrlHandlerFactory.defaultSecurityService);
+
+    urlFactory = new ZUrlFactory(ZTestUrlHandlerFactory.defaultSecureUrlDecorator);
+
+    up = ZTestUrlHandlerFactory.create(PropTest.class.getPackage().getName(), ZTestUrlHandlerFactory.defaultSecurityService);
   }
 
 
@@ -71,7 +77,7 @@ public class PropTest extends TestCase
   {
     Handler obj = new Handler();
     obj.getVarProp().setStringValue("varValue");
-    String url = up.createUrl(obj);
+    String url = urlFactory.createUrl(obj);
     assertEquals("/proptest/varValue", url);
   }
 
@@ -80,7 +86,7 @@ public class PropTest extends TestCase
   {
     Handler obj = new Handler();
     obj.getVarProp().setStringValue(null);
-    String url = up.createUrl(obj);
+    String url = urlFactory.createUrl(obj);
     assertEquals("/proptest", url.toString());
   }
 
@@ -89,7 +95,7 @@ public class PropTest extends TestCase
   {
     Handler obj = new Handler();
     obj.getParamProp().setStringValue("value");
-    String url = up.createUrl(obj);
+    String url = urlFactory.createUrl(obj);
     assertEquals("/proptest?paramProp=value", url.toString());
   }
 
@@ -98,7 +104,7 @@ public class PropTest extends TestCase
   {
     Handler obj = new Handler();
     obj.getParamProp().setStringValue(null);
-    String url = up.createUrl(obj);
+    String url = urlFactory.createUrl(obj);
     assertEquals("/proptest", url.toString());
   }
 
@@ -106,10 +112,10 @@ public class PropTest extends TestCase
   public void testDoNotValidateEmpty() throws Exception
   {
     Handler obj = (Handler) up.process("/proptest");
-    //do not validate empty properties
+    // do not validate empty properties
     assertFalse(obj.getOpProp1().isError());
-    
-    //assertEquals("katze", obj.getOpProp1().getState().getText());
+
+    // assertEquals("katze", obj.getOpProp1().getState().getText());
   }
 
 
