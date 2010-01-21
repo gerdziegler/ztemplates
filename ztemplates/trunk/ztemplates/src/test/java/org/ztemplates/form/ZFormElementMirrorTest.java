@@ -23,10 +23,12 @@ public class ZFormElementMirrorTest extends TestCase
   public void testFormElementMirror() throws Exception
   {
     FormModel f = new FormModel();
+    ZFormMirror.initPropertyNames(f, "");
     ZFormMirror mirr = new ZFormMirror(f);
-    assertEquals(1, mirr.getProperties().size());
+    assertEquals(2, mirr.getProperties().size());
     assertEquals(1, mirr.getOperations().size());
     assertEquals(1, mirr.getFormModels().size());
+    
     assertEquals("prop1", mirr.getProperties().get(0).getName());
     assertEquals("op1", mirr.getOperations().get(0).getName());
     assertEquals("topSection.op1", mirr.getFormModels().get(0).getOperations().get(0).getName());
@@ -36,7 +38,7 @@ public class ZFormElementMirrorTest extends TestCase
   public void testPredefinedPropertyNames() throws Exception
   {
     FormModel2 f = new FormModel2();
-    ZFormMirror mirr = new ZFormMirror(f);
+    ZFormMirror.initPropertyNames(f, "");
     assertEquals("myName", f.getProp().getName());
     assertEquals("prop1", f.getProp1().getName());
   }

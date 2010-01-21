@@ -23,32 +23,43 @@ import org.ztemplates.render.ZIRenderer;
 import org.ztemplates.render.script.ZCssExposed;
 import org.ztemplates.render.script.ZJavaScriptExposed;
 
-public interface ZIRenderContext {
-    public List<ZExposedMethod> getExposedMethods(Class clazz) throws Exception;
+public interface ZIRenderContext
+{
+  public List<ZExposedMethod> getExposedMethods(Class clazz) throws Exception;
 
-    public ZIRenderer getRenderer(Class<? extends ZIRenderer> clazz)
-	    throws Exception;
 
-    public ZICssIdRepository getCssIdRepository();
+  public ZIRenderer getRenderer(Class<? extends ZIRenderer> clazz) throws Exception;
 
-    public String getContextPath();
 
-    public String getScriptExposedBy();
+  public ZICssIdRepository getCssIdRepository();
 
-    public void setScriptExposedBy(String scriptExposedBy);
 
-    public String computeHtmlScriptTags() throws Exception;
+  public String getContextPath();
 
-    public void registerScripts(Object obj, Map<String, Object> exposed)
-	    throws Exception;
 
-    public void incRenderCallCounter();
+  public String getScriptExposedBy();
 
-    public int getRenderCallCounter();
 
-    public ZIRenderEngine getRenderEngine(Object obj) throws Exception;
+  public void setScriptExposedBy(String scriptExposedBy);
 
-    public SortedSet<ZJavaScriptExposed> getJavaScriptExposed();
 
-    public SortedSet<ZCssExposed> getCssExposed();
+  public String computeHtmlScriptTags() throws Exception;
+
+
+  public void registerScripts(Object obj, Map<String, Object> exposed) throws Exception;
+
+
+  public void incRenderCallCounter();
+
+
+  public int getRenderCallCounter();
+
+
+  public ZIRenderEngine getRenderEngine(Object obj) throws Exception;
+
+
+  public SortedSet<ZJavaScriptExposed> getJavaScriptExposed();
+
+
+  public SortedSet<ZCssExposed> getCssExposed();
 }

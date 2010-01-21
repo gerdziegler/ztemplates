@@ -45,7 +45,7 @@ public class SimpleSecureTest extends TestCase
     Handler1 h1 = new Handler1();
     ZIUrlFactory urlFactory = new ZUrlFactory();
     String url = urlFactory.createUrl(h1);
-    assertEquals("/test", url);
+    assertEquals("/secure/test", url);
   }
 
 

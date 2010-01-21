@@ -1,12 +1,11 @@
-package org.ztemplates.actions.urlhandler;
+package org.ztemplates.actions;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.ZMatch;
-import org.ztemplates.actions.ZSecure;
 import org.ztemplates.actions.expression.ZExpression;
 import org.ztemplates.actions.expression.ZLiteral;
 import org.ztemplates.actions.expression.ZNestedExpression;
@@ -16,20 +15,92 @@ import org.ztemplates.actions.expression.ZTail;
 import org.ztemplates.actions.expression.ZTerm;
 import org.ztemplates.actions.expression.ZVariable;
 import org.ztemplates.actions.security.ZRoles;
+import org.ztemplates.actions.urlhandler.ZUrl;
 import org.ztemplates.actions.util.ZReflectionUtil;
 
 public class ZUrlFactory implements ZIUrlFactory
 {
-
   static Logger log = Logger.getLogger(ZUrlFactory.class);
+
+  private final ZISecureUrlDecorator secureUrlDecorator;
+
+
+  public ZUrlFactory(ZISecureUrlDecorator secureUrlDecorator)
+  {
+    this.secureUrlDecorator = secureUrlDecorator;
+  }
 
 
   public ZUrlFactory()
   {
+    this.secureUrlDecorator = new ZISecureUrlDecorator()
+    {
+      public String removeSecurityFromUrl(String url)
+      {
+        if (url.startsWith("/secure"))
+        {
+          return url.substring("/secure".length());
+        }
+        else
+        {
+          return url;
+        }
+      }
+
+
+      public String addSecurityToUrl(String url, Set<String> roles)
+      {
+        return "/secure" + url;
+      }
+    };
   }
 
 
-  public ZUrl createUrl(Object obj)
+  public String createUrl(Object action) throws Exception
+  {
+    if (action instanceof String)
+    {
+      return (String) action;
+    }
+
+    ZUrl url = createZUrl(action);
+
+    String surl = url.getUrl();
+
+    if (secureUrlDecorator != null && url.getRoles().isSecure())
+    {
+      surl = secureUrlDecorator.addSecurityToUrl(surl, url.getRoles().getRoles());
+    }
+
+    StringBuffer sb = new StringBuffer(surl);
+    boolean first = true;
+    for (Map.Entry<String, String[]> en : url.getParameterMap().entrySet())
+    {
+      String name = en.getKey();
+      for (String val : en.getValue())
+      {
+        if (first)
+        {
+          sb.append('?');
+          first = false;
+        }
+        else
+        {
+          sb.append('&');
+        }
+        sb.append(name);
+        sb.append('=');
+        val = URLEncoder.encode(val/* , ENCODING */);
+
+        sb.append(val);
+      }
+    }
+
+    return sb.toString();
+  }
+
+
+  private ZUrl createZUrl(Object obj)
   {
     Map<String, String[]> parameterMap = new HashMap<String, String[]>();
     ZRoles roles = new ZRoles();
@@ -49,8 +120,7 @@ public class ZUrlFactory implements ZIUrlFactory
   }
 
 
-  protected boolean compute(Object obj, StringBuffer sb, Map<String, String[]> parameterMap,
-      ZRoles roles) throws Exception
+  protected boolean compute(Object obj, StringBuffer sb, Map<String, String[]> parameterMap, ZRoles roles) throws Exception
   {
     Class clazz = obj.getClass();
     ZMatch match = (ZMatch) clazz.getAnnotation(ZMatch.class);
@@ -82,8 +152,7 @@ public class ZUrlFactory implements ZIUrlFactory
   }
 
 
-  private boolean compute(ZExpression expression, Object obj, StringBuffer sb,
-      Map<String, String[]> parameterMap, ZRoles roles) throws Exception
+  private boolean compute(ZExpression expression, Object obj, StringBuffer sb, Map<String, String[]> parameterMap, ZRoles roles) throws Exception
   {
     boolean empty = false;
 
@@ -173,8 +242,7 @@ public class ZUrlFactory implements ZIUrlFactory
   }
 
 
-  private void compute(ZOptionalExpression oe, Object obj, StringBuffer sb,
-      Map<String, String[]> parameterMap, ZRoles roles) throws Exception
+  private void compute(ZOptionalExpression oe, Object obj, StringBuffer sb, Map<String, String[]> parameterMap, ZRoles roles) throws Exception
   {
     StringBuffer crtsb = new StringBuffer();
     boolean empty = compute(oe.getOptionalExpression(), obj, crtsb, parameterMap, roles);
@@ -185,8 +253,7 @@ public class ZUrlFactory implements ZIUrlFactory
   }
 
 
-  private boolean compute(ZNestedExpression ne, Object obj, StringBuffer sb,
-      Map<String, String[]> parameterMap, ZRoles roles) throws Exception
+  private boolean compute(ZNestedExpression ne, Object obj, StringBuffer sb, Map<String, String[]> parameterMap, ZRoles roles) throws Exception
   {
     Object nested = ZReflectionUtil.callReferenceGetter(obj, ne.getName());
     if (nested != null)

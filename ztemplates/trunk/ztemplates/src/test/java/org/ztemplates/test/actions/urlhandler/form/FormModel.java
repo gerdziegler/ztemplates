@@ -25,9 +25,9 @@ public class FormModel implements ZIFormModel
   private int revalidateCalledOp1 = 0;
 
   int updateCalled = 0;
-  
-  
-  private final ZStringProperty predefined = new ZStringProperty() {
+
+  private final ZStringProperty predefined = new ZStringProperty()
+  {
     {
       setName("predefined");
     }
@@ -60,11 +60,11 @@ public class FormModel implements ZIFormModel
   private final TopSectionFormModel topSection = new TopSectionFormModel();
 
 
-
   public ZStringProperty getProp1()
   {
     return prop1;
   }
+
 
   public TopSectionFormModel getTopSection()
   {
@@ -76,8 +76,6 @@ public class FormModel implements ZIFormModel
   {
     return op1;
   }
-
-
 
 
   public int getUpdateCalled()
@@ -96,6 +94,7 @@ public class FormModel implements ZIFormModel
   {
     return revalidateCalledOp1;
   }
+
 
   public ZStringProperty getPredefined()
   {

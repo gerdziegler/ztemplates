@@ -46,13 +46,18 @@ public class ZRenderEngine implements ZIRenderEngine
       ZIRenderedObject ro = (ZIRenderedObject) obj;
       ctx.getCssExposed().addAll(ro.getCssExposed());
       ctx.getJavaScriptExposed().addAll(ro.getJavaScriptExposed());
+    }
+    
+    if (obj instanceof ZIRenderedObject)
+    {
+      ZIRenderedObject ro = (ZIRenderedObject) obj;
       return ro.getText();
     }
 
     // always compute this to get script
     Map<String, Object> exposed = getExposed(obj, ctx);
 
-    // register scripts from annotation
+    // register scripts, needs exposed values
     ctx.registerScripts(obj, exposed);
 
     ZRenderer rendererAnnot = obj.getClass().getAnnotation(ZRenderer.class);
@@ -61,6 +66,22 @@ public class ZRenderEngine implements ZIRenderEngine
       return obj.toString();
     }
 
+    beforeRender(obj, rendererAnnot, exposed, ctx);
+
+    ZIRenderer renderer = ctx.getRenderer(rendererAnnot.value());
+    long time = System.currentTimeMillis();
+    String ret = renderer.render(obj.getClass(), exposed);
+    long delta = System.currentTimeMillis() - time;
+    if (delta > 15)
+    {
+      log.info("    engine " + obj.getClass().getName() + " [" + delta + " ms]");
+    }
+    return ret;
+  }
+
+
+  private void beforeRender(Object obj, ZRenderer rendererAnnot, Map<String, Object> exposed, ZIRenderContext ctx) throws Exception
+  {
     if (rendererAnnot.cssId() && exposed.get("cssId") == null)
     {
       String cssId = ctx.getCssIdRepository().getCssId(obj.getClass());
@@ -76,24 +97,14 @@ public class ZRenderEngine implements ZIRenderEngine
     {
       if (ctx.getScriptExposedBy() != null)
       {
-        throw new Exception("zscript can only be exposed once per request, but is exposed by \n"
-            + ctx.getScriptExposedBy() + "\n" + computeZscriptExposedBy(obj));
+        throw new Exception("zscript can only be exposed once per request, but is exposed by \n" + ctx.getScriptExposedBy() + "\n"
+            + computeZscriptExposedBy(obj));
       }
       ctx.setScriptExposedBy(computeZscriptExposedBy(obj));
 
       String zscript = ctx.computeHtmlScriptTags();
       exposed.put("zscript", zscript);
     }
-
-    ZIRenderer renderer = ctx.getRenderer(rendererAnnot.value());
-    long time = System.currentTimeMillis();
-    String ret = renderer.render(obj.getClass(), exposed);
-    long delta = System.currentTimeMillis() - time;
-    if (delta > 15)
-    {
-      log.info("    engine " + obj.getClass().getName() + " [" + delta + " ms]");
-    }
-    return ret;
   }
 
 

@@ -58,7 +58,7 @@ public class ScriptTest extends TestCase
     assertTrue(s, s.indexOf("nested.js") >= 0);
     assertTrue(s, s.indexOf("NoRender.js") >= 0);
     assertTrue(s, s.indexOf("NoRender2.js") >= 0);
-    assertTrue(s, s.indexOf("invalid values") >= 0);
+//    assertTrue(s, s.indexOf("invalid values") >= 0);
   }
 
 
