@@ -14,7 +14,6 @@
 
 package org.ztemplates.render;
 
-import org.ztemplates.render.impl.ZIRenderContext;
 
 public interface ZIRenderEngine
 {
@@ -23,5 +22,5 @@ public interface ZIRenderEngine
    * 
    * @param obj
    */
-  public String render(Object obj, ZIRenderContext ctx) throws Exception;
+  public String render(Object obj) throws Exception;
 }

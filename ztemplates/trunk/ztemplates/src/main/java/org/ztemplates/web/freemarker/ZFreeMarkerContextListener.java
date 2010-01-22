@@ -58,17 +58,14 @@ public class ZFreeMarkerContextListener implements ServletContextListener
       ClassTemplateLoader ctl = new ClassTemplateLoader(getClass(), "");
       TemplateLoader[] loaders = new TemplateLoader[]
       {
-          wtlClasses,
-          wtlLib,
-          ctl
+          wtlClasses, wtlLib, ctl
       };
       MultiTemplateLoader mtl = new MultiTemplateLoader(loaders);
       Configuration conf = new Configuration();
       conf.setTemplateLoader(mtl);
-      ZApplicationRepository applicationRepository = new ZApplicationRepository(servletContext);
-      ZApplication application = applicationRepository.getApplication();
-      ZFreeMarkerRenderer.setConfiguration(application.getRenderApplication()
-          .getApplicationContext(), conf);
+
+      ZApplication application = ZApplicationRepository.getApplication(servletContext);
+      ZFreeMarkerRenderer.setConfiguration(application.getRenderApplication().getApplicationContext(), conf);
     }
     catch (Exception e)
     {

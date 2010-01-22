@@ -8,12 +8,12 @@ import java.util.Map;
 
 import org.ztemplates.render.ZExpose;
 
-public class ZExposedMethodRepository
+public class ZExposedMethodRepository implements ZIExposedMethodRepository
 {
   private final Map<Class, List<ZExposedMethod>> cache = new HashMap<Class, List<ZExposedMethod>>();
 
 
-  public List<ZExposedMethod> getExposed(Class clazz) throws Exception
+  public List<ZExposedMethod> getExposedMethods(Class clazz) throws Exception
   {
     List<ZExposedMethod> ret = cache.get(clazz);
     if (ret != null)

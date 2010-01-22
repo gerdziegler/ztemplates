@@ -2,8 +2,6 @@ package org.ztemplates.render;
 
 import java.util.Enumeration;
 
-import org.zclasspath.ZIClassRepository;
-
 public interface ZIRenderApplicationContext
 {
   public Enumeration<String> getInitParameterNames();
@@ -19,7 +17,4 @@ public interface ZIRenderApplicationContext
 
 
   public void removeAttribute(String name);
-
-
-  public ZIClassRepository getClassRepository();
 }

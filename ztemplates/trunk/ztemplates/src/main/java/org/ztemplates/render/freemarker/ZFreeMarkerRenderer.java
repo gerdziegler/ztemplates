@@ -18,6 +18,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.ztemplates.render.ZIRenderApplicationContext;
 import org.ztemplates.render.ZIRenderer;
+import org.ztemplates.render.ZITemplateNameRepository;
 import org.ztemplates.render.ZRenderApplication;
 
 import freemarker.template.Configuration;
@@ -31,7 +32,8 @@ public class ZFreeMarkerRenderer implements ZIRenderer
       .getSimpleName()
       + ".CONFIGURATION";
 
-  private ZRenderApplication application;
+  
+  private ZITemplateNameRepository templateNameRepository;
 
   private Configuration cfg;
 
@@ -57,17 +59,17 @@ public class ZFreeMarkerRenderer implements ZIRenderer
   }
 
 
-  public void init(ZRenderApplication application) throws Exception
+  public void init(ZIRenderApplicationContext applicationContext, ZITemplateNameRepository templateNameRepository) throws Exception
   {
-    this.application = application;
-    cfg = ZFreeMarkerRenderer.getConfiguration(application.getApplicationContext());
+    this.templateNameRepository = templateNameRepository;
+    cfg = ZFreeMarkerRenderer.getConfiguration(applicationContext);
   }
 
 
   public String render(Class clazz, Map<String, Object> values) throws Exception
   {
 
-    String template = application.getTemplateNameRepository().getTemplateName(clazz) + ".ftl";
+    String template = templateNameRepository.getTemplateName(clazz) + ".ftl";
     Template t = cfg.getTemplate(template);
     if (t == null)
     {

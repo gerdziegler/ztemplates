@@ -20,19 +20,20 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ztemplates.render.ZIRenderApplicationContext;
 import org.ztemplates.render.ZIRenderer;
-import org.ztemplates.render.ZRenderApplication;
+import org.ztemplates.render.ZITemplateNameRepository;
 import org.ztemplates.web.ZIServletService;
 import org.ztemplates.web.ZTemplates;
 
 public class ZJspRenderer implements ZIRenderer
 {
-  private ZRenderApplication application;
+  private ZITemplateNameRepository templateNameRepository;
 
 
-  public void init(ZRenderApplication application)
+  public void init(ZIRenderApplicationContext applicationContext, ZITemplateNameRepository templateNameRepository)
   {
-    this.application = application;
+    this.templateNameRepository = templateNameRepository;
   }
 
 
@@ -42,7 +43,7 @@ public class ZJspRenderer implements ZIRenderer
     HttpServletRequest request = servletService.getRequest();
     HttpServletResponse response = servletService.getResponse();
 
-    String template = application.getTemplateNameRepository().getTemplateName(clazz) + ".jsp";
+    String template = templateNameRepository.getTemplateName(clazz) + ".jsp";
 
     if (!template.startsWith("/"))
     {

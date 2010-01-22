@@ -14,6 +14,8 @@
  */
 package org.ztemplates.web.application;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,7 +29,7 @@ import org.ztemplates.web.ZISecurityService;
 import org.ztemplates.web.ZIService;
 import org.ztemplates.web.ZIServletService;
 import org.ztemplates.web.request.ZIServiceRepository;
-import org.ztemplates.web.request.ZServiceRepository;
+import org.ztemplates.web.request.ZServiceRepositoryWebapp;
 
 /**
  * use this to wrap the default service factory and override the services you
@@ -47,59 +49,51 @@ public class ZServiceFactoryWrapper implements ZIServiceFactory
   }
 
 
-  public ZIActionService createActionService(ZIServiceRepository repo, HttpServletRequest request,
-      HttpServletResponse response)
+  public ZIActionService createActionService(ZIServiceRepository repo, String contextPath)
   {
-    return factory.createActionService(repo, request, response);
+    return factory.createActionService(repo, contextPath);
   }
 
 
-  public ZIApplicationService createApplicationService(ZIServiceRepository repo,
-      HttpServletRequest request, HttpServletResponse response)
+  public ZIApplicationService createApplicationService(ZIServiceRepository repo)
   {
-    return factory.createApplicationService(repo, request, response);
+    return factory.createApplicationService(repo);
   }
 
 
-  public ZIEncryptionService createEncryptionService(ZIServiceRepository repo,
-      HttpServletRequest request, HttpServletResponse response)
+  public ZIEncryptionService createEncryptionService(ZIServiceRepository repo)
   {
-    return factory.createEncryptionService(repo, request, response);
+    return factory.createEncryptionService(repo);
   }
 
 
-  public ZIExceptionService createExceptionService(ZIServiceRepository repo,
-      HttpServletRequest request, HttpServletResponse response)
+  public ZIExceptionService createExceptionService(ZIServiceRepository repo)
   {
-    return factory.createExceptionService(repo, request, response);
+    return factory.createExceptionService(repo);
   }
 
 
-  public ZIRenderService createRenderService(ZIServiceRepository repo, HttpServletRequest request,
-      HttpServletResponse response)
+  public ZIRenderService createRenderService(ZIServiceRepository repo, String contextPath)
   {
-    return factory.createRenderService(repo, request, response);
+    return factory.createRenderService(repo, contextPath);
   }
 
 
-  public ZISecurityService createSecurityService(ZIServiceRepository repo,
-      HttpServletRequest request, HttpServletResponse response)
+  public ZISecurityService createSecurityService(ZIServiceRepository repo, HttpServletRequest request)
   {
-    return factory.createSecurityService(repo, request, response);
+    return factory.createSecurityService(repo, request);
   }
 
 
-  public ZIServletService createServletService(ZIServiceRepository repo,
-      HttpServletRequest request, HttpServletResponse response)
+  public ZIServletService createServletService(ZIServiceRepository repo, HttpServletRequest request, HttpServletResponse response)
   {
     return factory.createServletService(repo, request, response);
   }
 
 
-  public ZIMessageService createMessageService(ZServiceRepository repository,
-      HttpServletRequest request, HttpServletResponse response)
+  public ZIMessageService createMessageService(ZIServiceRepository repository, Locale locale)
   {
-    return factory.createMessageService(repository, request, response);
+    return factory.createMessageService(repository, locale);
   }
 
 

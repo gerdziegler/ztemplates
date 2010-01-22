@@ -2,8 +2,6 @@ package org.ztemplates.actions;
 
 import java.util.Enumeration;
 
-import org.zclasspath.ZIClassRepository;
-
 public interface ZIActionApplicationContext
 {
   public Enumeration<String> getInitParameterNames();
@@ -19,7 +17,4 @@ public interface ZIActionApplicationContext
 
 
   public void removeAttribute(String name);
-
-
-  public ZIClassRepository getClassRepository();
 }

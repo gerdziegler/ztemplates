@@ -25,11 +25,5 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface ZTemplate
 {
-  String value() default "";
-
-
-  boolean relative() default false;
-
-
-  String mime() default "text/html";
+  String value();
 }

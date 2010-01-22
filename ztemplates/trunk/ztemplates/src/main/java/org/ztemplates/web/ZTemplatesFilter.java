@@ -35,7 +35,7 @@ import org.ztemplates.web.application.ZApplicationRepository;
 import org.ztemplates.web.application.ZHttpUtil;
 import org.ztemplates.web.application.ZIApplicationRepository;
 import org.ztemplates.web.application.ZIServiceFactory;
-import org.ztemplates.web.request.ZServiceRepository;
+import org.ztemplates.web.request.ZServiceRepositoryWebapp;
 
 public class ZTemplatesFilter implements Filter
 {
@@ -46,7 +46,7 @@ public class ZTemplatesFilter implements Filter
   private Set<String> passThroughRead = new HashSet<String>();
 
 
-  //  private final Set<String> passThroughWrite = new HashSet<String>();
+  // private final Set<String> passThroughWrite = new HashSet<String>();
 
   public void init(FilterConfig filterConfig) throws ServletException
   {
@@ -60,8 +60,7 @@ public class ZTemplatesFilter implements Filter
   }
 
 
-  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-      throws IOException, ServletException
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
   {
     HttpServletRequest req = (HttpServletRequest) request;
     HttpServletResponse resp = (HttpServletResponse) response;
@@ -75,18 +74,17 @@ public class ZTemplatesFilter implements Filter
       else
       {
         ZHttpUtil.printParameters(req);
-        ZIApplicationRepository applicationRepository = new ZApplicationRepository(req.getSession()
-            .getServletContext());
-        ZApplication application = applicationRepository.getApplication();
+        ZApplication application = ZApplicationRepository.getApplication(req.getSession().getServletContext());
 
         boolean processed = processRequest(application, req, resp);
         if (!processed)
         {
           Set<String> passThroughWrite = new HashSet<String>(passThroughRead);
-          //          synchronized (passThroughWrite)
+          // synchronized (passThroughWrite)
           {
             passThroughWrite.add(uri);
-            passThroughRead = passThroughWrite;//new HashSet<String>(passThroughWrite);
+            passThroughRead = passThroughWrite;// new
+                                               // HashSet<String>(passThroughWrite);
           }
           chain.doFilter(request, response);
         }
@@ -99,8 +97,7 @@ public class ZTemplatesFilter implements Filter
   }
 
 
-  private boolean processRequest(ZApplication application, HttpServletRequest req,
-      HttpServletResponse resp) throws Exception
+  private boolean processRequest(ZApplication application, HttpServletRequest req, HttpServletResponse resp) throws Exception
   {
     String url = req.getRequestURI();
     if (log.isDebugEnabled())
@@ -111,7 +108,9 @@ public class ZTemplatesFilter implements Filter
     boolean ret = false;
 
     ZIServiceFactory serviceFactory = application.getServiceFactory();
-    ZServiceRepository serviceRepository = new ZServiceRepository(serviceFactory, req, resp);
+    
+    
+    ZServiceRepositoryWebapp serviceRepository = new ZServiceRepositoryWebapp(serviceFactory, req, resp);
     ZTemplates.setServiceRepository(serviceRepository);
     try
     {
@@ -136,9 +135,9 @@ public class ZTemplatesFilter implements Filter
         long time = System.currentTimeMillis() - begin;
         if (ret)
         {
-//          if (time > 0)
+          // if (time > 0)
           {
-            String msg = url + " [" + time + " ms]"; 
+            String msg = url + " [" + time + " ms]";
             log.info(msg);
             System.out.println(msg);
           }

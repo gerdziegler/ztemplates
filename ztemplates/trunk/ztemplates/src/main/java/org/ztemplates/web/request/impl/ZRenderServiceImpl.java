@@ -17,8 +17,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.ztemplates.render.ZIRenderedObject;
 import org.ztemplates.render.ZRenderApplication;
-import org.ztemplates.render.impl.ZIRenderContext;
-import org.ztemplates.render.impl.ZRenderContextImpl;
+import org.ztemplates.render.impl.ZIWebRenderContext;
+import org.ztemplates.render.impl.ZWebRenderContextImpl;
+import org.ztemplates.render.impl.ZRenderEngine;
 import org.ztemplates.render.script.ZICssProcessor;
 import org.ztemplates.render.script.ZIJavaScriptProcessor;
 import org.ztemplates.web.ZIRenderService;
@@ -36,19 +37,20 @@ public class ZRenderServiceImpl implements ZIRenderService
 
   private final ZRenderApplication application;
 
-  private final ZIRenderContext ctx;
+  private final ZIWebRenderContext ctx;
 
   private String idPrefix = "zid" + System.currentTimeMillis() + "_";
 
   private int crtId = 0;
+
+  private final ZRenderEngine renderEngine;
 
 
   public ZRenderServiceImpl(final ZRenderApplication application, final String contextPath)
   {
     this.application = application;
 
-    ZCachingCssProcessorData cachingCssProcessorData = ZCachingCssProcessorData
-        .getInstance(application.getApplicationContext());
+    ZCachingCssProcessorData cachingCssProcessorData = ZCachingCssProcessorData.getInstance(application.getApplicationContext());
     ZICssProcessor cssProcessor = new ZCachingCssProcessor(cachingCssProcessorData);
 
     final ZICachingJavaScriptProcessorContext cachingJavaScriptProcessorContext = new ZICachingJavaScriptProcessorContext()
@@ -78,7 +80,8 @@ public class ZRenderServiceImpl implements ZIRenderService
       }
     };
     ZIJavaScriptProcessor javaScriptProcessor = new ZCachingJavaScriptProcessor(cachingJavaScriptProcessorContext);
-    ctx = new ZRenderContextImpl(application, contextPath, javaScriptProcessor, cssProcessor);
+    ctx = new ZWebRenderContextImpl(application, contextPath, javaScriptProcessor, cssProcessor);
+    renderEngine = new ZRenderEngine(ctx);
   }
 
 
@@ -88,15 +91,15 @@ public class ZRenderServiceImpl implements ZIRenderService
     {
       return null;
     }
-    if(obj instanceof String)
+    if (obj instanceof String)
     {
-      return (String)obj;
+      return (String) obj;
     }
-    
+
     long time = System.currentTimeMillis();
-    String ret = ctx.getRenderEngine(obj).render(obj, ctx);
+    String ret = renderEngine.render(obj);
     long delta = (System.currentTimeMillis() - time);
-//    if (delta > 0)
+    // if (delta > 0)
     {
       int cnt = ctx.getRenderCallCounter();
       long avg = (delta / cnt);
@@ -106,28 +109,28 @@ public class ZRenderServiceImpl implements ZIRenderService
     }
     return ret;
   }
-  
+
+
   public ZIRenderedObject prerender(Object obj) throws Exception
   {
-      if (obj == null)
-      {
-        return null;
-      }
-      if(obj instanceof String)
-      {
-        return new ZRenderedObject((String)obj);
-      }
-      long time = System.currentTimeMillis();
-      String rendered = ctx.getRenderEngine(obj).render(obj, ctx);
-      long delta = System.currentTimeMillis() - time;
-      int cnt = ctx.getRenderCallCounter();
-      if (delta > 20)
-      {
-        log.info("rendered " + obj.getClass().getName() + " [" + delta + " ms] " + cnt + " calls "
-            + (delta / cnt));
-      }      
-      ZIRenderedObject ret = new ZRenderedObject(rendered, ctx.getJavaScriptExposed(), ctx.getCssExposed());
-      return ret;      
+    if (obj == null)
+    {
+      return null;
+    }
+    if (obj instanceof String)
+    {
+      return new ZRenderedObject((String) obj);
+    }
+    long time = System.currentTimeMillis();
+    String rendered = renderEngine.render(obj);
+    long delta = System.currentTimeMillis() - time;
+    int cnt = ctx.getRenderCallCounter();
+    if (delta > 20)
+    {
+      log.info("rendered " + obj.getClass().getName() + " [" + delta + " ms] " + cnt + " calls " + (delta / cnt));
+    }
+    ZIRenderedObject ret = new ZRenderedObject(rendered, ctx.getJavaScriptExposed(), ctx.getCssExposed());
+    return ret;
   }
 
 

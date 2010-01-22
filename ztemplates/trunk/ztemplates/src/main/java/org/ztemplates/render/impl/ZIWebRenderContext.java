@@ -12,20 +12,20 @@
  * 
  * @author www.gerdziegler.de
  */
-package org.ztemplates.render.velocity.codegen;
+package org.ztemplates.render.impl;
 
-import java.io.IOException;
-import java.io.Writer;
+import java.util.SortedSet;
 
-public class GenUtils
+import org.ztemplates.render.script.ZCssExposed;
+import org.ztemplates.render.script.ZJavaScriptExposed;
+
+public interface ZIWebRenderContext extends ZIRenderContext
 {
-  public static void append(Writer sb, int depth, String s) throws IOException
-  {
-    for (int i = 0; i < depth; i++)
-    {
-      sb.append("  ");
-    }
-    sb.append(s);
-    sb.append("\n");
-  }
+  public int getRenderCallCounter();
+
+
+  public SortedSet<ZJavaScriptExposed> getJavaScriptExposed();
+
+
+  public SortedSet<ZCssExposed> getCssExposed();
 }

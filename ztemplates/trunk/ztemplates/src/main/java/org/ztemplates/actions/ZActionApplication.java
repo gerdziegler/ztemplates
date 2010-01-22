@@ -1,6 +1,7 @@
 package org.ztemplates.actions;
 
 import org.apache.log4j.Logger;
+import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
 
 public class ZActionApplication
@@ -12,10 +13,10 @@ public class ZActionApplication
   private final ZMatchTree matchTree;
 
 
-  public ZActionApplication(ZIActionApplicationContext applicationContext) throws Exception
+  public ZActionApplication(ZIActionApplicationContext applicationContext, ZIClassRepository classRepository) throws Exception
   {
     this.applicationContext = applicationContext;
-    this.matchTree = new ZMatchTree(applicationContext.getClassRepository());
+    this.matchTree = new ZMatchTree(classRepository);
     log.info(matchTree.toConsoleString());
   }
 

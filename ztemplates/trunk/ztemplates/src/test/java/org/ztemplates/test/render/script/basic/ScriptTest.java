@@ -18,11 +18,11 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.zclasspath.ZIClassRepository;
-import org.ztemplates.render.impl.ZIRenderContext;
+import org.ztemplates.render.impl.ZIWebRenderContext;
 import org.ztemplates.render.impl.ZRenderEngine;
-import org.ztemplates.render.velocity.ZVelocityRendererFactory;
 import org.ztemplates.test.ZMavenClassRepository;
 import org.ztemplates.test.ZTestApplication;
+import org.ztemplates.test.ZTestWebRenderContextFactory;
 import org.ztemplates.web.application.ZApplication;
 
 public class ScriptTest extends TestCase
@@ -49,11 +49,11 @@ public class ScriptTest extends TestCase
 
   public void testRootExposeRenderTrue() throws Exception
   {
-    ZIRenderContext ctx = ZVelocityRendererFactory.createStandaloneRenderEngine(application
+    ZIWebRenderContext ctx = ZTestWebRenderContextFactory.createWebRenderContext(application
         .getRenderApplication());
-    ZRenderEngine re = new ZRenderEngine();
+    ZRenderEngine re = new ZRenderEngine(ctx);
     RootExposeRenderTrue root = new RootExposeRenderTrue();
-    String s = re.render(root, ctx);
+    String s = re.render(root);
     assertTrue(s, s.indexOf("root.js") >= 0);
     assertTrue(s, s.indexOf("nested.js") >= 0);
     assertTrue(s, s.indexOf("NoRender.js") >= 0);
@@ -64,11 +64,11 @@ public class ScriptTest extends TestCase
 
   public void testRootExposeRenderFalse() throws Exception
   {
-    ZIRenderContext ctx = ZVelocityRendererFactory.createStandaloneRenderEngine(application
+    ZIWebRenderContext ctx = ZTestWebRenderContextFactory.createWebRenderContext(application
         .getRenderApplication());
-    ZRenderEngine re = new ZRenderEngine();
+    ZRenderEngine re = new ZRenderEngine(ctx);
     RootExposeRenderFalse root = new RootExposeRenderFalse();
-    String s = re.render(root, ctx);
+    String s = re.render(root);
     assertTrue(s, s.indexOf("$renderService") >= 0);
     assertTrue(s, s.indexOf("root.js") >= 0);
     assertTrue(s, s.indexOf("nested.js") < 0);

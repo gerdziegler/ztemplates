@@ -27,6 +27,7 @@ public class ZActionServiceImpl implements ZIActionService
 
   private final ZIUrlFactory urlFactory;
 
+
   public ZActionServiceImpl(ZIUrlHandler urlHandler, ZIUrlFactory urlFactory, String contextPath, String prefix)
   {
     this.prefix = prefix;
@@ -38,16 +39,24 @@ public class ZActionServiceImpl implements ZIActionService
 
   public Object process(String url, Map<String, String[]> paramMap) throws Exception
   {
-    if (!url.startsWith(contextPath))
+    String shortUrl;
+    if (contextPath != null)
     {
-      throw new Exception("url does not start with contextPath: " + url + " --- " + contextPath);
+      if (!url.startsWith(contextPath))
+      {
+        throw new Exception("url does not start with contextPath: " + url + " --- " + contextPath);
+      }
+      shortUrl = url.substring(contextPath.length());
     }
-    String shortUrl = url.substring(contextPath.length());
+    else
+    {
+      shortUrl = url;
+    }
     if (prefix != null)
     {
       if (!shortUrl.startsWith(prefix))
       {
-        throw new Exception("url does not start with prefix: " + url + " --- " + prefix);
+        throw new Exception("url does not start with prefix: [url with contextPath" + url + "] --- " + shortUrl + " --- " + prefix);
       }
       shortUrl = shortUrl.substring(prefix.length());
     }
@@ -75,12 +84,7 @@ public class ZActionServiceImpl implements ZIActionService
     {
       prepend = contextPath;
     }
-
-    // if (!(action instanceof String) || !ret.startsWith(prepend + "/"))
-    // {
     ret = prepend + ret;
-    // }
-
     return ret;
   }
 }

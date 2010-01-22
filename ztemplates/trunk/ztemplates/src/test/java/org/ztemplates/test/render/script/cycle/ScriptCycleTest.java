@@ -5,10 +5,10 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
-import org.ztemplates.render.impl.ZIRenderContext;
+import org.ztemplates.render.impl.ZIWebRenderContext;
 import org.ztemplates.render.impl.ZRenderEngine;
-import org.ztemplates.render.velocity.ZVelocityRendererFactory;
 import org.ztemplates.test.ZTestApplication;
+import org.ztemplates.test.ZTestWebRenderContextFactory;
 import org.ztemplates.web.application.ZApplication;
 
 public class ScriptCycleTest extends TestCase
@@ -35,8 +35,8 @@ public class ScriptCycleTest extends TestCase
 
   public void test1() throws Exception
   {
-    ZIRenderContext ctx = ZVelocityRendererFactory.createStandaloneRenderEngine(application
+    ZIWebRenderContext ctx = ZTestWebRenderContextFactory.createWebRenderContext(application
         .getRenderApplication());
-    ZRenderEngine re = new ZRenderEngine();
+    ZRenderEngine re = new ZRenderEngine(ctx);
   }
 }

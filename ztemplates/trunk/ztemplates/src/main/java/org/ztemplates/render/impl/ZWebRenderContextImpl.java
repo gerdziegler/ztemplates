@@ -15,17 +15,17 @@
 package org.ztemplates.render.impl;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.ztemplates.render.ZCss;
-import org.ztemplates.render.ZIRenderEngine;
+import org.ztemplates.render.ZIRenderedObject;
 import org.ztemplates.render.ZIRenderer;
 import org.ztemplates.render.ZJavaScript;
 import org.ztemplates.render.ZRenderApplication;
+import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.ZScript;
 import org.ztemplates.render.ZScriptDependency;
 import org.ztemplates.render.script.ZCssExposed;
@@ -34,13 +34,11 @@ import org.ztemplates.render.script.ZIJavaScriptProcessor;
 import org.ztemplates.render.script.ZIScriptRepository;
 import org.ztemplates.render.script.ZJavaScriptExposed;
 
-public class ZRenderContextImpl implements ZIRenderContext
+public class ZWebRenderContextImpl implements ZIWebRenderContext
 {
   private final ZRenderApplication application;
 
   private final String contextPath;
-
-  private final List<ZIRenderer> rendererCache = new ArrayList<ZIRenderer>();
 
   private int renderCnt = 0;
 
@@ -54,22 +52,22 @@ public class ZRenderContextImpl implements ZIRenderContext
 
   private final SortedSet<ZCssExposed> cssExposed = new TreeSet<ZCssExposed>();
 
+  private final ZRendererRepository rendererRepository;
 
-  public ZRenderContextImpl(ZRenderApplication application,
-      String contextPath,
-      ZIJavaScriptProcessor javaScriptProcessor,
-      ZICssProcessor cssProcessor)
+
+  public ZWebRenderContextImpl(ZRenderApplication application, String contextPath, ZIJavaScriptProcessor javaScriptProcessor, ZICssProcessor cssProcessor)
   {
     this.application = application;
     this.contextPath = contextPath;
     this.javaScriptProcessor = javaScriptProcessor;
     this.cssProcessor = cssProcessor;
+    this.rendererRepository = new ZRendererRepository(application.getApplicationContext(), application.getTemplateNameRepository());
   }
 
 
   public List<ZExposedMethod> getExposedMethods(Class clazz) throws Exception
   {
-    return application.getExposedMethodRepository().getExposed(clazz);
+    return application.getExposedMethodRepository().getExposedMethods(clazz);
   }
 
 
@@ -91,11 +89,11 @@ public class ZRenderContextImpl implements ZIRenderContext
   }
 
 
-  public ZExposedMethodRepository getExposedMethodRepository()
-  {
-    return application.getExposedMethodRepository();
-  }
-
+  //
+  // public ZExposedMethodRepository getExposedMethodRepository()
+  // {
+  // return application.getExposedMethodRepository();
+  // }
 
   public ZICssIdRepository getCssIdRepository()
   {
@@ -105,17 +103,7 @@ public class ZRenderContextImpl implements ZIRenderContext
 
   public ZIRenderer getRenderer(Class<? extends ZIRenderer> clazz) throws Exception
   {
-    for (ZIRenderer r : rendererCache)
-    {
-      if (clazz.equals(r.getClass()))
-      {
-        return r;
-      }
-    }
-    ZIRenderer renderer = clazz.newInstance();
-    renderer.init(application);
-    rendererCache.add(renderer);
-    return renderer;
+    return rendererRepository.getRenderer(clazz);
   }
 
 
@@ -165,6 +153,14 @@ public class ZRenderContextImpl implements ZIRenderContext
 
   public void registerScripts(Object obj, Map<String, Object> exposed) throws Exception
   {
+    if (obj instanceof ZIRenderedObject)
+    {
+      ZIRenderedObject ro = (ZIRenderedObject) obj;
+      cssExposed.addAll(ro.getCssExposed());
+      javaScriptExposed.addAll(ro.getJavaScriptExposed());
+      return;
+    }
+
     ZScript scriptAnn = obj.getClass().getAnnotation(ZScript.class);
     if (scriptAnn == null)
     {
@@ -197,15 +193,8 @@ public class ZRenderContextImpl implements ZIRenderContext
       String s = js.value();
       int idx = scriptRepository.getJavaScriptIndex(s);
       String val = exposed != null ? ZReplaceUtil.replace(s, exposed) : s;
-      addJavaScriptExposed(new ZJavaScriptExposed(idx, val, js.standalone(), js
-          .merge()));
+      addJavaScriptExposed(new ZJavaScriptExposed(idx, val, js.standalone(), js.merge()));
     }
-  }
-
-
-  public ZIRenderEngine getRenderEngine(Object obj) throws Exception
-  {
-    return application.getRenderEngineRepository().getRenderEngine(obj, this);
   }
 
 
@@ -233,4 +222,48 @@ public class ZRenderContextImpl implements ZIRenderContext
     Object ret = getter.invoke(obj);
     return ret;
   }
+
+
+  public void beforeRender(Object obj, Map<String, Object> exposed) throws Exception
+  {
+    ZRenderer rendererAnnot = obj.getClass().getAnnotation(ZRenderer.class);
+
+    incRenderCallCounter();
+
+    // register scripts, needs exposed values
+    registerScripts(obj, exposed);
+
+    if (rendererAnnot != null)
+    {
+      if (rendererAnnot.cssId() && exposed.get("cssId") == null)
+      {
+        String cssId = getCssIdRepository().getCssId(obj.getClass());
+        exposed.put("cssId", cssId);
+      }
+
+      if (rendererAnnot.contextPath() && exposed.get("contextPath") == null)
+      {
+        exposed.put("contextPath", getContextPath());
+      }
+
+      if (rendererAnnot.zscript() && exposed.get("zscript") == null)
+      {
+        if (getScriptExposedBy() != null)
+        {
+          throw new Exception("zscript can only be exposed once per request, but is exposed by \n" + getScriptExposedBy() + "\n" + computeZscriptExposedBy(obj));
+        }
+        setScriptExposedBy(computeZscriptExposedBy(obj));
+
+        String zscript = computeHtmlScriptTags();
+        exposed.put("zscript", zscript);
+      }
+    }
+  }
+
+
+  private static String computeZscriptExposedBy(Object obj)
+  {
+    return obj.getClass().getSimpleName() + "[" + obj + "]";
+  }
+
 }

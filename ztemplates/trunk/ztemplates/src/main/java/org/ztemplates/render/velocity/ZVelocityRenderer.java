@@ -12,61 +12,60 @@
 
 package org.ztemplates.render.velocity;
 
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
 import org.ztemplates.render.ZIRenderApplicationContext;
 import org.ztemplates.render.ZIRenderer;
-import org.ztemplates.render.ZRenderApplication;
+import org.ztemplates.render.ZITemplateNameRepository;
 
 public class ZVelocityRenderer implements ZIRenderer
 {
-  private static final String GLOBAL_PROPERTY_CONFIGURATION = ZVelocityRenderer.class
-      .getSimpleName()
-      + ".CONFIGURATION";
+  private static final String GLOBAL_PROPERTY_CONFIGURATION = ZVelocityRenderer.class.getSimpleName() + ".CONFIGURATION";
 
   protected static Logger log = Logger.getLogger(ZVelocityRenderer.class);
 
-  private ZRenderApplication application;
+  private ZITemplateNameRepository templateNameRepository;
 
   private VelocityEngine velocityEngine;
 
 
-  public static VelocityEngine getVelocityEngine(ZIRenderApplicationContext applicationContext)
-      throws Exception
+  public static VelocityEngine getVelocityEngine(ZIRenderApplicationContext applicationContext) throws Exception
   {
-    VelocityEngine cfg = (VelocityEngine) applicationContext
-        .getAttribute(ZVelocityRenderer.GLOBAL_PROPERTY_CONFIGURATION);
+    VelocityEngine cfg = (VelocityEngine) applicationContext.getAttribute(ZVelocityRenderer.GLOBAL_PROPERTY_CONFIGURATION);
     if (cfg == null)
     {
-      throw new Exception("missing Velocity Configuration (global property '"
-          + ZVelocityRenderer.GLOBAL_PROPERTY_CONFIGURATION + "')");
+      throw new Exception("missing Velocity Engine (global property '" + ZVelocityRenderer.GLOBAL_PROPERTY_CONFIGURATION
+          + "') call setVelocityEngine() or init()");
     }
     return cfg;
   }
 
 
-  public static void setVelocityEngine(ZIRenderApplicationContext applicationContext,
-      VelocityEngine cfg) throws Exception
+  public static void setVelocityEngine(ZIRenderApplicationContext applicationContext, VelocityEngine cfg) throws Exception
   {
     applicationContext.setAttribute(ZVelocityRenderer.GLOBAL_PROPERTY_CONFIGURATION, cfg);
   }
 
 
-  public void init(ZRenderApplication application) throws Exception
+  public void init(ZIRenderApplicationContext applicationContext, ZITemplateNameRepository templateNameRepository) throws Exception
   {
-    this.application = application;
-    velocityEngine = getVelocityEngine(application.getApplicationContext());
+    this.templateNameRepository = templateNameRepository;
+    velocityEngine = getVelocityEngine(applicationContext);
   }
 
 
   public String render(Class clazz, Map<String, Object> values) throws Exception
   {
-    String template = application.getTemplateNameRepository().getTemplateName(clazz) + ".vm";
+    String template = templateNameRepository.getTemplateName(clazz) + ".vm";
     Template t = velocityEngine.getTemplate(template);
     if (t == null)
     {
@@ -91,5 +90,87 @@ public class ZVelocityRenderer implements ZIRenderer
     }
 
     return pw.toString();
+  }
+
+
+  public static void init(ZIRenderApplicationContext applicationContext) throws Exception
+  {
+    VelocityEngine ve = new VelocityEngine();
+
+    Properties prop = getProperties(applicationContext.getClass());
+    log.info("--- Velocity Properties ---");
+    log.info(prop);
+    ve.init(prop);
+    applicationContext.setAttribute(ZVelocityRenderer.GLOBAL_PROPERTY_CONFIGURATION, ve);
+    log.info("--- velocity initialized ---");
+  }
+
+
+  public static Properties getProperties(Class clazz) throws Exception
+  {
+    Properties prop = getPropertiesFromClassLoader(clazz);
+    if (prop == null)
+    {
+      log.info("using default Velocity properties as defined in " + ZVelocityRenderer.class.getName());
+      prop = getDefaultProperties();
+    }
+    return prop;
+  }
+
+
+  public static Properties getDefaultProperties()
+  {
+    Properties prop = new Properties();
+    prop.setProperty("directive.foreach.counter.initial.value", "0");
+    prop.setProperty("resource.loader", "classpath,file");
+    prop.setProperty("file.resource.loader.class", FileResourceLoader.class.getName());
+    prop.setProperty("file.resource.loader.cache", "true");
+    prop.setProperty("file.resource.loader.path", "templates");
+    prop.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+    prop.setProperty("classpath.resource.loader.cache", "true");
+    prop.setProperty("velocimacro.permissions.allowInline", "true");
+    prop.setProperty("velocimacro.permissions.allowInlineToOverride", "false");
+    prop.setProperty("velocimacro.context.localscope", "true");
+    return prop;
+  }
+
+
+  private static Properties getPropertiesFromClassLoader(Class clazz) throws Exception
+  {
+    String[] locations =
+    {
+        "WEB-INF/velocity.properties", "/WEB-INF/velocity.properties", "velocity.properties", "/velocity.properties"
+    };
+    for (String loc : locations)
+    {
+      Properties prop = loadPropertiesFromClassLoader(clazz, loc);
+      if (prop != null)
+      {
+        return prop;
+      }
+    }
+    return null;
+  }
+
+
+  private static Properties loadPropertiesFromClassLoader(Class clazz, String propFile) throws Exception
+  {
+    log.info("try loading velocity properties from classloader of class " + clazz.getName() + " and path " + propFile + " ...");
+    InputStream in = clazz.getResourceAsStream(propFile);
+    if (in != null)
+    {
+      try
+      {
+        Properties ret = new Properties();
+        ret.load(in);
+        log.info("OK: loaded velocity properties from classloader of class " + clazz.getName() + " and path " + propFile + " ...");
+        return ret;
+      }
+      finally
+      {
+        in.close();
+      }
+    }
+    return null;
   }
 }

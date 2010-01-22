@@ -35,11 +35,10 @@ public class ZServletServiceImpl implements ZIServletService
 
   private final ZIRenderService renderService;
 
-//  private final boolean allowRenderInPost;
 
-  public ZServletServiceImpl(final HttpServletRequest request,
-      final HttpServletResponse response,
-      final ZIActionService actionService,
+  // private final boolean allowRenderInPost;
+
+  public ZServletServiceImpl(final HttpServletRequest request, final HttpServletResponse response, final ZIActionService actionService,
       final ZIRenderService renderService)
   {
     super();
@@ -47,7 +46,8 @@ public class ZServletServiceImpl implements ZIServletService
     this.response = response;
     this.actionService = actionService;
     this.renderService = renderService;
-//    this.allowRenderInPost = !"false".equals(request.getSession().getServletContext().getInitParameter("allowRenderInPost"));
+    // this.allowRenderInPost =
+    // !"false".equals(request.getSession().getServletContext().getInitParameter("allowRenderInPost"));
   }
 
 
@@ -83,15 +83,18 @@ public class ZServletServiceImpl implements ZIServletService
 
   public void render(Object obj, String mimeType, String encoding) throws Exception
   {
-//    if(!allowRenderInPost && request.getMethod().equals("POST"))
-//    {
-//      throw new Exception("RESTful applications should not render in POST, send redirect to another page instead. To allow rendering in POST response set the servlet context init parameter 'allowRenderInPost=true' in WEB-INF/web.xml' like this:" +
-//    	"\n<context-param>\n" +
-//        "  <description>In RESTful applications make a redirect after POST</description>\n" +
-//        "  <param-name>allowRenderInPost</param-name>\n" +
-//        "  <param-value>true</param-value>\n" +
-//        "</context-param>\n");
-//    }
+    // if(!allowRenderInPost && request.getMethod().equals("POST"))
+    // {
+    // throw new
+    // Exception("RESTful applications should not render in POST, send redirect to another page instead. To allow rendering in POST response set the servlet context init parameter 'allowRenderInPost=true' in WEB-INF/web.xml' like this:"
+    // +
+    // "\n<context-param>\n" +
+    // "  <description>In RESTful applications make a redirect after POST</description>\n"
+    // +
+    // "  <param-name>allowRenderInPost</param-name>\n" +
+    // "  <param-value>true</param-value>\n" +
+    // "</context-param>\n");
+    // }
     String value = obj == null ? null : renderService.render(obj);
     if (obj != null)
     {
@@ -116,6 +119,10 @@ public class ZServletServiceImpl implements ZIServletService
   }
 
 
+  /**
+   * 
+   */
+  @Deprecated
   public String createUrl(Object action)
   {
     try
@@ -130,22 +137,22 @@ public class ZServletServiceImpl implements ZIServletService
   }
 
 
-  public String createExternalUrl(Object action)
+  public String createExternalUrl(Object action) throws Exception
   {
-    String url = createUrl(action);
+    String url = actionService.createUrl(action);
     String scheme = request.getScheme();
     String serverName = request.getServerName();
     int serverPort = request.getServerPort();
-    //    String contextPath = request.getContextPath();    
-    //    String servletPath = request.getServletPath();    
+    // String contextPath = request.getContextPath();
+    // String servletPath = request.getServletPath();
     StringBuffer ret = new StringBuffer();
     ret.append(scheme);
     ret.append("://");
     ret.append(serverName);
     ret.append(':');
     ret.append(serverPort);
-    //    ret.append(contextPath);
-    //    ret.append(servletPath);
+    // ret.append(contextPath);
+    // ret.append(servletPath);
 
     ret.append(url);
     return ret.toString();

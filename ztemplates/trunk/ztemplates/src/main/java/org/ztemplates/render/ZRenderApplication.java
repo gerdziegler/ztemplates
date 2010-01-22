@@ -9,7 +9,6 @@ import org.ztemplates.render.impl.ZCssEngine;
 import org.ztemplates.render.impl.ZCssIdRepository;
 import org.ztemplates.render.impl.ZExposedMethodRepository;
 import org.ztemplates.render.impl.ZICssIdRepository;
-import org.ztemplates.render.impl.ZRenderEngineRepository;
 import org.ztemplates.render.impl.ZTemplateNameRepository;
 import org.ztemplates.render.script.ZIScriptRepository;
 import org.ztemplates.render.script.ZScriptRepository;
@@ -30,20 +29,20 @@ public class ZRenderApplication
 
   private final ZCssEngine cssEngine;
 
-  private final ZRenderEngineRepository renderEngineRepository;
+  private final ZIClassRepository classRepository;
 
-
-  public ZRenderApplication(ZIRenderApplicationContext applicationContext) throws Exception
+  public ZRenderApplication(ZIRenderApplicationContext applicationContext, ZIClassRepository classRepository) throws Exception
   {
     this.applicationContext = applicationContext;
-
-    ZCssIdRepository cssIdRepository = new ZCssIdRepository(applicationContext.getClassRepository());
+    this.classRepository = classRepository;
+    ZCssIdRepository cssIdRepository = new ZCssIdRepository(classRepository);
     cssIdRepository.preload();
     this.cssIdRepository = cssIdRepository;
 
-    ZTemplateNameRepository templateNameRepository = new ZTemplateNameRepository(applicationContext
-        .getClassRepository());
-    templateNameRepository.preload();
+    ZTemplateNameRepository templateNameRepository = new ZTemplateNameRepository();
+
+    List<Class> classesAnnotatedWithRenderer = classRepository.getClassesAnnotatedWith(ZRenderer.class);
+    templateNameRepository.preload(classesAnnotatedWithRenderer);
     this.templateNameRepository = templateNameRepository;
 
     // this.javaScriptProcessor = javaScriptProcessor;
@@ -51,8 +50,7 @@ public class ZRenderApplication
     // this.cssProcessor = cssProcessor;
 
     List<ZScript> scripts = new ArrayList<ZScript>();
-    List<Class> scriptClasses = applicationContext.getClassRepository()
-        .getClassesAnnotatedWith(ZScript.class);
+    List<Class> scriptClasses = classRepository.getClassesAnnotatedWith(ZScript.class);
     for (Class c : scriptClasses)
     {
       ZScript sc = (ZScript) c.getAnnotation(ZScript.class);
@@ -61,16 +59,13 @@ public class ZRenderApplication
     scriptRepository = new ZScriptRepository(scripts);
 
     exposedMethodRepository = new ZExposedMethodRepository();
-    List<Class> exposedClasses = applicationContext.getClassRepository()
-        .getClassesAnnotatedWith(ZRenderer.class);
+    List<Class> exposedClasses = classRepository.getClassesAnnotatedWith(ZRenderer.class);
     for (Class c : exposedClasses)
     {
       exposedMethodRepository.addExposed(c);
     }
 
     cssEngine = new ZCssEngine(this);
-
-    renderEngineRepository = new ZRenderEngineRepository();
   }
 
 
@@ -85,17 +80,6 @@ public class ZRenderApplication
     return templateNameRepository;
   }
 
-
-  // public ZIJavaScriptProcessor getJavaScriptProcessor()
-  // {
-  // return javaScriptProcessor;
-  // }
-  //
-  //
-  // public ZICssProcessor getCssProcessor()
-  // {
-  // return cssProcessor;
-  // }
 
   public ZIScriptRepository getScriptRepository()
   {
@@ -117,18 +101,12 @@ public class ZRenderApplication
 
   public ZIClassRepository getClassRepository()
   {
-    return applicationContext.getClassRepository();
+    return classRepository;
   }
 
 
   public ZCssEngine getCssEngine()
   {
     return cssEngine;
-  }
-
-
-  public ZRenderEngineRepository getRenderEngineRepository()
-  {
-    return renderEngineRepository;
   }
 }

@@ -18,7 +18,7 @@ import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 
 @ZRenderer(ZVelocityRenderer.class)
-public class Css2
+public final class Css2
 {
 
 }

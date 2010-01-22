@@ -18,11 +18,11 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.zclasspath.ZIClassRepository;
-import org.ztemplates.render.impl.ZIRenderContext;
+import org.ztemplates.render.impl.ZIWebRenderContext;
 import org.ztemplates.render.impl.ZRenderEngine;
-import org.ztemplates.render.velocity.ZVelocityRendererFactory;
 import org.ztemplates.test.ZMavenClassRepository;
 import org.ztemplates.test.ZTestApplication;
+import org.ztemplates.test.ZTestWebRenderContextFactory;
 import org.ztemplates.web.application.ZApplication;
 
 public class BasicScript2Test extends TestCase
@@ -49,11 +49,11 @@ public class BasicScript2Test extends TestCase
 
   public void test1() throws Exception
   {
-    ZIRenderContext ctx = ZVelocityRendererFactory.createStandaloneRenderEngine(application
+    ZIWebRenderContext ctx = ZTestWebRenderContextFactory.createWebRenderContext(application
         .getRenderApplication());
-    ZRenderEngine re = new ZRenderEngine();
+    ZRenderEngine re = new ZRenderEngine(ctx);
     Root root = new Root();
-    String s = re.render(root, ctx);
+    String s = re.render(root);
     log.info(s);
     int idx = s.indexOf("first.js");
     assertTrue(s, idx >= 0);

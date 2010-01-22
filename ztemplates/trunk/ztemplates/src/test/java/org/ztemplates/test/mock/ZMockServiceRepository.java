@@ -152,10 +152,10 @@ public class ZMockServiceRepository implements ZIServiceRepository
 
   public ZIFormService getFormService()
   {
-    if(formService == null)
+    if (formService == null)
     {
-      formService = new ZFormServiceImpl(getServletService());  
-    }    
+      formService = new ZFormServiceImpl();
+    }
     return formService;
   }
 

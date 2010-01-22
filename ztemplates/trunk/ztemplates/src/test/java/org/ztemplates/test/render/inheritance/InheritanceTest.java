@@ -20,11 +20,11 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.zclasspath.ZIClassRepository;
-import org.ztemplates.render.impl.ZIRenderContext;
+import org.ztemplates.render.impl.ZIWebRenderContext;
 import org.ztemplates.render.impl.ZRenderEngine;
-import org.ztemplates.render.velocity.ZVelocityRendererFactory;
 import org.ztemplates.test.ZMavenClassRepository;
 import org.ztemplates.test.ZTestApplication;
+import org.ztemplates.test.ZTestWebRenderContextFactory;
 import org.ztemplates.web.application.ZApplication;
 
 public class InheritanceTest extends TestCase
@@ -51,11 +51,11 @@ public class InheritanceTest extends TestCase
 
   public void testExposed() throws Exception
   {
-    ZIRenderContext ctx = ZVelocityRendererFactory.createStandaloneRenderEngine(application
+    ZIWebRenderContext ctx = ZTestWebRenderContextFactory.createWebRenderContext(application
         .getRenderApplication());
     ExtensionClass1 ext1 = new ExtensionClass1();
-    ZRenderEngine re = new ZRenderEngine();
-    Map<String, Object> exposed = re.getExposed(ext1, ctx);
+    ZRenderEngine re = new ZRenderEngine(ctx);
+    Map<String, Object> exposed = re.getExposed(ext1);
     assertEquals("val1", exposed.get("prop1"));
     assertEquals("val2", exposed.get("prop2"));
   }
@@ -63,11 +63,11 @@ public class InheritanceTest extends TestCase
 
   public void testRenderedExtensionClass() throws Exception
   {
-    ZIRenderContext ctx = ZVelocityRendererFactory.createStandaloneRenderEngine(application
+    ZIWebRenderContext ctx = ZTestWebRenderContextFactory.createWebRenderContext(application
         .getRenderApplication());
     ExtensionClass1 ext1 = new ExtensionClass1();
-    ZRenderEngine re = new ZRenderEngine();
-    String rendered = re.render(ext1, ctx);
+    ZRenderEngine re = new ZRenderEngine(ctx);
+    String rendered = re.render(ext1);
     assertTrue(rendered.indexOf("val1") >= 0);
     assertTrue(rendered.indexOf("val2") >= 0);
   }
@@ -75,11 +75,11 @@ public class InheritanceTest extends TestCase
 
   public void testRenderedBaseClass() throws Exception
   {
-    ZIRenderContext ctx = ZVelocityRendererFactory.createStandaloneRenderEngine(application
+    ZIWebRenderContext ctx = ZTestWebRenderContextFactory.createWebRenderContext(application
         .getRenderApplication());
-    ZRenderEngine re = new ZRenderEngine();
+    ZRenderEngine re = new ZRenderEngine(ctx);
     BaseClass base = new BaseClass();
-    String rendered = re.render(base, ctx);
+    String rendered = re.render(base);
     assertTrue(rendered.indexOf("val1") >= 0);
   }
 }

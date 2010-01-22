@@ -15,14 +15,13 @@ public class ZTestApplication
   }
 
 
-  public static ZApplication create(ZIClassRepository classRepository, String contextPath)
-      throws Exception
+  public static ZApplication create(ZIClassRepository classRepository, String contextPath) throws Exception
   {
     ZIActionApplicationContext actionContext = new ZTestApplicationContext(classRepository);
     ZIRenderApplicationContext renderContext = new ZTestApplicationContext(classRepository);
 
-    ZActionApplication actionApplication = new ZActionApplication(actionContext);
-    ZRenderApplication renderApplication = new ZRenderApplication(renderContext);
+    ZActionApplication actionApplication = new ZActionApplication(actionContext, classRepository);
+    ZRenderApplication renderApplication = new ZRenderApplication(renderContext, classRepository);
 
     ZApplication ret = new ZApplication(classRepository, actionApplication, renderApplication);
     return ret;

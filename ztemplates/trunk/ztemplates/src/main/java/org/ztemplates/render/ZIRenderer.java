@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public interface ZIRenderer extends Serializable
 {
-  public void init(ZRenderApplication application) throws Exception;
+  public void init(ZIRenderApplicationContext applicationContext, ZITemplateNameRepository templateNameRepository) throws Exception;
 
 
   public String render(Class exposedObjectClass, Map<String, Object> exposedValues)

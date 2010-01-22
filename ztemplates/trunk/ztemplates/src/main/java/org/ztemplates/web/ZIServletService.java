@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * interface to servlet
+ * interface to servlet. Not available in standalone mode!
  * 
  * @author www.gerdziegler.de
  */
@@ -78,11 +78,13 @@ public interface ZIServletService extends ZIService
 
 
   /**
-   * creates a url that calls the referenced action
+   * creates a url that calls the referenced action,
+   * Use ZIActionService.createUrl instead.
    * 
    * @param action
    * @return
-   */
+   */  
+  @Deprecated //Use ZIActionService.createUrl instead.
   public String createUrl(Object action);
 
 
@@ -90,8 +92,9 @@ public interface ZIServletService extends ZIService
    * 
    * @param action
    * @return
+   * @throws Exception 
    */
-  public String createExternalUrl(Object action);
+  public String createExternalUrl(Object action) throws Exception;
 
 
   /**

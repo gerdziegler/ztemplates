@@ -53,23 +53,18 @@ public class ZTemplatesContextListener implements ServletContextListener
 
       log.info("creating class repository...");
       final ZIClassRepository classRepository = createClassRepository(ctx);
-      final ZApplicationContextImpl applicationContext = new ZApplicationContextImpl(classRepository,
-          ctx);
+      final ZApplicationContextImpl applicationContext = new ZApplicationContextImpl(classRepository, ctx);
 
       log.info("creating application...");
 
-      ZCachingJavaScriptProcessorData.setInstance(applicationContext,
-          new ZCachingJavaScriptProcessorData());
+      ZCachingJavaScriptProcessorData.setInstance(applicationContext, new ZCachingJavaScriptProcessorData());
       ZCachingCssProcessorData.setInstance(applicationContext, new ZCachingCssProcessorData());
 
-      ZActionApplication actionApplication = new ZActionApplication(applicationContext);
-      ZRenderApplication renderApplication = new ZRenderApplication(applicationContext);
-      ZApplication application = new ZApplication(classRepository,
-          actionApplication,
-          renderApplication);
+      ZActionApplication actionApplication = new ZActionApplication(applicationContext, classRepository);
+      ZRenderApplication renderApplication = new ZRenderApplication(applicationContext, classRepository);
+      ZApplication application = new ZApplication(classRepository, actionApplication, renderApplication);
 
-      ZIApplicationRepository applicationRepository = new ZApplicationRepository(ctx);
-      applicationRepository.setApplication(application);
+      ZApplicationRepository.setApplication(ctx, application);
 
       log.info("context initialized");
     }
@@ -83,14 +78,12 @@ public class ZTemplatesContextListener implements ServletContextListener
   public void contextDestroyed(ServletContextEvent ev)
   {
     ServletContext ctx = ev.getServletContext();
-    ZIApplicationRepository applicationRepository = new ZApplicationRepository(ctx);
-    applicationRepository.setApplication(null);
+    ZApplicationRepository.setApplication(ctx, null);
     log.info("context destroyed");
   }
 
 
-  private ZIClassRepository createClassRepository(final ServletContext servletContext)
-      throws Exception
+  private ZIClassRepository createClassRepository(final ServletContext servletContext) throws Exception
   {
     List<ZIClassPathItem> items = new ArrayList<ZIClassPathItem>();
     items.add(new ZClassPathItemWebapp(servletContext, "/WEB-INF/classes/"));
@@ -101,18 +94,14 @@ public class ZTemplatesContextListener implements ServletContextListener
     final ZIClassPathFilter filter;
     if (filterClass != null)
     {
-      log.info("filtering scanned classes with : " + filterClass + " ( to change modify "
-          + filterClassPropertyName + " in WEB-INF/xml )");
+      log.info("filtering scanned classes with : " + filterClass + " ( to change modify " + filterClassPropertyName + " in WEB-INF/xml )");
       filter = (ZIClassPathFilter) Class.forName(filterClass).newInstance();
     }
     else
     {
-      log.info("no init property: " + filterClassPropertyName + ", using default value "
-          + ZDefaultClassPathFilter.class.getName());
-      log.info("to avoid scanning too many jars/classes you could have set the init property '"
-          + filterClassPropertyName
-          + "' in WEB-INF/web.xml to the classname of a implementation of "
-          + ZIClassPathFilter.class.getName() + " (best extending "
+      log.info("no init property: " + filterClassPropertyName + ", using default value " + ZDefaultClassPathFilter.class.getName());
+      log.info("to avoid scanning too many jars/classes you could have set the init property '" + filterClassPropertyName
+          + "' in WEB-INF/web.xml to the classname of a implementation of " + ZIClassPathFilter.class.getName() + " (best extending "
           + ZDefaultClassPathFilter.class.getName() + ")");
       filter = new ZDefaultClassPathFilter();
     }

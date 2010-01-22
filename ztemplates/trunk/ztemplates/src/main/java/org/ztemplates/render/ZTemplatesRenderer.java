@@ -24,18 +24,18 @@ import org.ztemplates.render.impl.ZReplaceUtil;
  */
 public class ZTemplatesRenderer implements ZIRenderer
 {
-  private ZRenderApplication application;
+  private ZITemplateNameRepository templateNameRepository;
 
 
-  public void init(ZRenderApplication application)
+  public void init(ZIRenderApplicationContext applicationContext, ZITemplateNameRepository templateNameRepository)
   {
-    this.application = application;
+    this.templateNameRepository = templateNameRepository;
   }
 
 
   public String render(Class clazz, Map<String, Object> values) throws Exception
   {
-    String template = application.getTemplateNameRepository().getTemplateName(clazz) + ".zt";
+    String template = templateNameRepository.getTemplateName(clazz) + ".zt";
 
     StringBuffer sb = new StringBuffer();
     InputStream inStream = clazz.getResourceAsStream(template);

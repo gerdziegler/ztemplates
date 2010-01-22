@@ -1,10 +1,8 @@
 package org.ztemplates.web.request;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.web.ZIActionService;
@@ -21,23 +19,17 @@ import org.ztemplates.web.application.ZIServiceFactory;
 import org.ztemplates.web.request.impl.ZFormServiceImpl;
 
 /**
- * holds the request-time services of ztemplates
+ * holds the per thread services of ztemplates in a webapp environment
  * 
  * @author www.gerdziegler.de
  */
-public class ZServiceRepository implements ZIServiceRepository
+public abstract class ZServiceRepositoryStandalone implements ZIServiceRepository
 {
-  static final Logger log = Logger.getLogger(ZServiceRepository.class);
+  static final Logger log = Logger.getLogger(ZServiceRepositoryStandalone.class);
 
   private final ZIServiceFactory serviceFactory;
 
-  private final HttpServletRequest request;
-
-  private final HttpServletResponse response;
-
   private ZIApplicationService applicationService;
-
-  private ZIServletService servletService;
 
   private ZIRenderService renderService;
 
@@ -55,17 +47,18 @@ public class ZServiceRepository implements ZIServiceRepository
 
   private Map<Class, Object> serviceMap = new HashMap<Class, Object>();
 
+  private final Locale locale;
 
-  public ZServiceRepository(ZIServiceFactory serviceFactory,
-      final HttpServletRequest request,
-      final HttpServletResponse response)
+  private final String contextPath;
+
+
+  public ZServiceRepositoryStandalone(ZIServiceFactory serviceFactory, Locale locale, String contextPath)
   {
     super();
     this.serviceFactory = serviceFactory;
-    this.request = request;
-    this.response = response;
-    servletService = serviceFactory.createServletService(this, request, response);
-    formService = new ZFormServiceImpl(servletService);
+    this.locale = locale;
+    this.contextPath = contextPath;
+    formService = new ZFormServiceImpl();
   }
 
 
@@ -76,7 +69,7 @@ public class ZServiceRepository implements ZIServiceRepository
    */
   public ZIServletService getServletService()
   {
-    return servletService;
+    return null;
   }
 
 
@@ -89,7 +82,7 @@ public class ZServiceRepository implements ZIServiceRepository
   {
     if (renderService == null)
     {
-      renderService = serviceFactory.createRenderService(this, request, response);
+      renderService = serviceFactory.createRenderService(this, contextPath);
     }
     return renderService;
   }
@@ -104,25 +97,25 @@ public class ZServiceRepository implements ZIServiceRepository
   {
     if (encryptionService == null)
     {
-      encryptionService = serviceFactory.createEncryptionService(this, request, response);
+      encryptionService = serviceFactory.createEncryptionService(this);
     }
     return encryptionService;
   }
 
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.ztemplates.web.impl.ZIServiceRepository#getSecurityService()
-   */
-  public ZISecurityService getSecurityService()
-  {
-    if (securityService == null)
-    {
-      securityService = serviceFactory.createSecurityService(this, request, response);
-    }
-    return securityService;
-  }
+//  /*
+//   * (non-Javadoc)
+//   * 
+//   * @see org.ztemplates.web.impl.ZIServiceRepository#getSecurityService()
+//   */
+//  public ZISecurityService getSecurityService()
+//  {
+//    if (securityService == null)
+//    {
+//      securityService = serviceFactory.createSecurityService(this, request);
+//    }
+//    return securityService;
+//  }
 
 
   /*
@@ -134,7 +127,7 @@ public class ZServiceRepository implements ZIServiceRepository
   {
     if (exceptionService == null)
     {
-      exceptionService = serviceFactory.createExceptionService(this, request, response);
+      exceptionService = serviceFactory.createExceptionService(this);
     }
     return exceptionService;
   }
@@ -144,7 +137,7 @@ public class ZServiceRepository implements ZIServiceRepository
   {
     if (actionService == null)
     {
-      actionService = serviceFactory.createActionService(this, request, response);
+      actionService = serviceFactory.createActionService(this, contextPath);
     }
     return actionService;
   }
@@ -154,7 +147,7 @@ public class ZServiceRepository implements ZIServiceRepository
   {
     if (applicationService == null)
     {
-      applicationService = serviceFactory.createApplicationService(this, request, response);
+      applicationService = serviceFactory.createApplicationService(this);
     }
     return applicationService;
   }
@@ -164,7 +157,7 @@ public class ZServiceRepository implements ZIServiceRepository
   {
     if (messageService == null)
     {
-      messageService = serviceFactory.createMessageService(this, request, response);
+      messageService = serviceFactory.createMessageService(this, locale);
     }
     return messageService;
   }

@@ -31,94 +31,84 @@ public class ZRenderEngine implements ZIRenderEngine
 {
   protected static Logger log = Logger.getLogger(ZRenderEngine.class);
 
+  private ZIExposedMethodRepository exposedMethodRepository;
 
-  public String render(Object obj, ZIRenderContext ctx) throws Exception
+  private ZIRendererRepository rendererRepository;
+
+  private ZIRenderEngineListener listener;
+
+
+  public ZRenderEngine(ZIRenderContext ctx)
+  {
+    // this.ctx = ctx;
+    this.listener = ctx;
+    this.exposedMethodRepository = ctx;
+    this.rendererRepository = ctx;
+  }
+
+
+  public ZRenderEngine(ZIExposedMethodRepository exposedMethodRepository, ZIRendererRepository rendererRepository, ZIRenderEngineListener listener)
+  {
+    this.exposedMethodRepository = exposedMethodRepository;
+    this.rendererRepository = rendererRepository;
+    this.listener = listener;
+  }
+
+
+  public ZRenderEngine(ZIExposedMethodRepository exposedMethodRepository, ZIRendererRepository rendererRepository)
+  {
+    this.exposedMethodRepository = exposedMethodRepository;
+    this.rendererRepository = rendererRepository;
+    this.listener = null;
+  }
+
+
+  public String render(Object obj) throws Exception
   {
     if (obj == null)
     {
       return null;
     }
 
-    ctx.incRenderCallCounter();
+    // always compute this to get scripts
+    Map<String, Object> exposed = getExposed(obj);
 
-    if (obj instanceof ZIRenderedObject)
+    if (listener != null)
     {
-      ZIRenderedObject ro = (ZIRenderedObject) obj;
-      ctx.getCssExposed().addAll(ro.getCssExposed());
-      ctx.getJavaScriptExposed().addAll(ro.getJavaScriptExposed());
+      listener.beforeRender(obj, exposed);
     }
-    
+
     if (obj instanceof ZIRenderedObject)
     {
       ZIRenderedObject ro = (ZIRenderedObject) obj;
       return ro.getText();
     }
 
-    // always compute this to get script
-    Map<String, Object> exposed = getExposed(obj, ctx);
-
-    // register scripts, needs exposed values
-    ctx.registerScripts(obj, exposed);
-
     ZRenderer rendererAnnot = obj.getClass().getAnnotation(ZRenderer.class);
     if (rendererAnnot == null)
     {
       return obj.toString();
     }
-
-    beforeRender(obj, rendererAnnot, exposed, ctx);
-
-    ZIRenderer renderer = ctx.getRenderer(rendererAnnot.value());
-    long time = System.currentTimeMillis();
-    String ret = renderer.render(obj.getClass(), exposed);
-    long delta = System.currentTimeMillis() - time;
-    if (delta > 15)
+    else
     {
-      log.info("    engine " + obj.getClass().getName() + " [" + delta + " ms]");
-    }
-    return ret;
-  }
-
-
-  private void beforeRender(Object obj, ZRenderer rendererAnnot, Map<String, Object> exposed, ZIRenderContext ctx) throws Exception
-  {
-    if (rendererAnnot.cssId() && exposed.get("cssId") == null)
-    {
-      String cssId = ctx.getCssIdRepository().getCssId(obj.getClass());
-      exposed.put("cssId", cssId);
-    }
-
-    if (rendererAnnot.contextPath() && exposed.get("contextPath") == null)
-    {
-      exposed.put("contextPath", ctx.getContextPath());
-    }
-
-    if (rendererAnnot.zscript() && exposed.get("zscript") == null)
-    {
-      if (ctx.getScriptExposedBy() != null)
+      ZIRenderer renderer = rendererRepository.getRenderer(rendererAnnot.value());
+      long time = System.currentTimeMillis();
+      String ret = renderer.render(obj.getClass(), exposed);
+      long delta = System.currentTimeMillis() - time;
+      if (delta > 15)
       {
-        throw new Exception("zscript can only be exposed once per request, but is exposed by \n" + ctx.getScriptExposedBy() + "\n"
-            + computeZscriptExposedBy(obj));
+        log.info("    engine " + obj.getClass().getName() + " [" + delta + " ms]");
       }
-      ctx.setScriptExposedBy(computeZscriptExposedBy(obj));
-
-      String zscript = ctx.computeHtmlScriptTags();
-      exposed.put("zscript", zscript);
+      return ret;
     }
   }
 
 
-  private static String computeZscriptExposedBy(Object obj)
-  {
-    return obj.getClass().getSimpleName() + "[" + obj + "]";
-  }
-
-
-  public Map<String, Object> getExposed(Object obj, ZIRenderContext ctx) throws Exception
+  public Map<String, Object> getExposed(Object obj) throws Exception
   {
     Map<String, Object> values = new HashMap<String, Object>();
 
-    List<ZExposedMethod> exposedMethods = ctx.getExposedMethods(obj.getClass());
+    List<ZExposedMethod> exposedMethods = exposedMethodRepository.getExposedMethods(obj.getClass());
 
     for (ZExposedMethod m : exposedMethods)
     {
@@ -132,7 +122,7 @@ public class ZRenderEngine implements ZIRenderEngine
           Collection newVal = new ArrayList();
           for (Object crt : oldVal)
           {
-            String rendered = ctx.getRenderEngine(crt).render(crt, ctx);
+            String rendered = render(crt);
             newVal.add(rendered);
           }
           val = newVal;
@@ -141,7 +131,7 @@ public class ZRenderEngine implements ZIRenderEngine
         {
           if (val != null)
           {
-            String rendered = ctx.getRenderEngine(val).render(val, ctx);
+            String rendered = render(val);
             val = rendered;
           }
         }

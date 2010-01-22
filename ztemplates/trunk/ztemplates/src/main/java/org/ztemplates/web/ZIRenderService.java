@@ -27,7 +27,9 @@ public interface ZIRenderService extends ZIService
 
 
   /**
-   * renders a object to a object that can be cached, just expose the returned object with @ZExpose(render=true).
+   * renders a object to a object that can be cached, just expose the returned
+   * object with @ZExpose(render=true).
+   * 
    * @param obj
    * @return
    * @throws Exception
@@ -45,9 +47,9 @@ public interface ZIRenderService extends ZIService
 
 
   /**
-   * creates a per request unique id for usage in javascript. 
-   * Ids are guaranteed to be unique in request scope as well as for future requests of the same user,
-   * so one can safely cache prerendered pojos. 
+   * creates a per request unique id for usage in javascript. Ids are guaranteed
+   * to be unique in request scope as well as for future requests of the same
+   * user, so one can safely cache prerendered pojos.
    */
   public String createJavaScriptId();
 

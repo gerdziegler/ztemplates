@@ -14,6 +14,8 @@
  */
 package org.ztemplates.web.request.impl;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,7 +37,6 @@ import org.ztemplates.web.ZIServletService;
 import org.ztemplates.web.application.ZApplication;
 import org.ztemplates.web.application.ZIServiceFactory;
 import org.ztemplates.web.request.ZIServiceRepository;
-import org.ztemplates.web.request.ZServiceRepository;
 
 /**
  * configures the default services
@@ -63,13 +64,13 @@ public class ZServiceFactory implements ZIServiceFactory
   }
 
 
-  public ZIApplicationService createApplicationService(final ZIServiceRepository repo, final HttpServletRequest request, final HttpServletResponse response)
+  public ZIApplicationService createApplicationService(final ZIServiceRepository repo)
   {
     return new ZApplicationServiceImpl(application);
   }
 
 
-  public ZIExceptionService createExceptionService(final ZIServiceRepository repo, final HttpServletRequest request, final HttpServletResponse response)
+  public ZIExceptionService createExceptionService(final ZIServiceRepository repo)
   {
     return new ZExceptionServiceImpl();
   }
@@ -81,30 +82,30 @@ public class ZServiceFactory implements ZIServiceFactory
   }
 
 
-  public ZIActionService createActionService(final ZIServiceRepository repo, final HttpServletRequest request, final HttpServletResponse response)
+  public ZIActionService createActionService(final ZIServiceRepository repo, String contextPath)
   {
     String prefix = application.getActionApplication().getApplicationContext().getInitParameter("prefix");
     ZMatchTree matchTree = application.getActionApplication().getMatchTree();
     ZISecurityService ss = repo.getSecurityService();
     ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, ss.getSecurityProvider(), ss.getSecureUrlDecorator());
     ZIUrlFactory urlFactory = new ZUrlFactory(ss.getSecureUrlDecorator());
-    return new ZActionServiceImpl(urlHandler, urlFactory, request.getContextPath(), prefix);
+    return new ZActionServiceImpl(urlHandler, urlFactory, contextPath, prefix);
   }
 
 
-  public ZISecurityService createSecurityService(final ZIServiceRepository repo, final HttpServletRequest request, final HttpServletResponse response)
+  public ZISecurityService createSecurityService(final ZIServiceRepository repo, final HttpServletRequest request)
   {
     return new ZSecurityServiceImpl(request);
   }
 
 
-  public ZIRenderService createRenderService(final ZIServiceRepository repo, final HttpServletRequest request, final HttpServletResponse response)
+  public ZIRenderService createRenderService(final ZIServiceRepository repo, String contextPath)
   {
-    return new ZRenderServiceImpl(application.getRenderApplication(), request.getContextPath());
+    return new ZRenderServiceImpl(application.getRenderApplication(), contextPath);
   }
 
 
-  public ZIEncryptionService createEncryptionService(final ZIServiceRepository repo, final HttpServletRequest request, final HttpServletResponse response)
+  public ZIEncryptionService createEncryptionService(final ZIServiceRepository repo)
   {
     String password = application.getActionApplication().getApplicationContext().getInitParameter("encryptPassword");
     if (password != null)
@@ -131,9 +132,8 @@ public class ZServiceFactory implements ZIServiceFactory
   }
 
 
-  public ZIMessageService createMessageService(final ZServiceRepository repository, final HttpServletRequest request, final HttpServletResponse response)
+  public ZIMessageService createMessageService(final ZIServiceRepository repository, Locale locale)
   {
-    ZIMessageService ret = new ZMessageService(request.getLocale());
-    return ret;
+    return new ZMessageService(locale);
   }
 }
