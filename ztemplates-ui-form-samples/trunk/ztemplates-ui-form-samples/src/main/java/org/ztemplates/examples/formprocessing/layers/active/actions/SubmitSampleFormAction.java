@@ -32,11 +32,12 @@ public class SubmitSampleFormAction implements ZIFormAction<SampleForm>
 
   /**
    * to create url to this action define one or many static createUrl methods here.  
+   * @throws Exception 
    */
-  public static String createUrl()
+  public static String createUrl() throws Exception
   {
     SubmitSampleFormAction act = new SubmitSampleFormAction();
-    return ZTemplates.getServletService().createUrl(act);
+    return ZTemplates.getActionService().createUrl(act);
   }
 
 

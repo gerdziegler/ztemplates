@@ -22,7 +22,7 @@ import org.ztemplates.web.ui.form.ZFormText;
 import org.ztemplates.web.ui.form.state.ZFormInputState;
 
 @ZRenderer(value = ZVelocityRenderer.class)
-public class CascadingFormPanel
+public final class CascadingFormPanel
 {
   private final CascadingForm data;
 

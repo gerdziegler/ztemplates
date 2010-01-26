@@ -28,7 +28,7 @@ import org.ztemplates.web.ui.form.ZFormTextArea;
 import org.ztemplates.web.ui.form.state.ZFormInputState;
 
 @ZRenderer(value = ZVelocityRenderer.class)
-public class PersonPanel
+public final class PersonPanel
 {
   private final String contentId;
 

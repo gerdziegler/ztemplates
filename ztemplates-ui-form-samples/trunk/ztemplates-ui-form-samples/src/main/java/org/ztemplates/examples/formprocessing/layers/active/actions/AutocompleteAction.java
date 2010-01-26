@@ -39,10 +39,10 @@ public class AutocompleteAction implements ZIAction
   }
 
 
-  public static String createUrl()
+  public static String createUrl() throws Exception
   {
     AutocompleteAction act = new AutocompleteAction();
-    return ZTemplates.getServletService().createUrl(act);
+    return ZTemplates.getActionService().createUrl(act);
   }
 
 

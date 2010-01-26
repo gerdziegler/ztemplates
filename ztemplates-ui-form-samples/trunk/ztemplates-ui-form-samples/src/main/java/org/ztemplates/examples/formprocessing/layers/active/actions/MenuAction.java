@@ -27,11 +27,12 @@ public class MenuAction implements ZIAction
 
   /**
    * to create url to this action define one or many static createUrl methods here.  
+   * @throws Exception 
    */
-  public static String createUrl()
+  public static String createUrl() throws Exception
   {
     MenuAction act = new MenuAction();
-    return ZTemplates.getServletService().createUrl(act);
+    return ZTemplates.getActionService().createUrl(act);
   }
 
 

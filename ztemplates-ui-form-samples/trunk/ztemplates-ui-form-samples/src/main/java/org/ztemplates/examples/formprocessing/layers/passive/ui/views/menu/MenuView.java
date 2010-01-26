@@ -21,7 +21,7 @@ import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 
 @ZRenderer(value=ZVelocityRenderer.class, zscript=true)
-public class MenuView
+public final class MenuView
 {
   private final JMenuBar menuBar;
 

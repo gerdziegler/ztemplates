@@ -28,7 +28,7 @@ import org.ztemplates.web.ui.form.state.ZFormState;
 import org.ztemplates.web.ui.form.state.ZFormStateHighlight;
 
 @ZRenderer(value = ZVelocityRenderer.class, zscript = true)
-public class SampleFormView
+public final class SampleFormView
 {
   private final String formId = "sampleForm";
 
