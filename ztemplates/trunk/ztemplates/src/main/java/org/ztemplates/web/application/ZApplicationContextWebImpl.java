@@ -9,18 +9,16 @@ import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.render.ZIRenderApplicationContext;
 
-public class ZApplicationContextImpl implements ZIRenderApplicationContext,
-    ZIActionApplicationContext
+public class ZApplicationContextWebImpl implements ZIRenderApplicationContext, ZIActionApplicationContext
 {
-  private static final Logger log = Logger.getLogger(ZApplicationContextImpl.class);
+  private static final Logger log = Logger.getLogger(ZApplicationContextWebImpl.class);
 
   private final ServletContext servletContext;
 
   private final ZIClassRepository classRepository;
 
 
-  public ZApplicationContextImpl(ZIClassRepository classRepository, ServletContext servletContext)
-      throws Exception
+  public ZApplicationContextWebImpl(ZIClassRepository classRepository, ServletContext servletContext) throws Exception
   {
     super();
     this.classRepository = classRepository;
@@ -52,14 +50,9 @@ public class ZApplicationContextImpl implements ZIRenderApplicationContext,
   }
 
 
-  // public String getContextPath()
-  // {
-  // return contextPath;
-  // }
-
   public Enumeration<String> getInitParameterNames()
   {
-    return servletContext.getAttributeNames();
+    return servletContext.getInitParameterNames();
   }
 
 

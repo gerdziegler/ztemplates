@@ -18,9 +18,8 @@ import org.ztemplates.web.ZIMessageService;
 
 public class ZMockMessageService implements ZIMessageService
 {
-  public String getMessage(String bundleName, String messageId, String... parameters)
-      throws Exception
+  public String getMessage(String bundleName, String messageId, Object... parameters)
   {
-    return messageId;
+    return bundleName + " " + messageId;
   }
 }

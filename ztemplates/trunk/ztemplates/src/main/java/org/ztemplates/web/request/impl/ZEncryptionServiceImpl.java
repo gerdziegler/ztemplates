@@ -19,7 +19,7 @@ import org.ztemplates.web.ZIEncryptionService;
 
 public class ZEncryptionServiceImpl implements ZIEncryptionService
 {
-  private ZEncrypter encrypter;
+  private final ZEncrypter encrypter;
 
 
   public ZEncryptionServiceImpl(String password, byte[] salt)
@@ -28,8 +28,42 @@ public class ZEncryptionServiceImpl implements ZIEncryptionService
   }
 
 
+  public ZEncryptionServiceImpl(String password, String saltHex)
+  {
+    if (password == null)
+    {
+      encrypter = null;
+    }
+    else
+    {
+      byte[] salt = null;
+      if (saltHex != null)
+      {
+        saltHex = saltHex.trim().toLowerCase();
+        if (saltHex.length() != 16)
+        {
+          throw new RuntimeException("'encryptSalt' in must have length 16 and contain only the hex characters 0-1 and a-f");
+        }
+
+        salt = new byte[saltHex.length() / 2];
+        for (int i = 0; i < salt.length; i++)
+        {
+          salt[i] = (byte) Integer.parseInt(saltHex.substring(2 * i, 2 * i + 2), 16);
+        }
+      }
+
+      encrypter = new ZEncrypter(salt, password);
+    }
+  }
+
+
   public String decrypt(String s) throws Exception
   {
+    if (encrypter == null)
+    {
+      return s;
+    }
+
     String ret = encrypter.decrypt(s);
     return ret;
   }
@@ -37,6 +71,11 @@ public class ZEncryptionServiceImpl implements ZIEncryptionService
 
   public String encrypt(String s) throws Exception
   {
+    if (encrypter == null)
+    {
+      return s;
+    }
+
     String ret = encrypter.encrypt(s);
     return ret;
   }

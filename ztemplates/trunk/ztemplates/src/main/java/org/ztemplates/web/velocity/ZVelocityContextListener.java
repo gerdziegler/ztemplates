@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.ztemplates.render.ZIRenderApplicationContext;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.application.ZApplication;
-import org.ztemplates.web.application.ZApplicationRepository;
+import org.ztemplates.web.application.ZApplicationRepositoryWeb;
 
 public class ZVelocityContextListener implements ServletContextListener
 {
@@ -32,7 +32,7 @@ public class ZVelocityContextListener implements ServletContextListener
     ServletContext servletContext = servletContextEvent.getServletContext();
     try
     {
-      ZApplication application = ZApplicationRepository.getApplication(servletContext);
+      ZApplication application = ZApplicationRepositoryWeb.getApplication(servletContext);
       ZIRenderApplicationContext renderApplicationContext = application.getRenderApplication().getApplicationContext();
       ZVelocityRenderer.init(renderApplicationContext);
       log.info("velocity initialized");

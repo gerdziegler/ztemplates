@@ -4,6 +4,7 @@
  */
 package org.ztemplates.property;
 
+
 public class ZInfo extends ZState
 {
   private static final long serialVersionUID = 1L;

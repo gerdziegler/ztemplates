@@ -22,7 +22,6 @@ import org.ztemplates.web.ZIFormService;
 import org.ztemplates.web.ZIMessageService;
 import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZISecurityService;
-import org.ztemplates.web.ZIService;
 import org.ztemplates.web.ZIServletService;
 import org.ztemplates.web.request.ZIServiceRepository;
 import org.ztemplates.web.request.impl.ZFormServiceImpl;
@@ -93,12 +92,6 @@ public class ZMockServiceRepository implements ZIServiceRepository
   public ZIServletService getServletService()
   {
     return servletService;
-  }
-
-
-  public <T extends ZIService> T getService(Class<T> type) throws Exception
-  {
-    return null;
   }
 
 

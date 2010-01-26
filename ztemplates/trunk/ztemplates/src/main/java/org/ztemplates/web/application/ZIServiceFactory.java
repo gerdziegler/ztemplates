@@ -14,47 +14,37 @@
  */
 package org.ztemplates.web.application;
 
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.ztemplates.web.ZIActionService;
-import org.ztemplates.web.ZIApplicationService;
 import org.ztemplates.web.ZIEncryptionService;
 import org.ztemplates.web.ZIExceptionService;
 import org.ztemplates.web.ZIMessageService;
-import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZISecurityService;
-import org.ztemplates.web.ZIService;
-import org.ztemplates.web.ZIServletService;
-import org.ztemplates.web.request.ZIServiceRepository;
 
 public interface ZIServiceFactory
 {
-  public ZIApplicationService createApplicationService(final ZIServiceRepository repo);
+  // public ZIServletService createServletService(final ZIServiceRepository
+  // repo, final HttpServletRequest request, final HttpServletResponse
+  // response);
+
+  // public ZIApplicationService createApplicationService(final
+  // ZIServiceRepository repo);
+
+  // public ZIActionService createActionService(final ZIServiceRepository repo,
+  // String contextPath);
+
+  // public ZIRenderService createRenderService(final ZIServiceRepository repo,
+  // String contextPath);
+
+  // public <T extends ZIService> T createService(Class<T> type) throws
+  // Exception;
+
+  public ZIExceptionService createExceptionService(ZApplication application);
 
 
-  public ZIExceptionService createExceptionService(final ZIServiceRepository repo);
+  public ZISecurityService createSecurityService(ZApplication application);
 
 
-  public ZIServletService createServletService(final ZIServiceRepository repo, final HttpServletRequest request, final HttpServletResponse response);
+  public ZIEncryptionService createEncryptionService(ZApplication application);
 
 
-  public ZISecurityService createSecurityService(final ZIServiceRepository repo, final HttpServletRequest request);
-
-
-  public ZIActionService createActionService(final ZIServiceRepository repo, String contextPath);
-
-
-  public ZIRenderService createRenderService(final ZIServiceRepository repo, String contextPath);
-
-
-  public ZIEncryptionService createEncryptionService(final ZIServiceRepository repo);
-
-
-  public ZIMessageService createMessageService(ZIServiceRepository repository, Locale locale);
-
-
-  public <T extends ZIService> T createService(Class<T> type) throws Exception;
+  public ZIMessageService createMessageService(ZApplication application);
 }

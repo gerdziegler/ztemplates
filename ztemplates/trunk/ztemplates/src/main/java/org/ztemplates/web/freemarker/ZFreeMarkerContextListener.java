@@ -20,7 +20,7 @@ import javax.servlet.ServletContextListener;
 import org.apache.log4j.Logger;
 import org.ztemplates.render.freemarker.ZFreeMarkerRenderer;
 import org.ztemplates.web.application.ZApplication;
-import org.ztemplates.web.application.ZApplicationRepository;
+import org.ztemplates.web.application.ZApplicationRepositoryWeb;
 
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
@@ -64,7 +64,7 @@ public class ZFreeMarkerContextListener implements ServletContextListener
       Configuration conf = new Configuration();
       conf.setTemplateLoader(mtl);
 
-      ZApplication application = ZApplicationRepository.getApplication(servletContext);
+      ZApplication application = ZApplicationRepositoryWeb.getApplication(servletContext);
       ZFreeMarkerRenderer.setConfiguration(application.getRenderApplication().getApplicationContext(), conf);
     }
     catch (Exception e)

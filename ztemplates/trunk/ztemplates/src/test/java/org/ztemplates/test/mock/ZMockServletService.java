@@ -444,20 +444,6 @@ public class ZMockServletService implements ZIServletService
   }
 
 
-  public ServletContext getServletContext()
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-
-  public void logout()
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-
   public void render(Object obj) throws Exception
   {
     // TODO Auto-generated method stub
@@ -466,13 +452,6 @@ public class ZMockServletService implements ZIServletService
 
 
   public void render(Object obj, String mimeType) throws Exception
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-
-  public void renderFormJson(Object form) throws Exception
   {
     // TODO Auto-generated method stub
 
@@ -488,6 +467,6 @@ public class ZMockServletService implements ZIServletService
 
   public void render(Object obj, String mimeType, String encoding) throws Exception
   {
-    // TODO Auto-generated method stub    
+    // TODO Auto-generated method stub
   }
 }

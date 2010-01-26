@@ -21,6 +21,5 @@ public interface ZIMessageService extends ZIService
    * 
    * @param obj
    */
-  public String getMessage(String bundleName, String messageId, String... parameters)
-      throws Exception;
+  public String getMessage(String bundleName, String messageId, Object... parameters);
 }

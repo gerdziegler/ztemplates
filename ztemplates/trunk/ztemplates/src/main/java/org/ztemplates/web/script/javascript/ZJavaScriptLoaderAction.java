@@ -21,7 +21,7 @@ public class ZJavaScriptLoaderAction
   {
     ZJavaScriptLoaderAction act = new ZJavaScriptLoaderAction();
     act.setScriptKey(scriptKey);
-    return ZTemplates.getServletService().createUrl(act);
+    return ZTemplates.getActionService().createUrl(act);
   }
 
 

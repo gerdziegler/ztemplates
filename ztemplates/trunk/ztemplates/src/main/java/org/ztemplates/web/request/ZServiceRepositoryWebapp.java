@@ -1,12 +1,14 @@
 package org.ztemplates.web.request;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.actions.ZIUrlFactory;
+import org.ztemplates.actions.ZUrlFactory;
+import org.ztemplates.actions.urlhandler.ZIUrlHandler;
+import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
+import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
 import org.ztemplates.web.ZIActionService;
 import org.ztemplates.web.ZIApplicationService;
 import org.ztemplates.web.ZIEncryptionService;
@@ -15,13 +17,18 @@ import org.ztemplates.web.ZIFormService;
 import org.ztemplates.web.ZIMessageService;
 import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZISecurityService;
-import org.ztemplates.web.ZIService;
 import org.ztemplates.web.ZIServletService;
+import org.ztemplates.web.application.ZApplication;
 import org.ztemplates.web.application.ZIServiceFactory;
+import org.ztemplates.web.request.impl.ZActionServiceImpl;
+import org.ztemplates.web.request.impl.ZApplicationServiceImpl;
 import org.ztemplates.web.request.impl.ZFormServiceImpl;
+import org.ztemplates.web.request.impl.ZRenderServiceImpl;
+import org.ztemplates.web.request.impl.ZServletServiceImpl;
 
 /**
- * holds the per thread services of ztemplates in a webapp environment
+ * holds the per thread services of ztemplates in a webapp environment, uses
+ * factory to lazy initialize services
  * 
  * @author www.gerdziegler.de
  */
@@ -29,21 +36,21 @@ public class ZServiceRepositoryWebapp implements ZIServiceRepository
 {
   static final Logger log = Logger.getLogger(ZServiceRepositoryWebapp.class);
 
+  private final ZApplication application;
+
   private final ZIServiceFactory serviceFactory;
 
-  private final HttpServletRequest request;
+  private final ZIApplicationService applicationService;
 
-  private ZIApplicationService applicationService;
+  private final ZIServletService servletService;
 
-  private ZIServletService servletService;
+  private final ZIRenderService renderService;
 
-  private ZIRenderService renderService;
+  private final ZIActionService actionService;
 
-  private ZIActionService actionService;
+  private final ZISecurityService securityService;
 
   private ZIEncryptionService encryptionService;
-
-  private ZISecurityService securityService;
 
   private ZIExceptionService exceptionService;
 
@@ -51,107 +58,83 @@ public class ZServiceRepositoryWebapp implements ZIServiceRepository
 
   private ZIFormService formService;
 
-  private Map<Class, Object> serviceMap = new HashMap<Class, Object>();
 
-
-  public ZServiceRepositoryWebapp(ZIServiceFactory serviceFactory, final HttpServletRequest request, final HttpServletResponse response)
+  public ZServiceRepositoryWebapp(ZApplication application, ZIServiceFactory serviceFactory, final HttpServletRequest request,
+      final HttpServletResponse response)
   {
     super();
+    this.application = application;
     this.serviceFactory = serviceFactory;
-    this.request = request;
-    servletService = serviceFactory.createServletService(this, request, response);
-    formService = new ZFormServiceImpl();
+    String contextPath = request.getContextPath();
+
+    applicationService = new ZApplicationServiceImpl(application);
+    securityService = serviceFactory.createSecurityService(application);
+    String prefix = application.getActionApplication().getApplicationContext().getInitParameter("prefix");
+    ZMatchTree matchTree = application.getActionApplication().getMatchTree();
+
+    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityService.getSecurityProvider(), securityService.getSecureUrlDecorator());
+    ZIUrlFactory urlFactory = new ZUrlFactory(securityService.getSecureUrlDecorator());
+    actionService = new ZActionServiceImpl(urlHandler, urlFactory, contextPath, prefix);
+
+    this.renderService = new ZRenderServiceImpl(application.getRenderApplication(), contextPath);
+    this.servletService = new ZServletServiceImpl(request, response, actionService, renderService);
+    this.formService = new ZFormServiceImpl();
   }
 
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.ztemplates.web.impl.ZIServiceRepository#getServletService()
-   */
+  public ZIActionService getActionService()
+  {
+    return actionService;
+  }
+
+
   public ZIServletService getServletService()
   {
     return servletService;
   }
 
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.ztemplates.web.impl.ZIServiceRepository#getRenderService()
-   */
   public ZIRenderService getRenderService()
   {
-    if (renderService == null)
-    {
-      renderService = serviceFactory.createRenderService(this, request.getContextPath());
-    }
     return renderService;
-  }
-
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.ztemplates.web.impl.ZIServiceRepository#getEncryptionService()
-   */
-  public ZIEncryptionService getEncryptionService()
-  {
-    if (encryptionService == null)
-    {
-      encryptionService = serviceFactory.createEncryptionService(this);
-    }
-    return encryptionService;
-  }
-
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.ztemplates.web.impl.ZIServiceRepository#getSecurityService()
-   */
-  public ZISecurityService getSecurityService()
-  {
-    if (securityService == null)
-    {
-      securityService = serviceFactory.createSecurityService(this, request);
-    }
-    return securityService;
-  }
-
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.ztemplates.web.impl.ZIServiceRepository#getExceptionService()
-   */
-  public ZIExceptionService getExceptionService()
-  {
-    if (exceptionService == null)
-    {
-      exceptionService = serviceFactory.createExceptionService(this);
-    }
-    return exceptionService;
-  }
-
-
-  public ZIActionService getActionService()
-  {
-    if (actionService == null)
-    {
-      actionService = serviceFactory.createActionService(this, request.getContextPath());
-    }
-    return actionService;
   }
 
 
   public ZIApplicationService getApplicationService()
   {
-    if (applicationService == null)
-    {
-      applicationService = serviceFactory.createApplicationService(this);
-    }
     return applicationService;
+  }
+
+
+  public ZIFormService getFormService()
+  {
+    return formService;
+  }
+
+
+  public ZISecurityService getSecurityService()
+  {
+    return securityService;
+  }
+
+
+  public ZIEncryptionService getEncryptionService()
+  {
+    if (encryptionService == null)
+    {
+      encryptionService = serviceFactory.createEncryptionService(application);
+    }
+    return encryptionService;
+  }
+
+
+  public ZIExceptionService getExceptionService()
+  {
+    if (exceptionService == null)
+    {
+      exceptionService = serviceFactory.createExceptionService(application);
+    }
+    return exceptionService;
   }
 
 
@@ -159,26 +142,8 @@ public class ZServiceRepositoryWebapp implements ZIServiceRepository
   {
     if (messageService == null)
     {
-      messageService = serviceFactory.createMessageService(this, request.getLocale());
+      messageService = serviceFactory.createMessageService(application);
     }
     return messageService;
-  }
-
-
-  public <T extends ZIService> T getService(Class<T> type) throws Exception
-  {
-    T ret = (T) serviceMap.get(type);
-    if (ret == null)
-    {
-      ret = serviceFactory.createService(type);
-      serviceMap.put(type, ret);
-    }
-    return ret;
-  }
-
-
-  public ZIFormService getFormService()
-  {
-    return formService;
   }
 }

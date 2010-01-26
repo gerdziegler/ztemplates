@@ -14,29 +14,15 @@
  */
 package org.ztemplates.web.request.impl;
 
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.ZIUrlFactory;
-import org.ztemplates.actions.ZUrlFactory;
-import org.ztemplates.actions.urlhandler.ZIUrlHandler;
-import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
-import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
-import org.ztemplates.web.ZIActionService;
-import org.ztemplates.web.ZIApplicationService;
+import org.ztemplates.actions.ZISecureUrlDecorator;
+import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.web.ZIEncryptionService;
 import org.ztemplates.web.ZIExceptionService;
 import org.ztemplates.web.ZIMessageService;
-import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZISecurityService;
-import org.ztemplates.web.ZIService;
-import org.ztemplates.web.ZIServletService;
 import org.ztemplates.web.application.ZApplication;
 import org.ztemplates.web.application.ZIServiceFactory;
-import org.ztemplates.web.request.ZIServiceRepository;
 
 /**
  * configures the default services
@@ -47,93 +33,31 @@ public class ZServiceFactory implements ZIServiceFactory
 {
   protected static final Logger log = Logger.getLogger(ZServiceFactory.class);
 
-  private final ZApplication application;
 
-
-  public ZServiceFactory(final ZApplication application) throws Exception
-  {
-    super();
-    this.application = application;
-
-  }
-
-
-  public <T extends ZIService> T createService(Class<T> type) throws Exception
-  {
-    return null;
-  }
-
-
-  public ZIApplicationService createApplicationService(final ZIServiceRepository repo)
-  {
-    return new ZApplicationServiceImpl(application);
-  }
-
-
-  public ZIExceptionService createExceptionService(final ZIServiceRepository repo)
+  public ZIExceptionService createExceptionService(ZApplication application)
   {
     return new ZExceptionServiceImpl();
   }
 
 
-  public ZIServletService createServletService(final ZIServiceRepository repo, final HttpServletRequest request, final HttpServletResponse response)
+  public ZISecurityService createSecurityService(ZApplication application)
   {
-    return new ZServletServiceImpl(request, response, repo.getActionService(), repo.getRenderService());
+    ZISecurityProvider securityProvider = new ZSecurityProviderImpl();
+    ZISecureUrlDecorator secureUrlDecorator = new ZSecureUrlDecoratorImpl();
+    return new ZSecurityServiceImpl(securityProvider, secureUrlDecorator);
   }
 
 
-  public ZIActionService createActionService(final ZIServiceRepository repo, String contextPath)
-  {
-    String prefix = application.getActionApplication().getApplicationContext().getInitParameter("prefix");
-    ZMatchTree matchTree = application.getActionApplication().getMatchTree();
-    ZISecurityService ss = repo.getSecurityService();
-    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, ss.getSecurityProvider(), ss.getSecureUrlDecorator());
-    ZIUrlFactory urlFactory = new ZUrlFactory(ss.getSecureUrlDecorator());
-    return new ZActionServiceImpl(urlHandler, urlFactory, contextPath, prefix);
-  }
-
-
-  public ZISecurityService createSecurityService(final ZIServiceRepository repo, final HttpServletRequest request)
-  {
-    return new ZSecurityServiceImpl(request);
-  }
-
-
-  public ZIRenderService createRenderService(final ZIServiceRepository repo, String contextPath)
-  {
-    return new ZRenderServiceImpl(application.getRenderApplication(), contextPath);
-  }
-
-
-  public ZIEncryptionService createEncryptionService(final ZIServiceRepository repo)
+  public ZIEncryptionService createEncryptionService(ZApplication application)
   {
     String password = application.getActionApplication().getApplicationContext().getInitParameter("encryptPassword");
-    if (password != null)
-    {
-      String hex = application.getActionApplication().getApplicationContext().getInitParameter("encryptSalt");
-      byte[] salt = null;
-      if (hex != null)
-      {
-        hex = hex.trim().toLowerCase();
-        if (hex.length() != 16)
-        {
-          throw new RuntimeException("'encryptSalt' in web.xml must have length 16 and contain only the hex characters 0-1 and a-f");
-        }
-
-        salt = new byte[hex.length() / 2];
-        for (int i = 0; i < salt.length; i++)
-        {
-          salt[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
-        }
-      }
-      return new ZEncryptionServiceImpl(password, salt);
-    }
-    return null;
+    String saltHex = application.getActionApplication().getApplicationContext().getInitParameter("encryptSalt");
+    return new ZEncryptionServiceImpl(password, saltHex);
   }
 
 
-  public ZIMessageService createMessageService(final ZIServiceRepository repository, Locale locale)
+  public ZIMessageService createMessageService(ZApplication application)
   {
-    return new ZMessageService(locale);
+    return new ZMessageServiceWebImpl();
   }
 }

@@ -31,9 +31,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.web.application.ZApplication;
-import org.ztemplates.web.application.ZApplicationRepository;
+import org.ztemplates.web.application.ZApplicationRepositoryWeb;
 import org.ztemplates.web.application.ZHttpUtil;
-import org.ztemplates.web.application.ZIApplicationRepository;
 import org.ztemplates.web.application.ZIServiceFactory;
 import org.ztemplates.web.request.ZServiceRepositoryWebapp;
 
@@ -74,7 +73,7 @@ public class ZTemplatesFilter implements Filter
       else
       {
         ZHttpUtil.printParameters(req);
-        ZApplication application = ZApplicationRepository.getApplication(req.getSession().getServletContext());
+        ZApplication application = ZApplicationRepositoryWeb.getApplication(req.getSession().getServletContext());
 
         boolean processed = processRequest(application, req, resp);
         if (!processed)
@@ -84,7 +83,7 @@ public class ZTemplatesFilter implements Filter
           {
             passThroughWrite.add(uri);
             passThroughRead = passThroughWrite;// new
-                                               // HashSet<String>(passThroughWrite);
+            // HashSet<String>(passThroughWrite);
           }
           chain.doFilter(request, response);
         }
@@ -108,9 +107,8 @@ public class ZTemplatesFilter implements Filter
     boolean ret = false;
 
     ZIServiceFactory serviceFactory = application.getServiceFactory();
-    
-    
-    ZServiceRepositoryWebapp serviceRepository = new ZServiceRepositoryWebapp(serviceFactory, req, resp);
+
+    ZServiceRepositoryWebapp serviceRepository = new ZServiceRepositoryWebapp(application, serviceFactory, req, resp);
     ZTemplates.setServiceRepository(serviceRepository);
     try
     {

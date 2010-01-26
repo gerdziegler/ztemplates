@@ -12,7 +12,6 @@
 
 package org.ztemplates.web.request.impl;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -60,12 +59,6 @@ public class ZServletServiceImpl implements ZIServletService
   public HttpServletResponse getResponse()
   {
     return response;
-  }
-
-
-  public ServletContext getServletContext()
-  {
-    return getRequest().getSession().getServletContext();
   }
 
 
@@ -120,7 +113,7 @@ public class ZServletServiceImpl implements ZIServletService
 
 
   /**
-   * 
+   * use actionService.createUrl instead
    */
   @Deprecated
   public String createUrl(Object action)
@@ -161,14 +154,7 @@ public class ZServletServiceImpl implements ZIServletService
 
   public void sendRedirect(Object action) throws Exception
   {
-    String url = createUrl(action);
+    String url = actionService.createUrl(action);
     response.sendRedirect(url);
   }
-
-
-  public void logout()
-  {
-    request.getSession().invalidate();
-  }
-
 }

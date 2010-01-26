@@ -24,14 +24,12 @@ public class ZApplication
   private ZIServiceFactory serviceFactory;
 
 
-  public ZApplication(ZIClassRepository classRepository,
-      ZActionApplication actionApplication,
-      ZRenderApplication renderApplication) throws Exception
+  public ZApplication(ZIClassRepository classRepository, ZActionApplication actionApplication, ZRenderApplication renderApplication) throws Exception
   {
     this.classRepository = classRepository;
     this.actionApplication = actionApplication;
     this.renderApplication = renderApplication;
-    serviceFactory = new ZServiceFactory(this);
+    this.serviceFactory = new ZServiceFactory();
   }
 
 
@@ -59,8 +57,8 @@ public class ZApplication
   }
 
 
-  public void setServiceFactory(ZIServiceFactory serviceRepositoryConfigurator)
+  public void setServiceFactory(ZIServiceFactory serviceFactory)
   {
-    this.serviceFactory = serviceRepositoryConfigurator;
+    this.serviceFactory = serviceFactory;
   }
 }

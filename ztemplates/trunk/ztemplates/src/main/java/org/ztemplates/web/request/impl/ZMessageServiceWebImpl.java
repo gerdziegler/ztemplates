@@ -14,53 +14,34 @@
  */
 package org.ztemplates.web.request.impl;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.web.ZIMessageService;
+import org.ztemplates.web.ZTemplates;
 
-public class ZMessageService implements ZIMessageService
+public class ZMessageServiceWebImpl implements ZIMessageService
 {
-  static final Logger log = Logger.getLogger(ZMessageService.class);
-
-  private Locale locale;
+  static final Logger log = Logger.getLogger(ZMessageServiceWebImpl.class);
 
 
-  public ZMessageService(Locale locale)
+  public String getMessage(String bundleName, String messageId, Object... parameters)
   {
-    super();
-    this.locale = locale;
-  }
-
-
-  public String getMessage(String bundleName, String messageId, String... parameters)
-      throws Exception
-  {
-    Locale locale = getLocale();
+    Locale locale = ZTemplates.getServletService().getRequest().getLocale();
     try
     {
       ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale);
-      return bundle.getString(messageId);
+      String ret = bundle.getString(messageId);
+      ret = MessageFormat.format(ret, parameters);
+      return ret;
     }
     catch (Exception e)
     {
-      String msg = "Error while reading resource bundle " + bundleName + " " + messageId
-          + " for locale " + locale;
+      String msg = "Error while reading resource bundle " + bundleName + " " + messageId + " for locale " + locale;
       log.error(msg, e);
       return msg + " --- " + e.getMessage();
     }
-  }
-
-
-  public Locale getLocale()
-  {
-    return locale;
-  }
-
-
-  public void setLocale(Locale locale)
-  {
-    this.locale = locale;
   }
 }

@@ -47,7 +47,7 @@ public abstract class ZTemplates
     if (repository == null)
     {
       stack.pop();
-      if(stack.isEmpty())
+      if (stack.isEmpty())
       {
         serviceRepository.set(null);
       }
@@ -60,8 +60,8 @@ public abstract class ZTemplates
     {
       stack.push(repository);
       serviceRepository.set(repository);
-    }   
-    
+    }
+
     if (log.isDebugEnabled())
     {
       log.debug("serviceRepository.stack.size = " + stack.size());
@@ -81,59 +81,65 @@ public abstract class ZTemplates
   }
 
 
-  public static ZIEncryptionService getEncryptionService() throws Exception
+  public static ZIEncryptionService getEncryptionService()
   {
     return serviceRepository.get().getEncryptionService();
   }
 
 
-  public static ZISecurityService getSecurityService() throws Exception
+  public static ZISecurityService getSecurityService()
   {
     return serviceRepository.get().getSecurityService();
   }
 
 
-  public static ZIExceptionService getExceptionService() throws Exception
+  public static ZIExceptionService getExceptionService()
   {
     return serviceRepository.get().getExceptionService();
   }
 
 
-  public static ZIApplicationService getApplicationService() throws Exception
+  public static ZIApplicationService getApplicationService()
   {
     return serviceRepository.get().getApplicationService();
   }
 
 
-  public static ZIMessageService getMessageService() throws Exception
+  public static ZIMessageService getMessageService()
   {
     return serviceRepository.get().getMessageService();
   }
 
 
-  public static ZIFormService getFormService() throws Exception
+  public static ZIFormService getFormService()
   {
     return serviceRepository.get().getFormService();
   }
 
 
-  /**
-   * user defined services, create in ZIServiceFactory, add ContextListener to
-   * your webapp
-   * 
-   * <code>
-   ZIApplicationRepository applicationRepository = new ZApplicationRepository(req.getSession().getServletContext());
-   ZApplication application = applicationRepository.getApplication();
-   </code>
-   * 
-   * 
-   * @param <T>
-   * @param type
-   * @return
-   * @throws Exception
-   */
-  public <T extends ZIService> T getService(Class<T> type) throws Exception
+  public static ZIActionService getActionService()
   {
-    return serviceRepository.get().getService(type);
+    return serviceRepository.get().getActionService();
   }
+
+  // /**
+  // * user defined services, create in ZIServiceFactory, add ContextListener to
+  // * your webapp
+  // *
+  // * <code>
+  // ZIApplicationRepository applicationRepository = new
+  // ZApplicationRepository(req.getSession().getServletContext());
+  // ZApplication application = applicationRepository.getApplication();
+  // </code>
+  // *
+  // *
+  // * @param <T>
+  // * @param type
+  // * @return
+  // * @throws Exception
+  // */
+  // public <T extends ZIService> T getService(Class<T> type) throws Exception
+  // {
+  // return serviceRepository.get().getService(type);
+  // }
 }

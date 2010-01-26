@@ -2,7 +2,7 @@ package org.ztemplates.web.application;
 
 import javax.servlet.ServletContext;
 
-public class ZApplicationRepository //implements ZIApplicationRepository
+public class ZApplicationRepositoryWeb
 {
   private static final String KEY_ZApplication = ZApplication.class.getName();
 

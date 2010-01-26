@@ -16,7 +16,6 @@ package org.ztemplates.web;
 
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,12 +36,6 @@ public interface ZIServletService extends ZIService
    * @return the HttpServletResponse
    */
   public HttpServletResponse getResponse();
-
-
-  /**
-   * @return the ServletContext
-   */
-  public ServletContext getServletContext();
 
 
   /**
@@ -78,21 +71,22 @@ public interface ZIServletService extends ZIService
 
 
   /**
-   * creates a url that calls the referenced action,
-   * Use ZIActionService.createUrl instead.
+   * creates a url that calls the referenced action, Use
+   * ZIActionService.createUrl instead.
    * 
    * @param action
    * @return
-   */  
-  @Deprecated //Use ZIActionService.createUrl instead.
+   */
+  @Deprecated
+  // Use ZIActionService.createUrl instead.
   public String createUrl(Object action);
 
 
   /**
-   * 
+   * Creates a url including http://servername:port as provided by HttpRequest
    * @param action
    * @return
-   * @throws Exception 
+   * @throws Exception
    */
   public String createExternalUrl(Object action) throws Exception;
 
@@ -104,10 +98,4 @@ public interface ZIServletService extends ZIService
    * @throws IOException
    */
   public void sendRedirect(Object action) throws Exception;
-
-
-  /**
-   * invalidates the session
-   */
-  public void logout();
 }

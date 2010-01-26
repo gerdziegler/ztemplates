@@ -28,11 +28,11 @@ import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.ZActionApplication;
 import org.ztemplates.render.ZRenderApplication;
 import org.ztemplates.web.application.ZApplication;
-import org.ztemplates.web.application.ZApplicationContextImpl;
-import org.ztemplates.web.application.ZApplicationRepository;
-import org.ztemplates.web.application.ZIApplicationRepository;
+import org.ztemplates.web.application.ZApplicationContextWebImpl;
+import org.ztemplates.web.application.ZApplicationRepositoryWeb;
 import org.ztemplates.web.script.css.ZCachingCssProcessorData;
 import org.ztemplates.web.script.javascript.ZCachingJavaScriptProcessorData;
+import org.ztemplates.web.standalone.ZApplicationRepositoryStandalone;
 
 /**
  * 
@@ -53,18 +53,24 @@ public class ZTemplatesContextListener implements ServletContextListener
 
       log.info("creating class repository...");
       final ZIClassRepository classRepository = createClassRepository(ctx);
-      final ZApplicationContextImpl applicationContext = new ZApplicationContextImpl(classRepository, ctx);
+      final ZApplicationContextWebImpl applicationContext = new ZApplicationContextWebImpl(classRepository, ctx);
 
       log.info("creating application...");
 
       ZCachingJavaScriptProcessorData.setInstance(applicationContext, new ZCachingJavaScriptProcessorData());
       ZCachingCssProcessorData.setInstance(applicationContext, new ZCachingCssProcessorData());
-
       ZActionApplication actionApplication = new ZActionApplication(applicationContext, classRepository);
       ZRenderApplication renderApplication = new ZRenderApplication(applicationContext, classRepository);
       ZApplication application = new ZApplication(classRepository, actionApplication, renderApplication);
-
-      ZApplicationRepository.setApplication(ctx, application);
+      ZApplicationRepositoryWeb.setApplication(ctx, application);
+      
+      String applicationName =  ctx.getInitParameter("applicationName");
+      if(applicationName==null)
+      {
+        log.info("No init parameter called 'applicationName' has been found in web.xml --- Using default application name. This is safe if webapp has its own classloader or you use ztemplates only inside a http request. --- If you share classloader between weapps and need access to ztemplates functionality outside of a http request (for example: a scheduled job) set the init parameter 'applicationName' in web.xml to unique name in each webapp and use the applicationName in ZTemplatesStandalone.init()");
+        applicationName = ZApplicationRepositoryStandalone.DEFAULT_APP_NAME;
+      }
+      ZApplicationRepositoryStandalone.setApplication(applicationName, application);
 
       log.info("context initialized");
     }
@@ -78,7 +84,13 @@ public class ZTemplatesContextListener implements ServletContextListener
   public void contextDestroyed(ServletContextEvent ev)
   {
     ServletContext ctx = ev.getServletContext();
-    ZApplicationRepository.setApplication(ctx, null);
+    String applicationName =  ctx.getInitParameter("applicationName");
+    if(applicationName==null)
+    {
+      applicationName = ZApplicationRepositoryStandalone.DEFAULT_APP_NAME;
+    }
+    ZApplicationRepositoryWeb.setApplication(ctx, null);
+    ZApplicationRepositoryStandalone.setApplication(applicationName, null);    
     log.info("context destroyed");
   }
 
