@@ -68,7 +68,7 @@ public class ZTemplatesStandalone implements ZIServiceRepository
    */
   public static void init(Locale locale, ZISecurityProvider securityProvider) throws Exception
   {
-    createServiceRepository(ZApplicationRepositoryStandalone.DEFAULT_APP_NAME, locale, securityProvider);
+    init(ZApplicationRepositoryStandalone.DEFAULT_APP_NAME, locale, securityProvider);
   }
 
 
