@@ -19,7 +19,7 @@ import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.ZTemplatesRenderer;
 
 @ZRenderer(ZTemplatesRenderer.class)
-public class ZFormScriptDebug
+public final class ZFormScriptDebug
 {
   private final ZFormScript formScript;
 

@@ -30,7 +30,7 @@ import org.ztemplates.web.ui.form.state.assets.ZInputStateLoaderAction;
     @ZJavaScript(ZFormScriptLoaderAction.FORM_SCRIPT),
     @ZJavaScript(ZInputStateLoaderAction.FORM_STATE_HIGHLIGHT_JS)
 })
-public class ZFormStateHighlight
+public final class ZFormStateHighlight
 {
   private final String displayId;
 

@@ -33,7 +33,7 @@ import org.ztemplates.web.ui.form.state.assets.ZInputStateLoaderAction;
     @ZJavaScript(ZFormScriptLoaderAction.FORM_SCRIPT),
     @ZJavaScript(ZInputStateLoaderAction.FORM_INPUT_STATE_JS)
 })
-public class ZFormInputState
+public final class ZFormInputState
 {
   private final String inputId;
 

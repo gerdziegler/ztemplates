@@ -22,14 +22,12 @@ import java.util.Map;
 import org.ztemplates.property.ZSelectProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
-import org.ztemplates.render.ZTemplate;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-@ZTemplate
-public class ZFormRadio<T>
+public final class ZFormRadio<T>
 {
   private Map<T, String> idMap = new HashMap<T, String>();
 

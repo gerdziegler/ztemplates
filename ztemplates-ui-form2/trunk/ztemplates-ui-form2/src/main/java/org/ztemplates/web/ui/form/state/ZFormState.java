@@ -28,7 +28,7 @@ import org.ztemplates.web.ui.form.script.assets.ZFormScriptLoaderAction;
     @ZJavaScript(value = JQueryLoaderAction.JQUERY_MIN_JS, standalone = JQueryLoaderAction.STANDALONE, merge = JQueryLoaderAction.MERGE),
     @ZJavaScript(ZFormScriptLoaderAction.FORM_SCRIPT)
 })
-public class ZFormState
+public final class ZFormState
 {
   private final String formId;
 

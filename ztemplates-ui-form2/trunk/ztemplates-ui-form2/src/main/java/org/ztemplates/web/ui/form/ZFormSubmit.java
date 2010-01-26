@@ -22,7 +22,7 @@ import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public class ZFormSubmit
+public final class ZFormSubmit
 {
   private final String inputId;
 

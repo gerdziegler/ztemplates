@@ -22,7 +22,7 @@ import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public class ZFormTextArea
+public final class ZFormTextArea
 {
   private final String inputId;
 

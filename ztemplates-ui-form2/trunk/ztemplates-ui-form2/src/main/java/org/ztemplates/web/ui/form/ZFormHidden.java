@@ -21,7 +21,7 @@ import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public class ZFormHidden
+public final class ZFormHidden
 {
   private final String inputId;
 

@@ -20,14 +20,12 @@ import java.util.List;
 import org.ztemplates.property.ZSelectProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
-import org.ztemplates.render.ZTemplate;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-@ZTemplate
-public class ZFormSelect
+public final class ZFormSelect
 {
   private final String selectId;
 

@@ -48,7 +48,7 @@ import org.ztemplates.web.ui.form.script.assets.ZFormScriptLoaderAction;
     @ZJavaScript(value = JQueryLoaderAction.JQUERY_MIN_JS, standalone = JQueryLoaderAction.STANDALONE, merge = JQueryLoaderAction.MERGE),
     @ZJavaScript(ZFormScriptLoaderAction.FORM_SCRIPT)
 }, property = "runtimeScripts")
-public class ZFormScript
+public final class ZFormScript
 {
   private static final String UTF8 = "UTF-8";
 
