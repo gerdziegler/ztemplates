@@ -37,9 +37,9 @@ public class ZReflectionUtil
   // *********************************************************************************
   // *********************************************************************************
 
-  public static void callAfter(Object obj, ZOperation op) throws Exception
+  public static void callAfter(Object obj/*, ZOperation op*/) throws Exception
   {
-    if (op != null)
+    /*if (op != null)
     {
       // if operation first try op after callback
       String name = computeCallbackName(op.getName());
@@ -68,7 +68,7 @@ public class ZReflectionUtil
       }
     }
     else
-    {
+    {*/
       Method m = getAfter(obj.getClass(), "");
       if (m != null)
       {
@@ -81,7 +81,7 @@ public class ZReflectionUtil
           log.debug("no after callback method found in action pojo " + obj.getClass().getName());
         }
       }
-    }
+   // }
   }
 
 

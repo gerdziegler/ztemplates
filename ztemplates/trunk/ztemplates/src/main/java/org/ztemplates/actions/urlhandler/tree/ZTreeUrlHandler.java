@@ -224,7 +224,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         }
         else
         {
-          ZReflectionUtil.callAfter(pojo, op);
+          ZReflectionUtil.callAfter(pojo);
         }
         pojos.pop();
         pojo = pojos.peek();
@@ -253,7 +253,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         }
         else
         {
-          ZReflectionUtil.callAfter(rootPojo, op);
+          ZReflectionUtil.callAfter(rootPojo);
         }
       }
       else
