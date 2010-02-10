@@ -6,6 +6,7 @@ import org.ztemplates.actions.ZMatch;
 import org.ztemplates.examples.formprocessing.layers.active.form.SampleFormController;
 import org.ztemplates.examples.formprocessing.layers.active.logic.ViewFactory;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.views.SampleForm;
+import org.ztemplates.property.ZIOperationCallback;
 import org.ztemplates.web.ZTemplates;
 
 /**
@@ -21,6 +22,35 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
   private SampleForm form;
 
 
+  private final ZIOperationCallback submitCallback = new ZIOperationCallback()
+  {      
+    @Override
+    public void exec() throws Exception
+    {
+      SampleFormController controller = new SampleFormController(form);
+      controller.updateValues();
+      controller.updateRequired();
+      controller.updateValidationState();
+      if (!ZTemplates.getFormService().getPropertiesWithError(form).isEmpty())
+      {
+        controller.updateForView();
+
+        ViewFactory views = new ViewFactory();
+        views.showSampleForm(form, controller.getAjaxProperties());
+      }
+      else
+      {
+        controller.updateDependencies();
+        controller.updateRequired();
+        controller.updateValidationState();
+        controller.updateForView();
+
+        ViewFactory views = new ViewFactory();
+        views.showSampleFormConfirm();
+      }
+    }
+  };
+  
   /**
    * private constructor, as there is no need to instantiate this class from 
    * application code, only ztemplates does it.
@@ -51,6 +81,7 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
   public void beforeForm() throws Exception
   {
     form = new SampleForm();
+    form.getSubmit().setCallback(submitCallback);
   }
 
 
@@ -78,29 +109,4 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
     views.showSampleForm(form, controller.getAjaxProperties());
   }
 
-
-  public void afterSubmit() throws Exception
-  {    
-    SampleFormController controller = new SampleFormController(form);
-    controller.updateValues();
-    controller.updateRequired();
-    controller.updateValidationState();
-    if (!ZTemplates.getFormService().getPropertiesWithError(form).isEmpty())
-    {
-      controller.updateForView();
-
-      ViewFactory views = new ViewFactory();
-      views.showSampleForm(form, controller.getAjaxProperties());
-    }
-    else
-    {
-      controller.updateDependencies();
-      controller.updateRequired();
-      controller.updateValidationState();
-      controller.updateForView();
-
-      ViewFactory views = new ViewFactory();
-      views.showSampleFormConfirm();
-    }
-  }
 }
