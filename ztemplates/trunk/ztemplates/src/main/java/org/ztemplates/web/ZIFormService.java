@@ -160,7 +160,7 @@ public interface ZIFormService
    * @return
    * @throws Exception
    */
-  public ZFormValues getStringValues(ZIFormModel form) throws Exception;
+  public ZFormValues getFormValues(ZIFormModel form) throws Exception;
 
 
   /**
@@ -168,7 +168,7 @@ public interface ZIFormService
    * @return
    * @throws Exception
    */
-  public void setStringValues(ZIFormModel form, ZFormValues values) throws Exception;
+  public void setFormValues(ZIFormModel form, ZFormValues values) throws Exception;
 
 
   /**

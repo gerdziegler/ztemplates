@@ -8,7 +8,7 @@ import org.ztemplates.render.velocity.ZVelocityRenderer;
 
 @ZRenderer(value = ZVelocityRenderer.class, zscript = true)
 @ZScript(javaScript = @ZJavaScript("root.js"))
-public class RootExposeRenderTrue
+public final class RootExposeRenderTrue
 {
   private Nested nested = new Nested();
 

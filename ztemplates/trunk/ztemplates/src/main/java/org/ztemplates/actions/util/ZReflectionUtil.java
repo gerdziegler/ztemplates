@@ -217,69 +217,6 @@ public class ZReflectionUtil
   }
 
 
-  /**
-   * get obj by path prop1.prop2[1].prop3
-   * 
-   * @param path
-   * @return
-   * @throws Exception
-   */
-  public static Object getObjectByBeanPath(Object obj, String path) throws Exception
-  {
-    String crtPath = path;
-    Object crtObj = obj;
-    int idx = crtPath.indexOf('.');
-    while (idx > 0)
-    {
-      String propName = crtPath.substring(0, idx);
-      int collectionIndex = -1;
-      int openParanth = propName.indexOf('[');
-      if (openParanth >= 0)
-      {
-        collectionIndex = Integer.parseInt(propName.substring(openParanth + 1, propName.length() - 1));
-        propName = propName.substring(0, openParanth);
-      }
-
-      String getterName = computePrefixName("get", propName);
-      Method m = crtObj.getClass().getMethod(getterName);
-      if (m == null)
-      {
-        throw new Exception("getter not found: '" + getterName + "' in " + crtObj.getClass().getName() + " in path '" + path
-            + "' starting from " + obj.getClass().getName());
-      }
-      crtObj = invoke(m, crtObj);
-      if (collectionIndex >= 0)
-      {
-        if (List.class.isAssignableFrom(m.getReturnType()))
-        {
-          List l = (List) crtObj;
-          crtObj = l.get(collectionIndex);
-        }
-        else if (m.getReturnType().isArray())
-        {
-          Object[] arr = (Object[]) crtObj;
-          crtObj = arr[collectionIndex];
-        }
-        else
-        {
-          throw new Exception("unsupported collection: " + m.getReturnType().getName() + " --- only List and arrays allowed.");
-        }
-      }
-      crtPath = crtPath.substring(idx + 1);
-      idx = crtPath.indexOf('.');
-    }
-
-    String propName = crtPath;
-    String getterName = computePrefixName("get", propName);
-    Method m = crtObj.getClass().getMethod(getterName);
-    if (m == null)
-    {
-      throw new Exception("getter not found: '" + getterName + "' in " + crtObj.getClass().getName() + " in path '" + path
-          + "' starting from " + obj.getClass().getName());
-    }
-    crtObj = invoke(m, crtObj);
-    return crtObj;
-  }
 
 
   public static void callReferenceSetter(Object obj, String name, Object value) throws Exception
@@ -433,7 +370,7 @@ public class ZReflectionUtil
   }
 
 
-  private static Object invoke(Method method, Object obj, Object... value) throws Exception
+  public static Object invoke(Method method, Object obj, Object... value) throws Exception
   {
     if (log.isDebugEnabled())
     {
@@ -451,6 +388,13 @@ public class ZReflectionUtil
     }
   }
 
+  /**
+   * not used anymore
+   * 
+   * @param path
+   * @return
+   * @throws Exception
+   */
 
   public static <T> T newInstance(Class<T> clazz) throws Exception
   {
@@ -674,22 +618,22 @@ public class ZReflectionUtil
   }
 
 
-  public static void invokeMethod(Object pojo, String path, String methodName) throws Exception
-  {
-    Object obj = getObjectByBeanPath(pojo, path);
-    if (obj == null)
-    {
-      return;
-    }
-    // find first not inner class
-    Class clazz = obj.getClass();
-    while (clazz.getName().indexOf("$") >= 0)
-    {
-      clazz = clazz.getSuperclass();
-    }
-    Method m = clazz.getMethod(methodName);
-    invoke(m, obj);
-  }
+//  public static void invokeMethod(Object pojo, String path, String methodName) throws Exception
+//  {
+//    Object obj = getObjectByBeanPath(pojo, path);
+//    if (obj == null)
+//    {
+//      return;
+//    }
+//    // find first not inner class
+//    Class clazz = obj.getClass();
+//    while (clazz.getName().indexOf("$") >= 0)
+//    {
+//      clazz = clazz.getSuperclass();
+//    }
+//    Method m = clazz.getMethod(methodName);
+//    invoke(m, obj);
+//  }
 
 
   public static String removePrefixName(String prefix, String name)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 Gerd Ziegler (www.gerdziegler.de)
+ * Copyright 2008 Gerd Ziegler (www.gerdziegler.de)
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -9,24 +9,31 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- * 28.12.2007
+ *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.test.render.inheritance;
+package org.ztemplates.form.list;
 
-import org.ztemplates.render.ZExpose;
-import org.ztemplates.render.ZRenderer;
-import org.ztemplates.render.velocity.ZVelocityRenderer;
+import java.util.ArrayList;
+import java.util.List;
 
-@ZRenderer(ZVelocityRenderer.class)
-public class BaseClass
+import org.ztemplates.form.ZIFormModel;
+
+public class FormModelWithList implements ZIFormModel
 {
-  private String prop1 = "val1";
+  private final List<ZIFormModel> models = new ArrayList<ZIFormModel>();
 
 
-  @ZExpose
-  public String getProp1()
+  public FormModelWithList()
   {
-    return prop1;
+    models.add(new FormModelWithListNested());
+    models.add(new FormModelWithListNested());
   }
+
+
+  public List<ZIFormModel> getModels()
+  {
+    return models;
+  }
+
 }

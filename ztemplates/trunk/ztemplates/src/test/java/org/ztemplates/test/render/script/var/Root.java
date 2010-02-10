@@ -12,7 +12,7 @@ import org.ztemplates.render.velocity.ZVelocityRenderer;
     @ZJavaScript("first.js"),
     @ZJavaScript("root.js?key=${key}")
 })
-public class Root
+public final class Root
 {
   private Nested nested = new Nested();
 

@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
-import org.ztemplates.form.ZFormMirror;
+import org.ztemplates.form.ZDynamicFormModel;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
 import org.ztemplates.test.mock.ZMock;
 import org.ztemplates.test.mock.ZMockServiceRepository;
@@ -38,8 +38,7 @@ public class FormTest extends TestCase
   {
     super.setUp();
     ZMock.setUp();
-    up = ZTestUrlHandlerFactory.create(FormTest.class.getPackage().getName(),
-        ZTestUrlHandlerFactory.defaultSecurityService);
+    up = ZTestUrlHandlerFactory.create(FormTest.class.getPackage().getName(), ZTestUrlHandlerFactory.defaultSecurityService);
   }
 
 
@@ -55,13 +54,14 @@ public class FormTest extends TestCase
     FormModel form = new FormModel();
     ZMockServiceRepository repo = ZMock.getMock();
     repo.setServletService(new ZMockServletService());
-    ZFormMirror.initPropertyNames(form, "");
+    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
     assertEquals("op1", form.getOp1().getName());
     assertEquals("prop1", form.getProp1().getName());
     assertEquals("topSection.field1", form.getTopSection().getField1().getName());
     assertEquals("topSection.field2", form.getTopSection().getField2().getName());
     assertEquals("topSection.op1", form.getTopSection().getOp1().getName());
   }
+
 
 
   public void testValidationParameterWithDot() throws Exception
@@ -111,34 +111,37 @@ public class FormTest extends TestCase
     }
   }
 
-
-//  public void testParamPropForm() throws Exception
-//  {
-//    Map<String, String[]> param = new HashMap<String, String[]>();
-//    param.put("topSection.field1", new String[]
-//    {
-//      "val1",
-//    });
-//    param.put("topSection.field2", new String[]
-//    {
-//      "val2",
-//    });
-//    param.put("predefined", new String[]
-//    {
-//      "predefinedVal",
-//    });
-//
-//    ZMockServiceRepository repo = ZMock.getMock();
-//    ZMockServletService ss = new ZMockServletService();
-//    ss.parameterMap = param;
-//    repo.setServletService(ss);
-//
-//    FormAction2 obj = (FormAction2) up.process("/act2", param);
-//    ZFormProcessor<FormController> wf = new ZFormProcessor<FormController>(obj.getForm());
-//    wf.assign();
-//
-//    assertEquals("topSection.field1", "val1", obj.getForm().getForm().getTopSection().getField1().getStringValue());
-//    assertEquals("topSection.field2", "val2", obj.getForm().getForm().getTopSection().getField2().getStringValue());
-//    assertEquals("predefined", "predefinedVal", obj.getForm().getForm().getPredefined().getStringValue());
-//  }
+  // public void testParamPropForm() throws Exception
+  // {
+  // Map<String, String[]> param = new HashMap<String, String[]>();
+  // param.put("topSection.field1", new String[]
+  // {
+  // "val1",
+  // });
+  // param.put("topSection.field2", new String[]
+  // {
+  // "val2",
+  // });
+  // param.put("predefined", new String[]
+  // {
+  // "predefinedVal",
+  // });
+  //
+  // ZMockServiceRepository repo = ZMock.getMock();
+  // ZMockServletService ss = new ZMockServletService();
+  // ss.parameterMap = param;
+  // repo.setServletService(ss);
+  //
+  // FormAction2 obj = (FormAction2) up.process("/act2", param);
+  // ZFormProcessor<FormController> wf = new
+  // ZFormProcessor<FormController>(obj.getForm());
+  // wf.assign();
+  //
+  // assertEquals("topSection.field1", "val1",
+  // obj.getForm().getForm().getTopSection().getField1().getStringValue());
+  // assertEquals("topSection.field2", "val2",
+  // obj.getForm().getForm().getTopSection().getField2().getStringValue());
+  // assertEquals("predefined", "predefinedVal",
+  // obj.getForm().getForm().getPredefined().getStringValue());
+  // }
 }

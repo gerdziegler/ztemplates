@@ -28,6 +28,7 @@ import org.ztemplates.test.actions.service.ActionServiceTest;
 import org.ztemplates.test.actions.urlhandler.callbacks.test1.CallbacksTest;
 import org.ztemplates.test.actions.urlhandler.callbacks.test2.ProcessorTest;
 import org.ztemplates.test.actions.urlhandler.constructor.ConstructorTest;
+import org.ztemplates.test.actions.urlhandler.form.FormActionCallback;
 import org.ztemplates.test.actions.urlhandler.form.FormTest;
 import org.ztemplates.test.actions.urlhandler.i18n.I18nTest;
 import org.ztemplates.test.actions.urlhandler.match.collision.TreeCollisionTest;
@@ -54,7 +55,6 @@ import org.ztemplates.test.property.PropertyTest;
 import org.ztemplates.test.reflection.ReflectionUtilTest;
 import org.ztemplates.test.render.css.CssTest;
 import org.ztemplates.test.render.impl.ReplaceUtilTest;
-import org.ztemplates.test.render.inheritance.InheritanceTest;
 import org.ztemplates.test.render.script.basic.ScriptTest;
 import org.ztemplates.test.render.script.basic2.BasicScript2Test;
 import org.ztemplates.test.render.script.cycle.ScriptCycleTest;
@@ -103,7 +103,6 @@ public class AllTests extends TestSuite
     suite.addTestSuite(CallbacksTest.class);
     suite.addTestSuite(PropTest.class);
     suite.addTestSuite(ListPropTest.class);
-    suite.addTestSuite(InheritanceTest.class);
     suite.addTestSuite(PropertyTest.class);
     suite.addTestSuite(ListPropertyTest.class);
     suite.addTestSuite(CssTest.class);
@@ -134,7 +133,7 @@ public class AllTests extends TestSuite
     suite.addTestSuite(ZScriptRepositoryTest.class);
     suite.addTestSuite(VariableNamesScriptTest.class);
     suite.addTestSuite(ZJsonTest.class);
-    
+    suite.addTestSuite(FormActionCallback.class);
 
     // suite.addTestSuite(ZTemplatesInternalArchitectureTest.class);
 

@@ -33,7 +33,7 @@ import org.ztemplates.actions.urlhandler.tree.term.ZTreeTail;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeTerm;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeVariable;
 import org.ztemplates.actions.util.ZReflectionUtil;
-import org.ztemplates.form.ZFormMirror;
+import org.ztemplates.form.ZDynamicFormModel;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.property.ZOperation;
@@ -42,7 +42,6 @@ import org.ztemplates.property.ZProperty;
 public class ZTreeUrlHandler implements ZIUrlHandler
 {
   static Logger log = Logger.getLogger(ZTreeUrlHandler.class);
-
 
   private final ZISecurityProvider security;
 
@@ -219,7 +218,14 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         ZMatch zmatch = (ZMatch) pojo.getClass().getAnnotation(ZMatch.class);
         ZEndNested v = (ZEndNested) et;
         ZOperation op = update(pojo, parameters);
-        ZReflectionUtil.callAfter(pojo, op);
+        if (op != null && op.getCallback() != null)
+        {
+          op.getCallback().exec();
+        }
+        else
+        {
+          ZReflectionUtil.callAfter(pojo, op);
+        }
         pojos.pop();
         pojo = pojos.peek();
         ZReflectionUtil.callAfterReference(pojo, v.getName());
@@ -241,7 +247,14 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         pojos.pop();
         assert pojos.isEmpty() : "should be empty: " + pojos.toString();
         ZOperation op = update(rootPojo, parameters);
-        ZReflectionUtil.callAfter(rootPojo, op);
+        if (op != null && op.getCallback() != null)
+        {
+          op.getCallback().exec();
+        }
+        else
+        {
+          ZReflectionUtil.callAfter(rootPojo, op);
+        }
       }
       else
       {
@@ -363,14 +376,14 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         }
       }
 
+      ZFormValues formValues = new ZFormValues();
+      formValues.getValues().putAll(parameters);
+
       ZReflectionUtil.callBeforeForm(pojo, formName);
       ZIFormModel form = (ZIFormModel) ZReflectionUtil.callFormGetter(pojo, formName);
 
-      ZFormMirror.initPropertyNames(form, "");
-
-      ZFormValues formValues = new ZFormValues();
-      formValues.getValues().putAll(parameters);
-      ZFormMirror mirr = new ZFormMirror(form);
+      // ZDynamicFormModel.initPropertyNames(form);
+      ZDynamicFormModel mirr = new ZDynamicFormModel(form);
       Set<ZOperation> ops = mirr.setFormValues(formValues);
       ZOperation op;
       int opCnt = ops.size();
@@ -391,6 +404,6 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       ZReflectionUtil.callAfterForm(pojo, "form");
       return op;
     }
-    return null;
+    return operation;
   }
 }

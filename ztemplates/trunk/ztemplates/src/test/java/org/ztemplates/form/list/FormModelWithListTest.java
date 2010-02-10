@@ -12,35 +12,34 @@
  * 
  * @author www.gerdziegler.de
  */
-package org.ztemplates.form;
+package org.ztemplates.form.list;
 
 import junit.framework.TestCase;
 
-import org.ztemplates.test.actions.urlhandler.form.FormModel;
+import org.ztemplates.form.ZDynamicFormModel;
 
-public class ZFormElementMirrorTest extends TestCase
+public class FormModelWithListTest extends TestCase
 {
   public void testFormElementMirror() throws Exception
   {
-    FormModel f = new FormModel();
+    FormModelWithList f = new FormModelWithList();
 //    ZDynamicFormModel.initPropertyNames(f, "");
     ZDynamicFormModel mirr = new ZDynamicFormModel(f);
+    assertEquals(2, mirr.getFormModels().size());
     assertEquals(2, mirr.getProperties().size());
-    assertEquals(1, mirr.getOperations().size());
-    assertEquals(1, mirr.getFormModels().size());
-    
-    assertEquals("prop1", mirr.getProperties().get(0).getName());
-    assertEquals("op1", mirr.getOperations().get(0).getName());
-    assertEquals("topSection.op1", mirr.getFormModels().get(0).getOperations().get(0).getName());
+    assertEquals(0, mirr.getOperations().size());
+
+    // assertEquals("prop1", mirr.getProperties().get(0).getName());
+    // assertEquals("op1", mirr.getOperations().get(0).getName());
+    // assertEquals("topSection.op1",
+    // mirr.getFormModels().get(0).getOperations().get(0).getName());
   }
 
-
-  public void testPredefinedPropertyNames() throws Exception
-  {
-    FormModel2 f = new FormModel2();
-//    ZDynamicFormModel.initPropertyNames(f, "");
-    ZDynamicFormModel mirr = new ZDynamicFormModel(f);
-    assertEquals("myName", f.getProp().getName());
-    assertEquals("prop1", f.getProp1().getName());
-  }
+  // public void testPredefinedPropertyNames() throws Exception
+  // {
+  // FormModelWithList f = new FormModelWithList();
+  // ZFormMirror.initPropertyNames(f, "");
+  // assertEquals("myName", f.getProp().getName());
+  // assertEquals("prop1", f.getProp1().getName());
+  // }
 }

@@ -55,7 +55,8 @@ public class ZFormValues implements Serializable
   public static ZFormValues createFromForm(ZIFormModel form) throws Exception
   {
     ZFormValues ret = new ZFormValues();
-    ret.readFromForm(form);
+    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    ret.readFromForm(mirr);
     return ret;
   }
 
@@ -73,9 +74,8 @@ public class ZFormValues implements Serializable
   }
 
 
-  public void readFromForm(ZIFormModel form) throws Exception
+  public void readFromForm(ZDynamicFormModel mirr) throws Exception
   {
-    ZFormMirror mirr = new ZFormMirror(form);
     ZFormMembers members = mirr.getFormMembers();
     for (ZProperty prop : members.getProperties())
     {
@@ -90,9 +90,8 @@ public class ZFormValues implements Serializable
   }
 
 
-  public void writeToForm(ZIFormModel form) throws Exception
+  public void writeToForm(ZDynamicFormModel mirr) throws Exception
   {
-    ZFormMirror mirr = new ZFormMirror(form);
     mirr.setFormValues(this);
   }
 

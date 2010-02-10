@@ -22,10 +22,12 @@ import javax.servlet.http.HttpSession;
 import org.ztemplates.property.ZProperty;
 
 /**
- * special Property that can be used to store and retrieve a value in the servlet-session.
- * Use it to pass values in redirects, but be aware the value lives in the HttpSession so if the session expires, 
- * the value is gone. Also keep in mind that the values accumulate in the session, so call removeFromSession
- * when you no longer need the value.
+ * special Property that can be used to store and retrieve a value in the
+ * servlet-session. Use it to pass values in redirects, but be aware the value
+ * lives in the HttpSession so if the session expires, the value is gone. Also
+ * keep in mind that the values accumulate in the session, so call
+ * removeFromSession when you no longer need the value.
+ * 
  * @author www.gerdziegler.de
  */
 public class ZSessionProperty<T extends Serializable> extends ZProperty<T>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 Gerd Ziegler (www.gerdziegler.de)
+ * Copyright 2009 Gerd Ziegler (www.gerdziegler.de)
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -9,27 +9,23 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- * 28.12.2007
  * @author www.gerdziegler.de
  */
-package org.ztemplates.test.render.inheritance;
+package org.ztemplates.web.workflow;
 
-import org.ztemplates.render.ZExpose;
-import org.ztemplates.render.ZJavaScript;
-import org.ztemplates.render.ZRenderer;
-import org.ztemplates.render.ZScript;
-import org.ztemplates.render.velocity.ZVelocityRenderer;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@ZRenderer(ZVelocityRenderer.class)
-@ZScript(javaScript = @ZJavaScript("/test.js"))
-public class ExtensionClass1 extends BaseClass
+/**
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(
 {
-  private String prop2 = "val2";
-
-
-  @ZExpose
-  public String getProp2()
-  {
-    return prop2;
-  }
+  ElementType.TYPE
+})
+public @interface ZWorkflowAction
+{
+  String idParam();
 }

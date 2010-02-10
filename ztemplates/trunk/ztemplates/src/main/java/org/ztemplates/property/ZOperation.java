@@ -10,24 +10,39 @@ public class ZOperation extends ZProperty<String>
 {
   private String allowedValue;
 
+  private ZIOperationCallback callback;
+
 
   public ZOperation(String allowedValue)
   {
     super(allowedValue);
-    this.allowedValue = allowedValue;    
+    this.allowedValue = allowedValue;
   }
 
 
-  public String parse(String formattedValue) throws Exception
+  public ZIOperationCallback getCallback()
   {
-    return formattedValue;
+    return callback;
   }
 
 
-  public String format(String obj)
+  public void setCallback(ZIOperationCallback callback)
   {
-    return obj;
+    this.callback = callback;
   }
+
+
+  public String parse(String s) throws Exception
+  {
+    return s;
+  }
+
+
+  public String format(String s)
+  {
+    return s;
+  }
+
 
   @ZExposeJson
   public String getAllowedValue()

@@ -21,8 +21,8 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.ztemplates.actions.util.ZBase64Util;
+import org.ztemplates.form.ZDynamicFormModel;
 import org.ztemplates.form.ZFormMembers;
-import org.ztemplates.form.ZFormMirror;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.json.ZJsonUtil;
@@ -34,68 +34,67 @@ public class ZFormServiceImpl implements ZIFormService
 {
   static final Logger log = Logger.getLogger(ZFormServiceImpl.class);
 
-//  private final ZIServletService servletService;
-
-
-  public ZFormServiceImpl()
-  {
-//    this.servletService = servletService;
-  }
-
-
-//  public void process(ZIFormModel form) throws Exception
-//  {
-//    ZFormMirror mirr = new ZFormMirror(form);
-//    ZFormValues formValues = new ZFormValues();
-//    formValues.getValues().putAll(servletService.getRequest().getParameterMap());
-//    mirr.setFormValues(formValues);
-//  }
-
-
-  // public void assign(ZIForm form) throws Exception
-  // {
-  // ZFormMirror mirr = new ZFormMirror(form);
-  // mirr.assign();
-  // }
-
-  // public void adjustValues(ZIForm form) throws Exception
-  // {
-  // ZFormMirror mirr = new ZFormMirror(form);
-  // mirr.adjustValues();
-  // }
 
   public void setWriteable(ZIFormModel form, boolean b) throws Exception
   {
-    ZFormMirror mirr = new ZFormMirror(form);
+    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
     mirr.setWriteable(b);
   }
 
 
   public void setReadable(ZIFormModel form, boolean b) throws Exception
   {
-    ZFormMirror mirr = new ZFormMirror(form);
+    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
     mirr.setReadable(b);
   }
 
 
   public List<ZProperty> getPropertiesWithError(ZIFormModel form) throws Exception
   {
-    ZFormMirror mirr = new ZFormMirror(form);
+    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
     return mirr.getPropertiesWithError();
   }
 
 
   public ZFormMembers getFormMembers(ZIFormModel form) throws Exception
   {
-    ZFormMirror mirr = new ZFormMirror(form);
+    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
     return mirr.getFormMembers();
   }
 
 
   public ZScriptDependency getJavaScriptDependency(ZIFormModel form) throws Exception
   {
-    ZFormMirror mirr = new ZFormMirror(form);
+    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
     return mirr.getJavaScriptDependency();
+  }
+
+
+  public ZFormValues getFormValues(ZIFormModel form) throws Exception
+  {
+    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    return mirr.getFormValues();
+  }
+
+
+  public void setFormValues(ZIFormModel form, ZFormValues values) throws Exception
+  {
+    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    mirr.setFormValues(values);
+  }
+
+
+  public Set<ZProperty> getPropertiesByName(ZIFormModel form, Set<String> propNames) throws Exception
+  {
+    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    return mirr.getPropertiesByName(propNames);
+  }
+
+
+  public void initPropertyNames(ZIFormModel form) throws Exception
+  {
+    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    // ZDynamicFormModel.initPropertyNames(form, "");
   }
 
 
@@ -120,45 +119,4 @@ public class ZFormServiceImpl implements ZIFormService
     Object ret = ZBase64Util.decodeToObject(s);
     return ret;
   }
-
-
-  public ZFormValues getStringValues(ZIFormModel form) throws Exception
-  {
-    ZFormValues ret = new ZFormValues();
-    ret.readFromForm(form);
-    return ret;
-  }
-
-
-  public void setStringValues(ZIFormModel form, ZFormValues values) throws Exception
-  {
-    ZFormMirror mirr = new ZFormMirror(form);
-    mirr.setFormValues(values);
-  }
-
-
-  public Set<ZProperty> getPropertiesByName(ZIFormModel form, Set<String> propNames) throws Exception
-  {
-    ZFormMirror mirr = new ZFormMirror(form);
-    Set<ZProperty> ret = mirr.getPropertiesByName(propNames);
-    return ret;
-  }
-
-
-  public void initPropertyNames(ZIFormModel form) throws Exception
-  {
-    ZFormMirror.initPropertyNames(form, "");
-  }
-
-  // public <T> ZProperty<T> getPropertyByParameterName(ZIFormElement form,
-  // String parameterName)
-  // throws Exception
-  // {
-  // String propName = servletService.getRequest().getParameter(parameterName);
-  // if (propName == null || propName.length() == 0)
-  // {
-  // return null;
-  // }
-  // return getPropertyByName(form, propName);
-  // }
 }

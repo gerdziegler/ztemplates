@@ -14,10 +14,14 @@
  */
 package org.ztemplates.test.reflection;
 
+import java.lang.reflect.Method;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.util.ZReflectionUtil;
+import org.ztemplates.form.ZDynamicFormModel;
 
 public class ReflectionUtilTest extends TestCase
 {
@@ -42,29 +46,95 @@ public class ReflectionUtilTest extends TestCase
     TestClass2 tc2 = new TestClass2();
     tc2.setValue("val1");
     tc.getList().add(tc2);
-    String s = (String) ZReflectionUtil.getObjectByBeanPath(tc, "list[0].value");
+    String s = (String) getObjectByBeanPath(tc, "list[0].value");
     assertEquals("val1", s);
   }
+  
+  //*
+  //Saved here from ZReflectionUtil
+  
+  @Deprecated
+  public static Object getObjectByBeanPath(Object obj, String path) throws Exception
+  {
+    String crtPath = path;
+    Object crtObj = obj;
+    int idx = crtPath.indexOf('.');
+    while (idx > 0)
+    {
+      String propName = crtPath.substring(0, idx);
+      int collectionIndex = -1;
+      int openParanth = propName.indexOf('[');
+      if (openParanth >= 0)
+      {
+        collectionIndex = Integer.parseInt(propName.substring(openParanth + 1, propName.length() - 1));
+        propName = propName.substring(0, openParanth);
+      }
+
+      String getterName = ZReflectionUtil.computePrefixName("get", propName);
+      Method m = crtObj.getClass().getMethod(getterName);
+      if (m == null)
+      {
+        throw new Exception("getter not found: '" + getterName + "' in " + crtObj.getClass().getName() + " in path '" + path + "' starting from "
+            + obj.getClass().getName());
+      }
+      crtObj = ZReflectionUtil.invoke(m, crtObj);
+      if (collectionIndex >= 0)
+      {
+        if (List.class.isAssignableFrom(m.getReturnType()))
+        {
+          List l = (List) crtObj;
+          crtObj = l.get(collectionIndex);
+        }
+        else if (m.getReturnType().isArray())
+        {
+          Object[] arr = (Object[]) crtObj;
+          crtObj = arr[collectionIndex];
+        }
+        else
+        {
+          throw new Exception("unsupported collection: " + m.getReturnType().getName() + " --- only List and arrays allowed.");
+        }
+      }
+      crtPath = crtPath.substring(idx + 1);
+      idx = crtPath.indexOf('.');
+    }
+
+    String propName = crtPath;
+    String getterName = ZReflectionUtil.computePrefixName("get", propName);
+    Method m = crtObj.getClass().getMethod(getterName);
+    if (m == null)
+    {
+      throw new Exception("getter not found: '" + getterName + "' in " + crtObj.getClass().getName() + " in path '" + path + "' starting from "
+          + obj.getClass().getName());
+    }
+    crtObj = ZReflectionUtil.invoke(m, crtObj);
+    return crtObj;
+  }
+
 
   public void test2() throws Exception
   {
     TestClass1 tc = new TestClass1();
     String[] vals = ZReflectionUtil.callParameterGetter(tc, "enumVal");
     assertEquals(TestClass1.TestEnum.ENUM1.name(), vals[0]);
-    ZReflectionUtil.callParameterSetter(tc, "enumVal", new String[]{TestClass1.TestEnum.ENUM2.name()});    
-    assertEquals(TestClass1.TestEnum.ENUM2, tc.getEnumVal());   
+    ZReflectionUtil.callParameterSetter(tc, "enumVal", new String[]
+    {
+      TestClass1.TestEnum.ENUM2.name()
+    });
+    assertEquals(TestClass1.TestEnum.ENUM2, tc.getEnumVal());
 
     String[] vals2 = ZReflectionUtil.callParameterGetter(tc, "enumVal");
     assertEquals(TestClass1.TestEnum.ENUM2.name(), vals2[0]);
   }
+
 
   public void test3() throws Exception
   {
     TestClass1 tc = new TestClass1();
     String vals = ZReflectionUtil.callVariableGetter(tc, "enumVal");
     assertEquals(TestClass1.TestEnum.ENUM1.name(), vals);
-    ZReflectionUtil.callVariableSetter(tc, "enumVal", TestClass1.TestEnum.ENUM2.name());    
-    assertEquals(TestClass1.TestEnum.ENUM2, tc.getEnumVal());   
+    ZReflectionUtil.callVariableSetter(tc, "enumVal", TestClass1.TestEnum.ENUM2.name());
+    assertEquals(TestClass1.TestEnum.ENUM2, tc.getEnumVal());
 
     String vals2 = ZReflectionUtil.callVariableGetter(tc, "enumVal");
     assertEquals(TestClass1.TestEnum.ENUM2.name(), vals2);
