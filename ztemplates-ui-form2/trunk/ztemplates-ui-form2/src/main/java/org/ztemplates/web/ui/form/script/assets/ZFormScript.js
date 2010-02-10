@@ -22,7 +22,7 @@ ZTEMPLATES.util.runScripts = function(e) {
 			n = n.nextSibling;
 		}
 	}
-};	
+}
 ZTEMPLATES.validateOperations = function(formId) {
 	var form = ZTEMPLATES.forms[formId];
 	for ( var i = 0; i < form.state.ztemplates.operations.length; i++) {
@@ -47,7 +47,7 @@ ZTEMPLATES.validateOperations = function(formId) {
 			}
 		}
 	}
-};
+}
 ZTEMPLATES.revalidateProperties = function(formId) {
 	var form = ZTEMPLATES.forms[formId];
 	for ( var i = 0; i < form.state.ztemplates.properties.length; i++) {
@@ -55,7 +55,7 @@ ZTEMPLATES.revalidateProperties = function(formId) {
 		var prop = ZTEMPLATES.getProperty(formId, propertyName);
 		ZTEMPLATES.validateProperty(formId, propertyName, prop.stringValue);
 	}
-};
+}
 ZTEMPLATES.validateProperty = function(formId, propertyName, value) {
 	var prop = ZTEMPLATES.getProperty(formId, propertyName);
 	if (value == null || value.length == 0) {
@@ -90,18 +90,14 @@ ZTEMPLATES.validateProperty = function(formId, propertyName, value) {
 		}
 	}
 	return false;
-};
-
+}
 ZTEMPLATES.reloadState = function(formId, propertyName, value){
 	var form = ZTEMPLATES.forms[formId];
 	var prop = ZTEMPLATES.getProperty(formId, propertyName);
 	prop.stringValue = value;
 	form.modified = true;
-
-	prop.empty = value == null || value.length == 0;
-	
-	var formProxy = $('#'+formId); 
-	
+	prop.empty = value == null || value.length == 0;	
+	var formProxy = $('#'+formId); 	
 	var ajaxReloadState = false;
 	for(var i=0; i<form.ajaxPropertyNames.length && !ajaxReloadState; i++)
 	{
@@ -116,10 +112,8 @@ ZTEMPLATES.reloadState = function(formId, propertyName, value){
 		ZTEMPLATES.validateOperations(formId);
 		formProxy.trigger('ztemplates-form-changed', propertyName);
 		return;
-	}
-	
-	formProxy.trigger('ztemplates-reload-state-begin',propertyName); 
-	
+	}	
+	formProxy.trigger('ztemplates-reload-state-begin',propertyName); 	
 	var parameters = $("#"+formId).serialize() /*+ "&" + encodeURI("zformscript.changed=" + propertyName)*/;
 	$.ajax({
 		type:"POST",
@@ -136,11 +130,16 @@ ZTEMPLATES.reloadState = function(formId, propertyName, value){
 			formProxy.trigger('ztemplates-reload-state-failure', propertyName);
 		}
 	});	
-};
+}
 ZTEMPLATES.getProperty = function(formId, propertyName){
-  var json = eval('ZTEMPLATES.forms.' + formId + '.state.' + propertyName);
-  return json;
-};
+	var propName = 'ZTEMPLATES.forms.' + formId + '.state.' + propertyName;
+	try {
+	  var json = eval(propName);
+	  return json;
+	} catch(e) {
+		alert('object not found: ' + propName);
+	}
+}
 ZTEMPLATES.updateStyle = function(formId, propertyName, contentId,
 		defaultClassName){
 	var json = ZTEMPLATES.getProperty(formId, propertyName);
@@ -168,8 +167,7 @@ ZTEMPLATES.form.initBeforeUnload = function(formId, message) {
 	$("#" + formId).submit(function(e) {
 		ZTEMPLATES.forms[formId].modified = false;
 	});
-};
-
+}
 function initFormRadio(form, input) {
 	var formId = form.id;
 	var propertyName = input.name;
@@ -184,7 +182,6 @@ function initFormRadio(form, input) {
 		updateFormRadio(form, input, triggerId);
 	});
 }
-
 function updateFormRadio(form, input, triggerName) {
 	var formId = form.id;
 	var propertyName = input.name;
@@ -205,7 +202,6 @@ function updateFormRadio(form, input, triggerName) {
 
 	ZTEMPLATES.updateStyle(formId, propertyName, inputId, cssId + "-input");
 }
-
 function initFormCheckbox(form, input) {	
 	updateFormCheckbox(form, input, "");
 	var formId = form.id;
@@ -232,7 +228,6 @@ function updateFormCheckbox(form, input, triggerName) {
 	}	
 	ZTEMPLATES.updateStyle(formId, propertyName, inputId, cssId + "-input");
 }
-
 function initFormSelect(form, input) {
 	var formId = form.id;
 	var propertyName = input.name;
@@ -272,7 +267,6 @@ function updateFormSelect(formId, propertyName, selectId, triggerName) {
 	}
 	ZTEMPLATES.updateStyle(formId, propertyName, selectId, cssId + "-input");
 }
-
 function initFormSubmit(form, input) {
 	var formId = form.id;
 	var propertyName = input.name;
@@ -306,7 +300,6 @@ function updateInputSubmit(form, input, triggerName) {
 		inputProxy.addClass("required");
 	}
 }
-
 function initInputTextArea(form, input) {
 	var inputId = input.id;
 	var autoresize = $(input).attr("autoresize");
@@ -332,7 +325,6 @@ function initInputText(form, input) {
 		updateInputText(formId, propertyName, inputId, triggerId);
 	});
 }
-
 function updateInputText(formId, propertyName, inputId, triggerName) {
 	var content = document.getElementById(inputId);
 	var cssId = $(content).attr("cssid");
@@ -351,7 +343,6 @@ function updateInputText(formId, propertyName, inputId, triggerName) {
 	}
 	ZTEMPLATES.updateStyle(formId, propertyName, inputId, cssId + "-input");
 }
-
 function initInputHidden(form, input) {
 	var formId = form.id;
 	var propertyName = input.name;
@@ -378,8 +369,6 @@ function updateInputHidden(formId, propertyName, inputId, triggerName) {
 		}
 	}
 }
-
-
 $(function(){
 	//init form items	
 	$("form[class='ztemplates-form']").each(function(){

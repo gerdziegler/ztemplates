@@ -54,9 +54,9 @@ public final class ZFormInputState
       if (!first)
       {
         sb.append(',');
-        first = false;
       }
       sb.append(p.getName());
+      first = false;
     }
     propertyNames = sb.toString();
   }

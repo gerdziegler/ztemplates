@@ -45,7 +45,7 @@ function updateInputState(form, stateDiv){
 	var stateDivProxy = $(stateDiv);
 	var textDiv = document.getElementById(stateDiv.id + "Text");
 	var textDivProxy = $(textDiv);
-	var propertyNames = stateDivProxy.attr('propertynames').split();	
+	var propertyNames = stateDivProxy.attr('propertynames').split(",");	
 	var text = "";
 	var error = false;
 	for(var i=0; i<propertyNames.length;i++)
