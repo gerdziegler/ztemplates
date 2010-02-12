@@ -76,6 +76,7 @@ public class ZFormValues implements Serializable
 
   public void readFromForm(ZDynamicFormModel mirr) throws Exception
   {
+    values.clear();
     ZFormMembers members = mirr.getFormMembers();
     for (ZProperty prop : members.getProperties())
     {

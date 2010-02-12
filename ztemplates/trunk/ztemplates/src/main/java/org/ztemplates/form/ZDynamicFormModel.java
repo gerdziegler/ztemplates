@@ -191,9 +191,11 @@ public class ZDynamicFormModel implements ZIFormVisitable
   }
 
 
-  public Set<ZOperation> setFormValues(ZFormValues formValues) throws Exception
+  
+  public ZFormMembers setFormValues(ZFormValues formValues) throws Exception
   {
-    final Set<ZOperation> called = new HashSet<ZOperation>();
+    final List<ZOperation> operations = new ArrayList<ZOperation>();
+    final List<ZProperty> properties = new ArrayList<ZProperty>();
     final Map<String, String[]> values = formValues.getValues();
     ZIFormVisitor visitor = new ZIFormVisitor()
     {
@@ -204,7 +206,7 @@ public class ZDynamicFormModel implements ZIFormVisitable
         if (param != null)
         {
           prop.setStringValue(param[0]);
-          values.remove(name);
+          properties.add(prop);
         }
       }
 
@@ -216,15 +218,14 @@ public class ZDynamicFormModel implements ZIFormVisitable
         if (param != null)
         {
           op.setStringValue(param[0]);
-          values.remove(name);
-          called.add(op);
+          operations.add(op);
         }
       }
     };
 
     visitDepthFirst(visitor);
 
-    return called;
+    return new ZFormMembers(properties, operations);
   }
 
 

@@ -34,6 +34,7 @@ import org.ztemplates.actions.urlhandler.tree.term.ZTreeTerm;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeVariable;
 import org.ztemplates.actions.util.ZReflectionUtil;
 import org.ztemplates.form.ZDynamicFormModel;
+import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.property.ZOperation;
@@ -382,23 +383,22 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       ZReflectionUtil.callBeforeForm(pojo, formName);
       ZIFormModel form = (ZIFormModel) ZReflectionUtil.callFormGetter(pojo, formName);
 
-      // ZDynamicFormModel.initPropertyNames(form);
       ZDynamicFormModel mirr = new ZDynamicFormModel(form);
-      Set<ZOperation> ops = mirr.setFormValues(formValues);
+      ZFormMembers assigned = mirr.setFormValues(formValues);
       ZOperation op;
-      int opCnt = ops.size();
+      int opCnt = assigned.getOperations().size();
       if (opCnt == 0)
       {
         op = null;
       }
       else if (opCnt == 1)
       {
-        op = ops.iterator().next();
+        op = assigned.getOperations().get(0);
       }
       else
       // if (opCnt > 1)
       {
-        throw new Exception("Only one operation call per request allowed: " + ops);
+        throw new Exception("Only one operation call per request allowed: " + assigned.getOperations());
       }
 
       ZReflectionUtil.callAfterForm(pojo, "form");

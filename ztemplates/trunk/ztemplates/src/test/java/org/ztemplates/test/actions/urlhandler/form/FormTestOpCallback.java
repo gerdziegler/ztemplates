@@ -24,9 +24,9 @@ import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
 import org.ztemplates.test.mock.ZMock;
 
-public class FormTestOpHandler extends TestCase
+public class FormTestOpCallback extends TestCase
 {
-  static Logger log = Logger.getLogger(FormTestOpHandler.class);
+  static Logger log = Logger.getLogger(FormTestOpCallback.class);
 
   ZIUrlHandler up;
 
@@ -35,7 +35,7 @@ public class FormTestOpHandler extends TestCase
   {
     super.setUp();
     ZMock.setUp();
-    up = ZTestUrlHandlerFactory.create(FormTestOpHandler.class.getPackage().getName(), ZTestUrlHandlerFactory.defaultSecurityService);
+    up = ZTestUrlHandlerFactory.create(FormTestOpCallback.class.getPackage().getName(), ZTestUrlHandlerFactory.defaultSecurityService);
   }
 
 

@@ -30,6 +30,7 @@ import org.ztemplates.test.actions.urlhandler.callbacks.test2.ProcessorTest;
 import org.ztemplates.test.actions.urlhandler.constructor.ConstructorTest;
 import org.ztemplates.test.actions.urlhandler.form.FormActionCallback;
 import org.ztemplates.test.actions.urlhandler.form.FormTest;
+import org.ztemplates.test.actions.urlhandler.form.FormTestOpCallback;
 import org.ztemplates.test.actions.urlhandler.i18n.I18nTest;
 import org.ztemplates.test.actions.urlhandler.match.collision.TreeCollisionTest;
 import org.ztemplates.test.actions.urlhandler.match.collision2.TreeCollision2Test;
@@ -133,7 +134,7 @@ public class AllTests extends TestSuite
     suite.addTestSuite(ZScriptRepositoryTest.class);
     suite.addTestSuite(VariableNamesScriptTest.class);
     suite.addTestSuite(ZJsonTest.class);
-    suite.addTestSuite(FormActionCallback.class);
+    suite.addTestSuite(FormTestOpCallback.class);
 
     // suite.addTestSuite(ZTemplatesInternalArchitectureTest.class);
 
