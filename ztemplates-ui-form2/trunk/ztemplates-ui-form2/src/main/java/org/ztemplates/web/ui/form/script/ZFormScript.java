@@ -24,9 +24,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ztemplates.form.ZFormMembers;
-import org.ztemplates.form.ZDynamicFormModel;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.form.impl.ZFormModelWrapper;
 import org.ztemplates.jquery.JQueryLoaderAction;
 import org.ztemplates.json.ZJsonUtil;
 import org.ztemplates.property.ZOperation;
@@ -84,12 +84,12 @@ public final class ZFormScript
     this.ajaxPropertyNames = ajaxPropertyNames;
     ajaxPropertyNamesJson = computeAjaxPropertyNamesJson();
     ZIFormService formService = ZTemplates.getFormService();
-    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
     formJson = computeFormJson(form, mirr).toString(1);
     runtimeScripts = formService.getJavaScriptDependency(form);
 
     ZFormValues values = new ZFormValues();
-    values.readFromForm(mirr);
+    mirr.writeToValues(values); 
     formStateParameterValue = values.writeToString();
   }
 
@@ -133,7 +133,9 @@ public final class ZFormScript
    */
   public static Set<String> computeChangedFormPropertyNames(ZIFormModel form) throws Exception
   {
-    ZFormValues newValues = ZFormValues.createFromForm(form);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    ZFormValues newValues = new ZFormValues();
+    mirr.writeToValues(newValues);
     ZFormValues oldValues = ZFormScript.computeOldFormValuesFromRequest();
     Set<String> changedNames = ZFormValues.computeChangedPropertyNames(oldValues, newValues);
     return changedNames;
@@ -158,7 +160,7 @@ public final class ZFormScript
   }
 
 
-  private static JSONObject computeFormJson(ZIFormModel form, ZDynamicFormModel mirr) throws Exception
+  private static JSONObject computeFormJson(ZIFormModel form, ZFormModelWrapper mirr) throws Exception
   {
     //TODO dynamic forms 
     JSONObject json = ZJsonUtil.computeJSON(form);
@@ -179,7 +181,7 @@ public final class ZFormScript
     ztemplatesJson.put("operations", operationsJson);
 
     ZFormValues values = new ZFormValues();
-    values.readFromForm(mirr);
+    mirr.writeToValues(values);
     String hiddenParameterValue = values.writeToString();
     ztemplatesJson.put(formStateParameterName, hiddenParameterValue);
 
@@ -191,7 +193,7 @@ public final class ZFormScript
 
   public static void sendAjaxResponse(ZIFormModel form) throws Exception
   {
-    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
     JSONObject json = computeFormJson(form, mirr);
     String ret = json.toString(2);
     ZIServletService servletService = ZTemplates.getServletService();
