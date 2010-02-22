@@ -16,6 +16,8 @@ package org.ztemplates.form;
 
 import junit.framework.TestCase;
 
+import org.ztemplates.actions.util.ZSerializeUtil;
+
 public class ZSerializeUtilTest extends TestCase
 {
   public void test1() throws Exception

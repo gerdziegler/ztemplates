@@ -72,13 +72,13 @@ public class ZServiceRepositoryWebapp implements ZIServiceRepository
     String prefix = application.getActionApplication().getApplicationContext().getInitParameter("prefix");
     ZMatchTree matchTree = application.getActionApplication().getMatchTree();
 
-    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityService.getSecurityProvider(), securityService.getSecureUrlDecorator());
+    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityService.getSecurityProvider(), securityService.getSecureUrlDecorator(), application.getActionApplication().getApplicationContext());
     ZIUrlFactory urlFactory = new ZUrlFactory(securityService.getSecureUrlDecorator());
     actionService = new ZActionServiceImpl(urlHandler, urlFactory, contextPath, prefix);
 
     this.renderService = new ZRenderServiceImpl(application.getRenderApplication(), contextPath);
     this.servletService = new ZServletServiceImpl(request, response, actionService, renderService);
-    this.formService = new ZFormServiceImpl();
+    this.formService = new ZFormServiceImpl(applicationService.getActionApplicationContext());
   }
 
 

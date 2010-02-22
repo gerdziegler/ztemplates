@@ -12,9 +12,10 @@
  * 
  * @author www.gerdziegler.de
  */
-package org.ztemplates.form;
+package org.ztemplates.form.impl;
 
-public interface ZIFormVisitable
+
+interface ZIFormVisitable
 {
   public void visitDepthFirst(ZIFormVisitor vis) throws Exception;
 }

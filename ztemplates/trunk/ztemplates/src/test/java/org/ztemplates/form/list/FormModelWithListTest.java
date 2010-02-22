@@ -16,7 +16,7 @@ package org.ztemplates.form.list;
 
 import junit.framework.TestCase;
 
-import org.ztemplates.form.ZDynamicFormModel;
+import org.ztemplates.form.impl.ZFormModelWrapper;
 
 public class FormModelWithListTest extends TestCase
 {
@@ -24,7 +24,7 @@ public class FormModelWithListTest extends TestCase
   {
     FormModelWithList f = new FormModelWithList();
 //    ZDynamicFormModel.initPropertyNames(f, "");
-    ZDynamicFormModel mirr = new ZDynamicFormModel(f);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(f);
     assertEquals(2, mirr.getFormModels().size());
     assertEquals(2, mirr.getProperties().size());
     assertEquals(0, mirr.getOperations().size());

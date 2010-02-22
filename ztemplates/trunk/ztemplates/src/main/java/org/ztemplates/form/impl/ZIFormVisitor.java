@@ -12,12 +12,12 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.form;
+package org.ztemplates.form.impl;
 
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 
-public interface ZIFormVisitor
+interface ZIFormVisitor
 {
   public void visit(ZProperty prop) throws Exception;
 

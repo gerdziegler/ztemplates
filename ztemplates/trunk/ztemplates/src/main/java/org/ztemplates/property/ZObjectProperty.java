@@ -6,7 +6,7 @@ package org.ztemplates.property;
 
 import java.io.Serializable;
 
-import org.ztemplates.form.ZSerializeUtil;
+import org.ztemplates.actions.util.ZSerializeUtil;
 
 public class ZObjectProperty<T extends Serializable> extends ZProperty<T>
 {

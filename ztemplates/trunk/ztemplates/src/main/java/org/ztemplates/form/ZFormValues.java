@@ -21,15 +21,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ztemplates.actions.util.ZBase64Util;
-import org.ztemplates.property.ZProperty;
 
 public class ZFormValues implements Serializable
 {
   private HashMap<String, String[]> values = new HashMap<String, String[]>();
 
 
-  public static Set<String> computeChangedPropertyNames(ZFormValues oldFormValues,
-      ZFormValues newFormValues)
+  public static Set<String> computeChangedPropertyNames(ZFormValues oldFormValues, ZFormValues newFormValues)
   {
     Map<String, String[]> oldValues = oldFormValues.getValues();
     Map<String, String[]> newValues = newFormValues.getValues();
@@ -52,15 +50,6 @@ public class ZFormValues implements Serializable
   }
 
 
-  public static ZFormValues createFromForm(ZIFormModel form) throws Exception
-  {
-    ZFormValues ret = new ZFormValues();
-    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
-    ret.readFromForm(mirr);
-    return ret;
-  }
-
-
   public static ZFormValues createFromString(String encoded) throws Exception
   {
     ZFormValues ret = new ZFormValues();
@@ -74,29 +63,6 @@ public class ZFormValues implements Serializable
   }
 
 
-  public void readFromForm(ZDynamicFormModel mirr) throws Exception
-  {
-    values.clear();
-    ZFormMembers members = mirr.getFormMembers();
-    for (ZProperty prop : members.getProperties())
-    {
-      if (!prop.isEmpty())
-      {
-        values.put(prop.getName(), new String[]
-        {
-          prop.getStringValue()
-        });
-      }
-    }
-  }
-
-
-  public void writeToForm(ZDynamicFormModel mirr) throws Exception
-  {
-    mirr.setFormValues(this);
-  }
-
-
   public HashMap<String, String[]> getValues()
   {
     return values;
@@ -104,20 +70,22 @@ public class ZFormValues implements Serializable
 
 
   /**
-   * encodes values to a string that it can be uses as value in a hidden form parameter
+   * encodes values to a string that it can be uses as value in a hidden form
+   * parameter
+   * 
    * @param values
    * @return
    */
   public String writeToString()
   {
-    String base64 = ZBase64Util.encodeObject(values, ZBase64Util.GZIP
-        | ZBase64Util.DONT_BREAK_LINES);
+    String base64 = ZBase64Util.encodeObject(values, ZBase64Util.GZIP | ZBase64Util.DONT_BREAK_LINES);
     return base64;
   }
 
 
   /**
    * decodes the values previously encoded by encodeValues
+   * 
    * @param base64
    * @return
    */

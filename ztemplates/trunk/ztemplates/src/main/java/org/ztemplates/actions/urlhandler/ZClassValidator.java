@@ -23,7 +23,7 @@ import org.ztemplates.actions.expression.ZOptionalExpression;
 import org.ztemplates.actions.expression.ZTail;
 import org.ztemplates.actions.expression.ZTerm;
 import org.ztemplates.actions.expression.ZVariable;
-import org.ztemplates.actions.util.ZReflectionUtil;
+import org.ztemplates.actions.util.impl.ZReflectionUtil;
 
 public class ZClassValidator
 {

@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
-import org.ztemplates.actions.util.ZReflectionUtil;
+import org.ztemplates.actions.util.impl.ZReflectionUtil;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
 import org.ztemplates.test.mock.ZMock;
 

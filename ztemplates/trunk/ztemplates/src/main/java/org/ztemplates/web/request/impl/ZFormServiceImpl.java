@@ -20,11 +20,12 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
+import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.actions.util.ZBase64Util;
-import org.ztemplates.form.ZDynamicFormModel;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.form.impl.ZFormModelWrapper;
 import org.ztemplates.json.ZJsonUtil;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZScriptDependency;
@@ -34,68 +35,113 @@ public class ZFormServiceImpl implements ZIFormService
 {
   static final Logger log = Logger.getLogger(ZFormServiceImpl.class);
 
+  private final ZIActionApplicationContext actionContext;
+
+
+  public ZFormServiceImpl(ZIActionApplicationContext actionContext)
+  {
+    super();
+    this.actionContext = actionContext;
+  }
+
 
   public void setWriteable(ZIFormModel form, boolean b) throws Exception
   {
-    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
     mirr.setWriteable(b);
   }
 
 
   public void setReadable(ZIFormModel form, boolean b) throws Exception
   {
-    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
     mirr.setReadable(b);
   }
 
 
   public List<ZProperty> getPropertiesWithError(ZIFormModel form) throws Exception
   {
-    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
     return mirr.getPropertiesWithError();
   }
 
 
   public ZFormMembers getFormMembers(ZIFormModel form) throws Exception
   {
-    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
     return mirr.getFormMembers();
   }
 
 
   public ZScriptDependency getJavaScriptDependency(ZIFormModel form) throws Exception
   {
-    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
     return mirr.getJavaScriptDependency();
   }
 
 
-  public ZFormValues getFormValues(ZIFormModel form) throws Exception
+  public void copyValuesToForm(ZFormValues values, ZIFormModel form) throws Exception
   {
-    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
-    return mirr.getFormValues();
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    mirr.readFromValues(values);
   }
 
 
-  public void setFormValues(ZIFormModel form, ZFormValues values) throws Exception
+  public void copyFormToValues(ZIFormModel form, ZFormValues values) throws Exception
   {
-    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
-    mirr.setFormValues(values);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    mirr.writeToValues(values);
   }
 
 
   public Set<ZProperty> getPropertiesByName(ZIFormModel form, Set<String> propNames) throws Exception
   {
-    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
     return mirr.getPropertiesByName(propNames);
   }
 
 
   public void initPropertyNames(ZIFormModel form) throws Exception
   {
-    ZDynamicFormModel mirr = new ZDynamicFormModel(form);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
     // ZDynamicFormModel.initPropertyNames(form, "");
   }
+
+
+//  public void copyFormToValues(ZISessionFormModel form) throws Exception
+//  {
+//    String key = form.getSessionKey();
+//    if (key == null)
+//    {
+//      return;
+//    }
+//    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+//    ZFormValues values = (ZFormValues) actionContext.getAttribute(key);
+//    if (values == null)
+//    {
+//      values = new ZFormValues();
+//      actionContext.setAttribute(key, values);
+//    }
+//    mirr.writeToValues(values);
+//  }
+
+
+//  public void copyValuesToForm(ZISessionFormModel form) throws Exception
+//  {
+//    String key = form.getSessionKey();
+//    if (key == null)
+//    {
+//      return;
+//    }
+//    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+//    ZFormValues values = (ZFormValues) actionContext.getAttribute(key);
+//    if (values == null)
+//    {
+//      values = new ZFormValues();
+//      actionContext.setAttribute(key, values);
+//    }
+//    mirr.readFromValues(values);
+//  }
 
 
   public JSONObject computeJson(ZIFormModel form) throws Exception
@@ -119,4 +165,5 @@ public class ZFormServiceImpl implements ZIFormService
     Object ret = ZBase64Util.decodeToObject(s);
     return ret;
   }
+
 }

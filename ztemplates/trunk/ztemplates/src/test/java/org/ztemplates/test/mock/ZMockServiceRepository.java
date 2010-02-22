@@ -147,7 +147,7 @@ public class ZMockServiceRepository implements ZIServiceRepository
   {
     if (formService == null)
     {
-      formService = new ZFormServiceImpl();
+      formService = new ZFormServiceImpl(applicationService.getActionApplicationContext());
     }
     return formService;
   }

@@ -12,11 +12,10 @@
  * 
  * @author www.gerdziegler.de
  */
-package org.ztemplates.form;
+package org.ztemplates.actions.util;
 
 import java.io.Serializable;
 
-import org.ztemplates.actions.util.ZBase64Util;
 
 public class ZSerializeUtil
 {

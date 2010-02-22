@@ -12,12 +12,10 @@
  * @author www.gerdziegler.de
  */
 
-package org.ztemplates.actions.util;
+package org.ztemplates.actions.util.impl;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.ZAfter;
@@ -25,7 +23,6 @@ import org.ztemplates.actions.ZBefore;
 import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZInit;
 import org.ztemplates.actions.ZSetter;
-import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 
 public class ZReflectionUtil
@@ -37,51 +34,36 @@ public class ZReflectionUtil
   // *********************************************************************************
   // *********************************************************************************
 
-  public static void callAfter(Object obj/*, ZOperation op*/) throws Exception
+  public static void callAfter(Object obj/* , ZOperation op */) throws Exception
   {
-    /*if (op != null)
+    /*
+     * if (op != null) { // if operation first try op after callback String name
+     * = computeCallbackName(op.getName());
+     * 
+     * Method m = getAfter(obj.getClass(), name); if (m == null) { if
+     * (log.isDebugEnabled()) {
+     * log.debug("no callback method found in action pojo " +
+     * obj.getClass().getName() + " for operation " + name +
+     * " --- trying default callback after()"); }
+     * 
+     * m = getAfter(obj.getClass(), ""); } if (m != null) { invoke(m, obj); }
+     * else { if (log.isDebugEnabled()) {
+     * log.debug("no after callback method found in action pojo " +
+     * obj.getClass().getName()); } } } else {
+     */
+    Method m = getAfter(obj.getClass(), "");
+    if (m != null)
     {
-      // if operation first try op after callback
-      String name = computeCallbackName(op.getName());
-
-      Method m = getAfter(obj.getClass(), name);
-      if (m == null)
-      {
-        if (log.isDebugEnabled())
-        {
-          log.debug("no callback method found in action pojo " + obj.getClass().getName() + " for operation " + name
-              + " --- trying default callback after()");
-        }
-
-        m = getAfter(obj.getClass(), "");
-      }
-      if (m != null)
-      {
-        invoke(m, obj);
-      }
-      else
-      {
-        if (log.isDebugEnabled())
-        {
-          log.debug("no after callback method found in action pojo " + obj.getClass().getName());
-        }
-      }
+      invoke(m, obj);
     }
     else
-    {*/
-      Method m = getAfter(obj.getClass(), "");
-      if (m != null)
+    {
+      if (log.isDebugEnabled())
       {
-        invoke(m, obj);
+        log.debug("no after callback method found in action pojo " + obj.getClass().getName());
       }
-      else
-      {
-        if (log.isDebugEnabled())
-        {
-          log.debug("no after callback method found in action pojo " + obj.getClass().getName());
-        }
-      }
-   // }
+    }
+    // }
   }
 
 
@@ -152,13 +134,11 @@ public class ZReflectionUtil
     {
       if (name.indexOf('.') >= 0)
       {
-        throw new Exception("parameter setter not found: '" + name + "' in " + obj.getClass().getName()
-            + " --- character '.' in parameter name not allowed");
+        throw new Exception("parameter setter not found: '" + name + "' in " + obj.getClass().getName() + " --- character '.' in parameter name not allowed");
       }
       else
       {
-        throw new Exception("parameter setter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation "
-            + ZSetter.class.getSimpleName());
+        throw new Exception("parameter setter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation " + ZSetter.class.getSimpleName());
       }
     }
     if (ZProperty.class.isAssignableFrom(m.getReturnType()))
@@ -206,26 +186,12 @@ public class ZReflectionUtil
   }
 
 
-  public static <T extends Annotation> T getAnnotation(Class c, Class<T> annClass) throws Exception
-  {
-    T ret = (T) c.getAnnotation(annClass);
-    for (Class crtClass = c; ret == null && !Object.class.equals(crtClass); crtClass = crtClass.getSuperclass())
-    {
-      ret = (T) crtClass.getAnnotation(annClass);
-    }
-    return ret;
-  }
-
-
-
-
   public static void callReferenceSetter(Object obj, String name, Object value) throws Exception
   {
     Method m = getSetter(obj.getClass(), name);
     if (m == null)
     {
-      throw new Exception("reference setter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation "
-          + ZSetter.class.getSimpleName());
+      throw new Exception("reference setter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation " + ZSetter.class.getSimpleName());
     }
     invoke(m, obj, value);
   }
@@ -236,8 +202,7 @@ public class ZReflectionUtil
     Method m = getSetter(obj.getClass(), name);
     if (m == null)
     {
-      throw new Exception("variable setter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation "
-          + ZSetter.class.getSimpleName());
+      throw new Exception("variable setter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation " + ZSetter.class.getSimpleName());
     }
     if (ZProperty.class.isAssignableFrom(m.getReturnType()))
     {
@@ -261,8 +226,7 @@ public class ZReflectionUtil
     Method m = getGetter(obj.getClass(), name);
     if (m == null)
     {
-      throw new Exception("parameter getter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation "
-          + ZGetter.class.getSimpleName());
+      throw new Exception("parameter getter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation " + ZGetter.class.getSimpleName());
     }
 
     Object ret;
@@ -303,8 +267,7 @@ public class ZReflectionUtil
     Method m = getGetter(obj.getClass(), name);
     if (m == null)
     {
-      throw new Exception("reference getter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation "
-          + ZGetter.class.getSimpleName());
+      throw new Exception("reference getter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation " + ZGetter.class.getSimpleName());
     }
 
     Object ret = invoke(m, obj);
@@ -331,8 +294,7 @@ public class ZReflectionUtil
     Method m = getGetter(obj.getClass(), name);
     if (m == null)
     {
-      throw new Exception("variable getter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation "
-          + ZGetter.class.getSimpleName());
+      throw new Exception("variable getter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation " + ZGetter.class.getSimpleName());
     }
 
     Class retClass = m.getReturnType();
@@ -363,8 +325,7 @@ public class ZReflectionUtil
     Method m = getGetter(clazz, name);
     if (m == null)
     {
-      throw new Exception("reference getter not found: '" + name + "' in " + clazz.getName() + " use annotation "
-          + ZGetter.class.getSimpleName());
+      throw new Exception("reference getter not found: '" + name + "' in " + clazz.getName() + " use annotation " + ZGetter.class.getSimpleName());
     }
     return m.getReturnType();
   }
@@ -387,6 +348,7 @@ public class ZReflectionUtil
       throw e;
     }
   }
+
 
   /**
    * not used anymore
@@ -618,23 +580,23 @@ public class ZReflectionUtil
   }
 
 
-//  public static void invokeMethod(Object pojo, String path, String methodName) throws Exception
-//  {
-//    Object obj = getObjectByBeanPath(pojo, path);
-//    if (obj == null)
-//    {
-//      return;
-//    }
-//    // find first not inner class
-//    Class clazz = obj.getClass();
-//    while (clazz.getName().indexOf("$") >= 0)
-//    {
-//      clazz = clazz.getSuperclass();
-//    }
-//    Method m = clazz.getMethod(methodName);
-//    invoke(m, obj);
-//  }
-
+  // public static void invokeMethod(Object pojo, String path, String
+  // methodName) throws Exception
+  // {
+  // Object obj = getObjectByBeanPath(pojo, path);
+  // if (obj == null)
+  // {
+  // return;
+  // }
+  // // find first not inner class
+  // Class clazz = obj.getClass();
+  // while (clazz.getName().indexOf("$") >= 0)
+  // {
+  // clazz = clazz.getSuperclass();
+  // }
+  // Method m = clazz.getMethod(methodName);
+  // invoke(m, obj);
+  // }
 
   public static String removePrefixName(String prefix, String name)
   {

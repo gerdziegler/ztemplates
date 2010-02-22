@@ -59,8 +59,9 @@ public class ZTemplatesStandalone implements ZIServiceRepository
 
 
   /**
-   * calls init() with default applicationName
-   * use if your application server does not share classloaders between webapps.
+   * calls init() with default applicationName use if your application server
+   * does not share classloaders between webapps.
+   * 
    * @param locale
    * @param securityProvider
    * @return
@@ -73,8 +74,10 @@ public class ZTemplatesStandalone implements ZIServiceRepository
 
 
   /**
-   * use this if you provide a applicationName servletContext initParameter to explicitly set a application name.
-   * This is needed if you explicitly configure your application server to share the classloader between webapps.
+   * use this if you provide a applicationName servletContext initParameter to
+   * explicitly set a application name. This is needed if you explicitly
+   * configure your application server to share the classloader between webapps.
+   * 
    * @param applicationName
    * @param locale
    * @param securityProvider
@@ -92,7 +95,7 @@ public class ZTemplatesStandalone implements ZIServiceRepository
     ZTemplates.setServiceRepository(null);
   }
 
-  
+
   public static ZIServiceRepository createServiceRepository(String applicationName, Locale locale, ZISecurityProvider securityProvider) throws Exception
   {
     ZApplication application = ZApplicationRepositoryStandalone.getApplication(applicationName);
@@ -106,7 +109,7 @@ public class ZTemplatesStandalone implements ZIServiceRepository
 
     ZISecureUrlDecorator secureUrlDecorator = application.getActionApplication().getSecureUrlDecorator();
     ZMatchTree matchTree = application.getActionApplication().getMatchTree();
-    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityProvider, secureUrlDecorator);
+    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityProvider, secureUrlDecorator, application.getActionApplication().getApplicationContext());
     ZIUrlFactory urlFactory = new ZUrlFactory(secureUrlDecorator);
     ZIServletService servletService = null;
 
@@ -119,7 +122,7 @@ public class ZTemplatesStandalone implements ZIServiceRepository
     ZIExceptionService exceptionService = new ZExceptionServiceImpl();
     ZIMessageService messageService = new ZMessageServiceStandaloneImpl(locale);
 
-    ZIFormService formService = new ZFormServiceImpl();
+    ZIFormService formService = new ZFormServiceImpl(applicationService.getActionApplicationContext());
     return new ZTemplatesStandalone(servletService, applicationService, actionService, renderService, encryptionService, securityService, exceptionService,
         messageService, formService);
   }

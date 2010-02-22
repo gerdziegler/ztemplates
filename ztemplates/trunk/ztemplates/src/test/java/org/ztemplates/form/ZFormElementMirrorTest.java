@@ -16,6 +16,7 @@ package org.ztemplates.form;
 
 import junit.framework.TestCase;
 
+import org.ztemplates.form.impl.ZFormModelWrapper;
 import org.ztemplates.test.actions.urlhandler.form.FormModel;
 
 public class ZFormElementMirrorTest extends TestCase
@@ -24,7 +25,7 @@ public class ZFormElementMirrorTest extends TestCase
   {
     FormModel f = new FormModel();
 //    ZDynamicFormModel.initPropertyNames(f, "");
-    ZDynamicFormModel mirr = new ZDynamicFormModel(f);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(f);
     assertEquals(2, mirr.getProperties().size());
     assertEquals(1, mirr.getOperations().size());
     assertEquals(1, mirr.getFormModels().size());
@@ -39,7 +40,7 @@ public class ZFormElementMirrorTest extends TestCase
   {
     FormModel2 f = new FormModel2();
 //    ZDynamicFormModel.initPropertyNames(f, "");
-    ZDynamicFormModel mirr = new ZDynamicFormModel(f);
+    ZFormModelWrapper mirr = new ZFormModelWrapper(f);
     assertEquals("myName", f.getProp().getName());
     assertEquals("prop1", f.getProp1().getName());
   }

@@ -69,8 +69,9 @@ public class ZTestUrlHandlerFactory
   {
     List<ZIClassPathItem> items = ZMavenClassPath.getItems();
     ZIClassRepository classRepository = ZClassRepository.create(items, pojoPackage);
+    ZTestApplicationContext applicationContext = new ZTestApplicationContext(classRepository);
     ZMatchTree matchTree = new ZMatchTree(classRepository);
-    ZIUrlHandler ret = new ZTreeUrlHandler(matchTree, security, defaultSecureUrlDecorator);
+    ZIUrlHandler ret = new ZTreeUrlHandler(matchTree, security, defaultSecureUrlDecorator, applicationContext);
     return ret;
   }
 }

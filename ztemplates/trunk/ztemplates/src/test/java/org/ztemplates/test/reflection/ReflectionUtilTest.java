@@ -20,8 +20,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.util.ZReflectionUtil;
-import org.ztemplates.form.ZDynamicFormModel;
+import org.ztemplates.actions.util.impl.ZReflectionUtil;
 
 public class ReflectionUtilTest extends TestCase
 {

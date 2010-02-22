@@ -17,16 +17,17 @@ package org.ztemplates.actions;
 import org.ztemplates.form.ZIFormModel;
 
 /**
- * Tagging interface for form actions, leads to parameter assignment to form properties.
- * Although it is NOT required for an form action to implement this interface, it is considered good style to do it,
- * as it leads to better IDE support and standard names for your form properties.
+ * Tagging interface for form actions, leads to parameter assignment to form
+ * properties. Although it is NOT required for an form action to implement this
+ * interface, it is considered good style to do it, as it leads to better IDE
+ * support and standard names for your form properties.
  * 
  * @author www.gerdziegler.de
  */
 public interface ZIFormAction<T extends ZIFormModel> extends ZIAction
 {
-  public T getForm() throws Exception;
-
-
   public void beforeForm() throws Exception;
+
+
+  public T getForm() throws Exception;
 }

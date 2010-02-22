@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.actions.ZIFormAction;
 import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
@@ -32,11 +32,11 @@ import org.ztemplates.actions.urlhandler.tree.term.ZTreeSlash;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeTail;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeTerm;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeVariable;
-import org.ztemplates.actions.util.ZReflectionUtil;
-import org.ztemplates.form.ZDynamicFormModel;
+import org.ztemplates.actions.util.impl.ZReflectionUtil;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.form.impl.ZFormModelWrapper;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 
@@ -48,15 +48,18 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
   private final ZISecureUrlDecorator secureUrlDecorator;
 
+  private final ZIActionApplicationContext applicationContext;
+
   private final ZMatchTree tree;
 
 
-  public ZTreeUrlHandler(ZMatchTree tree, ZISecurityProvider security, ZISecureUrlDecorator secureUrlDecorator)
+  public ZTreeUrlHandler(ZMatchTree tree, ZISecurityProvider security, ZISecureUrlDecorator secureUrlDecorator, ZIActionApplicationContext applicationContext)
   {
     super();
     this.security = security;
     this.tree = tree;
     this.secureUrlDecorator = secureUrlDecorator;
+    this.applicationContext = applicationContext;
   }
 
 
@@ -218,15 +221,19 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         Object pojo = pojos.peek();
         ZMatch zmatch = (ZMatch) pojo.getClass().getAnnotation(ZMatch.class);
         ZEndNested v = (ZEndNested) et;
-        ZOperation op = update(pojo, parameters);
-        if (op != null && op.getCallback() != null)
+        UpdateResult updateResult = update(pojo, parameters);
+        if (updateResult.operationToCall != null && updateResult.operationToCall.getCallback() != null)
         {
-          op.getCallback().exec();
+          updateResult.operationToCall.getCallback().exec();
         }
         else
         {
           ZReflectionUtil.callAfter(pojo);
         }
+//        if (updateResult.sessionForm != null)
+//        {
+//          storeSessionForm(updateResult.sessionForm, updateResult.formWrapper);
+//        }
         pojos.pop();
         pojo = pojos.peek();
         ZReflectionUtil.callAfterReference(pojo, v.getName());
@@ -247,15 +254,19 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         // ZAfterInstruction v = (ZAfterInstruction)et;
         pojos.pop();
         assert pojos.isEmpty() : "should be empty: " + pojos.toString();
-        ZOperation op = update(rootPojo, parameters);
-        if (op != null && op.getCallback() != null)
+        UpdateResult updateResult = update(rootPojo, parameters);
+        if (updateResult.operationToCall != null && updateResult.operationToCall.getCallback() != null)
         {
-          op.getCallback().exec();
+          updateResult.operationToCall.getCallback().exec();
         }
         else
         {
           ZReflectionUtil.callAfter(rootPojo);
         }
+//        if (updateResult.sessionForm != null)
+//        {
+//          storeSessionForm(updateResult.sessionForm, updateResult.formWrapper);
+//        }
       }
       else
       {
@@ -265,6 +276,23 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
     return rootPojo;
   }
+
+
+//  private void storeSessionForm(ZISessionFormModel sessionForm, ZFormModelWrapper mirr) throws Exception
+//  {
+//    String key = sessionForm.getSessionKey();
+//    if (key == null)
+//    {
+//      return;
+//    }
+//    ZFormValues values = (ZFormValues) applicationContext.getAttribute(key);
+//    if (values == null)
+//    {
+//      values = new ZFormValues();
+//      applicationContext.setAttribute(key, values);
+//    }
+//    mirr.writeToValues(values);
+//  }
 
 
   public ZUrl parse(String s) throws Exception
@@ -327,7 +355,6 @@ public class ZTreeUrlHandler implements ZIUrlHandler
     return new ZUrl(url, parameterMap, null);
   }
 
-
   // ***************************************************************************************************
   // ***************************************************************************************************
   // ***************************************************************************************************
@@ -335,9 +362,19 @@ public class ZTreeUrlHandler implements ZIUrlHandler
   // ***************************************************************************************************
   // ***************************************************************************************************
 
-  private static ZOperation update(Object pojo, Map<String, String[]> parameters) throws Exception
+  private static class UpdateResult
   {
-    ZOperation operation = null;
+    public ZOperation operationToCall;
+
+//    public ZISessionFormModel sessionForm;
+
+    public ZFormModelWrapper formWrapper;
+  }
+
+
+  private UpdateResult update(Object pojo, Map<String, String[]> parameters) throws Exception
+  {
+    UpdateResult ret = new UpdateResult();
     ZMatch zmatch = (ZMatch) pojo.getClass().getAnnotation(ZMatch.class);
     String[] parameterDefs = zmatch.parameters();
     for (String name : parameterDefs)
@@ -346,11 +383,11 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       ZProperty assignedProp = ZReflectionUtil.callParameterSetter(pojo, name, value);
       if (assignedProp instanceof ZOperation)
       {
-        if (operation != null)
+        if (ret.operationToCall != null)
         {
-          throw new Exception("Only one operation call per request allowed: " + operation + " " + assignedProp);
+          throw new Exception("Only one operation call per request allowed: " + ret.operationToCall + " " + assignedProp);
         }
-        operation = (ZOperation) assignedProp;
+        ret.operationToCall = (ZOperation) assignedProp;
       }
       // eat the parameters
       parameters.remove(name);
@@ -382,9 +419,23 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
       ZReflectionUtil.callBeforeForm(pojo, formName);
       ZIFormModel form = (ZIFormModel) ZReflectionUtil.callFormGetter(pojo, formName);
+      ret.formWrapper = new ZFormModelWrapper(form);
 
-      ZDynamicFormModel mirr = new ZDynamicFormModel(form);
-      ZFormMembers assigned = mirr.setFormValues(formValues);
+//      if (form instanceof ZISessionFormModel)
+//      {
+//        ret.sessionForm = (ZISessionFormModel) form;
+//        String key = ret.sessionForm.getSessionKey();
+//        if (key != null)
+//        {
+//          ZFormValues values = (ZFormValues) applicationContext.getAttribute(key);
+//          if (values != null)
+//          {
+//            ret.formWrapper.readFromValues(values);
+//          }
+//        }
+//      }
+
+      ZFormMembers assigned = ret.formWrapper.readFromValues(formValues);
       ZOperation op;
       int opCnt = assigned.getOperations().size();
       if (opCnt == 0)
@@ -402,8 +453,8 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       }
 
       ZReflectionUtil.callAfterForm(pojo, "form");
-      return op;
+      ret.operationToCall = op;
     }
-    return operation;
+    return ret;
   }
 }

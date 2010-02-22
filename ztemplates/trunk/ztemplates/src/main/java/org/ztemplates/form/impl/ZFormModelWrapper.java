@@ -12,18 +12,23 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.form;
+package org.ztemplates.form.impl;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.util.ZReflectionUtil;
+import org.ztemplates.actions.util.impl.ZReflectionUtil;
+import org.ztemplates.form.ZFormMembers;
+import org.ztemplates.form.ZFormValues;
+import org.ztemplates.form.ZIFormModel;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.property.validator.ZIStringValidator;
@@ -31,19 +36,18 @@ import org.ztemplates.render.ZScript;
 import org.ztemplates.render.ZScriptDependency;
 
 /**
- * dynamic form that can be assembled at runtime in the beforeForm method
- * <b>should not be modified after that</b>.
+ * form wrapper that can be used to manipulate a form in a generic way
  * 
  * @author gerdziegler.de
  * 
  */
-public class ZDynamicFormModel implements ZIFormVisitable
+public class ZFormModelWrapper implements ZIFormVisitable
 {
-  static final Logger log = Logger.getLogger(ZDynamicFormModel.class);
+  static final Logger log = Logger.getLogger(ZFormModelWrapper.class);
 
   private String name;
 
-  private final List<ZDynamicFormModel> formModels = new ArrayList<ZDynamicFormModel>();
+  private final List<ZFormModelWrapper> formModels = new ArrayList<ZFormModelWrapper>();
 
   private final List<ZProperty> properties = new ArrayList<ZProperty>();
 
@@ -56,7 +60,7 @@ public class ZDynamicFormModel implements ZIFormVisitable
    * @param obj
    * @throws Exception
    */
-  public ZDynamicFormModel(ZIFormModel obj) throws Exception
+  public ZFormModelWrapper(ZIFormModel obj) throws Exception
   {
     this(obj, "");
   }
@@ -69,7 +73,7 @@ public class ZDynamicFormModel implements ZIFormVisitable
    * @param name
    * @throws Exception
    */
-  protected ZDynamicFormModel(ZIFormModel obj, String name) throws Exception
+  protected ZFormModelWrapper(ZIFormModel obj, String name) throws Exception
   {
     this.name = name;
     String prefix;
@@ -123,9 +127,9 @@ public class ZDynamicFormModel implements ZIFormVisitable
           properties.add(prop);
         }
         // third
-        else if (ZDynamicFormModel.class.isAssignableFrom(returnType))
+        else if (ZFormModelWrapper.class.isAssignableFrom(returnType))
         {
-          ZDynamicFormModel fe = (ZDynamicFormModel) m.invoke(obj);
+          ZFormModelWrapper fe = (ZFormModelWrapper) m.invoke(obj);
           if (fe == null)
           {
             throw new Exception("null dynamic form model returned from " + m.getName());
@@ -146,7 +150,7 @@ public class ZDynamicFormModel implements ZIFormVisitable
             throw new Exception("null form model returned from " + m.getName());
           }
           String feName = prefix + ZReflectionUtil.removePrefixName("get", m.getName());
-          formModels.add(new ZDynamicFormModel(fe, feName));
+          formModels.add(new ZFormModelWrapper(fe, feName));
         }
       }
     }
@@ -191,8 +195,14 @@ public class ZDynamicFormModel implements ZIFormVisitable
   }
 
 
-  
-  public ZFormMembers setFormValues(ZFormValues formValues) throws Exception
+  /**
+   * returns the modified form members
+   * 
+   * @param formValues
+   * @return
+   * @throws Exception
+   */
+  public ZFormMembers readFromValues(ZFormValues formValues) throws Exception
   {
     final List<ZOperation> operations = new ArrayList<ZOperation>();
     final List<ZProperty> properties = new ArrayList<ZProperty>();
@@ -229,11 +239,32 @@ public class ZDynamicFormModel implements ZIFormVisitable
   }
 
 
-  public ZFormValues getFormValues() throws Exception
+  public void writeToValues(ZFormValues formValues) throws Exception
   {
-    ZFormValues ret = new ZFormValues();
-    ret.readFromForm(this);
-    return ret;
+    final HashMap<String, String[]> values = formValues.getValues();
+    values.clear();
+
+    ZIFormVisitor visitor = new ZIFormVisitor()
+    {
+      public void visit(ZProperty prop) throws Exception
+      {
+        if (!prop.isEmpty())
+        {
+          values.put(prop.getName(), new String[]
+          {
+            prop.getStringValue()
+          });
+        }
+      }
+
+
+      public void visit(ZOperation op) throws Exception
+      {
+        // operations are not written
+      }
+    };
+
+    visitDepthFirst(visitor);
   }
 
 
@@ -256,7 +287,7 @@ public class ZDynamicFormModel implements ZIFormVisitable
   }
 
 
-  public List<ZDynamicFormModel> getFormModels()
+  public List<ZFormModelWrapper> getFormModels()
   {
     return formModels;
   }
@@ -276,7 +307,7 @@ public class ZDynamicFormModel implements ZIFormVisitable
 
   public void visitDepthFirst(ZIFormVisitor vis) throws Exception
   {
-    for (ZDynamicFormModel formElem : formModels)
+    for (ZFormModelWrapper formElem : formModels)
     {
       formElem.visitDepthFirst(vis);
     }
@@ -359,7 +390,7 @@ public class ZDynamicFormModel implements ZIFormVisitable
         List<ZIStringValidator> validators = prop.getStringValidators();
         for (ZIStringValidator val : validators)
         {
-          ZScript script = ZReflectionUtil.getAnnotation(val.getClass(), ZScript.class);
+          ZScript script = ZFormModelWrapper.getAnnotation(val.getClass(), ZScript.class);
           if (script != null)
           {
             ret.add(script);
@@ -373,7 +404,7 @@ public class ZDynamicFormModel implements ZIFormVisitable
         List<ZIStringValidator> validators = op.getStringValidators();
         for (ZIStringValidator val : validators)
         {
-          ZScript script = ZReflectionUtil.getAnnotation(val.getClass(), ZScript.class);
+          ZScript script = ZFormModelWrapper.getAnnotation(val.getClass(), ZScript.class);
           if (script != null)
           {
             ret.add(script);
@@ -383,6 +414,17 @@ public class ZDynamicFormModel implements ZIFormVisitable
     };
 
     this.visitDepthFirst(vis);
+    return ret;
+  }
+
+
+  private static <T extends Annotation> T getAnnotation(Class c, Class<T> annClass) throws Exception
+  {
+    T ret = (T) c.getAnnotation(annClass);
+    for (Class crtClass = c; ret == null && !Object.class.equals(crtClass); crtClass = crtClass.getSuperclass())
+    {
+      ret = (T) crtClass.getAnnotation(annClass);
+    }
     return ret;
   }
 

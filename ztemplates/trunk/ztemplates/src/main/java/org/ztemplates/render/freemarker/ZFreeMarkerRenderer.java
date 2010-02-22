@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.ztemplates.render.ZIRenderApplicationContext;
 import org.ztemplates.render.ZIRenderer;
 import org.ztemplates.render.ZITemplateNameRepository;
-import org.ztemplates.render.ZRenderApplication;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

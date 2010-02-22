@@ -19,12 +19,11 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
-import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
 import org.ztemplates.test.ZMavenClassPath;
-import org.ztemplates.test.ZTestSecureUrlDecorator;
+import org.ztemplates.test.ZTestApplicationContext;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
 
 public class ProcessorTest extends TestCase
@@ -41,9 +40,10 @@ public class ProcessorTest extends TestCase
     super.setUp();
     classRepo = ZClassRepository.create(ZMavenClassPath.getItems(), ProcessorTest.class
         .getPackage().getName());
+    ZTestApplicationContext applicationContext = new ZTestApplicationContext(classRepo);
 
     proc = new ZTreeUrlHandler(new ZMatchTree(classRepo),
-        ZTestUrlHandlerFactory.defaultSecurityService, ZTestUrlHandlerFactory.defaultSecureUrlDecorator);
+        ZTestUrlHandlerFactory.defaultSecurityService, ZTestUrlHandlerFactory.defaultSecureUrlDecorator, applicationContext);
   }
 
 
