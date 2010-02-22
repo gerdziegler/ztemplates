@@ -24,68 +24,79 @@ import org.ztemplates.web.ui.form.state.ZFormInputState;
 @ZRenderer(value = ZVelocityRenderer.class)
 public final class CascadingFormPanel
 {
-  private final CascadingForm data;
+  private final ZFormSelect continent;
 
-  private final String formName;
+  private final ZFormInputState continentState;
+
+  private final ZFormSelect country;
+
+  private final ZFormInputState countryState;
+
+  private final ZFormText city;
+
+  private final ZFormInputState cityState;
+
+  private final ZFormInputState continentCountryState;
 
 
-  public CascadingFormPanel(String formName, CascadingForm data)
+  public CascadingFormPanel(String formId, CascadingForm data)
   {
-    this.formName = formName;
-    this.data = data;
+    this.continent = new ZFormSelect(formId, data.getContinent());
+    this.continentState = new ZFormInputState(formId, data.getContinent());
+    this.country = new ZFormSelect(formId, data.getCountry());
+    this.countryState = new ZFormInputState(formId, data.getCountry());
+    this.city = new ZFormText(formId, data.getCity());
+    this.cityState = new ZFormInputState(formId, data.getCity());
+    this.continentCountryState = new ZFormInputState(formId, data.getContinent(), data.getCountry());
   }
 
 
   @ZExpose(render = true)
   public ZFormSelect getContinent() throws Exception
   {
-    ZFormSelect ret = new ZFormSelect(formName, data.getContinent());
-    return ret;
+    return continent;
   }
+
 
   @ZExpose(render = true)
   public ZFormInputState getContinentState() throws Exception
   {
-    ZFormInputState ret = new ZFormInputState(formName, data.getContinent());
-    return ret;
+    return continentState;
   }
+
 
   @ZExpose(render = true)
   public ZFormSelect getCountry() throws Exception
   {
-    ZFormSelect ret = new ZFormSelect(formName, data.getCountry());
-    return ret;
+    return country;
   }
 
 
   @ZExpose(render = true)
   public ZFormInputState getCountryState() throws Exception
   {
-    ZFormInputState ret = new ZFormInputState(formName, data.getCountry());
-    return ret;
+    return countryState;
   }
 
 
   @ZExpose(render = true)
   public ZFormText getCity()
   {
-    ZFormText ret = new ZFormText(formName, data.getCity());
-    return ret;
+    return city;
   }
+
 
   @ZExpose(render = true)
   public ZFormInputState getCityState() throws Exception
   {
-    ZFormInputState ret = new ZFormInputState(formName, data.getCity());
-    return ret;
+    return cityState;
   }
-  
+
+
   @ZExpose(render = true)
   public ZFormInputState getContinentCountryState() throws Exception
   {
-    ZFormInputState ret = new ZFormInputState(formName, data.getContinent(), data.getCountry());
-    return ret;
+    return continentCountryState;
   }
-  
 
 }

@@ -10,7 +10,7 @@ import org.ztemplates.property.ZIOperationCallback;
 import org.ztemplates.web.ZTemplates;
 
 /**
- * implements ZIFormAction, to enable form processing.
+ * implements ZIFormAction.
  * 
  * @author www.gerdziegler.de
  */
@@ -22,37 +22,8 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
   private SampleForm form;
 
 
-  private final ZIOperationCallback submitCallback = new ZIOperationCallback()
-  {      
-    @Override
-    public void exec() throws Exception
-    {
-      SampleFormController controller = new SampleFormController(form);
-      controller.updateValues();
-      controller.updateRequired();
-      controller.updateValidationState();
-      if (!ZTemplates.getFormService().getPropertiesWithError(form).isEmpty())
-      {
-        controller.updateForView();
-
-        ViewFactory views = new ViewFactory();
-        views.showSampleForm(form, controller.getAjaxProperties());
-      }
-      else
-      {
-        controller.updateDependencies();
-        controller.updateRequired();
-        controller.updateValidationState();
-        controller.updateForView();
-
-        ViewFactory views = new ViewFactory();
-        views.showSampleFormConfirm();
-      }
-    }
-  };
-  
   /**
-   * private constructor, as there is no need to instantiate this class from 
+   * private constructor, as there is no need to instantiate this class from
    * application code, only ztemplates does it.
    */
   private SampleFormAction()
@@ -61,8 +32,10 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
 
 
   /**
-   * to create url to this action define one or many static createUrl methods here.  
-   * @throws Exception 
+   * to create url to this action define one or many static createUrl methods
+   * here.
+   * 
+   * @throws Exception
    */
   public static String createUrl() throws Exception
   {
@@ -72,16 +45,23 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
 
 
   /**
-   * always create the form
-   * in this callback, so it does
-   * not get created in createUrl(); 
+   * always create the form in this callback, so it does not get created in
+   * createUrl();
+   * 
    * @throws Exception
    */
   @Override
   public void beforeForm() throws Exception
   {
     form = new SampleForm();
-    form.getSubmit().setCallback(submitCallback);
+    form.getSubmit().setCallback(new ZIOperationCallback()
+    {
+      @Override
+      public void exec() throws Exception
+      {
+        afterSubmit();
+      }
+    });
   }
 
 
@@ -94,7 +74,7 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
 
   /**
    * the main callback, do the logic here, form has already been assigned.
-   *  
+   * Called if no operation callback was called
    * 
    * @see org.ztemplates.actions.ZIAction#after()
    */
@@ -104,9 +84,39 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
     controller.loadInitialData();
     controller.updateRequired();
     controller.updateForView();
-
     ViewFactory views = new ViewFactory();
     views.showSampleForm(form, controller.getAjaxProperties());
   }
 
+
+  /**
+   * this gets called on submit operation call (form submit) and is refactoring
+   * safe, one can rename the submit operation without breaking the callback.
+   * 
+   * @throws Exception
+   */
+  private void afterSubmit() throws Exception
+  {
+    SampleFormController controller = new SampleFormController(form);
+    controller.updateValues();
+    controller.updateRequired();
+    controller.updateValidationState();
+    if (!ZTemplates.getFormService().getPropertiesWithError(form).isEmpty())
+    {
+      controller.updateForView();
+
+      ViewFactory views = new ViewFactory();
+      views.showSampleForm(form, controller.getAjaxProperties());
+    }
+    else
+    {
+      controller.updateDependencies();
+      controller.updateRequired();
+      controller.updateValidationState();
+      controller.updateForView();
+
+      ViewFactory views = new ViewFactory();
+      views.showSampleFormConfirm();
+    }
+  }
 }
