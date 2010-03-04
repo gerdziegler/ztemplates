@@ -41,25 +41,20 @@ public final class SampleFormView
   private final ZFormInputState submitState;
 
   private final ZFormScript formScript;
-  
+
   private final ZFormState formState;
 
   private final ZFormStateHighlight formStateHighlight;
 
-  public SampleFormView(SampleForm form,
-      String submitUrl,
-      String ajaxUrl,
-      Set<String> ajaxPropertyNames,
-      String autocompleteQueryUrl) throws Exception
+
+  public SampleFormView(SampleForm form, String submitUrl, String ajaxUrl, Set<String> ajaxPropertyNames, String autocompleteQueryUrl) throws Exception
   {
     super();
     form.getPerson().getEnabled().setValue(Boolean.TRUE);
-    person = new PersonPanel(formId,
-        form.getPerson(),
-        autocompleteQueryUrl);
-    cascading = new CascadingFormPanel(formId, form.getCascading());
-    submit = new ZFormSubmit(formId, form.getSubmit());
-    submitState = new ZFormInputState(formId, form.getSubmit());
+    person = new PersonPanel(form.getPerson(), autocompleteQueryUrl);
+    cascading = new CascadingFormPanel(form.getCascading());
+    submit = new ZFormSubmit(form.getSubmit());
+    submitState = new ZFormInputState(form.getSubmit());
     formScript = new ZFormScript(formId, form, submitUrl, ajaxUrl, ajaxPropertyNames);
     formScript.setBeforeunloadMessage("There are unsubmitted changes.");
     formState = new ZFormState(formId, "formStateDisplay");
@@ -72,8 +67,8 @@ public final class SampleFormView
   {
     return formScript;
   }
-  
-  
+
+
   @ZExpose(render = true)
   public ZFormState getFormState()
   {
@@ -116,7 +111,7 @@ public final class SampleFormView
   }
 
 
-  @ZExpose(render=true)
+  @ZExpose(render = true)
   public ZFormStateHighlight getFormStateHighlight()
   {
     return formStateHighlight;

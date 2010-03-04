@@ -20,7 +20,7 @@ import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.ZTemplates;
-import org.ztemplates.web.ui.form.ZFormCheckbox;
+import org.ztemplates.web.ui.form.ZFormBooleanCheckbox;
 import org.ztemplates.web.ui.form.ZFormPassword;
 import org.ztemplates.web.ui.form.ZFormRadio;
 import org.ztemplates.web.ui.form.ZFormText;
@@ -66,44 +66,44 @@ public final class PersonPanel
 
   private final ZFormInputState marriedState;
 
-  private final ZFormCheckbox married;
+  private final ZFormBooleanCheckbox married;
 
-  private final ZFormCheckbox noAjax;
+  private final ZFormBooleanCheckbox noAjax;
 
   private final ZFormInputState noAjaxState;
 
   private final ZFormInputState occupationState;
 
 
-  public PersonPanel(String formName, PersonForm data, String autocompleteQueryUrl)
+  public PersonPanel(PersonForm data, String autocompleteQueryUrl)
       throws Exception
   {
     contentId = ZTemplates.getRenderService().createJavaScriptId();
-    occupationInput = new ZFormText(formName, data.getOccupation());
-    nameInput = new ZFormText(formName, data.getName());
-    nameState = new ZFormInputState(formName, data.getName());
-    prenameInput = new ZFormText(formName, data.getSurname());
-    prenameState = new ZFormInputState(formName, data.getSurname());
-    dateFromInput = new ZFormText(formName, data.getDateFrom());
-    dateFromState = new ZFormInputState(formName, data.getDateFrom());
-    dateToInput = new ZFormText(formName, data.getDateTo());
-    dateToState = new ZFormInputState(formName, data.getDateTo());
-    passwordInput = new ZFormPassword(formName, data.getPassword());
-    textInput = new ZFormTextArea(formName, data.getText());
-    genderInput = new ZFormRadio<GenderId>(formName, data.getGender());
-    genderState = new ZFormInputState(formName, data.getGender());
-    occupationState = new ZFormInputState(formName, data.getOccupation());
-    occupationAutocomplete = new JQueryAutocomplete(occupationInput.getInputId(), autocompleteQueryUrl);
+    occupationInput = new ZFormText( data.getOccupation());
+    nameInput = new ZFormText( data.getName());
+    nameState = new ZFormInputState( data.getName());
+    prenameInput = new ZFormText( data.getSurname());
+    prenameState = new ZFormInputState( data.getSurname());
+    dateFromInput = new ZFormText( data.getDateFrom());
+    dateFromState = new ZFormInputState( data.getDateFrom());
+    dateToInput = new ZFormText( data.getDateTo());
+    dateToState = new ZFormInputState(data.getDateTo());
+    passwordInput = new ZFormPassword(data.getPassword());
+    textInput = new ZFormTextArea(data.getText());
+    genderInput = new ZFormRadio<GenderId>(data.getGender());
+    genderState = new ZFormInputState(data.getGender());
+    occupationState = new ZFormInputState(data.getOccupation());
+    occupationAutocomplete = new JQueryAutocomplete(occupationInput.getId(), autocompleteQueryUrl);
     occupationAutocomplete.getProperties().put(JQueryAutocomplete.PROP_minChars_number, 1);
     occupationAutocomplete.getProperties().put(JQueryAutocomplete.PROP_delay_number, 200);
     occupationAutocomplete.getProperties().put(JQueryAutocomplete.PROP_max_number, 12);
     occupationAutocomplete.getProperties().put(JQueryAutocomplete.PROP_scroll_boolean, Boolean.FALSE);
-    taxRate = new ZFormText(formName, data.getTaxRate());
-    taxRateState = new ZFormInputState(formName, data.getTaxRate());
-    married = new ZFormCheckbox(formName, data.getMarried());
-    marriedState = new ZFormInputState(formName, data.getMarried());
-    noAjax = new ZFormCheckbox(formName, data.getNoAjax());
-    noAjaxState = new ZFormInputState(formName, data.getNoAjax());
+    taxRate = new ZFormText( data.getTaxRate());
+    taxRateState = new ZFormInputState(data.getTaxRate());
+    married = new ZFormBooleanCheckbox( data.getMarried());
+    marriedState = new ZFormInputState(data.getMarried());
+    noAjax = new ZFormBooleanCheckbox(data.getNoAjax());
+    noAjaxState = new ZFormInputState(data.getNoAjax());
   }
 
 
@@ -220,7 +220,7 @@ public final class PersonPanel
 
 
   @ZExpose(render = true)
-  public ZFormCheckbox getMarried()
+  public ZFormBooleanCheckbox getMarried()
   {
     return married;
   }
@@ -234,7 +234,7 @@ public final class PersonPanel
 
 
   @ZExpose(render = true)
-  public ZFormCheckbox getNoAjax()
+  public ZFormBooleanCheckbox getNoAjax()
   {
     return noAjax;
   }

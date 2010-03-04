@@ -39,15 +39,15 @@ public final class CascadingFormPanel
   private final ZFormInputState continentCountryState;
 
 
-  public CascadingFormPanel(String formId, CascadingForm data)
+  public CascadingFormPanel(CascadingForm data)
   {
-    this.continent = new ZFormSelect(formId, data.getContinent());
-    this.continentState = new ZFormInputState(formId, data.getContinent());
-    this.country = new ZFormSelect(formId, data.getCountry());
-    this.countryState = new ZFormInputState(formId, data.getCountry());
-    this.city = new ZFormText(formId, data.getCity());
-    this.cityState = new ZFormInputState(formId, data.getCity());
-    this.continentCountryState = new ZFormInputState(formId, data.getContinent(), data.getCountry());
+    this.continent = new ZFormSelect(data.getContinent());
+    this.continentState = new ZFormInputState(data.getContinent());
+    this.country = new ZFormSelect(data.getCountry());
+    this.countryState = new ZFormInputState(data.getCountry());
+    this.city = new ZFormText(data.getCity());
+    this.cityState = new ZFormInputState(data.getCity());
+    this.continentCountryState = new ZFormInputState(data.getContinent(), data.getCountry());
   }
 
 

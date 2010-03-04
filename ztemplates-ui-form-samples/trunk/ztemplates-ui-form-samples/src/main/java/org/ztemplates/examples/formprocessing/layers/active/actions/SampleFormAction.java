@@ -6,7 +6,7 @@ import org.ztemplates.actions.ZMatch;
 import org.ztemplates.examples.formprocessing.layers.active.form.SampleFormController;
 import org.ztemplates.examples.formprocessing.layers.active.logic.ViewFactory;
 import org.ztemplates.examples.formprocessing.layers.passive.ui.views.SampleForm;
-import org.ztemplates.property.ZIOperationCallback;
+import org.ztemplates.property.ZIOperationListener;
 import org.ztemplates.web.ZTemplates;
 
 /**
@@ -54,7 +54,7 @@ public class SampleFormAction implements ZIFormAction<SampleForm>
   public void beforeForm() throws Exception
   {
     form = new SampleForm();
-    form.getSubmit().setCallback(new ZIOperationCallback()
+    form.getSubmit().setOperationListener(new ZIOperationListener()
     {
       @Override
       public void exec() throws Exception
