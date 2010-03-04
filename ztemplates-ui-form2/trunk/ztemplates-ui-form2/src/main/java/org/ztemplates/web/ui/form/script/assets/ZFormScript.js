@@ -377,7 +377,7 @@ $(function(){
 
 		ZTEMPLATES.forms[formId].id = formId;
 	
-		$(this).find("input[type='text']").each(function(){
+		$(this).find("input[type='text'],input[type='file']").each(function(){
 			initInputText(form, this);
 		});
 		$(this).find("input[type='password']").each(function(){

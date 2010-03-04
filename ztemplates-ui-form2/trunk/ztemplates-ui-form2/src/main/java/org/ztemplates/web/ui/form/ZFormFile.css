@@ -1,8 +1,6 @@
-.${cssId}-input {
-	width: inherit;
-	height: inherit;
-	border: 1px solid #bbb;
+.${cssId}-input {	
 	background-color: #ffe;
+	border: 1px solid #bbb;
 	background-image:url('ztemplates-ui-form/assets/background.png');
 	background-position:top left;
 	background-repeat:repeat-x;

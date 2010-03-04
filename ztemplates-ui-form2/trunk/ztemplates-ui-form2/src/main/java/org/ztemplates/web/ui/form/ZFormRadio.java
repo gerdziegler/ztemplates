@@ -37,8 +37,6 @@ public final class ZFormRadio<T>
 
   private final String id;
 
-  private final String formId;
-
   private final String propertyName;
 
   private final List<ZFormRadioItem> items = new ArrayList<ZFormRadioItem>();
@@ -46,12 +44,11 @@ public final class ZFormRadio<T>
   private String htmlAttributes;
 
 
-  public ZFormRadio(String formId, final ZSelectProperty<T> prop)
+  public ZFormRadio(final ZSelectProperty<T> prop)
   {
     ZIRenderService rs = ZTemplates.getRenderService();
     id = rs.createJavaScriptId();
     cssId = rs.getCssId(getClass());
-    this.formId = formId;
     propertyName = prop.getName();
 
     for (int i = 0; i < prop.getAllowedValues().size(); i++)
@@ -84,13 +81,6 @@ public final class ZFormRadio<T>
   public void setVertical(boolean vertical)
   {
     this.vertical = vertical;
-  }
-
-
-  @ZExpose
-  public String getFormId()
-  {
-    return formId;
   }
 
 

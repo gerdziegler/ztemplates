@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Gerd Ziegler (www.gerdziegler.de)
+ * Copyright 2010 Gerd Ziegler (www.gerdziegler.de)
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,53 +22,42 @@ import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public final class ZFormCheckbox
+public final class ZFormFile
 {
-  private final String checkboxId;
-
-  private final String hiddenId;
+  private final String inputId;
 
   private String cssId;
 
   private final String propertyName;
 
+  private final String value;
+
+  private final String accept;
+
   private String htmlAttributes;
 
 
-  public ZFormCheckbox(String propertyName)
+  public ZFormFile(String propertyName, String value, String accept)
   {
     ZIRenderService rs = ZTemplates.getRenderService();
-    checkboxId = rs.createJavaScriptId();
-    hiddenId = rs.createJavaScriptId();
-    cssId = rs.getCssId(getClass());
+    this.inputId = rs.createJavaScriptId();
+    this.cssId = rs.getCssId(ZFormFile.class);
     this.propertyName = propertyName;
+    this.value = value;
+    this.accept = accept;
   }
 
 
-  public ZFormCheckbox(final ZProperty prop)
+  public ZFormFile(final ZProperty prop)
   {
-    this(prop.getName());
-  }
-
-
-  @ZExpose
-  public String getCheckboxId()
-  {
-    return checkboxId;
+    this(prop.getName(), prop.getStringValue(), null);
   }
 
 
   @ZExpose
-  public String getHiddenId()
+  public String getInputId()
   {
-    return hiddenId;
-  }
-
-
-  @ZExpose
-  public String getPropertyName()
-  {
-    return propertyName;
+    return inputId;
   }
 
 
@@ -82,6 +71,20 @@ public final class ZFormCheckbox
   public void setCssId(String cssId)
   {
     this.cssId = cssId;
+  }
+
+
+  @ZExpose
+  public String getPropertyName()
+  {
+    return propertyName;
+  }
+
+
+  @ZExpose
+  public String getValue()
+  {
+    return value;
   }
 
 
@@ -106,4 +109,12 @@ public final class ZFormCheckbox
   {
     this.htmlAttributes = attributes;
   }
+
+
+  @ZExpose
+  public String getAccept()
+  {
+    return accept;
+  }
+
 }

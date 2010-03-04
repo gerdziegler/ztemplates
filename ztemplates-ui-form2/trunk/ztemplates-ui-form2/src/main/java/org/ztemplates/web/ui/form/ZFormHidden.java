@@ -25,8 +25,6 @@ public final class ZFormHidden
 {
   private final String inputId;
 
-  private final String formId;
-
   private final String propertyName;
 
   private final String value;
@@ -34,18 +32,17 @@ public final class ZFormHidden
   private String htmlAttributes;
 
 
-  public ZFormHidden(String formId, String propertyName, String value)
+  public ZFormHidden(String propertyName, String value)
   {
     this.inputId = ZTemplates.getRenderService().createJavaScriptId();
-    this.formId = formId;
     this.propertyName = propertyName;
     this.value = value;
   }
 
 
-  public ZFormHidden(String formId, final ZProperty prop)
+  public ZFormHidden(final ZProperty prop)
   {
-    this(formId, prop.getName(), prop.getStringValue());
+    this(prop.getName(), prop.getStringValue());
   }
 
 
@@ -53,13 +50,6 @@ public final class ZFormHidden
   public String getInputId()
   {
     return inputId;
-  }
-
-
-  @ZExpose
-  public String getFormId()
-  {
-    return formId;
   }
 
 

@@ -28,8 +28,6 @@ public final class ZFormTextArea
 
   private String cssId;
 
-  private final String formId;
-
   private final String propertyName;
 
   private final String value;
@@ -41,9 +39,8 @@ public final class ZFormTextArea
   private Integer cols;
 
 
-  public ZFormTextArea(String formId, String propertyName, String value, Integer rows, Integer cols)
+  public ZFormTextArea(String propertyName, String value, Integer rows, Integer cols)
   {
-    this.formId = formId;
     this.propertyName = propertyName;
     this.value = value;
     this.rows = rows;
@@ -55,21 +52,21 @@ public final class ZFormTextArea
   }
 
 
-  public ZFormTextArea(String formId, final ZProperty prop, Integer rows, Integer cols)
+  public ZFormTextArea(final ZProperty prop, Integer rows, Integer cols)
   {
-    this(formId, prop.getName(), prop.getStringValue(), rows, cols);
+    this(prop.getName(), prop.getStringValue(), rows, cols);
   }
 
 
-  public ZFormTextArea(String formId, final ZProperty prop, Integer rows)
+  public ZFormTextArea(final ZProperty prop, Integer rows)
   {
-    this(formId, prop, rows, null);
+    this(prop, rows, null);
   }
 
 
-  public ZFormTextArea(String formId, final ZProperty prop)
+  public ZFormTextArea(final ZProperty prop)
   {
-    this(formId, prop, null, null);
+    this(prop, null, null);
   }
 
 
@@ -113,13 +110,6 @@ public final class ZFormTextArea
   public void setCssId(String cssId)
   {
     this.cssId = cssId;
-  }
-
-
-  @ZExpose
-  public String getFormId()
-  {
-    return formId;
   }
 
 

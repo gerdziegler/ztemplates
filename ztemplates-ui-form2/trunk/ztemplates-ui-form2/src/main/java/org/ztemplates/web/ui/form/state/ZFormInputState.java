@@ -30,23 +30,19 @@ import org.ztemplates.web.ui.form.state.assets.ZInputStateLoaderAction;
 @ZScript(javaScript =
 {
     @ZJavaScript(value = JQueryLoaderAction.JQUERY_MIN_JS, standalone = JQueryLoaderAction.STANDALONE, merge = JQueryLoaderAction.MERGE),
-    @ZJavaScript(ZFormScriptLoaderAction.FORM_SCRIPT),
-    @ZJavaScript(ZInputStateLoaderAction.FORM_INPUT_STATE_JS)
+    @ZJavaScript(ZFormScriptLoaderAction.FORM_SCRIPT), @ZJavaScript(ZInputStateLoaderAction.FORM_INPUT_STATE_JS)
 })
 public final class ZFormInputState
 {
   private final String inputId;
 
-  private final String formId;
-
   private final String propertyNames;
 
 
-  public ZFormInputState(String formId, final ZProperty... prop)
+  public ZFormInputState(final ZProperty... prop)
   {
     ZIRenderService rs = ZTemplates.getRenderService();
     inputId = rs.createJavaScriptId();
-    this.formId = formId;
     StringBuffer sb = new StringBuffer();
     boolean first = true;
     for (ZProperty p : prop)
@@ -66,13 +62,6 @@ public final class ZFormInputState
   public String getInputId()
   {
     return inputId;
-  }
-
-
-  @ZExpose
-  public String getFormId()
-  {
-    return formId;
   }
 
 

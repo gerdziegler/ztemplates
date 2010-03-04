@@ -28,8 +28,6 @@ public final class ZFormText
 
   private String cssId;
 
-  private final String formId;
-
   private final String propertyName;
 
   private final String value;
@@ -37,20 +35,19 @@ public final class ZFormText
   private String htmlAttributes;
 
 
-  public ZFormText(String formId, String propertyName, String value)
+  public ZFormText(String propertyName, String value)
   {
     ZIRenderService rs = ZTemplates.getRenderService();
     this.inputId = rs.createJavaScriptId();
     this.cssId = rs.getCssId(ZFormText.class);
-    this.formId = formId;
     this.propertyName = propertyName;
     this.value = value;
   }
 
 
-  public ZFormText(String formId, final ZProperty prop)
+  public ZFormText(final ZProperty prop)
   {
-    this(formId, prop.getName(), prop.getStringValue());
+    this(prop.getName(), prop.getStringValue());
   }
 
 
@@ -71,13 +68,6 @@ public final class ZFormText
   public void setCssId(String cssId)
   {
     this.cssId = cssId;
-  }
-
-
-  @ZExpose
-  public String getFormId()
-  {
-    return formId;
   }
 
 

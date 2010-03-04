@@ -33,8 +33,6 @@ public final class ZFormSelect
 
   private String cssId;
 
-  private final String formId;
-
   private final String propertyName;
 
   private final List<ZFormSelectItem> items = new ArrayList<ZFormSelectItem>();
@@ -42,19 +40,18 @@ public final class ZFormSelect
   private String htmlAttributes;
 
 
-  public <T> ZFormSelect(String formId, final ZSelectProperty<T> prop)
+  public <T> ZFormSelect(final ZSelectProperty<T> prop)
   {
-    this(formId, prop, 1);
+    this(prop, 1);
   }
 
 
-  public <T> ZFormSelect(String formId, final ZSelectProperty<T> prop, int size)
+  public <T> ZFormSelect(final ZSelectProperty<T> prop, int size)
   {
     this.size = size;
     ZIRenderService rs = ZTemplates.getRenderService();
     selectId = rs.createJavaScriptId();
     cssId = rs.getCssId(getClass());
-    this.formId = formId;
     propertyName = prop.getName();
 
     String stringValue = prop.getStringValue();
@@ -95,13 +92,6 @@ public final class ZFormSelect
   public String getSelectId()
   {
     return selectId;
-  }
-
-
-  @ZExpose
-  public String getFormId()
-  {
-    return formId;
   }
 
 
