@@ -19,6 +19,10 @@ public class ZDefaultClassPathFilter implements ZIClassPathFilter
 
   public boolean acceptClasspathPart(String name) throws Exception
   {
+    if(!name.contains("WEB-INF"))
+    {
+      return false;
+    }
     if (name.endsWith(".jar")
         && (name.startsWith("jgrapht") || name.startsWith("junit") || name.startsWith("log4j")
             || name.startsWith("json") || name.startsWith("servlet") || name.startsWith("velocity")

@@ -10,7 +10,7 @@ public class ZOperation extends ZProperty<String>
 {
   private String allowedValue;
 
-  private ZIOperationCallback callback;
+  private ZIOperationListener operationListener;
 
 
   public ZOperation(String allowedValue)
@@ -20,15 +20,15 @@ public class ZOperation extends ZProperty<String>
   }
 
 
-  public ZIOperationCallback getCallback()
+  public ZIOperationListener getOperationListener()
   {
-    return callback;
+    return operationListener;
   }
 
 
-  public void setCallback(ZIOperationCallback callback)
+  public void setOperationListener(ZIOperationListener callback)
   {
-    this.callback = callback;
+    this.operationListener = callback;
   }
 
 

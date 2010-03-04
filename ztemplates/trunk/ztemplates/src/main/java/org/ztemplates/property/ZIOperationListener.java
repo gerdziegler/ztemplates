@@ -7,7 +7,7 @@ package org.ztemplates.property;
  * @author gerdziegler.de
  * 
  */
-public interface ZIOperationCallback
+public interface ZIOperationListener
 {
   public void exec() throws Exception;
 }

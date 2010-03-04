@@ -307,6 +307,10 @@ public class ZReflectionUtil
     else if (retClass.isEnum())
     {
       Enum val = (Enum) invoke(m, obj);
+      if(val==null)
+      {
+        return null;
+      }
       return val.name();
     }
     else

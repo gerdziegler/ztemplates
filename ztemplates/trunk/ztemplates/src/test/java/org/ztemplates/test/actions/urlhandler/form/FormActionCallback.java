@@ -1,7 +1,7 @@
 package org.ztemplates.test.actions.urlhandler.form;
 
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.property.ZIOperationCallback;
+import org.ztemplates.property.ZIOperationListener;
 import org.ztemplates.property.ZOperation;
 
 /**
@@ -18,7 +18,7 @@ public class FormActionCallback
   private final ZOperation op = new ZOperation("called")
   {
     {
-      setCallback(new ZIOperationCallback()
+      setOperationListener(new ZIOperationListener()
       {
         public void exec() throws Exception
         {

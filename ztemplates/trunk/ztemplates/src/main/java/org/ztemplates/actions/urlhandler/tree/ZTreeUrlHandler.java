@@ -222,9 +222,9 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         ZMatch zmatch = (ZMatch) pojo.getClass().getAnnotation(ZMatch.class);
         ZEndNested v = (ZEndNested) et;
         UpdateResult updateResult = update(pojo, parameters);
-        if (updateResult.operationToCall != null && updateResult.operationToCall.getCallback() != null)
+        if (updateResult.operationToCall != null && updateResult.operationToCall.getOperationListener() != null)
         {
-          updateResult.operationToCall.getCallback().exec();
+          updateResult.operationToCall.getOperationListener().exec();
         }
         else
         {
@@ -255,9 +255,9 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         pojos.pop();
         assert pojos.isEmpty() : "should be empty: " + pojos.toString();
         UpdateResult updateResult = update(rootPojo, parameters);
-        if (updateResult.operationToCall != null && updateResult.operationToCall.getCallback() != null)
+        if (updateResult.operationToCall != null && updateResult.operationToCall.getOperationListener() != null)
         {
-          updateResult.operationToCall.getCallback().exec();
+          updateResult.operationToCall.getOperationListener().exec();
         }
         else
         {

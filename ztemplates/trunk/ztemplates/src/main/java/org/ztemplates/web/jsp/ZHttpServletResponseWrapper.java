@@ -14,7 +14,9 @@
 
 package org.ztemplates.web.jsp;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
@@ -27,14 +29,24 @@ public class ZHttpServletResponseWrapper implements HttpServletResponse
 {
   private HttpServletResponse response;
 
-  private ZServletOutputStreamWrapper out = new ZServletOutputStreamWrapper();
+  private ZServletOutputStreamWrapper out;
 
-  private PrintWriter pw = new PrintWriter(out);
+  private PrintWriter pw;
 
 
   public ZHttpServletResponseWrapper(HttpServletResponse response)
   {
     this.response = response;
+    this.out = new ZServletOutputStreamWrapper();
+    this.pw = new PrintWriter(out);
+    try
+    {
+      pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(out, "utf-8")), false);
+    }
+    catch (UnsupportedEncodingException e)
+    {
+      throw new Error(e);
+    }
   }
 
 
@@ -42,8 +54,7 @@ public class ZHttpServletResponseWrapper implements HttpServletResponse
   {
     pw.flush();
     byte[] bytes = getBytes();
-    String s = getCharacterEncoding() == null ? new String(bytes) : new String(bytes,
-        getCharacterEncoding());
+    String s = getCharacterEncoding() == null ? new String(bytes) : new String(bytes, getCharacterEncoding());
     return s;
   }
 

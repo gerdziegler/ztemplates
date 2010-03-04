@@ -101,7 +101,7 @@ public class ZTemplatesStandalone implements ZIServiceRepository
     ZApplication application = ZApplicationRepositoryStandalone.getApplication(applicationName);
     if (application == null)
     {
-      throw new Exception("no ztemplates application found for applicationName " + applicationName);
+      throw new Exception("no ztemplates application found for applicationName: '" + applicationName + "'");
     }
     String prefix = application.getActionApplication().getApplicationContext().getInitParameter("prefix");
     String encryptPassword = application.getActionApplication().getApplicationContext().getInitParameter("encryptPassword");
