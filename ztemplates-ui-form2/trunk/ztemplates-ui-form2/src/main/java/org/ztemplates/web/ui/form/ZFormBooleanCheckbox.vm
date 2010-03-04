@@ -1,2 +1,1 @@
-<a name="${name}"></a>
 <input type="checkbox" id="${id}" name="${name}" value="${value}" #if(${checked}) checked="true" #end cssid="$cssId" $!{htmlAttributes}></input>

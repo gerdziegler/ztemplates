@@ -5,16 +5,13 @@
 	background-position:top left;
 	background-repeat:repeat-x;
 }
-
 .${cssId}-input_readonly {
 	background-color: #fff;
 	border: 1px dotted #ddd;
 }
-
 .${cssId}-input_required {
 	background-color: #ffe;
 }
-
 .${cssId}-input_error {
 	background-color: #fee;
 }

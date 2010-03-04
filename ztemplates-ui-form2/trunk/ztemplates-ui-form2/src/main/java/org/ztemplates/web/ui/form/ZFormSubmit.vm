@@ -1,2 +1,1 @@
-<a name="${name}"></a>
 <input type="submit" id="${id}" class="${cssId}-submit" name="${name}" value="${allowedValue}" $!{htmlAttributes} cssid="${cssId}"></input>
