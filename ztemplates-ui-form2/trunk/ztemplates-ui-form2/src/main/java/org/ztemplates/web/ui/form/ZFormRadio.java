@@ -37,7 +37,7 @@ public final class ZFormRadio<T>
 
   private final String id;
 
-  private final String propertyName;
+  private final String name;
 
   private final List<ZFormRadioItem> items = new ArrayList<ZFormRadioItem>();
 
@@ -49,7 +49,7 @@ public final class ZFormRadio<T>
     ZIRenderService rs = ZTemplates.getRenderService();
     id = rs.createJavaScriptId();
     cssId = rs.getCssId(getClass());
-    propertyName = prop.getName();
+    name = prop.getName();
 
     for (int i = 0; i < prop.getAllowedValues().size(); i++)
     {
@@ -85,9 +85,9 @@ public final class ZFormRadio<T>
 
 
   @ZExpose
-  public String getPropertyName()
+  public String getName()
   {
-    return propertyName;
+    return name;
   }
 
 

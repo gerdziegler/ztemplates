@@ -1,6 +1,6 @@
-<a name="${propertyName}"></a>
-<select id="${selectId}" name="${propertyName}" class="${cssId}-input" size="${size}" $!{htmlAttributes} cssid="${cssId}">
-#foreach($item in $items)
-	<option class="${cssId}-input-option" value="$!{item.key}"#if($item.selected) selected="selected"#end>$item.value</option>
+<a name="${name}"></a>
+<select id="${id}" name="${name}" class="${cssId}-input" size="${size}" $!{htmlAttributes} cssid="${cssId}">
+#foreach($option in $options)
+	<option class="${cssId}-input-option" value="$!{option.key}"#if($option.selected) selected="selected"#end>$option.value</option>
 #end
 </select>

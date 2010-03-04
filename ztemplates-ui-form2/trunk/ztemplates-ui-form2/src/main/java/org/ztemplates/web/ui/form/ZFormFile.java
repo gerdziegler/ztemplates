@@ -24,11 +24,11 @@ import org.ztemplates.web.ZTemplates;
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormFile
 {
-  private final String inputId;
+  private final String id;
 
   private String cssId;
 
-  private final String propertyName;
+  private final String name;
 
   private final String value;
 
@@ -37,12 +37,12 @@ public final class ZFormFile
   private String htmlAttributes;
 
 
-  public ZFormFile(String propertyName, String value, String accept)
+  public ZFormFile(String name, String value, String accept)
   {
     ZIRenderService rs = ZTemplates.getRenderService();
-    this.inputId = rs.createJavaScriptId();
+    this.id = rs.createJavaScriptId();
     this.cssId = rs.getCssId(ZFormFile.class);
-    this.propertyName = propertyName;
+    this.name = name;
     this.value = value;
     this.accept = accept;
   }
@@ -55,9 +55,9 @@ public final class ZFormFile
 
 
   @ZExpose
-  public String getInputId()
+  public String getId()
   {
-    return inputId;
+    return id;
   }
 
 
@@ -75,9 +75,9 @@ public final class ZFormFile
 
 
   @ZExpose
-  public String getPropertyName()
+  public String getName()
   {
-    return propertyName;
+    return name;
   }
 
 

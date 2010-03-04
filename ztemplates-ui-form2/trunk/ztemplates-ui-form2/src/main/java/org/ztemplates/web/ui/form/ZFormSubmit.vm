@@ -1,2 +1,2 @@
-<a name="${operationName}"></a>
-<input type="submit" id="${inputId}" class="${cssId}-submit" name="${operationName}" value="${allowedValue}" $!{htmlAttributes} cssid="${cssId}"></input>
+<a name="${name}"></a>
+<input type="submit" id="${id}" class="${cssId}-submit" name="${name}" value="${allowedValue}" $!{htmlAttributes} cssid="${cssId}"></input>

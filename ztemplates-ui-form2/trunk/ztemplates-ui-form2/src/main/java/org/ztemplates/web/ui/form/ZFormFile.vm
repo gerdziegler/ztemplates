@@ -1,2 +1,2 @@
-<a name="${propertyName}"></a>
-<input type="file" id="${inputId}" class="${cssId}-input" name="${propertyName}" value="$!{value}" #if($accept)accept="$accept"#end $!{htmlAttributes} cssid="${cssId}"></input>
+<a name="${name}"></a>
+<input type="file" id="${id}" class="${cssId}-input" name="${name}" value="$!{value}" #if($accept)accept="$accept"#end $!{htmlAttributes} cssid="${cssId}"></input>

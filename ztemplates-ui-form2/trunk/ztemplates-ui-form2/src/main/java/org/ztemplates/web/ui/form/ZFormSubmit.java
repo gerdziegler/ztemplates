@@ -24,11 +24,11 @@ import org.ztemplates.web.ZTemplates;
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormSubmit
 {
-  private final String inputId;
+  private final String id;
 
   private String cssId;
 
-  private final String operationName;
+  private final String name;
 
   private final String allowedValue;
 
@@ -38,17 +38,17 @@ public final class ZFormSubmit
   public ZFormSubmit(final ZOperation prop)
   {
     ZIRenderService rs = ZTemplates.getRenderService();
-    inputId = rs.createJavaScriptId();
+    id = rs.createJavaScriptId();
     cssId = rs.getCssId(getClass());
-    operationName = prop.getName();
+    name = prop.getName();
     allowedValue = prop.getAllowedValue();
   }
 
 
   @ZExpose
-  public String getInputId()
+  public String getId()
   {
-    return inputId;
+    return id;
   }
 
 
@@ -66,9 +66,9 @@ public final class ZFormSubmit
 
 
   @ZExpose
-  public String getOperationName()
+  public String getName()
   {
-    return operationName;
+    return name;
   }
 
 

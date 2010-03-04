@@ -23,19 +23,19 @@ import org.ztemplates.web.ZTemplates;
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormHidden
 {
-  private final String inputId;
+  private final String id;
 
-  private final String propertyName;
+  private final String name;
 
   private final String value;
 
   private String htmlAttributes;
 
 
-  public ZFormHidden(String propertyName, String value)
+  public ZFormHidden(String name, String value)
   {
-    this.inputId = ZTemplates.getRenderService().createJavaScriptId();
-    this.propertyName = propertyName;
+    this.id = ZTemplates.getRenderService().createJavaScriptId();
+    this.name = name;
     this.value = value;
   }
 
@@ -47,16 +47,16 @@ public final class ZFormHidden
 
 
   @ZExpose
-  public String getInputId()
+  public String getId()
   {
-    return inputId;
+    return id;
   }
 
 
   @ZExpose
-  public String getPropertyName()
+  public String getName()
   {
-    return propertyName;
+    return name;
   }
 
 

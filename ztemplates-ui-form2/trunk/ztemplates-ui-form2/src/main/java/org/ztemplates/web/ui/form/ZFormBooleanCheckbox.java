@@ -14,7 +14,7 @@
  */
 package org.ztemplates.web.ui.form;
 
-import org.ztemplates.property.ZProperty;
+import org.ztemplates.property.ZBooleanProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
@@ -22,53 +22,49 @@ import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public final class ZFormCheckbox
+public final class ZFormBooleanCheckbox
 {
-  private final String checkboxId;
+  private final String id;
 
-  private final String hiddenId;
+  private final String name;
 
-  private String cssId;
+  private final String value;
 
-  private final String propertyName;
+  private final boolean checked;
 
   private String htmlAttributes;
 
+  private String cssId;
 
-  public ZFormCheckbox(String propertyName)
+
+  public ZFormBooleanCheckbox(String name, boolean checked)
   {
     ZIRenderService rs = ZTemplates.getRenderService();
-    checkboxId = rs.createJavaScriptId();
-    hiddenId = rs.createJavaScriptId();
-    cssId = rs.getCssId(getClass());
-    this.propertyName = propertyName;
+    this.id = rs.createJavaScriptId();
+    this.cssId = rs.getCssId(getClass());
+    this.name = name;
+    this.checked = checked;
+    this.value = "true";
   }
 
 
-  public ZFormCheckbox(final ZProperty prop)
+  public ZFormBooleanCheckbox(final ZBooleanProperty prop)
   {
-    this(prop.getName());
-  }
-
-
-  @ZExpose
-  public String getCheckboxId()
-  {
-    return checkboxId;
+    this(prop.getName(), "true".equals(prop.getStringValue()));
   }
 
 
   @ZExpose
-  public String getHiddenId()
+  public String getId()
   {
-    return hiddenId;
+    return id;
   }
 
 
   @ZExpose
-  public String getPropertyName()
+  public String getName()
   {
-    return propertyName;
+    return name;
   }
 
 
@@ -82,6 +78,13 @@ public final class ZFormCheckbox
   public void setCssId(String cssId)
   {
     this.cssId = cssId;
+  }
+
+
+  @ZExpose
+  public boolean isChecked()
+  {
+    return checked;
   }
 
 
@@ -105,5 +108,12 @@ public final class ZFormCheckbox
   public void setHtmlAttributes(String attributes)
   {
     this.htmlAttributes = attributes;
+  }
+
+
+  @ZExpose
+  public String getValue()
+  {
+    return value;
   }
 }

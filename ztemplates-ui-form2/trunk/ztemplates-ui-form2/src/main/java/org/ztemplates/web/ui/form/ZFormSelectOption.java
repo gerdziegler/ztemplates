@@ -16,7 +16,7 @@ package org.ztemplates.web.ui.form;
 
 import org.ztemplates.json.ZExposeJson;
 
-public class ZFormSelectItem
+public class ZFormSelectOption
 {
   private final String key;
 
@@ -25,7 +25,7 @@ public class ZFormSelectItem
   private final boolean selected;
 
 
-  public ZFormSelectItem(final String key, final String value, boolean selected)
+  public ZFormSelectOption(final String key, final String value, boolean selected)
   {
     super();
     this.key = key;

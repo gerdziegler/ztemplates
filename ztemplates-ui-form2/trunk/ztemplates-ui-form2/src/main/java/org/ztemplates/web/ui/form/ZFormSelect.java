@@ -27,15 +27,15 @@ import org.ztemplates.web.ZTemplates;
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormSelect
 {
-  private final String selectId;
+  private final String id;
 
   private final int size;
 
   private String cssId;
 
-  private final String propertyName;
+  private final String name;
 
-  private final List<ZFormSelectItem> items = new ArrayList<ZFormSelectItem>();
+  private final List<ZFormSelectOption> options = new ArrayList<ZFormSelectOption>();
 
   private String htmlAttributes;
 
@@ -50,9 +50,9 @@ public final class ZFormSelect
   {
     this.size = size;
     ZIRenderService rs = ZTemplates.getRenderService();
-    selectId = rs.createJavaScriptId();
+    id = rs.createJavaScriptId();
     cssId = rs.getCssId(getClass());
-    propertyName = prop.getName();
+    name = prop.getName();
 
     String stringValue = prop.getStringValue();
     for (T t : prop.getAllowedValues())
@@ -68,16 +68,16 @@ public final class ZFormSelect
       {
         selected = stringValue != null && key.equals(stringValue);
       }
-      ZFormSelectItem item = new ZFormSelectItem(key, value, selected);
-      items.add(item);
+      ZFormSelectOption item = new ZFormSelectOption(key, value, selected);
+      options.add(item);
     }
   }
 
 
   @ZExpose
-  public List<ZFormSelectItem> getItems() throws Exception
+  public List<ZFormSelectOption> getOptions() throws Exception
   {
-    return items;
+    return options;
   }
 
 
@@ -89,16 +89,16 @@ public final class ZFormSelect
 
 
   @ZExpose
-  public String getSelectId()
+  public String getId()
   {
-    return selectId;
+    return id;
   }
 
 
   @ZExpose
-  public String getPropertyName()
+  public String getName()
   {
-    return propertyName;
+    return name;
   }
 
 

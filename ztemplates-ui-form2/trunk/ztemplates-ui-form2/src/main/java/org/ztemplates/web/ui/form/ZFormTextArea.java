@@ -24,11 +24,11 @@ import org.ztemplates.web.ZTemplates;
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormTextArea
 {
-  private final String inputId;
+  private final String id;
 
   private String cssId;
 
-  private final String propertyName;
+  private final String name;
 
   private final String value;
 
@@ -39,15 +39,15 @@ public final class ZFormTextArea
   private Integer cols;
 
 
-  public ZFormTextArea(String propertyName, String value, Integer rows, Integer cols)
+  public ZFormTextArea(String name, String value, Integer rows, Integer cols)
   {
-    this.propertyName = propertyName;
+    this.name = name;
     this.value = value;
     this.rows = rows;
     this.cols = cols;
 
     ZIRenderService rs = ZTemplates.getRenderService();
-    this.inputId = rs.createJavaScriptId();
+    this.id = rs.createJavaScriptId();
     this.cssId = rs.getCssId(getClass());
   }
 
@@ -94,9 +94,9 @@ public final class ZFormTextArea
 
 
   @ZExpose
-  public String getInputId()
+  public String getId()
   {
-    return inputId;
+    return id;
   }
 
 
@@ -114,9 +114,9 @@ public final class ZFormTextArea
 
 
   @ZExpose
-  public String getPropertyName()
+  public String getName()
   {
-    return propertyName;
+    return name;
   }
 
 
