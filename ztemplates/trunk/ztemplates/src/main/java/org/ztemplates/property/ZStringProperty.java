@@ -10,17 +10,21 @@ public class ZStringProperty extends ZProperty<String>
   {
   }
 
+
   public ZStringProperty(String label)
   {
     super(label);
   }
-  
-  public String parse(String formattedValue) throws Exception
+
+
+  @Override
+  public String parse(String formattedValue)
   {
     return formattedValue;
   }
 
 
+  @Override
   public String format(String obj)
   {
     return obj;
