@@ -34,14 +34,13 @@ public final class ZFormBooleanCheckbox
 
   private String htmlAttributes;
 
-  private String cssId;
+  private String cssClass;
 
 
   public ZFormBooleanCheckbox(String name, boolean checked)
   {
     ZIRenderService rs = ZTemplates.getRenderService();
     this.id = rs.createJavaScriptId();
-    this.cssId = rs.getCssId(getClass());
     this.name = name;
     this.checked = checked;
     this.value = "true";
@@ -69,15 +68,15 @@ public final class ZFormBooleanCheckbox
 
 
   @ZExpose
-  public String getCssId()
+  public String getCssClass()
   {
-    return cssId;
+    return cssClass;
   }
 
 
-  public void setCssId(String cssId)
+  public void setCssClass(String cssId)
   {
-    this.cssId = cssId;
+    this.cssClass = cssId;
   }
 
 

@@ -26,7 +26,7 @@ public final class ZFormSubmit
 {
   private final String id;
 
-  private String cssId;
+  private String cssClass;
 
   private final String name;
 
@@ -39,7 +39,6 @@ public final class ZFormSubmit
   {
     ZIRenderService rs = ZTemplates.getRenderService();
     id = rs.createJavaScriptId();
-    cssId = rs.getCssId(getClass());
     name = prop.getName();
     allowedValue = prop.getAllowedValue();
   }
@@ -53,15 +52,15 @@ public final class ZFormSubmit
 
 
   @ZExpose
-  public String getCssId()
+  public String getCssClass()
   {
-    return cssId;
+    return cssClass;
   }
 
 
-  public void setCssId(String cssId)
+  public void setCssClass(String cssId)
   {
-    this.cssId = cssId;
+    this.cssClass = cssId;
   }
 
 

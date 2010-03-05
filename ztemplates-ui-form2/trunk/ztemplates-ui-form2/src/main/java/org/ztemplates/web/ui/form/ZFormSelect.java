@@ -31,7 +31,7 @@ public final class ZFormSelect
 
   private final int size;
 
-  private String cssId;
+  private String cssClass;
 
   private final String name;
 
@@ -51,7 +51,6 @@ public final class ZFormSelect
     this.size = size;
     ZIRenderService rs = ZTemplates.getRenderService();
     id = rs.createJavaScriptId();
-    cssId = rs.getCssId(getClass());
     name = prop.getName();
 
     String stringValue = prop.getStringValue();
@@ -103,15 +102,15 @@ public final class ZFormSelect
 
 
   @ZExpose
-  public String getCssId()
+  public String getCssClass()
   {
-    return cssId;
+    return cssClass;
   }
 
 
-  public void setCssId(String cssId)
+  public void setCssClass(String cssId)
   {
-    this.cssId = cssId;
+    this.cssClass = cssId;
   }
 
 

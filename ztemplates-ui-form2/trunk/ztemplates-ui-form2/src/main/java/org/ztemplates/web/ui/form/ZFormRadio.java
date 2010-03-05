@@ -33,7 +33,7 @@ public final class ZFormRadio<T>
 
   private boolean vertical = false;
 
-  private String cssId;
+  private String cssClass;
 
   private final String id;
 
@@ -48,7 +48,6 @@ public final class ZFormRadio<T>
   {
     ZIRenderService rs = ZTemplates.getRenderService();
     id = rs.createJavaScriptId();
-    cssId = rs.getCssId(getClass());
     name = prop.getName();
 
     for (int i = 0; i < prop.getAllowedValues().size(); i++)
@@ -92,9 +91,9 @@ public final class ZFormRadio<T>
 
 
   @ZExpose
-  public String getCssId()
+  public String getCssClass()
   {
-    return cssId;
+    return cssClass;
   }
 
 
@@ -111,9 +110,9 @@ public final class ZFormRadio<T>
   }
 
 
-  public void setCssId(String cssId)
+  public void setCssClass(String cssId)
   {
-    this.cssId = cssId;
+    this.cssClass = cssId;
   }
 
 

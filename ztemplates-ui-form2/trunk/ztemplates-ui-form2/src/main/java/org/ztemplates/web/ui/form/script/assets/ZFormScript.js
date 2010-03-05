@@ -140,21 +140,20 @@ ZTEMPLATES.getProperty = function(formId, propertyName){
 		alert('object not found: ' + propName);
 	}
 }
-ZTEMPLATES.updateStyle = function(formId, propertyName, contentId,
-		defaultClassName){
+ZTEMPLATES.updateStyle = function(formId, propertyName, contentId){
 	var json = ZTEMPLATES.getProperty(formId, propertyName);
 	var content = document.getElementById(contentId);
     var contentProxy = $(content); 
-    contentProxy.removeClass(defaultClassName + "_readonly");
-    contentProxy.removeClass(defaultClassName + "_required");
-    contentProxy.removeClass(defaultClassName + "_error");
+    contentProxy.removeClass("ztemplates-readonly");
+    contentProxy.removeClass("ztemplates-required");
+    contentProxy.removeClass("ztemplates-error");
 	if (!json.writeable) {
-		contentProxy.addClass(defaultClassName + "_readonly");
+		contentProxy.addClass("ztemplates-readonly");
 	} else if (json.required
 			&& (json.stringValue == null || json.stringValue.length == 0)) {
-		contentProxy.addClass(defaultClassName + "_required");
+		contentProxy.addClass("ztemplates-required");
 	} else if (json.error) {
-		contentProxy.addClass(defaultClassName + "_error");
+		contentProxy.addClass("ztemplates-error");
 	}
 	return json;
 };
@@ -261,7 +260,6 @@ function updateFormRadio(form, input, triggerName) {
 	var formId = form.id;
 	var propertyName = input.name;
 	var inputId = input.id;
-	var cssId = $(input).attr("cssid");	
 	var json = ZTEMPLATES.getProperty(formId, propertyName);
 	if(input.value==json.stringValue) {
 		input.checked = "checked";
@@ -273,13 +271,12 @@ function updateFormRadio(form, input, triggerName) {
 	} else {
 		input.disabled="disabled";
 	}
-	ZTEMPLATES.updateStyle(formId, propertyName, inputId, cssId + "-input");
+	ZTEMPLATES.updateStyle(formId, propertyName, inputId);
 }
 function updateFormCheckbox(form, input, triggerName) {
 	var formId = form.id;
 	var propertyName = input.name;
 	var inputId = input.id;
-	var cssId = $(input).attr("cssid");
 	var json = ZTEMPLATES.getProperty(formId, propertyName);
 	input.checked = (json.stringValue=='true');
     //$(input).val([json.stringValue]);
@@ -288,12 +285,11 @@ function updateFormCheckbox(form, input, triggerName) {
 	} else {
 		input.disabled = false;
 	}	
-	ZTEMPLATES.updateStyle(formId, propertyName, inputId, cssId + "-input");
+	ZTEMPLATES.updateStyle(formId, propertyName, inputId);
 }
 function updateFormSelect(formId, propertyName, selectId, triggerName) {
 	var json = ZTEMPLATES.getProperty(formId, propertyName);
 	var content = document.getElementById(selectId);
-	var cssId = $(content).attr("cssid");	
 	content.innerHTML = '';
 	for(i=0; i<json.allowedStringValues.length; i++) {
 		var crt = json.allowedStringValues[i];
@@ -313,7 +309,7 @@ function updateFormSelect(formId, propertyName, selectId, triggerName) {
 	} else {
 		content.disabled="disabled";
 	}
-	ZTEMPLATES.updateStyle(formId, propertyName, selectId, cssId + "-input");
+	ZTEMPLATES.updateStyle(formId, propertyName, selectId);
 }
 function updateInputSubmit(form, input, triggerName) {
 	var formId = form.id;
@@ -336,7 +332,6 @@ function updateInputSubmit(form, input, triggerName) {
 }
 function updateInputText(formId, propertyName, inputId, triggerName) {
 	var content = document.getElementById(inputId);
-	var cssId = $(content).attr("cssid");
 	var json = ZTEMPLATES.getProperty(formId, propertyName);
 	if(triggerName!=propertyName) {
 		if(json.stringValue==null) {
@@ -350,7 +345,7 @@ function updateInputText(formId, propertyName, inputId, triggerName) {
 	} else {
 		content.readOnly="readonly";
 	}
-	ZTEMPLATES.updateStyle(formId, propertyName, inputId, cssId + "-input");
+	ZTEMPLATES.updateStyle(formId, propertyName, inputId);
 }
 function updateInputHidden(formId, propertyName, inputId, triggerName) {
 	var content = document.getElementById(inputId);

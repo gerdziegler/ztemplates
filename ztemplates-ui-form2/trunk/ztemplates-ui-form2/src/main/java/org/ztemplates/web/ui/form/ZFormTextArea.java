@@ -26,7 +26,7 @@ public final class ZFormTextArea
 {
   private final String id;
 
-  private String cssId;
+  private String cssClass;
 
   private final String name;
 
@@ -48,7 +48,6 @@ public final class ZFormTextArea
 
     ZIRenderService rs = ZTemplates.getRenderService();
     this.id = rs.createJavaScriptId();
-    this.cssId = rs.getCssId(getClass());
   }
 
 
@@ -101,15 +100,15 @@ public final class ZFormTextArea
 
 
   @ZExpose
-  public String getCssId()
+  public String getCssClass()
   {
-    return cssId;
+    return cssClass;
   }
 
 
-  public void setCssId(String cssId)
+  public void setCssClass(String cssId)
   {
-    this.cssId = cssId;
+    this.cssClass = cssId;
   }
 
 

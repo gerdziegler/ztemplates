@@ -26,7 +26,7 @@ public final class ZFormFile
 {
   private final String id;
 
-  private String cssId;
+  private String cssClass;
 
   private final String name;
 
@@ -41,7 +41,6 @@ public final class ZFormFile
   {
     ZIRenderService rs = ZTemplates.getRenderService();
     this.id = rs.createJavaScriptId();
-    this.cssId = rs.getCssId(ZFormFile.class);
     this.name = name;
     this.value = value;
     this.accept = accept;
@@ -62,15 +61,15 @@ public final class ZFormFile
 
 
   @ZExpose
-  public String getCssId()
+  public String getCssClass()
   {
-    return cssId;
+    return cssClass;
   }
 
 
-  public void setCssId(String cssId)
+  public void setCssClass(String cssId)
   {
-    this.cssId = cssId;
+    this.cssClass = cssId;
   }
 
 

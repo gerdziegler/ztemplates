@@ -1,5 +1,5 @@
-<select id="${id}" name="${name}" class="${cssId}-input" size="${size}" $!{htmlAttributes} cssid="${cssId}">
+<select id="${id}" name="${name}" size="${size}" class="ztemplates-input-select $!{cssClass}" $!{htmlAttributes}>
 #foreach($option in $options)
-<option class="${cssId}-input-option" value="$!{option.key}"#if($option.selected) selected="selected"#end>$option.value</option>
+<option value="$!{option.key}" #if($option.selected) selected="selected"#end class="ztemplates-input-option $!{cssClass}">$!{option.value}</option>
 #end
 </select>

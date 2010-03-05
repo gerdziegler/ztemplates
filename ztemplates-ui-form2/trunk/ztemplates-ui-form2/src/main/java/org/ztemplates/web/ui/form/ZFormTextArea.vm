@@ -1,1 +1,1 @@
-<textarea id="${id}" class="${cssId}-input" name="${name}" $!{htmlAttributes} #if($rows)rows="${rows}"#end #if($cols)cols="${cols}"#end #if($wrap)wrap="${wrap}"#end cssid="${cssId}">$!value</textarea>
+<textarea id="${id}" name="${name}" class="ztemplates-input-textarea $!{cssClass}" $!{htmlAttributes} #if($rows)rows="${rows}"#end #if($cols)cols="${cols}"#end #if($wrap)wrap="${wrap}"#end>$!{value}</textarea>

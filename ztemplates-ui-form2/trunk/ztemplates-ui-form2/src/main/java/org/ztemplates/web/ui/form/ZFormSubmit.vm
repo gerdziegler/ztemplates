@@ -1,1 +1,1 @@
-<input type="submit" id="${id}" class="${cssId}-submit" name="${name}" value="${allowedValue}" $!{htmlAttributes} cssid="${cssId}"></input>
+<input type="submit" id="${id}" name="${name}" value="${allowedValue}" class="ztemplates-input-submit $!{cssClass}" $!{htmlAttributes}></input>

@@ -1,1 +1,1 @@
-<input type="checkbox" id="${id}" name="${name}" value="${value}" #if(${checked}) checked="true" #end cssid="$cssId" $!{htmlAttributes}></input>
+<input type="checkbox" id="${id}" class="ztemplates-input-checkbox $!{cssClass}" name="${name}" value="$!{value}" #if(${checked}) checked="true" #end $!{htmlAttributes}></input>

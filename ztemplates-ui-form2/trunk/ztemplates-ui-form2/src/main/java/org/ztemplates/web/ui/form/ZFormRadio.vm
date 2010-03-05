@@ -1,5 +1,5 @@
 <span class="${cssId}-container" id="${id}">
 #foreach($item in $items)
-<input type="radio" name="${name}" id="${item.id}" value="${item.key}" class="${cssId}-input" cssid="${cssId}" $!{htmlAttributes}></input><span class="${cssId}-item-text">${item.value}</span>#if($vertical)<br/>#end
+<input type="radio" id="${item.id}" name="${name}" value="${item.key}" class="ztemplates-input-radio $!{cssClass}" $!{htmlAttributes}></input><span class="${cssId}-item-text">$!{item.value}</span>#if($vertical)<br/>#end
 #end
 </span>

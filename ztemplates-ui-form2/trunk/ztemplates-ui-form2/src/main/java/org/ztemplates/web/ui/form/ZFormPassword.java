@@ -26,7 +26,7 @@ public final class ZFormPassword
 {
   private final String id;
 
-  private String cssId;
+  private String cssClass;
 
   private final String name;
 
@@ -39,7 +39,6 @@ public final class ZFormPassword
   {
     ZIRenderService rs = ZTemplates.getRenderService();
     this.id = rs.createJavaScriptId();
-    this.cssId = rs.getCssId(ZFormText.class);
     this.name = name;
     this.value = value;
   }
@@ -59,15 +58,15 @@ public final class ZFormPassword
 
 
   @ZExpose
-  public String getCssId()
+  public String getCssClass()
   {
-    return cssId;
+    return cssClass;
   }
 
 
-  public void setCssId(String cssId)
+  public void setCssClass(String cssId)
   {
-    this.cssId = cssId;
+    this.cssClass = cssId;
   }
 
 
