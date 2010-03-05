@@ -1,0 +1,34 @@
+.ztemplates-input-checkbox {
+} 
+.ztemplates-input-radio {
+} 
+.ztemplates-input-submit {
+}
+.ztemplates-input-text{
+}
+.ztemplates-input-textarea{
+}
+.ztemplates-input-password{
+}
+.ztemplates-input-text, 
+.ztemplates-input-password,
+.ztemplates-input-select,
+.ztemplates-input-textarea {	
+	width: inherit;
+	height:inherit;
+	background-color: #FCFCFF;
+	border: 1px solid #999;
+	background-image:url('background.png');
+	background-position:top left;
+	background-repeat:repeat-x;
+}
+.ztemplates-readonly {
+	background-color: #fff;
+	border: 1px dotted #ddd;
+}
+.ztemplates-required {
+	background-color: #ffe;
+}
+.ztemplates-error {
+	background-color: #fee;
+}

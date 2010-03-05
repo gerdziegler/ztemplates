@@ -124,15 +124,15 @@ public class SampleFormController implements ZIFormController
 
     country.setWriteable(!continent.isEmpty());
 
-    if ("m".equals(name.getStringValue()))
+    if ("m".equals(name.getValue()))
     {
       gender.setWriteable(false);
     }
-    else if ("Maria".equals(surname.getStringValue()))
+    else if ("Maria".equals(surname.getValue()))
     {
       gender.setWriteable(false);
     }
-    else if ("Marc".equals(surname.getStringValue()))
+    else if ("Marc".equals(surname.getValue()))
     {
       gender.setWriteable(false);
     }
@@ -217,11 +217,11 @@ public class SampleFormController implements ZIFormController
     final NameProperty name = form.getPerson().getName();
     final GenderIdSelectProperty gender = form.getPerson().getGender();
     //apply invariants, means constraints that are always true
-    if ("Maria".equals(surname.getStringValue()))
+    if ("Maria".equals(surname.getValue()))
     {
       gender.setValue(GenderId.FEMALE);
     }
-    else if ("Marc".equals(surname.getStringValue()))
+    else if ("Marc".equals(surname.getValue()))
     {
       gender.setValue(GenderId.MALE);
     }
@@ -261,11 +261,11 @@ public class SampleFormController implements ZIFormController
           @Override
           public boolean onUpdate(ZIDependencyContext<ZProperty> ctx) throws Exception
           {
-            if ("Maria".equals(surname.getStringValue()))
+            if ("Maria".equals(surname.getValue()))
             {
               return continent.setValue(ContinentId.ASIA);
             }
-            else if ("Marc".equals(form.getPerson().getSurname().getStringValue()))
+            else if ("Marc".equals(form.getPerson().getSurname().getValue()))
             {
               return continent.setValue(ContinentId.EUROPE);
             }
@@ -299,11 +299,11 @@ public class SampleFormController implements ZIFormController
       @Override
       public boolean onUpdate(ZIDependencyContext<ZProperty> ctx) throws Exception
       {
-        if ("m".equals(name.getStringValue()))
+        if ("m".equals(name.getValue()))
         {
           return surname.setValue("Marc");
         }
-        else if ("f".equals(name.getStringValue()))
+        else if ("f".equals(name.getValue()))
         {
           return surname.setValue("Maria");
         }
@@ -319,11 +319,11 @@ public class SampleFormController implements ZIFormController
       @Override
       public boolean onUpdate(ZIDependencyContext<ZProperty> ctx) throws Exception
       {
-        if ("m".equals(name.getStringValue()))
+        if ("m".equals(name.getValue()))
         {
           return gender.setValue(GenderId.MALE);
         }
-        else if ("f".equals(name.getStringValue()))
+        else if ("f".equals(name.getValue()))
         {
           return gender.setValue(GenderId.FEMALE);
         }

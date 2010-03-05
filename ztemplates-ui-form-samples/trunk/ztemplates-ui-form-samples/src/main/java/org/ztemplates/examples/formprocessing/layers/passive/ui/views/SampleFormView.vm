@@ -1,7 +1,8 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-
 <head>
 	$zscript
+	<link rel="stylesheet" type="text/css" href="$contextPath/style.css" />
 </head>
 
 <body class="yui-skin-sam ${cssId}-body">
