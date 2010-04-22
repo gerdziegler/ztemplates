@@ -4,7 +4,7 @@
 	<groupId>org.ztemplates</groupId>
 	<artifactId>ztemplates</artifactId>
 	<packaging>jar</packaging>
-	<version>0.9.9.7</version>
+	<version>1.0.0</version>
 	<name>ztemplates</name>
 	<url>http://ztemplates.org</url>
 	<description>    
