@@ -14,6 +14,8 @@
  */
 package org.ztemplates.test.property;
 
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
@@ -51,38 +53,47 @@ public class PropertyTest extends TestCase
   }
 
 
-//  public void testFireAjaxListerer() throws Exception
-//  {
-//    final List<String> test = new ArrayList<String>();
-//    ZProperty<String> p = new ZStringProperty();
-//    p.setStringValue("1");
-//    p.setEnableChangeListeners(true);
-//    p.getChangeListeners().add(new ZIChangeListener()
-//    {
-//      public void onChange()
-//      {
-//        test.add("1");
-//      }
-//    });
-//    p.setStringValue("2");
-//    assertFalse(test.isEmpty());
-//  }
-//
-//
-//  public void testFireAjaxListerer2() throws Exception
-//  {
-//    final List<String> test = new ArrayList<String>();
-//    ZProperty<String> p = new ZStringProperty();
-//    p.setStringValue("1");
-//    p.setEnableChangeListeners(true);
-//    p.getChangeListeners().add(new ZIChangeListener()
-//    {
-//      public void onChange()
-//      {
-//        test.add("1");
-//      }
-//    });
-//    p.setStringValue("1");
-//    assertTrue(test.isEmpty());
-//  }
+  public void testValues() throws Exception
+  {
+    ZIntProperty p = new ZIntProperty();
+    p.setValue(1);
+    List<Integer> values = p.getValues();
+    assertEquals(1, values.size());
+    assertEquals(1, values.get(0).intValue());
+  }
+
+  // public void testFireAjaxListerer() throws Exception
+  // {
+  // final List<String> test = new ArrayList<String>();
+  // ZProperty<String> p = new ZStringProperty();
+  // p.setStringValue("1");
+  // p.setEnableChangeListeners(true);
+  // p.getChangeListeners().add(new ZIChangeListener()
+  // {
+  // public void onChange()
+  // {
+  // test.add("1");
+  // }
+  // });
+  // p.setStringValue("2");
+  // assertFalse(test.isEmpty());
+  // }
+  //
+  //
+  // public void testFireAjaxListerer2() throws Exception
+  // {
+  // final List<String> test = new ArrayList<String>();
+  // ZProperty<String> p = new ZStringProperty();
+  // p.setStringValue("1");
+  // p.setEnableChangeListeners(true);
+  // p.getChangeListeners().add(new ZIChangeListener()
+  // {
+  // public void onChange()
+  // {
+  // test.add("1");
+  // }
+  // });
+  // p.setStringValue("1");
+  // assertTrue(test.isEmpty());
+  // }
 }

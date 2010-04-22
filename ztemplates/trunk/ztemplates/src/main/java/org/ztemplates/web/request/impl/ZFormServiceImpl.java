@@ -57,6 +57,13 @@ public class ZFormServiceImpl implements ZIFormService
     ZFormModelWrapper mirr = new ZFormModelWrapper(form);
     mirr.setReadable(b);
   }
+  
+  public void setRequired(ZIFormModel form, boolean b) throws Exception
+  {
+    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    mirr.setRequired(b);
+  }
+
 
 
   public List<ZProperty> getPropertiesWithError(ZIFormModel form) throws Exception
@@ -165,5 +172,6 @@ public class ZFormServiceImpl implements ZIFormService
     Object ret = ZBase64Util.decodeToObject(s);
     return ret;
   }
+
 
 }

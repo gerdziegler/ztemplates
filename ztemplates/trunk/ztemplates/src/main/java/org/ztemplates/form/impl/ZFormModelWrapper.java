@@ -215,7 +215,7 @@ public class ZFormModelWrapper implements ZIFormVisitable
         String[] param = values.get(name);
         if (param != null)
         {
-          prop.setStringValue(param[0]);
+          prop.setStringValues(param);
           properties.add(prop);
         }
       }
@@ -227,7 +227,7 @@ public class ZFormModelWrapper implements ZIFormVisitable
         String[] param = values.get(name);
         if (param != null)
         {
-          op.setStringValue(param[0]);
+          op.setStringValues(param);
           operations.add(op);
         }
       }
@@ -465,4 +465,23 @@ public class ZFormModelWrapper implements ZIFormVisitable
     };
     this.visitDepthFirst(visitor);
   }
+
+
+  public void setRequired(final boolean b) throws Exception
+  {
+    ZIFormVisitor visitor = new ZIFormVisitor()
+    {
+      public void visit(ZProperty prop) throws Exception
+      {
+        prop.setRequired(b);
+      }
+
+
+      public void visit(ZOperation op) throws Exception
+      {
+      }
+    };
+    this.visitDepthFirst(visitor);
+  }
+
 }

@@ -31,7 +31,9 @@ public abstract class ZProperty<T>
 
   protected static final Logger log = Logger.getLogger(ZProperty.class);
 
-  private String stringValue;
+  private static final String[] EMPTY = new String[0];
+
+  private String[] stringValues = EMPTY;
 
   private ZState state;
 
@@ -68,28 +70,66 @@ public abstract class ZProperty<T>
 
 
   /**
-   * always calls parse, to allow for Null-Objects
+   * parses only not null objects
+   * 
+   * @return true if the value has changed
    */
   public final T getValue() throws Exception
   {
-    return parse(stringValue);
+    return isEmpty() ? null : parse(stringValues[0]);
   }
 
 
   /**
+   * using List here because generic arrays cannot be created without passing
+   * parameters.
+   * 
+   * @return
+   * @throws Exception
+   */
+  public final List<T> getValues() throws Exception
+  {
+    List<T> ret = new ArrayList<T>(stringValues.length);
+    for (int i = 0; i < stringValues.length; i++)
+    {
+      ret.add(parse(stringValues[i]));
+    }
+    return ret;
+  }
+
+
+  // public final T[] getValues() throws Exception
+  // {
+  // if (isEmpty())
+  // {
+  // return null;
+  // }
+  // T[] ret = (T[]) new Object[stringValues.length];
+  // for (int i = 0; i < stringValues.length; i++)
+  // {
+  // ret[i] = parse(stringValues[i]);
+  // }
+  // return ret;
+  // }
+
+  /**
    * formats only not null objects
+   * 
    * @return true if the value has changed
    */
   public boolean setValue(T val)
   {
-    return setStringValue(val == null ? null : format(val));
+    return setStringValues(val == null ? null : new String[]
+    {
+      format(val)
+    });
   }
 
 
   @ZExposeJson
   public boolean isEmpty()
   {
-    return stringValue == null;
+    return stringValues.length == 0;
   }
 
 
@@ -115,18 +155,18 @@ public abstract class ZProperty<T>
   {
     if (required)
     {
-      if(stringValue == null)
+      if (isEmpty())
       {
         setState(new ZErrorRequired(getRequiredMessage()));
       }
     }
     else if (!required)
     {
-      if(stringValue != null && state instanceof ZErrorRequired)
+      if (!isEmpty() && state instanceof ZErrorRequired)
       {
         setState(null);
       }
-      else if(stringValue == null)
+      else if (isEmpty())
       {
         setState(null);
       }
@@ -149,15 +189,21 @@ public abstract class ZProperty<T>
 
   public String toString()
   {
-    return "[" + getClass().getSimpleName() + " name='" + getName() + "' label='" + getLabel()
-        + "' stringValue='" + stringValue + "']";
+    return "[" + getClass().getSimpleName() + " name='" + getName() + "' label='" + getLabel() + "' stringValues='" + stringValues + "']";
   }
 
 
   @ZExposeJson
   public String getStringValue()
   {
-    return stringValue;
+    return isEmpty() ? null : stringValues[0];
+  }
+
+
+  @ZExposeJson
+  public String[] getStringValues()
+  {
+    return stringValues;
   }
 
 
@@ -179,22 +225,36 @@ public abstract class ZProperty<T>
    * @param newStringValue
    * @return true if the value has changed
    */
-  public boolean setStringValue(String newStringValue)
+  public boolean setStringValues(String[] newStringValues)
   {
-    boolean changed = this.stringValue == null && newStringValue != null
-        || this.stringValue != null && !this.stringValue.equals(newStringValue);
+    String[] oldStringValues = this.stringValues;
+    if (newStringValues == null)
+    {
+      newStringValues = EMPTY;
+    }
+    this.stringValues = newStringValues;
+
+    boolean changed = false;
+    if (oldStringValues.length == newStringValues.length)
+    {
+      for (int i = 0; i < newStringValues.length; i++)
+      {
+        String oldStringValue = oldStringValues[i];
+        String newStringValue = newStringValues[i];
+        changed = !oldStringValue.equals(newStringValue);
+        if (changed)
+        {
+          break;
+        }
+      }
+    }
+    else
+    {
+      changed = true;
+    }
 
     if (changed)
     {
-      if (newStringValue == null || "".equals(newStringValue))
-      {
-        this.stringValue = null;
-      }
-      else
-      {
-        this.stringValue = newStringValue;
-      }
-
       revalidate();
     }
 
@@ -203,40 +263,46 @@ public abstract class ZProperty<T>
 
 
   /**
-   * Override this to validate <b>this property only</b>, without any access to some persistency layer,
-   * this is <b>called every time the value or the required status changes to false</b>
-   * if you need to validate <b>more than one property</b>, like for example
-   * two dates that must be one before another, place that validation
-   * into the validate() method of the containing ZIFormElement. Obey the
-   * subsidiarity principle: place the validation into the first ZIFormElement
-   * that knows <b>all</b> properties involved.
-   * Called only for <b>non-empty</b> Properties. 
-
+   * Override this to validate <b>this property only</b>, without any access to
+   * some persistency layer, this is <b>called every time the value or the
+   * required status changes to false</b> if you need to validate <b>more than
+   * one property</b>, like for example two dates that must be one before
+   * another, place that validation into the validate() method of the containing
+   * ZIFormElement. Obey the subsidiarity principle: place the validation into
+   * the first ZIFormElement that knows <b>all</b> properties involved. Called
+   * only for <b>non-empty</b> Properties.
+   * 
    * @return the Error Object or null if validation successful
    * 
-   *  <p>Typical usage pattern:<p>
-   <pre>
-     @Override
-     public ZError validate() throws Exception {
-        ZError ret = super.validate();
-        if (ret!=null) {
-          return ret;
-        }
-        val = getValue(); //this is always not null, as validate is never called for empty Properties.        
-        //do the validation here
-        //validate ONLY this property here, no access to other properties or persistency layer
-        
-        return null;
-     }
-   </pre>
+   *         <p>
+   *         Typical usage pattern:
+   *         <p>
+   * 
+   *         <pre>
+   * &#064;Override
+   * public ZError validate() throws Exception
+   * {
+   *   ZError ret = super.validate();
+   *   if (ret != null)
+   *   {
+   *     return ret;
+   *   }
+   *   val = getValue(); //this is always not null, as validate is never called for empty Properties.        
+   *   //do the validation here
+   *   //validate ONLY this property here, no access to other properties or persistency layer
+   * 
+   *   return null;
+   * }
+   * </pre>
    */
   public ZError validate() throws Exception
   {
-    if (stringValue == null)
+    if (isEmpty())
     {
       throw new Exception("validate should never be called with empty value: " + this);
     }
 
+    String stringValue = stringValues[0];
     for (ZIStringValidator val : stringValidators)
     {
       ZError err = val.validate(stringValue);
@@ -254,7 +320,7 @@ public abstract class ZProperty<T>
    */
   public void revalidate()
   {
-    if (stringValue == null)
+    if (isEmpty())
     {
       if (required)
       {
@@ -284,8 +350,7 @@ public abstract class ZProperty<T>
   {
     try
     {
-      return ZTemplates.getMessageService().getMessage(ZProperty.class.getName(),
-          MESSAGE_ID_required);
+      return ZTemplates.getMessageService().getMessage(ZProperty.class.getName(), MESSAGE_ID_required);
     }
     catch (Exception e)
     {
@@ -351,21 +416,21 @@ public abstract class ZProperty<T>
   }
 
 
-  //  @ZExposeJson
-  //  public boolean isAjaxReloadState()
-  //  {
-  //    return ajaxReloadState;
-  //  }
+  // @ZExposeJson
+  // public boolean isAjaxReloadState()
+  // {
+  // return ajaxReloadState;
+  // }
   //
   //
-  //  /**
-  //   * To enable ajax calls, set this to true when ajax call should
-  //   * be made if this property changes, defaults to <b>false</b>
-  //   */
-  //  public void setAjaxReloadState(boolean ajaxReloadStateOnChange)
-  //  {
-  //    this.ajaxReloadState = ajaxReloadStateOnChange;
-  //  }
+  // /**
+  // * To enable ajax calls, set this to true when ajax call should
+  // * be made if this property changes, defaults to <b>false</b>
+  // */
+  // public void setAjaxReloadState(boolean ajaxReloadStateOnChange)
+  // {
+  // this.ajaxReloadState = ajaxReloadStateOnChange;
+  // }
 
   /**
    * human readable String identifier

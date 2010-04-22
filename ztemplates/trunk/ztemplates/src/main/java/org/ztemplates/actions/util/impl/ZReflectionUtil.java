@@ -144,7 +144,7 @@ public class ZReflectionUtil
     if (ZProperty.class.isAssignableFrom(m.getReturnType()))
     {
       ZProperty prop = (ZProperty) invoke(m, obj);
-      prop.setStringValue(value == null ? null : value[0]);
+      prop.setStringValues(value);
       return prop;
     }
 
@@ -207,7 +207,7 @@ public class ZReflectionUtil
     if (ZProperty.class.isAssignableFrom(m.getReturnType()))
     {
       ZProperty prop = (ZProperty) invoke(m, obj);
-      prop.setStringValue(value);
+      prop.setStringValues(new String[]{value});
     }
     else if (m.getParameterTypes()[0].isEnum())
     {

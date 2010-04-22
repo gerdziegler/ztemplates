@@ -37,10 +37,6 @@ public class ZTemplateNameRepository implements ZITemplateNameRepository
     {
       log.warn("class annotated with @ZRenderer should be final: " + clazz.getName());
     }
-    else
-    {
-      log.warn("processing: " + clazz.getName());
-    }
     
     final String key = clazz.getName();
     String ret;

@@ -27,5 +27,5 @@ import java.lang.annotation.Target;
 })
 public @interface ZWorkflowAction
 {
-  String idParam();
+  String wfParam();
 }

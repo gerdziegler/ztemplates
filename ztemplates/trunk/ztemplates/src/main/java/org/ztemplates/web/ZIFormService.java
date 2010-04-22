@@ -104,6 +104,14 @@ public interface ZIFormService
    */
   public void setWriteable(ZIFormModel form, boolean b) throws Exception;
 
+  /**
+   * sets all Properties in a form to required b
+   * 
+   * @param form
+   * @param b
+   * @throws Exception
+   */
+  public void setRequired(ZIFormModel form, boolean b) throws Exception;
 
   /**
    * sets all Properties in the form to readable b

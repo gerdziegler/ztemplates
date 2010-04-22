@@ -76,7 +76,7 @@ public class PropTest extends TestCase
   public void testVarPropUrl() throws Exception
   {
     Handler obj = new Handler();
-    obj.getVarProp().setStringValue("varValue");
+    obj.getVarProp().setStringValues(new String[]{"varValue"});
     String url = urlFactory.createUrl(obj);
     assertEquals("/proptest/varValue", url);
   }
@@ -85,7 +85,7 @@ public class PropTest extends TestCase
   public void testVarPropUrl2() throws Exception
   {
     Handler obj = new Handler();
-    obj.getVarProp().setStringValue(null);
+    obj.getVarProp().setStringValues(null);
     String url = urlFactory.createUrl(obj);
     assertEquals("/proptest", url.toString());
   }
@@ -94,7 +94,7 @@ public class PropTest extends TestCase
   public void testParamPropUrl() throws Exception
   {
     Handler obj = new Handler();
-    obj.getParamProp().setStringValue("value");
+    obj.getParamProp().setStringValues(new String[]{"value"});
     String url = urlFactory.createUrl(obj);
     assertEquals("/proptest?paramProp=value", url.toString());
   }
@@ -103,7 +103,7 @@ public class PropTest extends TestCase
   public void testParamPropUrl2() throws Exception
   {
     Handler obj = new Handler();
-    obj.getParamProp().setStringValue(null);
+    obj.getParamProp().setStringValues(null);
     String url = urlFactory.createUrl(obj);
     assertEquals("/proptest", url.toString());
   }
