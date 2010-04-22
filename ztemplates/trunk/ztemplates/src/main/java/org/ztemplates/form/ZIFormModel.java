@@ -17,7 +17,8 @@ package org.ztemplates.form;
 
 /**
  * Interface for form models. Form models are required to implement this.
- * Forms are passive objects, they do not access services.
+ * Form models are passive objects, they do not access services.
+ * Form models keep the form user input and validation state.
  * 
  * @author www.gerdziegler.de
  */
