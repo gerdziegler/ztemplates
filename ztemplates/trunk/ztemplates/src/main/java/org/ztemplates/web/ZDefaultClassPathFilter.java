@@ -4,10 +4,9 @@ import org.apache.log4j.Logger;
 import org.zclasspath.ZIClassPathFilter;
 
 /**
- * The default filter that accepts only classes that contain ztemplates in the
- * name. Extend this to add your own
- * 
- * see http://www.ztemplates.org/Edit.jsp?page=Install
+ * Default classpath filter behavior accepts only ztemplates classes and skips all other. 
+ * Also scans only web-inf/lib and web-inf/classes. See http://www.ztemplates.org/Edit.jsp?page=Install 
+ * for how to override this behavior.
  * 
  * @author gerdziegler.de
  * 
