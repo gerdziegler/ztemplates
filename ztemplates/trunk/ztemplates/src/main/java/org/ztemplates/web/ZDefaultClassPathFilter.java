@@ -1,37 +1,69 @@
 package org.ztemplates.web;
 
+import org.apache.log4j.Logger;
 import org.zclasspath.ZIClassPathFilter;
 
+/**
+ * The default filter that accepts only classes that contain ztemplates in the
+ * name. Extend this to add your own
+ * 
+ * see http://www.ztemplates.org/Edit.jsp?page=Install
+ * 
+ * @author gerdziegler.de
+ * 
+ */
 public class ZDefaultClassPathFilter implements ZIClassPathFilter
 {
+  static final Logger log = Logger.getLogger(ZDefaultClassPathFilter.class);
+
+
   public boolean acceptClass(String name) throws Exception
   {
-    if (name.startsWith("org.apache.") || name.startsWith("freemarker.")
-        || name.startsWith("flex.") || name.startsWith("java.") || name.startsWith("javax.")
-        || name.startsWith("org.junit") || name.startsWith("org.json")
-        || name.startsWith("org.jgrapht") || name.startsWith("org.jfree"))
+    if (name.contains("ztemplates"))
     {
+      if (log.isDebugEnabled())
+      {
+        log.debug("accept class " + name);
+      }
+      return true;
+    }
+    else
+    {
+      if (log.isDebugEnabled())
+      {
+        log.debug("skip class " + name);
+      }
       return false;
     }
-    return true;
   }
+  // if (name.startsWith("org.apache.") || name.startsWith("freemarker.")
+  // || name.startsWith("flex.") || name.startsWith("java.") ||
+  // name.startsWith("javax.")
+  // || name.startsWith("org.junit") || name.startsWith("org.json")
+  // || name.startsWith("org.jgrapht") || name.startsWith("org.jfree"))
+  // {
+  // return false;
+  // }
 
 
   public boolean acceptClasspathPart(String name) throws Exception
   {
-    if(!name.contains("WEB-INF"))
+    if (name.startsWith("/WEB-INF/classes/") || name.startsWith("/WEB-INF/lib/"))
     {
+      if (log.isInfoEnabled())
+      {
+        log.info("accept classpath part " + name);
+      }
+      return true;
+    }
+    else
+    {
+      if (log.isDebugEnabled())
+      {
+        log.debug("skip classpath part " + name);
+      }
       return false;
     }
-    if (name.endsWith(".jar")
-        && (name.startsWith("jgrapht") || name.startsWith("junit") || name.startsWith("log4j")
-            || name.startsWith("json") || name.startsWith("servlet") || name.startsWith("velocity")
-            || name.startsWith("freemarker") || name.startsWith("yui") || name
-            .startsWith("commons")))
-    {
-      return false;
-    }
-    return true;
   }
 
 
