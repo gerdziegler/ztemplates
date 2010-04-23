@@ -11,9 +11,9 @@ import org.zclasspath.ZIClassPathFilter;
  * @author gerdziegler.de
  * 
  */
-public class ZDefaultClassPathFilter implements ZIClassPathFilter
+public abstract class ZDefaultClassPathFilter implements ZIClassPathFilter
 {
-  static final Logger log = Logger.getLogger(ZDefaultClassPathFilter.class);
+  protected static final Logger log = Logger.getLogger(ZDefaultClassPathFilter.class);
 
 
   public boolean acceptClass(String name) throws Exception
@@ -35,14 +35,6 @@ public class ZDefaultClassPathFilter implements ZIClassPathFilter
       return false;
     }
   }
-  // if (name.startsWith("org.apache.") || name.startsWith("freemarker.")
-  // || name.startsWith("flex.") || name.startsWith("java.") ||
-  // name.startsWith("javax.")
-  // || name.startsWith("org.junit") || name.startsWith("org.json")
-  // || name.startsWith("org.jgrapht") || name.startsWith("org.jfree"))
-  // {
-  // return false;
-  // }
 
 
   public boolean acceptClasspathPart(String name) throws Exception

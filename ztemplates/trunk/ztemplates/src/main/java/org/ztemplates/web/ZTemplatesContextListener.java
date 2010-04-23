@@ -43,6 +43,26 @@ public class ZTemplatesContextListener implements ServletContextListener
 {
   private static final Logger log = Logger.getLogger(ZTemplatesContextListener.class);
 
+  static final class ZInternalClassPathFilter extends ZDefaultClassPathFilter
+  {
+    @Override
+    public boolean acceptClass(String name) throws Exception
+    {
+      if (super.acceptClass(name))
+      {
+        return true;
+      }
+
+      if (name.startsWith("org.apache.") || name.startsWith("freemarker.") || name.startsWith("flex.") || name.startsWith("java.") || name.startsWith("javax.")
+          || name.startsWith("org.junit") || name.startsWith("org.json") || name.startsWith("org.jgrapht") || name.startsWith("org.jfree"))
+      {
+        return false;
+      }
+
+      return true;
+    }
+  }
+
 
   public void contextInitialized(ServletContextEvent ev)
   {
@@ -63,11 +83,12 @@ public class ZTemplatesContextListener implements ServletContextListener
       ZRenderApplication renderApplication = new ZRenderApplication(applicationContext, classRepository);
       ZApplication application = new ZApplication(classRepository, actionApplication, renderApplication);
       ZApplicationRepositoryWeb.setApplication(ctx, application);
-      
-      String applicationName =  ctx.getInitParameter("applicationName");
-      if(applicationName==null)
+
+      String applicationName = ctx.getInitParameter("applicationName");
+      if (applicationName == null)
       {
-        log.info("No init parameter called 'applicationName' has been found in web.xml --- Using default application name. This is safe if webapp has its own classloader or you use ztemplates only inside a http request. --- If you share classloader between weapps and need access to ztemplates functionality outside of a http request (for example: a scheduled job) set the init parameter 'applicationName' in web.xml to unique name in each webapp and use the applicationName in ZTemplatesStandalone.init()");
+        log
+            .info("No init parameter called 'applicationName' has been found in web.xml --- Using default application name. This is safe if webapp has its own classloader or you use ztemplates only inside a http request. --- If you share classloader between weapps and need access to ztemplates functionality outside of a http request (for example: a scheduled job) set the init parameter 'applicationName' in web.xml to unique name in each webapp and use the applicationName in ZTemplatesStandalone.init()");
         applicationName = ZApplicationRepositoryStandalone.DEFAULT_APP_NAME;
       }
       ZApplicationRepositoryStandalone.setApplication(applicationName, application);
@@ -84,13 +105,13 @@ public class ZTemplatesContextListener implements ServletContextListener
   public void contextDestroyed(ServletContextEvent ev)
   {
     ServletContext ctx = ev.getServletContext();
-    String applicationName =  ctx.getInitParameter("applicationName");
-    if(applicationName==null)
+    String applicationName = ctx.getInitParameter("applicationName");
+    if (applicationName == null)
     {
       applicationName = ZApplicationRepositoryStandalone.DEFAULT_APP_NAME;
     }
     ZApplicationRepositoryWeb.setApplication(ctx, null);
-    ZApplicationRepositoryStandalone.setApplication(applicationName, null);    
+    ZApplicationRepositoryStandalone.setApplication(applicationName, null);
     log.info("context destroyed");
   }
 
@@ -106,16 +127,17 @@ public class ZTemplatesContextListener implements ServletContextListener
     final ZIClassPathFilter filter;
     if (filterClass != null)
     {
-      log.info("filtering scanned classes with : " + filterClass + " ( to change modify " + filterClassPropertyName + " in WEB-INF/xml )");
+      log.info("CLASSPATH filter OK --- filtering scanned classes with : " + filterClass + " ( to change modify " + filterClassPropertyName
+          + " in WEB-INF/xml )");
       filter = (ZIClassPathFilter) Class.forName(filterClass).newInstance();
     }
     else
     {
-      log.info("no init property: " + filterClassPropertyName + ", using default value " + ZDefaultClassPathFilter.class.getName());
-      log.info("to avoid scanning too many jars/classes you could have set the init property '" + filterClassPropertyName
+      log.warn("CLASSPATH filter --- no init property: " + filterClassPropertyName + ", using default value " + ZInternalClassPathFilter.class.getName());
+      log.info("CLASSPATH filter INFO --- to avoid scanning too many jars/classes you could have set the init property '" + filterClassPropertyName
           + "' in WEB-INF/web.xml to the classname of a implementation of " + ZIClassPathFilter.class.getName() + " (best extending "
-          + ZDefaultClassPathFilter.class.getName() + ")");
-      filter = new ZDefaultClassPathFilter();
+          + ZDefaultClassPathFilter.class.getName() + "), see http://www.ztemplates.org/Wiki.jsp?page=Install");
+      filter = null;
     }
     ZClassPathScanner scanner = new ZClassPathScanner();
     scanner.setClassPathItems(items);
