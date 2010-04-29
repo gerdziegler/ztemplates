@@ -5,6 +5,7 @@ import org.ztemplates.actions.ZActionApplication;
 import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.render.ZIRenderApplicationContext;
 import org.ztemplates.render.ZRenderApplication;
+import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.application.ZApplication;
 
 public class ZTestApplication
@@ -22,6 +23,8 @@ public class ZTestApplication
 
     ZActionApplication actionApplication = new ZActionApplication(actionContext, classRepository);
     ZRenderApplication renderApplication = new ZRenderApplication(renderContext, classRepository);
+
+//    ZVelocityRenderer.init(renderApplication.getApplicationContext());
 
     ZApplication ret = new ZApplication(classRepository, actionApplication, renderApplication);
     return ret;

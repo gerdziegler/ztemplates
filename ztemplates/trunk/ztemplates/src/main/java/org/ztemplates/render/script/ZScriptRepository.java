@@ -67,8 +67,7 @@ public class ZScriptRepository implements Serializable, ZIScriptRepository
         else
         {
           String v2 = js.value();
-          if (jsGraph.containsVertex(v1) && jsGraph.containsVertex(v2)
-              && !jsGraph.containsEdge(v1, v2))
+          if (jsGraph.containsVertex(v1) && jsGraph.containsVertex(v2) && !jsGraph.containsEdge(v1, v2))
           {
             jsGraph.addEdge(v1, v2);
           }
@@ -142,10 +141,15 @@ public class ZScriptRepository implements Serializable, ZIScriptRepository
 
     for (ZScript zs : scripts)
     {
-      for (ZCss js : zs.css())
+      for (ZCss css : zs.css())
       {
-        g.addVertex(js);
+        g.addVertex(css);
       }
+    }
+
+    if (g.vertexSet().isEmpty())
+    {
+      return;
     }
 
     for (ZScript zs : scripts)
@@ -178,7 +182,9 @@ public class ZScriptRepository implements Serializable, ZIScriptRepository
 
 
   /**
-   * need this to recognize the same script, if written with different variable names
+   * need this to recognize the same script, if written with different variable
+   * names
+   * 
    * @param s
    * @return
    */

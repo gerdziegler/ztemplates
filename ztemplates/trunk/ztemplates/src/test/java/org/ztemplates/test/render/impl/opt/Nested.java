@@ -12,7 +12,7 @@ import org.ztemplates.render.velocity.ZVelocityRenderer;
     @ZJavaScript("nested.js?key=${key}")
 })
 @ZRenderer(ZVelocityRenderer.class)
-public class Nested
+public final class Nested
 {
   private final String val;
 

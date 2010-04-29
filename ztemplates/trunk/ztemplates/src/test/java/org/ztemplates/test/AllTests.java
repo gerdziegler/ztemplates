@@ -19,6 +19,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.ztemplates.form.ZFormElementMirrorTest;
+import org.ztemplates.form.ZFormValuesTest;
 import org.ztemplates.form.ZSerializeUtilTest;
 import org.ztemplates.json.ZJsonTest;
 import org.ztemplates.render.script.ZScriptRepositoryTest;
@@ -55,6 +56,7 @@ import org.ztemplates.test.property.PropertyTest;
 import org.ztemplates.test.reflection.ReflectionUtilTest;
 import org.ztemplates.test.render.css.CssTest;
 import org.ztemplates.test.render.impl.ReplaceUtilTest;
+import org.ztemplates.test.render.impl.opt.ZRenderClassRepositoryTest;
 import org.ztemplates.test.render.script.basic.ScriptTest;
 import org.ztemplates.test.render.script.basic2.BasicScript2Test;
 import org.ztemplates.test.render.script.cycle.ScriptCycleTest;
@@ -135,8 +137,8 @@ public class AllTests extends TestSuite
     suite.addTestSuite(ZJsonTest.class);
     suite.addTestSuite(FormTestOpCallback.class);
 //    suite.addTestSuite(SessionFormTest.class);
-    
-    
+    suite.addTestSuite(ZFormValuesTest.class);
+    suite.addTestSuite(ZRenderClassRepositoryTest.class);
 
     // suite.addTestSuite(ZTemplatesInternalArchitectureTest.class);
 

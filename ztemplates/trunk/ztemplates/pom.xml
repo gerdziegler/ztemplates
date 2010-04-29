@@ -115,11 +115,10 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<additionalClasspathElements>
-						<element>src/main/java</element>
+						<element>${basedir}/src/main/java</element>
 					</additionalClasspathElements>
 				</configuration>
-			</plugin>
-
+			</plugin>			
 		</plugins>
 		<resources>
 			<resource>
@@ -129,6 +128,20 @@
 				</excludes>
 			</resource>
 		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/java</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+			</testResource>
+		</testResources>
 	</build>
 	<repositories>
 		<repository>

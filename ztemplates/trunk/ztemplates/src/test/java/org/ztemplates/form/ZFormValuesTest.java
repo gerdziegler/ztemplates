@@ -14,7 +14,9 @@
  */
 package org.ztemplates.form;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -49,15 +51,18 @@ public class ZFormValuesTest extends TestCase
       "val6"
     });
 
-    ZFormValues values = new ZFormValues();
-    values.getValues().putAll(map);
+    ZFormValues values1 = new ZFormValues();
+    values1.getValues().putAll(map);
 
-    String enc = values.writeToString();
+    String enc = values1.writeToString();
 
     ZFormValues values2 = new ZFormValues();
     values2.readFromString(enc);
 
-    assertEquals(values.getValues(), values2.getValues());
+    for (String key : map.keySet())
+    {
+      assertTrue(Arrays.equals(values1.getValues().get(key), values2.getValues().get(key)));
+    }
   }
 
 
@@ -117,12 +122,12 @@ public class ZFormValuesTest extends TestCase
     assertTrue(changed.toString(), changed.contains("extra-new-value-not-null"));
     assertFalse(changed.toString(), changed.contains("extra-new-value-null"));
 
-    //    assertEquals(changed.toString(), 3, changed.size());
-    //    assertTrue(changed.toString(), changed.contains("key1"));
-    //    assertTrue(changed.toString(), changed.contains("key3"));
-    //    assertTrue(changed.toString(), changed.contains("key5"));
-    //    assertTrue(changed.toString(), changed.contains("extra-new-value"));
-    //    assertTrue(changed.toString(), changed.contains("extra-new-null-value"));
+    // assertEquals(changed.toString(), 3, changed.size());
+    // assertTrue(changed.toString(), changed.contains("key1"));
+    // assertTrue(changed.toString(), changed.contains("key3"));
+    // assertTrue(changed.toString(), changed.contains("key5"));
+    // assertTrue(changed.toString(), changed.contains("extra-new-value"));
+    // assertTrue(changed.toString(), changed.contains("extra-new-null-value"));
   }
 
 }

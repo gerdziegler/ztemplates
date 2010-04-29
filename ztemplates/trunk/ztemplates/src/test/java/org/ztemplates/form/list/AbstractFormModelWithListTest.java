@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 
 import org.ztemplates.form.impl.ZFormModelWrapper;
 
-public class FormModelWithListTest extends TestCase
+public abstract class AbstractFormModelWithListTest extends TestCase
 {
   public void testFormElementMirror() throws Exception
   {

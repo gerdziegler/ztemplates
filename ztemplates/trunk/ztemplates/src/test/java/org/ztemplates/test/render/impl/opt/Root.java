@@ -8,7 +8,7 @@ import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 
 @ZRenderer(value = ZVelocityRenderer.class, zscript = true)
-public class Root
+public final class Root
 {
   private Nested nested = new Nested("nested-val0");
 
