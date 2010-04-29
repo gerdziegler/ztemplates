@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.ZUrlFactory;
-import org.ztemplates.test.ZMavenClassPath;
 
 public class ActionServiceTest extends TestCase
 {
@@ -32,7 +31,7 @@ public class ActionServiceTest extends TestCase
   protected void setUp() throws Exception
   {
     super.setUp();
-    classRepo = ZClassRepository.create(ZMavenClassPath.getItems(), ActionServiceTest.class.getPackage().getName());
+    classRepo = ZClassRepository.create(ActionServiceTest.class);
   }
 
 

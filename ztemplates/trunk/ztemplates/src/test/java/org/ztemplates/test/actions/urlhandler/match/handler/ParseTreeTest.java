@@ -21,7 +21,6 @@ import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchedUrl;
-import org.ztemplates.test.ZMavenClassPath;
 
 public class ParseTreeTest extends TestCase
 {
@@ -35,8 +34,7 @@ public class ParseTreeTest extends TestCase
   protected void setUp() throws Exception
   {
     super.setUp();
-    classRepo = ZClassRepository.create(ZMavenClassPath.getItems(), ParseTreeTest.class
-        .getPackage().getName());
+    classRepo = ZClassRepository.create(ParseTreeTest.class);
     han = new ZMatchTree(classRepo);
   }
 

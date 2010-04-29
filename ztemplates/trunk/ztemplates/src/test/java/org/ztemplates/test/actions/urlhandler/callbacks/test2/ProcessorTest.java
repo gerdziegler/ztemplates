@@ -22,7 +22,6 @@ import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
-import org.ztemplates.test.ZMavenClassPath;
 import org.ztemplates.test.ZTestApplicationContext;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
 
@@ -38,8 +37,7 @@ public class ProcessorTest extends TestCase
   protected void setUp() throws Exception
   {
     super.setUp();
-    classRepo = ZClassRepository.create(ZMavenClassPath.getItems(), ProcessorTest.class
-        .getPackage().getName());
+    classRepo = ZClassRepository.create(ProcessorTest.class);
     ZTestApplicationContext applicationContext = new ZTestApplicationContext(classRepo);
 
     proc = new ZTreeUrlHandler(new ZMatchTree(classRepo),

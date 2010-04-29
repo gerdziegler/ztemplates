@@ -25,7 +25,6 @@ import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTreeNode;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeTermFactory;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeTermList;
-import org.ztemplates.test.ZMavenClassPath;
 
 public class TreeTest extends TestCase
 {
@@ -37,8 +36,7 @@ public class TreeTest extends TestCase
   protected void setUp() throws Exception
   {
     super.setUp();
-    classRepo = ZClassRepository.create(ZMavenClassPath.getItems(), TreeTest.class.getPackage()
-        .getName());
+    classRepo = ZClassRepository.create(TreeTest.class);
   }
 
 

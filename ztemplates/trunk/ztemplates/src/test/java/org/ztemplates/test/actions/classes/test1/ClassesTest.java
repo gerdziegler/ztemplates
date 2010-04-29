@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.test.ZMavenClassPath;
 
 public class ClassesTest extends TestCase
 {
@@ -41,8 +40,7 @@ public class ClassesTest extends TestCase
 
   public void test1() throws Exception
   {
-    ZIClassRepository classRepo = ZClassRepository.create(ZMavenClassPath.getItems(),
-        ClassesTest.class.getPackage().getName());
+    ZIClassRepository classRepo = ZClassRepository.create(ClassesTest.class.getPackage().getName());
     assertTrue(classRepo.getClassesAnnotatedWith(ZMatch.class).contains(Handler1.class));
     assertTrue(classRepo.getClassesAnnotatedWith(ZMatch.class).contains(Handler2.class));
     assertEquals(2, classRepo.getClassesAnnotatedWith(ZMatch.class).size());

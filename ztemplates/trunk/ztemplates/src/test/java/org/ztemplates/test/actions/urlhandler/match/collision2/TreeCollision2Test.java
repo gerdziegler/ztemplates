@@ -21,7 +21,6 @@ import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.urlhandler.ZUrlCollisionException;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
-import org.ztemplates.test.ZMavenClassPath;
 
 public class TreeCollision2Test extends TestCase
 {
@@ -33,8 +32,7 @@ public class TreeCollision2Test extends TestCase
   protected void setUp() throws Exception
   {
     super.setUp();
-    classRepo = ZClassRepository.create(ZMavenClassPath.getItems(), TreeCollision2Test.class
-        .getPackage().getName());
+    classRepo = ZClassRepository.create(TreeCollision2Test.class);
   }
 
 

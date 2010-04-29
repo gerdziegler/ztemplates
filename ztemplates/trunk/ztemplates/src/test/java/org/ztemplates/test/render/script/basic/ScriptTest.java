@@ -17,10 +17,10 @@ package org.ztemplates.test.render.script.basic;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.render.impl.ZIWebRenderContext;
 import org.ztemplates.render.impl.ZRenderEngine;
-import org.ztemplates.test.ZMavenClassRepository;
 import org.ztemplates.test.ZTestApplication;
 import org.ztemplates.test.ZTestWebRenderContextFactory;
 import org.ztemplates.web.application.ZApplication;
@@ -35,7 +35,7 @@ public class ScriptTest extends TestCase
   protected void setUp() throws Exception
   {
     super.setUp();
-    ZIClassRepository classRepository = ZMavenClassRepository.create(ScriptTest.class);
+    ZIClassRepository classRepository = ZClassRepository.create(ScriptTest.class);
     application = ZTestApplication.create(classRepository);
   }
 

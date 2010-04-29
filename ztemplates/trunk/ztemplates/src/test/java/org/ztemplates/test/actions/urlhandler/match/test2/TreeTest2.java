@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
-import org.ztemplates.test.ZMavenClassPath;
 
 public class TreeTest2 extends TestCase
 {
@@ -32,8 +31,7 @@ public class TreeTest2 extends TestCase
   protected void setUp() throws Exception
   {
     super.setUp();
-    classRepo = ZClassRepository.create(ZMavenClassPath.getItems(), TreeTest2.class.getPackage()
-        .getName());
+    classRepo = ZClassRepository.create(TreeTest2.class);
   }
 
 

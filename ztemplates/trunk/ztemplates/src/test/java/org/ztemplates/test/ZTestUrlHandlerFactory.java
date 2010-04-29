@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassPathItem;
 import org.zclasspath.ZIClassRepository;
+import org.zclasspath.ZJavaClassPath;
 import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
@@ -67,7 +68,7 @@ public class ZTestUrlHandlerFactory
 
   public static ZIUrlHandler create(String pojoPackage, ZISecurityProvider security) throws Exception
   {
-    List<ZIClassPathItem> items = ZMavenClassPath.getItems();
+    List<ZIClassPathItem> items = ZJavaClassPath.getItems();
     ZIClassRepository classRepository = ZClassRepository.create(items, pojoPackage);
     ZTestApplicationContext applicationContext = new ZTestApplicationContext(classRepository);
     ZMatchTree matchTree = new ZMatchTree(classRepository);

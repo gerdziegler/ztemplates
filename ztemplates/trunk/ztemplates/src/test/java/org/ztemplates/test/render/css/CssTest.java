@@ -22,7 +22,6 @@ import org.zclasspath.ZIClassRepository;
 import org.ztemplates.render.impl.ZCssEngine;
 import org.ztemplates.render.impl.ZIWebRenderContext;
 import org.ztemplates.render.impl.ZRenderEngine;
-import org.ztemplates.test.ZMavenClassPath;
 import org.ztemplates.test.ZTestApplication;
 import org.ztemplates.test.ZTestWebRenderContextFactory;
 import org.ztemplates.web.application.ZApplication;
@@ -37,8 +36,7 @@ public class CssTest extends TestCase
   protected void setUp() throws Exception
   {
     super.setUp();
-    ZIClassRepository classRepository = ZClassRepository.create(ZMavenClassPath.getItems(),
-        CssTest.class.getPackage().getName());
+    ZIClassRepository classRepository = ZClassRepository.create(CssTest.class);
     application = ZTestApplication.create(classRepository);
   }
 

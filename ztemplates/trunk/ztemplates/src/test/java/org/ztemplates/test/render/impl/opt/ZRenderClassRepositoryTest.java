@@ -17,8 +17,8 @@ package org.ztemplates.test.render.impl.opt;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
-import org.ztemplates.test.ZMavenClassRepository;
 import org.ztemplates.test.ZTestApplication;
 import org.ztemplates.web.application.ZApplication;
 
@@ -34,7 +34,7 @@ public class ZRenderClassRepositoryTest extends TestCase
   protected void setUp() throws Exception
   {
     super.setUp();
-    classRepo = ZMavenClassRepository.create(Root.class);
+    classRepo = ZClassRepository.create(Root.class);
     application = ZTestApplication.create(classRepo);
   }
 
