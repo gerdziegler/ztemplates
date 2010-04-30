@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 import org.ztemplates.actions.util.impl.ZReflectionUtil;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
-import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.form.ZIForm;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.property.validator.ZIStringValidator;
@@ -41,13 +41,13 @@ import org.ztemplates.render.ZScriptDependency;
  * @author gerdziegler.de
  * 
  */
-public class ZFormModelWrapper implements ZIFormVisitable
+public final class ZFormWrapper implements ZIFormVisitable
 {
-  static final Logger log = Logger.getLogger(ZFormModelWrapper.class);
+  static final Logger log = Logger.getLogger(ZFormWrapper.class);
 
   private String name;
 
-  private final List<ZFormModelWrapper> formModels = new ArrayList<ZFormModelWrapper>();
+  private final List<ZFormWrapper> forms = new ArrayList<ZFormWrapper>();
 
   private final List<ZProperty> properties = new ArrayList<ZProperty>();
 
@@ -60,7 +60,7 @@ public class ZFormModelWrapper implements ZIFormVisitable
    * @param obj
    * @throws Exception
    */
-  public ZFormModelWrapper(ZIFormModel obj) throws Exception
+  public ZFormWrapper(ZIForm obj) throws Exception
   {
     this(obj, "");
   }
@@ -73,7 +73,7 @@ public class ZFormModelWrapper implements ZIFormVisitable
    * @param name
    * @throws Exception
    */
-  protected ZFormModelWrapper(ZIFormModel obj, String name) throws Exception
+  protected ZFormWrapper(ZIForm obj, String name) throws Exception
   {
     this.name = name;
     String prefix;
@@ -127,9 +127,9 @@ public class ZFormModelWrapper implements ZIFormVisitable
           properties.add(prop);
         }
         // third
-        else if (ZFormModelWrapper.class.isAssignableFrom(returnType))
+        else if (ZFormWrapper.class.isAssignableFrom(returnType))
         {
-          ZFormModelWrapper fe = (ZFormModelWrapper) m.invoke(obj);
+          ZFormWrapper fe = (ZFormWrapper) m.invoke(obj);
           if (fe == null)
           {
             throw new Exception("null dynamic form model returned from " + m.getName());
@@ -139,18 +139,18 @@ public class ZFormModelWrapper implements ZIFormVisitable
             String feName = prefix + ZReflectionUtil.removePrefixName("get", m.getName());
             fe.setName(feName);
           }
-          formModels.add(fe);
+          forms.add(fe);
         }
         // fourth
-        else if (ZIFormModel.class.isAssignableFrom(returnType))
+        else if (ZIForm.class.isAssignableFrom(returnType))
         {
-          ZIFormModel fe = (ZIFormModel) m.invoke(obj);
+          ZIForm fe = (ZIForm) m.invoke(obj);
           if (fe == null)
           {
             throw new Exception("null form model returned from " + m.getName());
           }
           String feName = prefix + ZReflectionUtil.removePrefixName("get", m.getName());
-          formModels.add(new ZFormModelWrapper(fe, feName));
+          forms.add(new ZFormWrapper(fe, feName));
         }
       }
     }
@@ -287,9 +287,9 @@ public class ZFormModelWrapper implements ZIFormVisitable
   }
 
 
-  public List<ZFormModelWrapper> getFormModels()
+  public List<ZFormWrapper> getForms()
   {
-    return formModels;
+    return forms;
   }
 
 
@@ -307,9 +307,9 @@ public class ZFormModelWrapper implements ZIFormVisitable
 
   public void visitDepthFirst(ZIFormVisitor vis) throws Exception
   {
-    for (ZFormModelWrapper formElem : formModels)
+    for (ZFormWrapper form : forms)
     {
-      formElem.visitDepthFirst(vis);
+      form.visitDepthFirst(vis);
     }
     for (ZProperty prop : properties)
     {
@@ -390,7 +390,7 @@ public class ZFormModelWrapper implements ZIFormVisitable
         List<ZIStringValidator> validators = prop.getStringValidators();
         for (ZIStringValidator val : validators)
         {
-          ZScript script = ZFormModelWrapper.getAnnotation(val.getClass(), ZScript.class);
+          ZScript script = ZFormWrapper.getAnnotation(val.getClass(), ZScript.class);
           if (script != null)
           {
             ret.add(script);
@@ -404,7 +404,7 @@ public class ZFormModelWrapper implements ZIFormVisitable
         List<ZIStringValidator> validators = op.getStringValidators();
         for (ZIStringValidator val : validators)
         {
-          ZScript script = ZFormModelWrapper.getAnnotation(val.getClass(), ZScript.class);
+          ZScript script = ZFormWrapper.getAnnotation(val.getClass(), ZScript.class);
           if (script != null)
           {
             ret.add(script);

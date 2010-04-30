@@ -22,11 +22,27 @@ import java.util.Set;
 
 import org.ztemplates.actions.util.ZBase64Util;
 
+/**
+ * Holds the values (as string) from a form. Should be used to extract the
+ * values from a form and keep them in a servlet session or serialize them into
+ * a hidden form parameter. Never keep the form object itself in the session.
+ * 
+ * @author gerdziegler.de
+ * 
+ */
 public class ZFormValues implements Serializable
 {
   private HashMap<String, String[]> values = new HashMap<String, String[]>();
 
 
+  /**
+   * Computes the names of the properties that have different values in the two
+   * ZFormValues. Use this to compute the parameters changed by a user.
+   * 
+   * @param oldFormValues
+   * @param newFormValues
+   * @return
+   */
   public static Set<String> computeChangedPropertyNames(ZFormValues oldFormValues, ZFormValues newFormValues)
   {
     Map<String, String[]> oldValues = oldFormValues.getValues();
@@ -50,6 +66,13 @@ public class ZFormValues implements Serializable
   }
 
 
+  /**
+   * Deserializes the form Values from a string.
+   * 
+   * @param encoded
+   * @return
+   * @throws Exception
+   */
   public static ZFormValues createFromString(String encoded) throws Exception
   {
     ZFormValues ret = new ZFormValues();
@@ -63,6 +86,10 @@ public class ZFormValues implements Serializable
   }
 
 
+  /**
+   * 
+   * @return the values as a Map propertyName->propertyValues
+   */
   public HashMap<String, String[]> getValues()
   {
     return values;
@@ -70,7 +97,7 @@ public class ZFormValues implements Serializable
 
 
   /**
-   * encodes values to a string that it can be uses as value in a hidden form
+   * encodes values to a string that it can be used as value in a hidden form
    * parameter
    * 
    * @param values
@@ -93,5 +120,4 @@ public class ZFormValues implements Serializable
   {
     this.values = (HashMap<String, String[]>) ZBase64Util.decodeToObject(base64);
   }
-
 }

@@ -16,16 +16,16 @@ package org.ztemplates.form.list;
 
 import junit.framework.TestCase;
 
-import org.ztemplates.form.impl.ZFormModelWrapper;
+import org.ztemplates.form.impl.ZFormWrapper;
 
-public abstract class AbstractFormModelWithListTest extends TestCase
+public abstract class AbstractFormWithListTest extends TestCase
 {
   public void testFormElementMirror() throws Exception
   {
-    FormModelWithList f = new FormModelWithList();
+    FormWithList f = new FormWithList();
 //    ZDynamicFormModel.initPropertyNames(f, "");
-    ZFormModelWrapper mirr = new ZFormModelWrapper(f);
-    assertEquals(2, mirr.getFormModels().size());
+    ZFormWrapper mirr = new ZFormWrapper(f);
+    assertEquals(2, mirr.getForms().size());
     assertEquals(2, mirr.getProperties().size());
     assertEquals(0, mirr.getOperations().size());
 

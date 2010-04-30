@@ -16,12 +16,15 @@
 package org.ztemplates.form;
 
 /**
- * Interface for form models. Form models are required to implement this.
- * Form models are passive objects, they do not access services.
- * Form models keep the form user input and validation state.
+ * Forms are required to implement this.
+ * Forms are passive objects, they do not access services.
+ * Forms keep the user input and validation state.
+ * Never keep forms in the servlet session. 
+ * If you need to keep the user input between calls use the ZIFormService
+ * obtained with ZTemplates.getFormService() to extract the values into a ZFormValues object.
  * 
  * @author www.gerdziegler.de
  */
-public interface ZIFormModel
+public interface ZIForm
 {
 }

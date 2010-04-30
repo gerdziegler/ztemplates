@@ -14,10 +14,10 @@
  */
 package org.ztemplates.form.list;
 
-import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.form.ZIForm;
 import org.ztemplates.property.ZStringProperty;
 
-public class FormModelWithListNested implements ZIFormModel
+public class FormModelWithListNested implements ZIForm
 {
   private final ZStringProperty prop = new ZStringProperty();
 

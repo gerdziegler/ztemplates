@@ -13,7 +13,7 @@ import org.ztemplates.property.ZStringProperty;
 })
 public class FormAction
 {
-  private FormModel form = new FormModel();
+  private Form form = new Form();
 
   private final ZOperation op1 = new ZOperation("submit")
   {
@@ -34,7 +34,7 @@ public class FormAction
   };
 
 
-  public FormModel getForm()
+  public Form getForm()
   {
     return form;
   }

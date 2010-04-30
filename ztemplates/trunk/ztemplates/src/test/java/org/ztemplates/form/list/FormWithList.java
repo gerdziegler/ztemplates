@@ -17,21 +17,21 @@ package org.ztemplates.form.list;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.form.ZIForm;
 
-public class FormModelWithList implements ZIFormModel
+public class FormWithList implements ZIForm
 {
-  private final List<ZIFormModel> models = new ArrayList<ZIFormModel>();
+  private final List<ZIForm> models = new ArrayList<ZIForm>();
 
 
-  public FormModelWithList()
+  public FormWithList()
   {
     models.add(new FormModelWithListNested());
     models.add(new FormModelWithListNested());
   }
 
 
-  public List<ZIFormModel> getModels()
+  public List<ZIForm> getModels()
   {
     return models;
   }

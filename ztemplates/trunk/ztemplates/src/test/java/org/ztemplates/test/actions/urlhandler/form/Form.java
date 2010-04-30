@@ -14,11 +14,11 @@
  */
 package org.ztemplates.test.actions.urlhandler.form;
 
-import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.form.ZIForm;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZStringProperty;
 
-public class FormModel implements ZIFormModel
+public class Form implements ZIForm
 {
   private int revalidateCalledProp1 = 0;
 

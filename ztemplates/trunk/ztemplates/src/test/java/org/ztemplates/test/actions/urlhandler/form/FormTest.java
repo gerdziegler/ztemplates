@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
-import org.ztemplates.form.impl.ZFormModelWrapper;
+import org.ztemplates.form.impl.ZFormWrapper;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
 import org.ztemplates.test.mock.ZMock;
 import org.ztemplates.test.mock.ZMockServiceRepository;
@@ -51,10 +51,10 @@ public class FormTest extends TestCase
 
   public void testNames() throws Exception
   {
-    FormModel form = new FormModel();
+    Form form = new Form();
     ZMockServiceRepository repo = ZMock.getMock();
     repo.setServletService(new ZMockServletService());
-    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    ZFormWrapper mirr = new ZFormWrapper(form);
     assertEquals("op1", form.getOp1().getName());
     assertEquals("prop1", form.getProp1().getName());
     assertEquals("topSection.field1", form.getTopSection().getField1().getName());

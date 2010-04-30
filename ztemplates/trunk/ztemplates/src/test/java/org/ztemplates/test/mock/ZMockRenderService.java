@@ -21,10 +21,12 @@ public class ZMockRenderService implements ZIRenderService
 {
   private int cnt = 0;
 
+  private String javaScriptIdPrefix = "zid";
+
 
   public String createJavaScriptId()
   {
-    return "zid" + cnt++;
+    return javaScriptIdPrefix + cnt++;
   }
 
 
@@ -49,5 +51,18 @@ public class ZMockRenderService implements ZIRenderService
   public ZIRenderedObject prerender(Object obj) throws Exception
   {
     return null;
+  }
+
+
+  public String getJavaScriptIdPrefix()
+  {
+    return javaScriptIdPrefix;
+  }
+
+
+  public void setJavaScriptIdPrefix(String javaScriptIdPrefix)
+  {
+    this.javaScriptIdPrefix = javaScriptIdPrefix;
+
   }
 }

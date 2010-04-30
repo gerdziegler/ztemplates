@@ -55,6 +55,23 @@ public interface ZIRenderService extends ZIService
 
 
   /**
+   * manually sets the prefix used when creating JavaScriptIds, use to have full
+   * control over the ids created
+   * 
+   * @param javaScriptIdPrefix
+   */
+  public void setJavaScriptIdPrefix(String javaScriptIdPrefix);
+
+
+  /**
+   * the prefix used when creating javascript ids.
+   * 
+   * @return
+   */
+  public String getJavaScriptIdPrefix();
+
+
+  /**
    * computes the cssId for the provided object
    * 
    * @param obj

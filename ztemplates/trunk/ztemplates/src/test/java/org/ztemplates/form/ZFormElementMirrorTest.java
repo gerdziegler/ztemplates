@@ -16,23 +16,23 @@ package org.ztemplates.form;
 
 import junit.framework.TestCase;
 
-import org.ztemplates.form.impl.ZFormModelWrapper;
-import org.ztemplates.test.actions.urlhandler.form.FormModel;
+import org.ztemplates.form.impl.ZFormWrapper;
+import org.ztemplates.test.actions.urlhandler.form.Form;
 
 public class ZFormElementMirrorTest extends TestCase
 {
   public void testFormElementMirror() throws Exception
   {
-    FormModel f = new FormModel();
+    Form f = new Form();
 //    ZDynamicFormModel.initPropertyNames(f, "");
-    ZFormModelWrapper mirr = new ZFormModelWrapper(f);
+    ZFormWrapper mirr = new ZFormWrapper(f);
     assertEquals(2, mirr.getProperties().size());
     assertEquals(1, mirr.getOperations().size());
-    assertEquals(1, mirr.getFormModels().size());
+    assertEquals(1, mirr.getForms().size());
     
     assertEquals("prop1", mirr.getProperties().get(0).getName());
     assertEquals("op1", mirr.getOperations().get(0).getName());
-    assertEquals("topSection.op1", mirr.getFormModels().get(0).getOperations().get(0).getName());
+    assertEquals("topSection.op1", mirr.getForms().get(0).getOperations().get(0).getName());
   }
 
 
@@ -40,7 +40,7 @@ public class ZFormElementMirrorTest extends TestCase
   {
     FormModel2 f = new FormModel2();
 //    ZDynamicFormModel.initPropertyNames(f, "");
-    ZFormModelWrapper mirr = new ZFormModelWrapper(f);
+    ZFormWrapper mirr = new ZFormWrapper(f);
     assertEquals("myName", f.getProp().getName());
     assertEquals("prop1", f.getProp1().getName());
   }

@@ -35,8 +35,8 @@ import org.ztemplates.actions.urlhandler.tree.term.ZTreeVariable;
 import org.ztemplates.actions.util.impl.ZReflectionUtil;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
-import org.ztemplates.form.ZIFormModel;
-import org.ztemplates.form.impl.ZFormModelWrapper;
+import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.impl.ZFormWrapper;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 
@@ -368,7 +368,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
 //    public ZISessionFormModel sessionForm;
 
-    public ZFormModelWrapper formWrapper;
+    public ZFormWrapper formWrapper;
   }
 
 
@@ -418,8 +418,8 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       formValues.getValues().putAll(parameters);
 
       ZReflectionUtil.callBeforeForm(pojo, formName);
-      ZIFormModel form = (ZIFormModel) ZReflectionUtil.callFormGetter(pojo, formName);
-      ret.formWrapper = new ZFormModelWrapper(form);
+      ZIForm form = (ZIForm) ZReflectionUtil.callFormGetter(pojo, formName);
+      ret.formWrapper = new ZFormWrapper(form);
 
 //      if (form instanceof ZISessionFormModel)
 //      {

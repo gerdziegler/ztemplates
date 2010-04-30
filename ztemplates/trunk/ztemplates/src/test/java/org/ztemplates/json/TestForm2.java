@@ -14,10 +14,10 @@
  */
 package org.ztemplates.json;
 
-import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.form.ZIForm;
 import org.ztemplates.property.ZStringProperty;
 
-public class TestForm2 implements ZIFormModel
+public class TestForm2 implements ZIForm
 {
   private final ZStringProperty prop1 = new ZStringProperty();
 

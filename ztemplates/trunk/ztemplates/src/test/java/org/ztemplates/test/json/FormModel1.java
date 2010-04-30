@@ -17,11 +17,11 @@ package org.ztemplates.test.json;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ztemplates.form.ZIFormModel;
+import org.ztemplates.form.ZIForm;
 import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZStringProperty;
 
-public class FormModel1 implements ZIFormModel
+public class FormModel1 implements ZIForm
 {
   private final ZStringProperty stringProp = new ZStringProperty();
 

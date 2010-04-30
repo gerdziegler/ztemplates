@@ -24,8 +24,8 @@ import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.actions.util.ZBase64Util;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
-import org.ztemplates.form.ZIFormModel;
-import org.ztemplates.form.impl.ZFormModelWrapper;
+import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.impl.ZFormWrapper;
 import org.ztemplates.json.ZJsonUtil;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZScriptDependency;
@@ -45,72 +45,72 @@ public class ZFormServiceImpl implements ZIFormService
   }
 
 
-  public void setWriteable(ZIFormModel form, boolean b) throws Exception
+  public void setWriteable(ZIForm form, boolean b) throws Exception
   {
-    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    ZFormWrapper mirr = new ZFormWrapper(form);
     mirr.setWriteable(b);
   }
 
 
-  public void setReadable(ZIFormModel form, boolean b) throws Exception
+  public void setReadable(ZIForm form, boolean b) throws Exception
   {
-    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    ZFormWrapper mirr = new ZFormWrapper(form);
     mirr.setReadable(b);
   }
   
-  public void setRequired(ZIFormModel form, boolean b) throws Exception
+  public void setRequired(ZIForm form, boolean b) throws Exception
   {
-    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    ZFormWrapper mirr = new ZFormWrapper(form);
     mirr.setRequired(b);
   }
 
 
 
-  public List<ZProperty> getPropertiesWithError(ZIFormModel form) throws Exception
+  public List<ZProperty> getPropertiesWithError(ZIForm form) throws Exception
   {
-    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    ZFormWrapper mirr = new ZFormWrapper(form);
     return mirr.getPropertiesWithError();
   }
 
 
-  public ZFormMembers getFormMembers(ZIFormModel form) throws Exception
+  public ZFormMembers getFormMembers(ZIForm form) throws Exception
   {
-    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    ZFormWrapper mirr = new ZFormWrapper(form);
     return mirr.getFormMembers();
   }
 
 
-  public ZScriptDependency getJavaScriptDependency(ZIFormModel form) throws Exception
+  public ZScriptDependency getJavaScriptDependency(ZIForm form) throws Exception
   {
-    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    ZFormWrapper mirr = new ZFormWrapper(form);
     return mirr.getJavaScriptDependency();
   }
 
 
-  public void copyValuesToForm(ZFormValues values, ZIFormModel form) throws Exception
+  public void copyValuesToForm(ZFormValues values, ZIForm form) throws Exception
   {
-    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    ZFormWrapper mirr = new ZFormWrapper(form);
     mirr.readFromValues(values);
   }
 
 
-  public void copyFormToValues(ZIFormModel form, ZFormValues values) throws Exception
+  public void copyFormToValues(ZIForm form, ZFormValues values) throws Exception
   {
-    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    ZFormWrapper mirr = new ZFormWrapper(form);
     mirr.writeToValues(values);
   }
 
 
-  public Set<ZProperty> getPropertiesByName(ZIFormModel form, Set<String> propNames) throws Exception
+  public Set<ZProperty> getPropertiesByName(ZIForm form, Set<String> propNames) throws Exception
   {
-    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    ZFormWrapper mirr = new ZFormWrapper(form);
     return mirr.getPropertiesByName(propNames);
   }
 
 
-  public void initPropertyNames(ZIFormModel form) throws Exception
+  public void initPropertyNames(ZIForm form) throws Exception
   {
-    ZFormModelWrapper mirr = new ZFormModelWrapper(form);
+    ZFormWrapper mirr = new ZFormWrapper(form);
     // ZDynamicFormModel.initPropertyNames(form, "");
   }
 
@@ -151,7 +151,7 @@ public class ZFormServiceImpl implements ZIFormService
 //  }
 
 
-  public JSONObject computeJson(ZIFormModel form) throws Exception
+  public JSONObject computeJson(ZIForm form) throws Exception
   {
     JSONObject ret = ZJsonUtil.computeJSON(form);
     return ret;

@@ -17,7 +17,7 @@ package org.ztemplates.form;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZStringProperty;
 
-public class FormModel implements ZIFormModel
+public class FormModel implements ZIForm
 {
   private final ZStringProperty prop1 = new ZStringProperty();
 
