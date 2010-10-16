@@ -50,7 +50,7 @@ public class ZRegexStringValidator implements ZIValidator, ZIJavaScriptValidator
   }
 
 
-  @Override
+  // @Override
   public void validate(ZMessages res) throws Exception
   {
     for (String value : prop.getStringValues())

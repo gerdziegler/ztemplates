@@ -16,7 +16,7 @@ public abstract class ZOnlyNotEmptyValidator implements ZIValidator
   public abstract void validateNotEmpty(ZMessages res) throws Exception;
 
 
-  @Override
+  // @Override
   public void validate(ZMessages res) throws Exception
   {
     for (ZProperty prop : props)
