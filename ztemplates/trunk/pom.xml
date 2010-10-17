@@ -24,10 +24,24 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+	<scm>
+		<url>
+			http://ztemplates.svn.sourceforge.net/svnroot/ztemplates/ztemplates/trunk
+		</url>
+		<connection>
+			scm:svn:https://ztemplates.svn.sourceforge.net/svnroot/ztemplates/ztemplates/trunk
+		</connection>
+		<developerConnection>
+			scm:svn:https://ztemplates.svn.sourceforge.net/svnroot/ztemplates/ztemplates/trunk
+		</developerConnection>
+	</scm>
 	<developers>
 		<developer>
 			<id>gerdziegler</id>
 			<name>Gerd Ziegler</name>
+			<roles>
+				<role>admin</role>
+			</roles>
 		</developer>
 	</developers>
 	<dependencies>
@@ -50,7 +64,7 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20080701</version>
+			<version>20090211</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -73,18 +87,7 @@
 			<artifactId>freemarker</artifactId>
 			<version>2.3.14</version>
 		</dependency>
-		<!--
-			<dependency> <groupId>org.zdependency</groupId>
-			<artifactId>zdependency</artifactId> <version>1.1</version>
-			</dependency>
-		-->
 	</dependencies>
-	<distributionManagement>
-		<repository>
-			<id>frs.sourceforge.net.ztemplates</id>
-			<url>sftp://frs.sourceforge.net/home/frs/project/z/zt/ztemplates/maven2</url>
-		</repository>
-	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
@@ -92,6 +95,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.0.2</version>
 				<configuration>
+					<encoding>UTF-8</encoding>
 					<source>1.5</source>
 					<target>1.5</target>
 				</configuration>
@@ -121,17 +125,36 @@
 				<configuration>
 					<additionalClasspathElements>
 						<element>${basedir}/src/main/java</element>
-						<!--						<element>${basedir}/src/main/resources</element> -->
 					</additionalClasspathElements>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.6.1</version>
+				<version>2.7</version>
 				<configuration>
 					<show>public</show>
 				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<resources>
@@ -162,17 +185,11 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.6.1</version>
+				<version>2.7</version>
 				<configuration>
 					<show>public</show>
 				</configuration>
 			</plugin>
 		</plugins>
 	</reporting>
-	<repositories>
-		<repository>
-			<id>web.sourceforge.net.zclasspath</id>
-			<url>http://zclasspath.sourceforge.net/maven2</url>
-		</repository>
-	</repositories>
 </project>
