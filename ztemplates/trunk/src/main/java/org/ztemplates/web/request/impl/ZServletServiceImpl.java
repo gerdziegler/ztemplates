@@ -39,8 +39,6 @@ public class ZServletServiceImpl implements ZIServletService
   private final String encoding;
 
 
-  // private final boolean allowRenderInPost;
-
   public ZServletServiceImpl(final HttpServletRequest request, final HttpServletResponse response, final ZIActionService actionService,
       final ZIRenderService renderService, String encoding)
   {
@@ -49,9 +47,7 @@ public class ZServletServiceImpl implements ZIServletService
     this.response = response;
     this.actionService = actionService;
     this.renderService = renderService;
-    this.encoding = encoding == null ? "ISO-8859-1" : encoding;
-    // this.allowRenderInPost =
-    // !"false".equals(request.getSession().getServletContext().getInitParameter("allowRenderInPost"));
+    this.encoding = encoding;
   }
 
 
@@ -81,18 +77,6 @@ public class ZServletServiceImpl implements ZIServletService
 
   public void render(Object obj, String mimeType, String encoding) throws Exception
   {
-    // if(!allowRenderInPost && request.getMethod().equals("POST"))
-    // {
-    // throw new
-    // Exception("RESTful applications should not render in POST, send redirect to another page instead. To allow rendering in POST response set the servlet context init parameter 'allowRenderInPost=true' in WEB-INF/web.xml' like this:"
-    // +
-    // "\n<context-param>\n" +
-    // "  <description>In RESTful applications make a redirect after POST</description>\n"
-    // +
-    // "  <param-name>allowRenderInPost</param-name>\n" +
-    // "  <param-value>true</param-value>\n" +
-    // "</context-param>\n");
-    // }
     String value = obj == null ? null : renderService.render(obj);
     if (obj != null)
     {
@@ -143,17 +127,12 @@ public class ZServletServiceImpl implements ZIServletService
     String scheme = request.getScheme();
     String serverName = request.getServerName();
     int serverPort = request.getServerPort();
-    // String contextPath = request.getContextPath();
-    // String servletPath = request.getServletPath();
     StringBuffer ret = new StringBuffer();
     ret.append(scheme);
     ret.append("://");
     ret.append(serverName);
     ret.append(':');
     ret.append(serverPort);
-    // ret.append(contextPath);
-    // ret.append(servletPath);
-
     ret.append(url);
     return ret.toString();
   }

@@ -103,7 +103,19 @@ public interface ZIServletService extends ZIService
 
   /**
    * The encoding used for the response and for parsing request parameters,
-   * defaults to "ISO-8859-1"
+   * defaults to "UTF-8". *
+   * <p>
+   * To change encoding to ISO-8859-1 add the following lines to your web.xml:
+   * 
+   * <pre>
+   * <context-param> 
+   *    <param-name>encoding</param-name>
+   *    <param-value>ISO-8859-1</param-value> 
+   * </context-param>
+   * </pre>
+   * 
+   * Don't forget to adjust your IDE/compiler/editor settings to use the
+   * selected encoding.
    * 
    * @return
    */
