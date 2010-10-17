@@ -17,12 +17,12 @@ package org.ztemplates.validation;
 import java.util.regex.Pattern;
 
 import org.ztemplates.json.ZExposeJson;
+import org.ztemplates.message.ZErrorMessage;
+import org.ztemplates.message.ZMessages;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZJavaScript;
 import org.ztemplates.render.ZScript;
 import org.ztemplates.validation.assets.ZRegexValidatorScriptLoaderAction;
-import org.ztemplates.validation.message.ZErrorMessage;
-import org.ztemplates.validation.message.ZMessages;
 
 @ZScript(javaScript =
 {

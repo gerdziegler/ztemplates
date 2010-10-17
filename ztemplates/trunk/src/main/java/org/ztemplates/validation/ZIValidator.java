@@ -1,6 +1,6 @@
 package org.ztemplates.validation;
 
-import org.ztemplates.validation.message.ZMessages;
+import org.ztemplates.message.ZMessages;
 
 public interface ZIValidator
 {

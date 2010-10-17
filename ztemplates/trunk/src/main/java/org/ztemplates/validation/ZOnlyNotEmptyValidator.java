@@ -1,7 +1,7 @@
 package org.ztemplates.validation;
 
+import org.ztemplates.message.ZMessages;
 import org.ztemplates.property.ZProperty;
-import org.ztemplates.validation.message.ZMessages;
 
 public abstract class ZOnlyNotEmptyValidator implements ZIValidator
 {

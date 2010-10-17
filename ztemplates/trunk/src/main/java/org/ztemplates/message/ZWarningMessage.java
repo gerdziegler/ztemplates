@@ -1,4 +1,4 @@
-package org.ztemplates.validation.message;
+package org.ztemplates.message;
 
 import org.ztemplates.property.ZProperty;
 
