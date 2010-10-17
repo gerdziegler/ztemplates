@@ -27,7 +27,6 @@ import org.ztemplates.render.ZIRenderApplicationContext;
 import org.ztemplates.render.ZIRenderer;
 import org.ztemplates.render.ZITemplateNameRepository;
 import org.ztemplates.render.ZRenderer;
-import org.ztemplates.web.ZTemplates;
 
 public class ZVelocityRenderer implements ZIRenderer
 {
@@ -117,6 +116,11 @@ public class ZVelocityRenderer implements ZIRenderer
     VelocityEngine ve = new VelocityEngine();
 
     Properties prop = ZVelocityRenderer.getProperties(applicationContext.getClass());
+    String encoding = applicationContext.getInitParameter("encoding");
+    if (encoding != null)
+    {
+      prop.setProperty("input.encoding", encoding);
+    }
     log.info("--- Velocity Properties ---");
     log.info(prop);
     ve.init(prop);
@@ -150,7 +154,7 @@ public class ZVelocityRenderer implements ZIRenderer
     prop.setProperty("velocimacro.permissions.allowInline", "true");
     prop.setProperty("velocimacro.permissions.allowInlineToOverride", "false");
     prop.setProperty("velocimacro.context.localscope", "true");
-    prop.setProperty("input.encoding", ZTemplates.getServletService().getEncoding());
+    prop.setProperty("input.encoding", "UTF-8");
     return prop;
   }
 
