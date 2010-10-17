@@ -63,11 +63,7 @@ public class ZVelocityRenderer implements ZIRenderer
   {
     this.templateNameRepository = templateNameRepository;
     velocityEngine = ZVelocityRenderer.getVelocityEngine(applicationContext);
-    encoding = applicationContext.getInitParameter("encoding");
-    if (encoding == null)
-    {
-      encoding = "ISO-8859-1";
-    }
+    encoding = applicationContext.getEncoding();
   }
 
 
@@ -116,11 +112,8 @@ public class ZVelocityRenderer implements ZIRenderer
     VelocityEngine ve = new VelocityEngine();
 
     Properties prop = ZVelocityRenderer.getProperties(applicationContext.getClass());
-    String encoding = applicationContext.getInitParameter("encoding");
-    if (encoding != null)
-    {
-      prop.setProperty("input.encoding", encoding);
-    }
+    String encoding = applicationContext.getEncoding();
+    prop.setProperty("input.encoding", encoding);
     log.info("--- Velocity Properties ---");
     log.info(prop);
     ve.init(prop);

@@ -17,4 +17,7 @@ public interface ZIRenderApplicationContext
 
 
   public void removeAttribute(String name);
+
+
+  public String getEncoding();
 }

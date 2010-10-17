@@ -20,6 +20,8 @@ public class ZTestApplicationContext implements ZIRenderApplicationContext,
 
   private final ZIClassRepository classRepository;
 
+  private String encoding = "UTF-8";
+
 
   public ZTestApplicationContext(ZIClassRepository classRepository)
   {
@@ -78,5 +80,17 @@ public class ZTestApplicationContext implements ZIRenderApplicationContext,
   public ZIClassRepository getClassRepository()
   {
     return classRepository;
+  }
+
+
+  public void setEncoding(String encoding)
+  {
+    this.encoding = encoding;
+  }
+
+
+  public String getEncoding()
+  {
+    return encoding;
   }
 }

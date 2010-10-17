@@ -108,11 +108,7 @@ public class ZTemplatesStandalone implements ZIServiceRepository
     String prefix = applicationContext.getInitParameter("prefix");
     String encryptPassword = applicationContext.getInitParameter("encryptPassword");
     String encryptSalt = applicationContext.getInitParameter("encryptSalt");
-    String encoding = applicationContext.getInitParameter("encoding");
-    if (encoding == null)
-    {
-      encoding = "ISO-8859-1";
-    }
+    String encoding = applicationContext.getEncoding();
 
     ZISecureUrlDecorator secureUrlDecorator = application.getActionApplication().getSecureUrlDecorator();
     ZMatchTree matchTree = application.getActionApplication().getMatchTree();

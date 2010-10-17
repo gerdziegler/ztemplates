@@ -11,6 +11,15 @@ public class ZRenderApplicationContext implements ZIRenderApplicationContext
 
   private final Map<String, String> initParameters = new HashMap<String, String>();
 
+  private final String encoding;
+
+
+  public ZRenderApplicationContext(String encoding)
+  {
+    super();
+    this.encoding = encoding;
+  }
+
 
   public String getInitParameter(String name)
   {
@@ -45,6 +54,12 @@ public class ZRenderApplicationContext implements ZIRenderApplicationContext
   public Map<String, String> getInitParameters()
   {
     return initParameters;
+  }
+
+
+  public String getEncoding()
+  {
+    return encoding;
   }
 
 }

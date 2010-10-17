@@ -17,12 +17,15 @@ public class ZApplicationContextWebImpl implements ZIRenderApplicationContext, Z
 
   private final ZIClassRepository classRepository;
 
+  private final String encoding;
 
-  public ZApplicationContextWebImpl(ZIClassRepository classRepository, ServletContext servletContext) throws Exception
+
+  public ZApplicationContextWebImpl(ZIClassRepository classRepository, ServletContext servletContext, String encoding) throws Exception
   {
     super();
     this.classRepository = classRepository;
     this.servletContext = servletContext;
+    this.encoding = encoding;
   }
 
 
@@ -60,4 +63,11 @@ public class ZApplicationContextWebImpl implements ZIRenderApplicationContext, Z
   {
     return classRepository;
   }
+
+
+  public String getEncoding()
+  {
+    return encoding;
+  }
+
 }

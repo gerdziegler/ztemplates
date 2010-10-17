@@ -74,7 +74,30 @@ public class ZTemplatesContextListener implements ServletContextListener
 
       log.info("creating class repository...");
       final ZIClassRepository classRepository = createClassRepository(ctx);
-      final ZApplicationContextWebImpl applicationContext = new ZApplicationContextWebImpl(classRepository, ctx);
+
+      String encoding = ctx.getInitParameter("encoding");
+      if (encoding == null)
+      {
+        // default encoding for ztemplates
+        encoding = "UTF-8";
+        // encoding = "ISO-8859-1";
+        log.warn(
+                  "*******************************************************************************************\n" +
+                      "*** No context-param named 'encoding' found\n" +
+                      "*** Using ztemplates default encoding " + encoding + "\n" +
+                      "*******************************************************************************************\n" +
+                      "*** To change encoding add the following lines to your web.xml: \n" +
+                      "<context-param>\n" +
+                      "    <param-name>encoding</param-name>\n" +
+                      "    <param-value>ISO-8859-1</param-value>\n" +
+                      "</context-param>\n" +
+                      "*******************************************************************************************\n" +
+                      "*** Don't forget to adjust your IDE/compiler/editor settings to use the selected encoding " + encoding + "\n" +
+                      "*******************************************************************************************\n"
+            );
+      }
+
+      final ZApplicationContextWebImpl applicationContext = new ZApplicationContextWebImpl(classRepository, ctx, encoding);
 
       log.info("creating application...");
 
