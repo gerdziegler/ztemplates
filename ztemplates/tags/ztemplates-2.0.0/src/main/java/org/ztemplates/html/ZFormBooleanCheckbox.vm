@@ -1,1 +1,0 @@
-<input type="checkbox" id="${id}" #if(${cssClass})class="${cssClass}"#end name="${name}" #if($property.required)required="required"#end value="$!{value}" #if(!$property.writeable)readonly="readonly"#end #if(${checked}) checked="true" #end $!{htmlAttributes}></input>

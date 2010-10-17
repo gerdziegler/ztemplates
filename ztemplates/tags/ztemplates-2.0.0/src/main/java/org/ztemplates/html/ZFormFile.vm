@@ -1,1 +1,0 @@
-<input type="file" id="${id}" #if(${cssClass})class="${cssClass}"#end name="${name}" value="$!{value}" #if($accept)accept="$accept"#end #if(!$property.writeable)readonly="readonly"#end #if($property.required)required="required"#end $!{htmlAttributes}></input>
