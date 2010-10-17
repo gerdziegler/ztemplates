@@ -1,4 +1,4 @@
-package org.ztemplates.web.workflow;
+package org.ztemplates.experimental.web.workflow;
 
 
 public class ZWorkflowDefinition {

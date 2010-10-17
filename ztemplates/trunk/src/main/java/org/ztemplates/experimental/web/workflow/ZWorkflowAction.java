@@ -11,7 +11,7 @@
  * language governing permissions and limitations under the License.
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.workflow;
+package org.ztemplates.experimental.web.workflow;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

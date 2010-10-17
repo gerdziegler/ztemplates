@@ -1,4 +1,4 @@
-package org.ztemplates.web.workflow;
+package org.ztemplates.experimental.web.workflow;
 
 public interface ZIWorkflowContext {
 //    public <WI extends ZIWorkflowInput, WA extends ZIWorkflowAction<WI, ? extends ZIWorkflowOutput>> WI getInput(Class<WA> nextClass) throws Exception;
