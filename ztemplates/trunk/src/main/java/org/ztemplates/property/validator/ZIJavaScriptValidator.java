@@ -14,12 +14,12 @@
  */
 package org.ztemplates.property.validator;
 
-import org.ztemplates.form.validation.ZIValidator;
 import org.ztemplates.json.ZExposeJson;
+import org.ztemplates.validation.ZIValidator;
 
 /**
  * implement this to define a client side validator and add the validator to the
- * properties string validators
+ * properties validators
  * 
  * @author www.gerdziegler.de
  */

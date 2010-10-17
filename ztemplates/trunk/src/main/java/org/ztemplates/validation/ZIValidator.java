@@ -1,4 +1,4 @@
-package org.ztemplates.form.validation;
+package org.ztemplates.validation;
 
 public interface ZIValidator
 {

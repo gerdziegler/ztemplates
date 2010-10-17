@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.form.validation.ZIValidator;
 import org.ztemplates.json.ZExposeJson;
+import org.ztemplates.validation.ZIValidator;
 
 public abstract class ZProperty<T>
 {

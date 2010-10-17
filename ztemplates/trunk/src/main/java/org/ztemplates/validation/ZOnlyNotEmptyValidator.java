@@ -1,4 +1,4 @@
-package org.ztemplates.form.validation;
+package org.ztemplates.validation;
 
 import org.ztemplates.property.ZProperty;
 

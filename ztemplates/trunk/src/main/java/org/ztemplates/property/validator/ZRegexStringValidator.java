@@ -16,14 +16,14 @@ package org.ztemplates.property.validator;
 
 import java.util.regex.Pattern;
 
-import org.ztemplates.form.validation.ZErrorMessage;
-import org.ztemplates.form.validation.ZIValidator;
-import org.ztemplates.form.validation.ZMessages;
 import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.property.validator.assets.ZRegexValidatorScriptLoaderAction;
 import org.ztemplates.render.ZJavaScript;
 import org.ztemplates.render.ZScript;
+import org.ztemplates.validation.ZErrorMessage;
+import org.ztemplates.validation.ZIValidator;
+import org.ztemplates.validation.ZMessages;
 
 @ZScript(javaScript =
 {
