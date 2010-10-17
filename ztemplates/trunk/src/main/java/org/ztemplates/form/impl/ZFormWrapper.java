@@ -29,11 +29,11 @@ import org.ztemplates.actions.util.impl.ZReflectionUtil;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.validation.ZIValidator;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZScript;
 import org.ztemplates.render.ZScriptDependency;
-import org.ztemplates.web.form.validation.ZIValidator;
 
 /**
  * form wrapper that can be used to manipulate a form in a generic way

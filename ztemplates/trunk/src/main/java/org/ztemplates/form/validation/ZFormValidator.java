@@ -1,4 +1,4 @@
-package org.ztemplates.web.form.validation;
+package org.ztemplates.form.validation;
 
 import java.util.List;
 

@@ -14,8 +14,8 @@
  */
 package org.ztemplates.property.validator;
 
+import org.ztemplates.form.validation.ZIValidator;
 import org.ztemplates.json.ZExposeJson;
-import org.ztemplates.web.form.validation.ZIValidator;
 
 /**
  * implement this to define a client side validator and add the validator to the

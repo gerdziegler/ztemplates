@@ -1,4 +1,4 @@
-package org.ztemplates.web.form.validation;
+package org.ztemplates.form.validation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +12,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * container for messages, keeps messages created by a validator or any other
+ * program part
+ * 
+ * @author gerd
+ * 
+ */
 public class ZMessages
 {
   private static final Logger log = Logger.getLogger(ZMessages.class);
@@ -21,8 +28,6 @@ public class ZMessages
   private final Map<String, List<ZMessage>> propertyMessagesMap = new HashMap<String, List<ZMessage>>();
 
   private final List<ZMessage> globalMessages = new ArrayList<ZMessage>();
-
-  // private final Set<String> requiredPropertyNames = new HashSet<String>();
 
   private boolean dirty = false;
 
@@ -41,14 +46,9 @@ public class ZMessages
     dirty = false;
     propertyMessagesMap.clear();
     globalMessages.clear();
-    // requiredPropertyNames.clear();
 
     for (ZMessage msg : messages)
     {
-      // if (msg instanceof ZRequiredMessage)
-      // {
-      // requiredPropertyNames.addAll(msg.getPropertyNames());
-      // }
       if (msg.getPropertyNames().isEmpty())
       {
         globalMessages.add(msg);
@@ -138,31 +138,6 @@ public class ZMessages
   }
 
 
-  // public String getRequiredPropertyNamesJSON()
-  // {
-  // cleanup();
-  // try
-  // {
-  // return createRequiredPropertyNamesJSON().toString(2);
-  // }
-  // catch (JSONException e)
-  // {
-  // log.error("", e);
-  // return e.getLocalizedMessage();
-  // }
-  // }
-
-  // public JSONArray createRequiredPropertyNamesJSON()
-  // {
-  // cleanup();
-  // JSONArray requiredPropertyNamesJSON = new JSONArray();
-  // for (String s : requiredPropertyNames)
-  // {
-  // requiredPropertyNamesJSON.put(s);
-  // }
-  // return requiredPropertyNamesJSON;
-  // }
-
   public JSONArray createGlobalMessagesJSON() throws JSONException
   {
     cleanup();
@@ -206,6 +181,12 @@ public class ZMessages
   }
 
 
+  /**
+   * messages bound to a property
+   * 
+   * @param propName
+   * @return
+   */
   public List<ZMessage> getPropertyMessages(String propName)
   {
     cleanup();
