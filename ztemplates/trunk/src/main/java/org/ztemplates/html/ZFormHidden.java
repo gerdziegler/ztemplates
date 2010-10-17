@@ -12,7 +12,7 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.html;
+package org.ztemplates.html;
 
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZExpose;
@@ -21,23 +21,19 @@ import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public final class ZFormTextArea extends ZPropertyHtml
+public final class ZFormHidden extends ZPropertyHtml
 {
   private final String value;
 
-  private Integer rows;
 
-  private Integer cols;
-
-
-  public ZFormTextArea(String id, final ZProperty prop)
+  public ZFormHidden(String id, ZProperty prop)
   {
     super(id, prop);
     this.value = prop.getStringValue();
   }
 
 
-  public ZFormTextArea(final ZProperty prop)
+  public ZFormHidden(final ZProperty prop)
   {
     this(ZTemplates.getRenderService().createJavaScriptId(), prop);
   }
@@ -47,31 +43,5 @@ public final class ZFormTextArea extends ZPropertyHtml
   public String getValue()
   {
     return value;
-  }
-
-
-  @ZExpose
-  public Integer getRows()
-  {
-    return rows;
-  }
-
-
-  public void setRows(Integer rows)
-  {
-    this.rows = rows;
-  }
-
-
-  @ZExpose
-  public Integer getCols()
-  {
-    return cols;
-  }
-
-
-  public void setCols(Integer cols)
-  {
-    this.cols = cols;
   }
 }

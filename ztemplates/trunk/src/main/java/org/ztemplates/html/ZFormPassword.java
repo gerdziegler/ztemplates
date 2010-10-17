@@ -12,36 +12,36 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.html;
+package org.ztemplates.html;
 
-import org.ztemplates.property.ZOperation;
+import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public final class ZFormSubmit extends ZPropertyHtml
+public final class ZFormPassword extends ZPropertyHtml
 {
-  private final String allowedValue;
+  private final String value;
 
 
-  public ZFormSubmit(String id, final ZOperation prop)
+  public ZFormPassword(String id, final ZProperty prop)
   {
     super(id, prop);
-    this.allowedValue = prop.getAllowedValue();
+    this.value = prop.getStringValue();
   }
 
 
-  public ZFormSubmit(final ZOperation prop)
+  public ZFormPassword(final ZProperty prop)
   {
     this(ZTemplates.getRenderService().createJavaScriptId(), prop);
   }
 
 
   @ZExpose
-  public String getAllowedValue()
+  public String getValue()
   {
-    return allowedValue;
+    return value;
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Gerd Ziegler (www.gerdziegler.de)
+ * Copyright 2008 Gerd Ziegler (www.gerdziegler.de)
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,35 +12,40 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.html;
+package org.ztemplates.html;
 
 import org.ztemplates.property.ZBooleanProperty;
-import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public final class ZFormFile extends ZPropertyHtml
+public final class ZFormBooleanCheckbox extends ZPropertyHtml
 {
   private final String value;
 
-  private final String accept;
+  private final boolean checked;
 
 
-  public ZFormFile(String id, final ZProperty prop)
+  public ZFormBooleanCheckbox(String id, final ZBooleanProperty prop)
   {
     super(id, prop);
-    this.value = prop.getStringValue();
-    // TODO always null
-    this.accept = null;
+    this.checked = "true".equals(prop.getStringValue());
+    this.value = "true";
   }
 
 
-  public ZFormFile(final ZBooleanProperty prop)
+  public ZFormBooleanCheckbox(final ZBooleanProperty prop)
   {
     this(ZTemplates.getRenderService().createJavaScriptId(), prop);
+  }
+
+
+  @ZExpose
+  public boolean isChecked()
+  {
+    return checked;
   }
 
 
@@ -49,12 +54,4 @@ public final class ZFormFile extends ZPropertyHtml
   {
     return value;
   }
-
-
-  @ZExpose
-  public String getAccept()
-  {
-    return accept;
-  }
-
 }

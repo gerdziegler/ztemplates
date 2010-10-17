@@ -12,45 +12,36 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.html;
+package org.ztemplates.html;
 
-import org.ztemplates.json.ZExposeJson;
+import org.ztemplates.property.ZOperation;
+import org.ztemplates.render.ZExpose;
+import org.ztemplates.render.ZRenderer;
+import org.ztemplates.render.velocity.ZVelocityRenderer;
+import org.ztemplates.web.ZTemplates;
 
-public class ZFormSelectOption
+@ZRenderer(ZVelocityRenderer.class)
+public final class ZFormSubmit extends ZPropertyHtml
 {
-  private final String key;
-
-  private final String value;
-
-  private final boolean selected;
+  private final String allowedValue;
 
 
-  public ZFormSelectOption(final String key, final String value, boolean selected)
+  public ZFormSubmit(String id, final ZOperation prop)
   {
-    super();
-    this.key = key;
-    this.value = value;
-    this.selected = selected;
+    super(id, prop);
+    this.allowedValue = prop.getAllowedValue();
   }
 
 
-  @ZExposeJson
-  public String getKey()
+  public ZFormSubmit(final ZOperation prop)
   {
-    return key;
+    this(ZTemplates.getRenderService().createJavaScriptId(), prop);
   }
 
 
-  @ZExposeJson
-  public String getValue()
+  @ZExpose
+  public String getAllowedValue()
   {
-    return value;
-  }
-
-
-  @ZExposeJson
-  public boolean isSelected()
-  {
-    return selected;
+    return allowedValue;
   }
 }

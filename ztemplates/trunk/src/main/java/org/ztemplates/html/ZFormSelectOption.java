@@ -12,36 +12,45 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.html;
+package org.ztemplates.html;
 
-import org.ztemplates.property.ZProperty;
-import org.ztemplates.render.ZExpose;
-import org.ztemplates.render.ZRenderer;
-import org.ztemplates.render.velocity.ZVelocityRenderer;
-import org.ztemplates.web.ZTemplates;
+import org.ztemplates.json.ZExposeJson;
 
-@ZRenderer(ZVelocityRenderer.class)
-public final class ZFormPassword extends ZPropertyHtml
+public class ZFormSelectOption
 {
+  private final String key;
+
   private final String value;
 
+  private final boolean selected;
 
-  public ZFormPassword(String id, final ZProperty prop)
+
+  public ZFormSelectOption(final String key, final String value, boolean selected)
   {
-    super(id, prop);
-    this.value = prop.getStringValue();
+    super();
+    this.key = key;
+    this.value = value;
+    this.selected = selected;
   }
 
 
-  public ZFormPassword(final ZProperty prop)
+  @ZExposeJson
+  public String getKey()
   {
-    this(ZTemplates.getRenderService().createJavaScriptId(), prop);
+    return key;
   }
 
 
-  @ZExpose
+  @ZExposeJson
   public String getValue()
   {
     return value;
+  }
+
+
+  @ZExposeJson
+  public boolean isSelected()
+  {
+    return selected;
   }
 }

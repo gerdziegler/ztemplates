@@ -12,12 +12,10 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.html;
+package org.ztemplates.html;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.ztemplates.property.ZSelectProperty;
 import org.ztemplates.render.ZExpose;
@@ -26,61 +24,54 @@ import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public final class ZFormRadio<T> extends ZPropertyHtml
+public final class ZFormSelect extends ZPropertyHtml
 {
-  private Map<T, String> idMap = new HashMap<T, String>();
+  private final int size;
 
-  private boolean vertical = false;
-
-  private final List<ZFormRadioItem> items = new ArrayList<ZFormRadioItem>();
+  private final List<ZFormSelectOption> options = new ArrayList<ZFormSelectOption>();
 
 
-  public ZFormRadio(String id, ZSelectProperty<T> prop)
+  public <T> ZFormSelect(final ZSelectProperty<T> prop)
+  {
+    this(ZTemplates.getRenderService().createJavaScriptId(), prop, 1);
+  }
+
+
+  public <T> ZFormSelect(String id, final ZSelectProperty<T> prop, int size)
   {
     super(id, prop);
+    this.size = size;
 
-    final String myId = getId();
-    for (int i = 0; i < prop.getAllowedValues().size(); i++)
+    String stringValue = prop.getStringValue();
+    for (T t : prop.getAllowedValues())
     {
-      T t = prop.getAllowedValues().get(i);
-      String itemId = myId + "RB" + i;
       String key = prop.format(t);
       String value = prop.computeDisplayValue(t);
-      boolean selected = key.equals(prop.getStringValue());
-      ZFormRadioItem item = new ZFormRadioItem(itemId, key, value, selected);
-      items.add(item);
+      boolean selected;
+      if (key == null)
+      {
+        selected = stringValue == null;
+      }
+      else
+      {
+        selected = stringValue != null && key.equals(stringValue);
+      }
+      ZFormSelectOption item = new ZFormSelectOption(key, value, selected);
+      options.add(item);
     }
   }
 
 
-  public ZFormRadio(final ZSelectProperty<T> prop)
+  @ZExpose
+  public List<ZFormSelectOption> getOptions() throws Exception
   {
-    this(ZTemplates.getRenderService().createJavaScriptId(), prop);
+    return options;
   }
 
 
   @ZExpose
-  public List<ZFormRadioItem> getItems()
+  public int getSize()
   {
-    return items;
-  }
-
-
-  @ZExpose
-  public boolean isVertical()
-  {
-    return vertical;
-  }
-
-
-  public void setVertical(boolean vertical)
-  {
-    this.vertical = vertical;
-  }
-
-
-  public Map<T, String> getIdMap()
-  {
-    return idMap;
+    return size;
   }
 }

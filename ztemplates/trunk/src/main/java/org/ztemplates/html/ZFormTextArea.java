@@ -12,40 +12,34 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.html;
+package org.ztemplates.html;
 
-import org.ztemplates.property.ZBooleanProperty;
+import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public final class ZFormBooleanCheckbox extends ZPropertyHtml
+public final class ZFormTextArea extends ZPropertyHtml
 {
   private final String value;
 
-  private final boolean checked;
+  private Integer rows;
+
+  private Integer cols;
 
 
-  public ZFormBooleanCheckbox(String id, final ZBooleanProperty prop)
+  public ZFormTextArea(String id, final ZProperty prop)
   {
     super(id, prop);
-    this.checked = "true".equals(prop.getStringValue());
-    this.value = "true";
+    this.value = prop.getStringValue();
   }
 
 
-  public ZFormBooleanCheckbox(final ZBooleanProperty prop)
+  public ZFormTextArea(final ZProperty prop)
   {
     this(ZTemplates.getRenderService().createJavaScriptId(), prop);
-  }
-
-
-  @ZExpose
-  public boolean isChecked()
-  {
-    return checked;
   }
 
 
@@ -53,5 +47,31 @@ public final class ZFormBooleanCheckbox extends ZPropertyHtml
   public String getValue()
   {
     return value;
+  }
+
+
+  @ZExpose
+  public Integer getRows()
+  {
+    return rows;
+  }
+
+
+  public void setRows(Integer rows)
+  {
+    this.rows = rows;
+  }
+
+
+  @ZExpose
+  public Integer getCols()
+  {
+    return cols;
+  }
+
+
+  public void setCols(Integer cols)
+  {
+    this.cols = cols;
   }
 }

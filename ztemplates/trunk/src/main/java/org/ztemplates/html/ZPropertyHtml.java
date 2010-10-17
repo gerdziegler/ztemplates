@@ -1,4 +1,4 @@
-package org.ztemplates.web.html;
+package org.ztemplates.html;
 
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZExpose;
