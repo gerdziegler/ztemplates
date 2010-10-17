@@ -53,7 +53,7 @@ public class ZTemplatesContextListener implements ServletContextListener
       }
 
       if (name.startsWith("org.apache.") || name.startsWith("freemarker.") || name.startsWith("flex.") || name.startsWith("java.") || name.startsWith("javax.")
-          || name.startsWith("org.junit") || name.startsWith("org.json") || name.startsWith("org.jgrapht") || name.startsWith("org.jfree"))
+          || name.startsWith("org.junit") || name.startsWith("org.json") || name.startsWith("org.jfree"))
       {
         return false;
       }

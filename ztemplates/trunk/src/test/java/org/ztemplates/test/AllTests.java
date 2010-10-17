@@ -22,7 +22,6 @@ import org.ztemplates.form.ZFormElementMirrorTest;
 import org.ztemplates.form.ZFormValuesTest;
 import org.ztemplates.form.ZSerializeUtilTest;
 import org.ztemplates.json.ZJsonTest;
-import org.ztemplates.render.script.ZScriptRepositoryTest;
 import org.ztemplates.test.actions.classes.test1.ClassesTest;
 import org.ztemplates.test.actions.expression.test1.ExpressionTest;
 import org.ztemplates.test.actions.service.ActionServiceTest;
@@ -132,14 +131,12 @@ public class AllTests extends TestSuite
     suite.addTestSuite(ReflectionUtilTest.class);
     suite.addTestSuite(ZFormElementMirrorTest.class);
     suite.addTestSuite(ZSerializeUtilTest.class);
-    suite.addTestSuite(ZScriptRepositoryTest.class);
     suite.addTestSuite(VariableNamesScriptTest.class);
     suite.addTestSuite(ZJsonTest.class);
     suite.addTestSuite(FormTestOpCallback.class);
     // suite.addTestSuite(SessionFormTest.class);
     suite.addTestSuite(ZFormValuesTest.class);
     suite.addTestSuite(ZRenderClassRepositoryTest.class);
-    suite.addTestSuite(ZScriptRepositoryTest.class);
 
     // suite.addTestSuite(ZTemplatesInternalArchitectureTest.class);
 
