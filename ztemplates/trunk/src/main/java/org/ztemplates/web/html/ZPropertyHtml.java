@@ -1,4 +1,4 @@
-package org.ztemplates.web.form.html;
+package org.ztemplates.web.html;
 
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZExpose;

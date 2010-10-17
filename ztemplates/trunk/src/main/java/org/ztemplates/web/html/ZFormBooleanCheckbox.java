@@ -12,30 +12,40 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.form.html;
+package org.ztemplates.web.html;
 
-import org.ztemplates.property.ZProperty;
+import org.ztemplates.property.ZBooleanProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public final class ZFormPassword extends ZPropertyHtml
+public final class ZFormBooleanCheckbox extends ZPropertyHtml
 {
   private final String value;
 
+  private final boolean checked;
 
-  public ZFormPassword(String id, final ZProperty prop)
+
+  public ZFormBooleanCheckbox(String id, final ZBooleanProperty prop)
   {
     super(id, prop);
-    this.value = prop.getStringValue();
+    this.checked = "true".equals(prop.getStringValue());
+    this.value = "true";
   }
 
 
-  public ZFormPassword(final ZProperty prop)
+  public ZFormBooleanCheckbox(final ZBooleanProperty prop)
   {
     this(ZTemplates.getRenderService().createJavaScriptId(), prop);
+  }
+
+
+  @ZExpose
+  public boolean isChecked()
+  {
+    return checked;
   }
 
 

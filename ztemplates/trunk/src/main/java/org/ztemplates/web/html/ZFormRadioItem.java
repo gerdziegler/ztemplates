@@ -12,36 +12,49 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.form.html;
+package org.ztemplates.web.html;
 
-import org.ztemplates.property.ZProperty;
-import org.ztemplates.render.ZExpose;
-import org.ztemplates.render.ZRenderer;
-import org.ztemplates.render.velocity.ZVelocityRenderer;
-import org.ztemplates.web.ZTemplates;
-
-@ZRenderer(ZVelocityRenderer.class)
-public final class ZFormText extends ZPropertyHtml
+public class ZFormRadioItem
 {
+  private final String id;
+
+  private final String key;
+
   private final String value;
 
+  private final boolean selected;
 
-  public ZFormText(String id, final ZProperty prop)
+
+  public ZFormRadioItem(String id, final String key, final String value, boolean selected)
   {
-    super(id, prop);
-    this.value = prop.getStringValue();
+    super();
+    this.id = id;
+    this.key = key;
+    this.value = value;
+    this.selected = selected;
   }
 
 
-  public ZFormText(final ZProperty prop)
+  public String getKey()
   {
-    this(ZTemplates.getRenderService().createJavaScriptId(), prop);
+    return key;
   }
 
 
-  @ZExpose
   public String getValue()
   {
     return value;
+  }
+
+
+  public boolean isSelected()
+  {
+    return selected;
+  }
+
+
+  public String getId()
+  {
+    return id;
   }
 }

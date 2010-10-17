@@ -12,36 +12,36 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.form.html;
+package org.ztemplates.web.html;
 
-import org.ztemplates.property.ZProperty;
+import org.ztemplates.property.ZOperation;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public final class ZFormHidden extends ZPropertyHtml
+public final class ZFormSubmit extends ZPropertyHtml
 {
-  private final String value;
+  private final String allowedValue;
 
 
-  public ZFormHidden(String id, ZProperty prop)
+  public ZFormSubmit(String id, final ZOperation prop)
   {
     super(id, prop);
-    this.value = prop.getStringValue();
+    this.allowedValue = prop.getAllowedValue();
   }
 
 
-  public ZFormHidden(final ZProperty prop)
+  public ZFormSubmit(final ZOperation prop)
   {
     this(ZTemplates.getRenderService().createJavaScriptId(), prop);
   }
 
 
   @ZExpose
-  public String getValue()
+  public String getAllowedValue()
   {
-    return value;
+    return allowedValue;
   }
 }

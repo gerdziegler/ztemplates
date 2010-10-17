@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Gerd Ziegler (www.gerdziegler.de)
+ * Copyright 2010 Gerd Ziegler (www.gerdziegler.de)
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,36 +12,49 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.form.html;
+package org.ztemplates.web.html;
 
-import org.ztemplates.property.ZOperation;
+import org.ztemplates.property.ZBooleanProperty;
+import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
-public final class ZFormSubmit extends ZPropertyHtml
+public final class ZFormFile extends ZPropertyHtml
 {
-  private final String allowedValue;
+  private final String value;
+
+  private final String accept;
 
 
-  public ZFormSubmit(String id, final ZOperation prop)
+  public ZFormFile(String id, final ZProperty prop)
   {
     super(id, prop);
-    this.allowedValue = prop.getAllowedValue();
+    this.value = prop.getStringValue();
+    // TODO always null
+    this.accept = null;
   }
 
 
-  public ZFormSubmit(final ZOperation prop)
+  public ZFormFile(final ZBooleanProperty prop)
   {
     this(ZTemplates.getRenderService().createJavaScriptId(), prop);
   }
 
 
   @ZExpose
-  public String getAllowedValue()
+  public String getValue()
   {
-    return allowedValue;
+    return value;
   }
+
+
+  @ZExpose
+  public String getAccept()
+  {
+    return accept;
+  }
+
 }

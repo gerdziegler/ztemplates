@@ -12,7 +12,7 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.form.html;
+package org.ztemplates.web.html;
 
 import java.util.ArrayList;
 import java.util.HashMap;
