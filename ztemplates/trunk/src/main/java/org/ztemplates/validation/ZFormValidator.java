@@ -7,6 +7,8 @@ import org.ztemplates.form.ZIForm;
 import org.ztemplates.form.impl.ZFormWrapper;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
+import org.ztemplates.validation.message.ZErrorMessage;
+import org.ztemplates.validation.message.ZMessages;
 
 public class ZFormValidator implements ZIValidator
 {

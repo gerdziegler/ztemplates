@@ -12,21 +12,23 @@
  * 
  * @author www.gerdziegler.de
  */
-package org.ztemplates.property.validator;
+package org.ztemplates.validation;
 
-import org.ztemplates.property.ZProperty;
-import org.ztemplates.property.validator.assets.ZRegexValidatorScriptLoaderAction;
-import org.ztemplates.render.ZJavaScript;
-import org.ztemplates.render.ZScript;
+import org.ztemplates.json.ZExposeJson;
 
-@ZScript(javaScript =
+/**
+ * implement this to define a client side validator and add the validator to the
+ * properties validators
+ * 
+ * @author www.gerdziegler.de
+ */
+public interface ZIJavaScriptValidator extends ZIValidator
 {
-    @ZJavaScript(ZRegexValidatorScriptLoaderAction.REGEX_VALIDATOR_JS)
-})
-public class ZLengthValidator extends ZRegexStringValidator
-{
-  public ZLengthValidator(int minlength, int maxlength, String message, ZProperty prop)
-  {
-    super("^.{" + minlength + "," + maxlength + "}$", message, prop);
-  }
+  /**
+   * name of a JavaScript validation method to call for this validator
+   * 
+   * @return
+   */
+  @ZExposeJson
+  public String getJavaScriptMethodName();
 }

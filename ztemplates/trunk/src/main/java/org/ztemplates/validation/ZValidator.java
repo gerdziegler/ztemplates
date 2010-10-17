@@ -3,6 +3,8 @@ package org.ztemplates.validation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ztemplates.validation.message.ZMessages;
+
 public class ZValidator implements ZIValidator
 {
   private final List<ZIValidator> validators = new ArrayList<ZIValidator>();

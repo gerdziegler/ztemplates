@@ -12,21 +12,21 @@
  * 
  * @author www.gerdziegler.de
  */
-package org.ztemplates.property.validator;
+package org.ztemplates.validation;
 
 import org.ztemplates.property.ZProperty;
-import org.ztemplates.property.validator.assets.ZRegexValidatorScriptLoaderAction;
 import org.ztemplates.render.ZJavaScript;
 import org.ztemplates.render.ZScript;
+import org.ztemplates.validation.assets.ZRegexValidatorScriptLoaderAction;
 
 @ZScript(javaScript =
 {
     @ZJavaScript(ZRegexValidatorScriptLoaderAction.REGEX_VALIDATOR_JS)
 })
-public class ZMaxLengthValidator extends ZLengthValidator
+public class ZMinLengthValidator extends ZLengthValidator
 {
-  public ZMaxLengthValidator(int maxlength, String message, ZProperty prop)
+  public ZMinLengthValidator(int minlength, String message, ZProperty prop)
   {
-    super(0, maxlength, message, prop);
+    super(minlength, 0, message, prop);
   }
 }

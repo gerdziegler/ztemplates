@@ -12,24 +12,23 @@
  * 
  * @author www.gerdziegler.de
  */
-package org.ztemplates.property.validator;
+package org.ztemplates.validation;
 
 import java.util.regex.Pattern;
 
 import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.property.ZProperty;
-import org.ztemplates.property.validator.assets.ZRegexValidatorScriptLoaderAction;
 import org.ztemplates.render.ZJavaScript;
 import org.ztemplates.render.ZScript;
-import org.ztemplates.validation.ZErrorMessage;
-import org.ztemplates.validation.ZIValidator;
-import org.ztemplates.validation.ZMessages;
+import org.ztemplates.validation.assets.ZRegexValidatorScriptLoaderAction;
+import org.ztemplates.validation.message.ZErrorMessage;
+import org.ztemplates.validation.message.ZMessages;
 
 @ZScript(javaScript =
 {
     @ZJavaScript(ZRegexValidatorScriptLoaderAction.REGEX_VALIDATOR_JS)
 })
-public class ZRegexStringValidator implements ZIValidator, ZIJavaScriptValidator
+public class ZRegexValidator implements ZIValidator, ZIJavaScriptValidator
 {
   private final ZProperty prop;
 
@@ -40,7 +39,7 @@ public class ZRegexStringValidator implements ZIValidator, ZIJavaScriptValidator
   private final Pattern pattern;
 
 
-  public ZRegexStringValidator(String regex, String message, ZProperty prop)
+  public ZRegexValidator(String regex, String message, ZProperty prop)
   {
     super();
     this.prop = prop;

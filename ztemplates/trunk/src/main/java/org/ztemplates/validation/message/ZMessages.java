@@ -1,4 +1,4 @@
-package org.ztemplates.validation;
+package org.ztemplates.validation.message;
 
 import java.util.ArrayList;
 import java.util.Collections;

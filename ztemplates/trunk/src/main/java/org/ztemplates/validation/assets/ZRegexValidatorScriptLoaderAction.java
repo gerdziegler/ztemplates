@@ -1,4 +1,4 @@
-package org.ztemplates.property.validator.assets;
+package org.ztemplates.validation.assets;
 
 import org.ztemplates.actions.ZMatch;
 import org.ztemplates.web.request.actions.ZResourceLoaderAction;
