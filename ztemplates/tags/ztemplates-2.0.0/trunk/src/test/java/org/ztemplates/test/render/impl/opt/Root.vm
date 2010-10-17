@@ -1,0 +1,12 @@
+$zscript
+
+[root content]
+
+$nested
+
+$simpleValue
+
+#foreach($item in $nestedList)
+$item
+
+#end
