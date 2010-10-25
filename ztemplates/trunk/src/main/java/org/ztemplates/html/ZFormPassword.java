@@ -18,7 +18,6 @@ import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
-import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormPassword extends ZPropertyHtml
@@ -35,7 +34,7 @@ public final class ZFormPassword extends ZPropertyHtml
 
   public ZFormPassword(final ZProperty prop)
   {
-    this(ZTemplates.getRenderService().createJavaScriptId(), prop);
+    this(computeId(prop), prop);
   }
 
 

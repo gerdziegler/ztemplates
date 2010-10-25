@@ -39,7 +39,10 @@ public class ZRenderServiceImpl implements ZIRenderService
 
   private final ZIWebRenderContext ctx;
 
-  private String javaScriptIdPrefix = "zid" + System.currentTimeMillis() + "_";
+  private String javaScriptIdPrefix = "zid" /*
+                                             * + System.currentTimeMillis() +
+                                             * "_"
+                                             */;
 
   private int crtId = 0;
 

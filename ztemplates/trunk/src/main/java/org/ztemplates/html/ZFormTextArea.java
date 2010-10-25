@@ -18,7 +18,6 @@ import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
-import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormTextArea extends ZPropertyHtml
@@ -39,7 +38,7 @@ public final class ZFormTextArea extends ZPropertyHtml
 
   public ZFormTextArea(final ZProperty prop)
   {
-    this(ZTemplates.getRenderService().createJavaScriptId(), prop);
+    this(computeId(prop), prop);
   }
 
 

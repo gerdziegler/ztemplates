@@ -18,7 +18,6 @@ import org.ztemplates.property.ZOperation;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
-import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormSubmit extends ZPropertyHtml
@@ -35,7 +34,7 @@ public final class ZFormSubmit extends ZPropertyHtml
 
   public ZFormSubmit(final ZOperation prop)
   {
-    this(ZTemplates.getRenderService().createJavaScriptId(), prop);
+    this(computeId(prop), prop);
   }
 
 

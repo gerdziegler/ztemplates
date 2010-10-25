@@ -18,7 +18,6 @@ import org.ztemplates.property.ZBooleanProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
-import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormBooleanCheckbox extends ZPropertyHtml
@@ -38,7 +37,7 @@ public final class ZFormBooleanCheckbox extends ZPropertyHtml
 
   public ZFormBooleanCheckbox(final ZBooleanProperty prop)
   {
-    this(ZTemplates.getRenderService().createJavaScriptId(), prop);
+    this(computeId(prop), prop);
   }
 
 

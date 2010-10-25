@@ -21,6 +21,12 @@ public abstract class ZPropertyHtml
   }
 
 
+  protected static String computeId(ZProperty property)
+  {
+    return property.getName().replace('.', '_');
+  }
+
+
   @ZExpose
   public final String getId()
   {

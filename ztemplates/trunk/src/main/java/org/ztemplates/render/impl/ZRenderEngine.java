@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZIRenderEngine;
 import org.ztemplates.render.ZIRenderedObject;
 import org.ztemplates.render.ZIRenderer;
@@ -112,14 +111,13 @@ public class ZRenderEngine implements ZIRenderEngine
   {
     Map<String, Object> values = new HashMap<String, Object>();
 
-    List<ZExposedMethod> exposedMethods = exposedMethodRepository.getExposedMethods(obj.getClass());
+    List<ZIExposedValue> exposedMethods = exposedMethodRepository.getExposedValues(obj.getClass());
 
-    for (ZExposedMethod m : exposedMethods)
+    for (ZIExposedValue m : exposedMethods)
     {
-      ZExpose exp = m.getMethod().getAnnotation(ZExpose.class);
-      Object val = m.getMethod().invoke(obj);
+      Object val = m.getValue(obj);
       values.put(m.getName() + "Bean", val);
-      if (exp.render())
+      if (m.isRender())
       {
         if (val instanceof Collection)
         {

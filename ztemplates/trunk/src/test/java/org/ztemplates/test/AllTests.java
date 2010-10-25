@@ -56,6 +56,7 @@ import org.ztemplates.test.reflection.ReflectionUtilTest;
 import org.ztemplates.test.render.css.CssTest;
 import org.ztemplates.test.render.impl.ReplaceUtilTest;
 import org.ztemplates.test.render.impl.opt.ZRenderClassRepositoryTest;
+import org.ztemplates.test.render.methodrepo.ZExposedMethodRepositoryTest;
 import org.ztemplates.test.render.script.basic.ScriptTest;
 import org.ztemplates.test.render.script.basic2.BasicScript2Test;
 import org.ztemplates.test.render.script.cycle.ScriptCycleTest;
@@ -137,6 +138,7 @@ public class AllTests extends TestSuite
     // suite.addTestSuite(SessionFormTest.class);
     suite.addTestSuite(ZFormValuesTest.class);
     suite.addTestSuite(ZRenderClassRepositoryTest.class);
+    suite.addTestSuite(ZExposedMethodRepositoryTest.class);
 
     // suite.addTestSuite(ZTemplatesInternalArchitectureTest.class);
 

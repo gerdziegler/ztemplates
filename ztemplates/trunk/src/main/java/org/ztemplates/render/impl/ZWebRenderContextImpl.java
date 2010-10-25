@@ -70,10 +70,9 @@ public class ZWebRenderContextImpl implements ZIWebRenderContext
   }
 
 
-  public List<ZExposedMethod> getExposedMethods(Class clazz) throws Exception
+  public List<ZIExposedValue> getExposedValues(Class clazz) throws Exception
   {
-    return application.getExposedMethodRepository()
-        .getExposedMethods(clazz);
+    return application.getExposedMethodRepository().getExposedValues(clazz);
   }
 
 

@@ -23,7 +23,6 @@ import org.ztemplates.property.ZSelectProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
-import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormRadio<T> extends ZPropertyHtml
@@ -55,7 +54,7 @@ public final class ZFormRadio<T> extends ZPropertyHtml
 
   public ZFormRadio(final ZSelectProperty<T> prop)
   {
-    this(ZTemplates.getRenderService().createJavaScriptId(), prop);
+    this(computeId(prop), prop);
   }
 
 

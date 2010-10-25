@@ -1,21 +1,21 @@
 package org.ztemplates.render.impl;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 
-public class ZExposedMethod implements ZIExposedValue
+public class ZExposedField implements ZIExposedValue
 {
   private final String name;
 
-  private final Method method;
+  private final Field field;
 
   private final boolean render;
 
 
-  public ZExposedMethod(String name, Method method, boolean render)
+  public ZExposedField(String name, Field field, boolean render)
   {
     super();
     this.name = name;
-    this.method = method;
+    this.field = field;
     this.render = render;
   }
 
@@ -23,7 +23,7 @@ public class ZExposedMethod implements ZIExposedValue
   @Override
   public String toString()
   {
-    return name + "[" + method + "]";
+    return name + "[" + field + "]";
   }
 
 
@@ -45,7 +45,7 @@ public class ZExposedMethod implements ZIExposedValue
    */
   public Object getValue(Object obj) throws Exception
   {
-    return method.invoke(obj);
+    return field.get(obj);
   }
 
 

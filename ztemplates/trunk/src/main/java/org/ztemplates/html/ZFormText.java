@@ -18,30 +18,25 @@ import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
-import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormText extends ZPropertyHtml
 {
-  private final String value;
-
-
   public ZFormText(String id, final ZProperty prop)
   {
     super(id, prop);
-    this.value = prop.getStringValue();
   }
 
 
   public ZFormText(final ZProperty prop)
   {
-    this(ZTemplates.getRenderService().createJavaScriptId(), prop);
+    this(computeId(prop), prop);
   }
 
 
   @ZExpose
   public String getValue()
   {
-    return value;
+    return getProperty().getStringValue();
   }
 }

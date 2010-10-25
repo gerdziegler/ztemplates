@@ -19,7 +19,6 @@ import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
-import org.ztemplates.web.ZTemplates;
 
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormFile extends ZPropertyHtml
@@ -40,7 +39,7 @@ public final class ZFormFile extends ZPropertyHtml
 
   public ZFormFile(final ZBooleanProperty prop)
   {
-    this(ZTemplates.getRenderService().createJavaScriptId(), prop);
+    this(computeId(prop), prop);
   }
 
 

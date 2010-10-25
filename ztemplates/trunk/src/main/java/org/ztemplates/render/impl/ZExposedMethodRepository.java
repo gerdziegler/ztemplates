@@ -1,5 +1,6 @@
 package org.ztemplates.render.impl;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,12 +11,12 @@ import org.ztemplates.render.ZExpose;
 
 public class ZExposedMethodRepository implements ZIExposedMethodRepository
 {
-  private final Map<Class, List<ZExposedMethod>> cache = new HashMap<Class, List<ZExposedMethod>>();
+  private final Map<Class, List<ZIExposedValue>> cache = new HashMap<Class, List<ZIExposedValue>>();
 
 
-  public List<ZExposedMethod> getExposedMethods(Class clazz) throws Exception
+  public List<ZIExposedValue> getExposedValues(Class clazz) throws Exception
   {
-    List<ZExposedMethod> ret = cache.get(clazz);
+    List<ZIExposedValue> ret = cache.get(clazz);
     if (ret != null)
     {
       return ret;
@@ -24,11 +25,22 @@ public class ZExposedMethodRepository implements ZIExposedMethodRepository
   }
 
 
-  public List<ZExposedMethod> addExposed(Class clazz) throws Exception
+  public List<ZIExposedValue> addExposed(Class clazz) throws Exception
   {
-    List<ZExposedMethod> ret = new ArrayList<ZExposedMethod>();
+    Map<String, ZIExposedValue> map = new HashMap<String, ZIExposedValue>();
+    for (Field f : clazz.getFields())
+    {
+      ZExpose exp = f.getAnnotation(ZExpose.class);
+      if (exp != null)
+      {
+        String name = f.getName();
+        ZExposedField em = new ZExposedField(name, f, exp.render());
+        map.put(em.getName(), em);
+      }
+    }
     for (Method m : clazz.getMethods())
     {
+
       ZExpose exp = m.getAnnotation(ZExpose.class);
       if (exp != null)
       {
@@ -47,10 +59,17 @@ public class ZExposedMethodRepository implements ZIExposedMethodRepository
           throw new Exception("Only getters can be annotated with " + ZExpose.class.getName() + " "
               + m);
         }
-        ZExposedMethod em = new ZExposedMethod(key, m);
-        ret.add(em);
+        boolean render = exp != null && exp.render();
+        ZExposedMethod em = new ZExposedMethod(key, m, render);
+        if (map.containsKey(em.getName()))
+        {
+          ZIExposedValue val1 = map.get(em.getName());
+          throw new Exception("duplicate value exposed in " + clazz.getName() + " --- " + val1 + " --- " + em);
+        }
+        map.put(em.getName(), em);
       }
     }
+    List<ZIExposedValue> ret = new ArrayList<ZIExposedValue>(map.values());
     cache.put(clazz, ret);
     return ret;
   }
