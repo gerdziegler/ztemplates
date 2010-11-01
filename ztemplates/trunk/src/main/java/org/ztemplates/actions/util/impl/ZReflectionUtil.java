@@ -15,6 +15,7 @@
 package org.ztemplates.actions.util.impl;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.apache.log4j.Logger;
@@ -207,7 +208,10 @@ public class ZReflectionUtil
     if (ZProperty.class.isAssignableFrom(m.getReturnType()))
     {
       ZProperty prop = (ZProperty) invoke(m, obj);
-      prop.setStringValues(new String[]{value});
+      prop.setStringValues(new String[]
+      {
+          value
+      });
     }
     else if (m.getParameterTypes()[0].isEnum())
     {
@@ -224,16 +228,20 @@ public class ZReflectionUtil
   public static String[] callParameterGetter(Object obj, String name) throws Exception
   {
     Method m = getGetter(obj.getClass(), name);
+    Object ret;
+
     if (m == null)
     {
-      throw new Exception("parameter getter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation " + ZGetter.class.getSimpleName());
-    }
-
-    Object ret;
-    if (ZProperty.class.isAssignableFrom(m.getReturnType()))
-    {
-      ZProperty prop = (ZProperty) invoke(m, obj);
-      ret = prop.getStringValue();
+      Field f = obj.getClass().getField(name);
+      if (f == null)
+      {
+        throw new Exception("parameter getter/field not found: '" + name + "' in " + obj.getClass().getName() + " use annotation "
+            + ZGetter.class.getSimpleName());
+      }
+      else
+      {
+        ret = f.get(obj);
+      }
     }
     else
     {
@@ -243,6 +251,11 @@ public class ZReflectionUtil
     if (ret == null)
     {
       return null;
+    }
+    if (ret instanceof ZProperty)
+    {
+      ZProperty prop = (ZProperty) ret;
+      ret = prop.getStringValue();
     }
     if (ret.getClass().isArray())
     {
@@ -307,7 +320,7 @@ public class ZReflectionUtil
     else if (retClass.isEnum())
     {
       Enum val = (Enum) invoke(m, obj);
-      if(val==null)
+      if (val == null)
       {
         return null;
       }
