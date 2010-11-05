@@ -130,9 +130,15 @@ public class ZReflectionUtil
 
   public static ZProperty callParameterSetter(Object obj, String name, String[] value) throws Exception
   {
-    Method m = getSetter(obj.getClass(), name);
+    Class clazz = obj.getClass();
+    Method m = getSetter(clazz, name);
     if (m == null)
     {
+      // Field f = clazz.getField(name);
+      // if (f == null)
+      // {
+      //
+      // }
       if (name.indexOf('.') >= 0)
       {
         throw new Exception("parameter setter not found: '" + name + "' in " + obj.getClass().getName() + " --- character '.' in parameter name not allowed");
