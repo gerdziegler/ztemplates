@@ -2,9 +2,7 @@ package org.ztemplates.test.actions.urlhandler.callbacks.test2;
 
 import org.ztemplates.actions.ZAfter;
 import org.ztemplates.actions.ZBefore;
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.actions.ZSetter;
 
 /**
  */
@@ -62,14 +60,12 @@ public class NestedHandlerImpl implements NestedHandlerInterface
   }
 
 
-  @ZGetter("value")
   public String getValue()
   {
     return value;
   }
 
 
-  @ZSetter("value")
   public void setValue(String value)
   {
     this.value = value;

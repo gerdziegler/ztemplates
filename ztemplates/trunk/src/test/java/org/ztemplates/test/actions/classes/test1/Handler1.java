@@ -1,8 +1,6 @@
 package org.ztemplates.test.actions.classes.test1;
 
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.actions.ZSetter;
 
 /**
  */
@@ -56,28 +54,24 @@ public class Handler1
   }
 
 
-  @ZGetter("title")
   public String getTitle()
   {
     return title;
   }
 
 
-  @ZSetter("title")
   public void setTitle(String title)
   {
     this.title = title;
   }
 
 
-  @ZGetter("param1")
   public String getParam1()
   {
     return param1;
   }
 
 
-  @ZSetter("param1")
   public void setParam1(String param1)
   {
     this.param1 = param1;

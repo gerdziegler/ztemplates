@@ -118,8 +118,9 @@ public class ZTemplatesStandalone implements ZIServiceRepository
     ZIServletService servletService = null;
 
     ZIApplicationService applicationService = new ZApplicationServiceImpl(application);
-    ZIActionService actionService = new ZActionServiceImpl(urlHandler, urlFactory, applicationName, prefix);
-    ZIRenderService renderService = new ZRenderServiceImpl(application.getRenderApplication(), applicationName);
+    String contextPath = application.getActionApplication().getApplicationContext().getContextPath();
+    ZIActionService actionService = new ZActionServiceImpl(urlHandler, urlFactory, contextPath, prefix);
+    ZIRenderService renderService = new ZRenderServiceImpl(application.getRenderApplication(), contextPath);
 
     ZIEncryptionService encryptionService = new ZEncryptionServiceImpl(encryptPassword, encryptSalt);
     ZISecurityService securityService = new ZSecurityServiceImpl(securityProvider, secureUrlDecorator);

@@ -1,14 +1,12 @@
 package org.ztemplates.test.actions.classes.test1;
 
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.actions.ZSetter;
 
 /**
  */
 @ZMatch(value = "audiobooks/category/${title}_${categoryId}[/page/${pageNum}][/sortby-${sortBy}]", parameters =
 {
-  "param1"
+    "param1"
 })
 public class Handler2
 {
@@ -41,49 +39,42 @@ public class Handler2
   }
 
 
-  @ZSetter("pageNum")
   public void setPageNum(String pageNum)
   {
     this.pageNum = pageNum;
   }
 
 
-  @ZGetter("sortBy")
   public String getSortBy()
   {
     return sortBy;
   }
 
 
-  @ZSetter("sortBy")
   public void setSortBy(String sortBy)
   {
     this.sortBy = sortBy;
   }
 
 
-  @ZGetter("title")
   public String getTitle()
   {
     return title;
   }
 
 
-  @ZSetter("title")
   public void setTitle(String title)
   {
     this.title = title;
   }
 
 
-  @ZGetter("param1")
   public String getParam1()
   {
     return param1;
   }
 
 
-  @ZSetter("param1")
   public void setParam1(String param1)
   {
     this.param1 = param1;

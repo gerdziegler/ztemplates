@@ -70,4 +70,10 @@ public class ZApplicationContextWebImpl implements ZIRenderApplicationContext, Z
     return encoding;
   }
 
+
+  public String getContextPath()
+  {
+    return servletContext.getContextPath();
+  }
+
 }

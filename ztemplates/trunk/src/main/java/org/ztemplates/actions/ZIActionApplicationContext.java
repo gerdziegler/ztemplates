@@ -20,4 +20,7 @@ public interface ZIActionApplicationContext
 
 
   public String getEncoding();
+
+
+  public String getContextPath();
 }

@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ztemplates.property.ZProperty;
 
 /**
  * container for messages, keeps messages created by a validator or any other
@@ -81,6 +82,78 @@ public class ZMessages
   {
     dirty = true;
     messages.add(msg);
+  }
+
+
+  /**
+   * utilitiy
+   * 
+   * @param text
+   * @param propertyNameArr
+   */
+  public void addInfoMessage(String text, String... propertyNameArr)
+  {
+    addMessage(new ZInfoMessage(text, propertyNameArr));
+  }
+
+
+  /**
+   * utilitiy
+   * 
+   * @param text
+   * @param propertyNameArr
+   */
+  public void addInfoPropertyMessage(String text, ZProperty... propertyArr)
+  {
+    addMessage(ZMessage.create(ZMessage.INFO, text, propertyArr));
+  }
+
+
+  /**
+   * utilitiy
+   * 
+   * @param text
+   * @param propertyNameArr
+   */
+  public void addErrorMessage(String text, String... propertyNameArr)
+  {
+    addMessage(new ZErrorMessage(text, propertyNameArr));
+  }
+
+
+  /**
+   * utilitiy
+   * 
+   * @param text
+   * @param propertyNameArr
+   */
+  public void addErrorPropertyMessage(String text, ZProperty... propertyArr)
+  {
+    addMessage(ZMessage.create(ZMessage.ERROR, text, propertyArr));
+  }
+
+
+  /**
+   * utilitiy
+   * 
+   * @param text
+   * @param propertyNameArr
+   */
+  public void addWarningMessage(String text, String... propertyNameArr)
+  {
+    addMessage(new ZWarningMessage(text, propertyNameArr));
+  }
+
+
+  /**
+   * utilitiy
+   * 
+   * @param text
+   * @param propertyNameArr
+   */
+  public void addWarningPropertyMessage(String text, ZProperty... propertyArr)
+  {
+    addMessage(ZMessage.create(ZMessage.WARNING, text, propertyArr));
   }
 
 

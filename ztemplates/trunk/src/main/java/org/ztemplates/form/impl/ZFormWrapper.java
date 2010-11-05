@@ -15,6 +15,7 @@
 package org.ztemplates.form.impl;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -85,19 +86,79 @@ public final class ZFormWrapper implements ZIFormVisitable
     {
       prefix = "";
     }
+
+    for (Field f : obj.getClass().getFields())
+    {
+      Class type = f.getType();
+      // ORDER given by extends relation
+      // first
+      if (ZOperation.class.isAssignableFrom(type))
+      {
+        ZOperation op = (ZOperation) f.get(obj);
+        if (op == null)
+        {
+          throw new Exception("null value in property " + f);
+        }
+        if (op.getName() == null)
+        {
+          String opName = prefix + f.getName();
+          op.setName(opName);
+        }
+        operations.add(op);
+      }
+      // second
+      else if (ZProperty.class.isAssignableFrom(type))
+      {
+        ZProperty prop = (ZProperty) f.get(obj);
+        if (prop == null)
+        {
+          throw new Exception("null value in property " + f);
+        }
+        if (prop.getName() == null)
+        {
+          String propName = prefix + f.getName();
+          prop.setName(propName);
+        }
+        properties.add(prop);
+      }
+      // third
+      else if (ZFormWrapper.class.isAssignableFrom(type))
+      {
+        ZFormWrapper fe = (ZFormWrapper) f.get(obj);
+        if (fe == null)
+        {
+          throw new Exception("null value in property " + f);
+        }
+        if (fe.getName() == null)
+        {
+          String feName = prefix + f.getName();
+          fe.setName(feName);
+        }
+        forms.add(fe);
+      }
+      // fourth
+      else if (ZIForm.class.isAssignableFrom(type))
+      {
+        ZIForm fe = (ZIForm) f.get(obj);
+        if (fe == null)
+        {
+          throw new Exception("null value in property " + f);
+        }
+        String feName = prefix + f.getName();
+        forms.add(new ZFormWrapper(fe, feName));
+      }
+    }
+
+    // Methods
     for (Method m : obj.getClass().getMethods())
     {
       if (m.getName().startsWith("get") && m.getParameterTypes().length == 0 && Modifier.isPublic(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())
           && !m.getName().equals("getClass"))
       {
-        Class returnType = m.getReturnType();
-        /*
-         * if (ZForm.class.isAssignableFrom(returnType)) { ZForm form = (ZForm)
-         * m.invoke(obj); forms.add(form); } else
-         */
+        Class type = m.getReturnType();
         // ORDER given by extends relation
         // first
-        if (ZOperation.class.isAssignableFrom(returnType))
+        if (ZOperation.class.isAssignableFrom(type))
         {
           ZOperation op = (ZOperation) m.invoke(obj);
           if (op == null)
@@ -112,7 +173,7 @@ public final class ZFormWrapper implements ZIFormVisitable
           operations.add(op);
         }
         // second
-        else if (ZProperty.class.isAssignableFrom(returnType))
+        else if (ZProperty.class.isAssignableFrom(type))
         {
           ZProperty prop = (ZProperty) m.invoke(obj);
           if (prop == null)
@@ -127,7 +188,7 @@ public final class ZFormWrapper implements ZIFormVisitable
           properties.add(prop);
         }
         // third
-        else if (ZFormWrapper.class.isAssignableFrom(returnType))
+        else if (ZFormWrapper.class.isAssignableFrom(type))
         {
           ZFormWrapper fe = (ZFormWrapper) m.invoke(obj);
           if (fe == null)
@@ -142,7 +203,7 @@ public final class ZFormWrapper implements ZIFormVisitable
           forms.add(fe);
         }
         // fourth
-        else if (ZIForm.class.isAssignableFrom(returnType))
+        else if (ZIForm.class.isAssignableFrom(type))
         {
           ZIForm fe = (ZIForm) m.invoke(obj);
           if (fe == null)

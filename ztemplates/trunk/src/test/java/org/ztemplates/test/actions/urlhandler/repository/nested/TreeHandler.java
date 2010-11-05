@@ -1,8 +1,6 @@
 package org.ztemplates.test.actions.urlhandler.repository.nested;
 
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.actions.ZSetter;
 
 /**
  */
@@ -14,14 +12,12 @@ public class TreeHandler
   private String nodeId;
 
 
-  @ZGetter("treeId")
   public String getTreeId()
   {
     return treeId;
   }
 
 
-  @ZSetter("treeId")
   public void setTreeId(String value)
   {
     this.treeId = value;

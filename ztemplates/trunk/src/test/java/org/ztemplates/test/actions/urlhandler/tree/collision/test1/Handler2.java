@@ -1,8 +1,6 @@
 package org.ztemplates.test.actions.urlhandler.tree.collision.test1;
 
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.actions.ZSetter;
 
 /**
  */
@@ -68,14 +66,12 @@ public class Handler2
   }
 
 
-  @ZGetter("param1")
   public String getParam1()
   {
     return param1;
   }
 
 
-  @ZSetter("param1")
   public void setParam1(String param1)
   {
     this.param1 = param1;

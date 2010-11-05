@@ -2,9 +2,7 @@ package org.ztemplates.test.actions.urlhandler.repository.nested;
 
 import org.ztemplates.actions.ZAfter;
 import org.ztemplates.actions.ZBefore;
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.actions.ZSetter;
 
 /**
  */
@@ -64,28 +62,24 @@ public class Handler
   }
 
 
-  @ZGetter("nested")
   public NestedHandler getNested()
   {
     return nested;
   }
 
 
-  @ZSetter("nested")
   public void setNested(NestedHandler nested)
   {
     this.nested = nested;
   }
 
 
-  @ZGetter("tree")
   public TreeHandler getTree()
   {
     return tree;
   }
 
 
-  @ZSetter("tree")
   public void setTree(TreeHandler tree)
   {
     this.tree = tree;

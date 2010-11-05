@@ -2,10 +2,8 @@ package org.ztemplates.test.actions.urlhandler.callbacks.test2;
 
 import org.ztemplates.actions.ZAfter;
 import org.ztemplates.actions.ZBefore;
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZInit;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.actions.ZSetter;
 
 /**
  */
@@ -87,21 +85,18 @@ public class Handler
   }
 
 
-  @ZSetter("nested")
   public void setNested(NestedHandlerInterface nested)
   {
     this.nested = nested;
   }
 
 
-  @ZGetter("tree")
   public TreeHandler getTree()
   {
     return tree;
   }
 
 
-  // @ZSetter("tree")
   public void setTree(TreeHandler tree)
   {
     this.tree = tree;

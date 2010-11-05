@@ -2,9 +2,7 @@ package org.ztemplates.test.actions.urlhandler.callbacks.test2;
 
 import org.ztemplates.actions.ZAfter;
 import org.ztemplates.actions.ZBefore;
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.actions.ZSetter;
 
 /**
  */
@@ -64,14 +62,12 @@ public class NestedHandlerImpl2 implements NestedHandlerInterface
   }
 
 
-  @ZGetter("value")
   public String getValue()
   {
     return value;
   }
 
 
-  @ZSetter("value")
   public void setValue(String value)
   {
     this.value = value;
@@ -90,14 +86,12 @@ public class NestedHandlerImpl2 implements NestedHandlerInterface
   }
 
 
-  @ZGetter("tree")
   public TreeHandler getTree()
   {
     return tree;
   }
 
 
-  @ZSetter("tree")
   public void setTree(TreeHandler tree)
   {
     this.tree = tree;

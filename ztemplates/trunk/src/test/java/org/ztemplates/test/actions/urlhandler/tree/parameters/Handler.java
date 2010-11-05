@@ -1,8 +1,6 @@
 package org.ztemplates.test.actions.urlhandler.tree.parameters;
 
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.actions.ZSetter;
 import org.ztemplates.property.ZStringProperty;
 
 /**
@@ -12,7 +10,9 @@ import org.ztemplates.property.ZStringProperty;
     "param1",
     "param2",
     "paramArr4",
-    "paramProp"
+    "paramProp",
+    "field",
+    "fieldProp"
 })
 public class Handler
 {
@@ -26,43 +26,41 @@ public class Handler
 
   private NestedHandler nested;
 
+  public String field;
 
-  @ZGetter("param1")
+  public final ZStringProperty fieldProp = new ZStringProperty();
+
+
   public String getParam1()
   {
     return param1;
   }
 
 
-  @ZSetter("param1")
   public void setParam1(String param1)
   {
     this.param1 = param1;
   }
 
 
-  @ZGetter("nested")
   public NestedHandler getNested()
   {
     return nested;
   }
 
 
-  @ZSetter("nested")
   public void setNested(NestedHandler nested)
   {
     this.nested = nested;
   }
 
 
-  @ZGetter("param2")
   public String getParam2()
   {
     return param2;
   }
 
 
-  @ZSetter("param2")
   public void setParam2(String param2)
   {
     this.param2 = param2;
@@ -81,8 +79,6 @@ public class Handler
   }
 
 
-  @ZGetter("paramProp")
-  @ZSetter("paramProp")
   public ZStringProperty getParamProp()
   {
     return paramProp;

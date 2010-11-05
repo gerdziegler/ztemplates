@@ -2,10 +2,8 @@ package org.ztemplates.test.actions.urlhandler.callbacks.test1;
 
 import org.ztemplates.actions.ZAfter;
 import org.ztemplates.actions.ZBefore;
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZInit;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.actions.ZSetter;
 
 /**
  */
@@ -41,14 +39,12 @@ public class HandlerAnnotated
   }
 
 
-  @ZGetter("var1")
   public String getVar1()
   {
     return var1;
   }
 
 
-  @ZSetter("var1")
   public void setVar1(String var1)
   {
     this.var1 = var1;

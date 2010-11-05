@@ -21,9 +21,7 @@ import java.lang.reflect.Method;
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.ZAfter;
 import org.ztemplates.actions.ZBefore;
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZInit;
-import org.ztemplates.actions.ZSetter;
 import org.ztemplates.property.ZProperty;
 
 public class ZReflectionUtil
@@ -130,41 +128,48 @@ public class ZReflectionUtil
 
   public static ZProperty callParameterSetter(Object obj, String name, String[] value) throws Exception
   {
+    ZSetParameter setter;
     Class clazz = obj.getClass();
     Method m = getSetter(clazz, name);
-    if (m == null)
+    if (m != null)
     {
-      // Field f = clazz.getField(name);
-      // if (f == null)
-      // {
-      //
-      // }
-      if (name.indexOf('.') >= 0)
+      if (ZProperty.class.isAssignableFrom(m.getReturnType()))
       {
-        throw new Exception("parameter setter not found: '" + name + "' in " + obj.getClass().getName() + " --- character '.' in parameter name not allowed");
+        ZProperty prop = (ZProperty) invoke(m, obj);
+        prop.setStringValues(value);
+        return prop;
+      }
+      setter = new ZSetParameter_Method(m);
+    }
+    else
+    {
+      Field f = getField(clazz, name);
+      if (f != null)
+      {
+        if (ZProperty.class.isAssignableFrom(f.getType()))
+        {
+          ZProperty prop = (ZProperty) f.get(obj);
+          prop.setStringValues(value);
+          return prop;
+        }
+        setter = new ZSetParameter_Field(f);
       }
       else
       {
-        throw new Exception("parameter setter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation " + ZSetter.class.getSimpleName());
+        throw new Exception("parameter setter not found: '" + name + "' in " + obj.getClass().getName());
       }
     }
-    if (ZProperty.class.isAssignableFrom(m.getReturnType()))
-    {
-      ZProperty prop = (ZProperty) invoke(m, obj);
-      prop.setStringValues(value);
-      return prop;
-    }
 
-    Class paramType = m.getParameterTypes()[0];
+    Class paramType = setter.getType();
     if (paramType.isArray())
     {
-      invoke(m, obj, (Object) value);
+      setter.setValue(obj, (Object) value);
     }
     else
     {
       if (value == null)
       {
-        invoke(m, obj, (Object) null);
+        setter.setValue(obj, (Object) null);
       }
       else if (value.length == 1)
       {
@@ -176,20 +181,72 @@ public class ZReflectionUtil
 
         if (paramType.isEnum())
         {
-          invoke(m, obj, Enum.valueOf(paramType, val));
+          setter.setValue(obj, Enum.valueOf(paramType, val));
         }
         else
         {
-          invoke(m, obj, val);
+          setter.setValue(obj, val);
         }
       }
       else
       {
-        throw new Exception("cannot assign multiple values to non array setter: " + m + " " + value);
+        throw new Exception("cannot assign multiple values to non array property: " + name + " " + value);
       }
     }
 
     return null;
+  }
+
+
+  public static void callVariableSetter(Object obj, String name, String value) throws Exception
+  {
+    ZSetParameter setter;
+    Class clazz = obj.getClass();
+    Method m = getSetter(clazz, name);
+    if (m != null)
+    {
+      if (ZProperty.class.isAssignableFrom(m.getReturnType()))
+      {
+        ZProperty prop = (ZProperty) invoke(m, obj);
+        prop.setStringValues(new String[]
+        {
+            value
+        });
+        return;
+      }
+      setter = new ZSetParameter_Method(m);
+    }
+    else
+    {
+      Field f = getField(clazz, name);
+      if (f != null)
+      {
+        if (ZProperty.class.isAssignableFrom(f.getType()))
+        {
+          ZProperty prop = (ZProperty) f.get(obj);
+          prop.setStringValues(new String[]
+          {
+              value
+          });
+          return;
+        }
+        setter = new ZSetParameter_Field(f);
+      }
+      else
+      {
+        throw new Exception("variable setter not found: '" + name + "' in " + obj.getClass().getName());
+      }
+    }
+
+    if (setter.getType().isEnum())
+    {
+      Class paramType = m.getParameterTypes()[0];
+      setter.setValue(obj, Enum.valueOf(paramType, value));
+    }
+    else
+    {
+      setter.setValue(obj, value);
+    }
   }
 
 
@@ -198,75 +255,60 @@ public class ZReflectionUtil
     Method m = getSetter(obj.getClass(), name);
     if (m == null)
     {
-      throw new Exception("reference setter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation " + ZSetter.class.getSimpleName());
+      throw new Exception("reference setter not found: '" + name + "' in " + obj.getClass().getName());
     }
     invoke(m, obj, value);
   }
 
 
-  public static void callVariableSetter(Object obj, String name, String value) throws Exception
+  public static String[] callParameterGetter(Object obj, String name) throws Exception
   {
-    Method m = getSetter(obj.getClass(), name);
-    if (m == null)
+    Object ret;
+
+    Class clazz = obj.getClass();
+    String getterName = computePrefixName("get", name);
+    Method m = getMethod(clazz, getterName);
+    if (m != null)
     {
-      throw new Exception("variable setter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation " + ZSetter.class.getSimpleName());
-    }
-    if (ZProperty.class.isAssignableFrom(m.getReturnType()))
-    {
-      ZProperty prop = (ZProperty) invoke(m, obj);
-      prop.setStringValues(new String[]
-      {
-          value
-      });
-    }
-    else if (m.getParameterTypes()[0].isEnum())
-    {
-      Class paramType = m.getParameterTypes()[0];
-      invoke(m, obj, Enum.valueOf(paramType, value));
+      ret = invoke(m, obj);
     }
     else
     {
-      invoke(m, obj, value);
-    }
-  }
-
-
-  public static String[] callParameterGetter(Object obj, String name) throws Exception
-  {
-    Method m = getGetter(obj.getClass(), name);
-    Object ret;
-
-    if (m == null)
-    {
-      Field f = obj.getClass().getField(name);
-      if (f == null)
-      {
-        throw new Exception("parameter getter/field not found: '" + name + "' in " + obj.getClass().getName() + " use annotation "
-            + ZGetter.class.getSimpleName());
-      }
-      else
+      Field f = getField(clazz, name);
+      if (f != null)
       {
         ret = f.get(obj);
       }
-    }
-    else
-    {
-      ret = invoke(m, obj);
+      else
+      {
+        throw new Exception("parameter getter/field not found: '" + name + "' in " + obj.getClass());
+      }
     }
 
     if (ret == null)
     {
       return null;
     }
+
     if (ret instanceof ZProperty)
     {
       ZProperty prop = (ZProperty) ret;
-      ret = prop.getStringValue();
+      if (prop.isEmpty())
+      {
+        return null;
+      }
+
+      return new String[]
+      {
+        prop.getStringValue()
+      };
     }
+
     if (ret.getClass().isArray())
     {
       return (String[]) ret;
     }
+
     if (ret.getClass().isEnum())
     {
       return new String[]
@@ -274,10 +316,16 @@ public class ZReflectionUtil
         ((Enum) ret).name()
       };
     }
-    return new String[]
+
+    if (ret instanceof String)
     {
-      (String) ret
-    };
+      return new String[]
+      {
+        (String) ret
+      };
+    }
+
+    throw new Exception("parameter getter/field must be String, String[], Enum, Enum[]: '" + name + "' in " + obj.getClass());
   }
 
 
@@ -286,44 +334,89 @@ public class ZReflectionUtil
     Method m = getGetter(obj.getClass(), name);
     if (m == null)
     {
-      throw new Exception("reference getter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation " + ZGetter.class.getSimpleName());
+      throw new Exception("reference getter not found: '" + name + "' in " + obj.getClass().getName());
     }
 
     Object ret = invoke(m, obj);
     return ret;
+  }
+
+
+  private static Method getMethod(Class clazz, String name)
+  {
+    try
+    {
+      return clazz.getMethod(name);
+    }
+    catch (NoSuchMethodException e)
+    {
+      return null;
+    }
+  }
+
+
+  private static Field getField(Class clazz, String name)
+  {
+    try
+    {
+      return clazz.getField(name);
+    }
+    catch (NoSuchFieldException e)
+    {
+      return null;
+    }
   }
 
 
   public static Object callFormGetter(Object obj, String name) throws Exception
   {
     String formGetter = computePrefixName("get", name);
-    Method m = obj.getClass().getMethod(formGetter);
-    if (m == null)
+    Method m = getMethod(obj.getClass(), formGetter);
+    if (m != null)
     {
-      throw new Exception("form getter not found: '" + name + "' in " + obj.getClass().getName());
+      return invoke(m, obj);
     }
 
-    Object ret = invoke(m, obj);
-    return ret;
+    throw new Exception("form getter not found: '" + name + "' in " + obj.getClass().getName());
   }
 
 
   public static String callVariableGetter(Object obj, String name) throws Exception
   {
-    Method m = getGetter(obj.getClass(), name);
-    if (m == null)
+    Object ret;
+
+    Class clazz = obj.getClass();
+    String getterName = computePrefixName("get", name);
+    Method m = getMethod(clazz, getterName);
+    if (m != null)
     {
-      throw new Exception("variable getter not found: '" + name + "' in " + obj.getClass().getName() + " use annotation " + ZGetter.class.getSimpleName());
+      ret = invoke(m, obj);
+    }
+    else
+    {
+      Field f = getField(clazz, name);
+      if (f != null)
+      {
+        ret = f.get(obj);
+      }
+      else
+      {
+        throw new Exception("variable getter/field not found: '" + name + "' in " + obj.getClass());
+      }
     }
 
-    Class retClass = m.getReturnType();
-    String ret;
-    if (ZProperty.class.isAssignableFrom(retClass))
+    if (ret == null)
     {
-      ZProperty prop = (ZProperty) invoke(m, obj);
-      ret = prop.getStringValue();
+      return null;
     }
-    else if (retClass.isEnum())
+
+    if (ret instanceof ZProperty)
+    {
+      ZProperty prop = (ZProperty) ret;
+      return prop.getStringValue();
+    }
+
+    if (ret.getClass().isEnum())
     {
       Enum val = (Enum) invoke(m, obj);
       if (val == null)
@@ -332,11 +425,13 @@ public class ZReflectionUtil
       }
       return val.name();
     }
-    else
+
+    if (ret instanceof String)
     {
-      ret = (String) invoke(m, obj);
+      return (String) ret;
     }
-    return ret;
+
+    throw new Exception("variable getter/field must be String or Enum: '" + name + "' in " + obj.getClass());
   }
 
 
@@ -348,7 +443,7 @@ public class ZReflectionUtil
     Method m = getGetter(clazz, name);
     if (m == null)
     {
-      throw new Exception("reference getter not found: '" + name + "' in " + clazz.getName() + " use annotation " + ZGetter.class.getSimpleName());
+      throw new Exception("reference getter not found: '" + name + "' in " + clazz.getName());
     }
     return m.getReturnType();
   }
@@ -449,24 +544,23 @@ public class ZReflectionUtil
   public static Method getGetter(Class clazz, String name) throws Exception
   {
     String getterName = computePrefixName("get", name);
-    Method ret = null;
-    Method[] methods = clazz.getMethods();
-    for (Method m : methods)
-    {
-      if (m.isAnnotationPresent(ZGetter.class))
-      {
-        ZGetter ann = m.getAnnotation(ZGetter.class);
-        if (name.equals(ann.value()))
-        {
-          return m;
-        }
-      }
-      else if (m.getName().equals(getterName))
-      {
-        ret = m;
-      }
-    }
-
+    Method ret = getMethod(clazz, getterName);
+    // Method[] methods = clazz.getMethods();
+    // for (Method m : methods)
+    // {
+    // if (m.isAnnotationPresent(ZGetter.class))
+    // {
+    // ZGetter ann = m.getAnnotation(ZGetter.class);
+    // if (name.equals(ann.value()))
+    // {
+    // return m;
+    // }
+    // }
+    // else if (m.getName().equals(getterName))
+    // {
+    // ret = m;
+    // }
+    // }
     return ret;
   }
 
@@ -479,30 +573,11 @@ public class ZReflectionUtil
     Method[] methods = clazz.getMethods();
     for (Method m : methods)
     {
-      if (m.isAnnotationPresent(ZSetter.class))
+      if (m.getName().equals(setterName))
       {
-        ZSetter ann = m.getAnnotation(ZSetter.class);
-        if (name.equals(ann.value()))
-        {
-          return m;
-        }
+        return m;
       }
-      else if (ZProperty.class.isAssignableFrom(m.getReturnType()))
-      {
-        ZGetter ann = m.getAnnotation(ZGetter.class);
-        if (ann != null)
-        {
-          if (name.equals(ann.value()))
-          {
-            return m;
-          }
-        }
-        else if (m.getName().equals(getterName))
-        {
-          return m;
-        }
-      }
-      else if (m.getName().equals(setterName))
+      if (m.getName().equals(getterName) && ZProperty.class.isAssignableFrom(m.getReturnType()))
       {
         return m;
       }
@@ -602,24 +677,6 @@ public class ZReflectionUtil
     }
   }
 
-
-  // public static void invokeMethod(Object pojo, String path, String
-  // methodName) throws Exception
-  // {
-  // Object obj = getObjectByBeanPath(pojo, path);
-  // if (obj == null)
-  // {
-  // return;
-  // }
-  // // find first not inner class
-  // Class clazz = obj.getClass();
-  // while (clazz.getName().indexOf("$") >= 0)
-  // {
-  // clazz = clazz.getSuperclass();
-  // }
-  // Method m = clazz.getMethod(methodName);
-  // invoke(m, obj);
-  // }
 
   public static String removePrefixName(String prefix, String name)
   {

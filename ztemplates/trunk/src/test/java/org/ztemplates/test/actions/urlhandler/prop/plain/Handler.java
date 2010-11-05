@@ -1,6 +1,5 @@
 package org.ztemplates.test.actions.urlhandler.prop.plain;
 
-import org.ztemplates.actions.ZGetter;
 import org.ztemplates.actions.ZMatch;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZStringProperty;
@@ -30,35 +29,30 @@ public class Handler
   }
 
 
-  @ZGetter("opProp1")
   public ZOperation getOpProp1()
   {
     return opProp1;
   }
 
 
-  @ZGetter("paramProp")
   public ZStringProperty getParamProp()
   {
     return paramProp;
   }
 
 
-  @ZGetter("varProp")
   public ZStringProperty getVarProp()
   {
     return varProp;
   }
 
 
-  @ZGetter("opProp2")
   public ZOperation getOpProp2()
   {
     return opProp2;
   }
 
 
-  @ZGetter("op3")
   public ZOperation getOp3()
   {
     return op3;

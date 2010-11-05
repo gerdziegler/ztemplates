@@ -60,7 +60,7 @@ public class ParameterTest extends TestCase
     Map<String, String[]> param = new HashMap<String, String[]>();
     param.put("param2", new String[]
     {
-      "value2"
+        "value2"
     });
 
     Handler obj = (Handler) up.process("/mytext/nested/katzeklo", param);
@@ -74,7 +74,7 @@ public class ParameterTest extends TestCase
     Map<String, String[]> param = new HashMap<String, String[]>();
     param.put("param2", new String[]
     {
-      ""
+        ""
     });
 
     Handler obj = (Handler) up.process("/mytext/nested/katzeklo", param);
@@ -88,7 +88,7 @@ public class ParameterTest extends TestCase
     Map<String, String[]> param = new HashMap<String, String[]>();
     param.put("param3", new String[]
     {
-      "value3"
+        "value3"
     });
 
     Handler obj = (Handler) up.process("/mytext/nested/katzeklo", param);
@@ -102,7 +102,7 @@ public class ParameterTest extends TestCase
     Map<String, String[]> param = new HashMap<String, String[]>();
     param.put("param1", new String[]
     {
-      "value1"
+        "value1"
     });
 
     Handler obj = (Handler) up.process("/mytext/nested/katzeklo", param);
@@ -120,6 +120,28 @@ public class ParameterTest extends TestCase
     ZUrl parsedUrl = up.parse(surl);
 
     Assert.assertEquals("value1", parsedUrl.getParameterMap().get("param1")[0]);
+  }
+
+
+  public void testFieldParamInRoot() throws Exception
+  {
+    Handler obj1 = new Handler();
+    obj1.field = "fieldValue";
+    String surl = urlFactory.createUrl(obj1);
+    ZUrl parsedUrl = up.parse(surl);
+
+    Assert.assertEquals("fieldValue", parsedUrl.getParameterMap().get("field")[0]);
+  }
+
+
+  public void testFieldPropetyParamInRoot() throws Exception
+  {
+    Handler obj1 = new Handler();
+    obj1.fieldProp.setValue("fieldValue");
+    String surl = urlFactory.createUrl(obj1);
+    ZUrl parsedUrl = up.parse(surl);
+
+    Assert.assertEquals("fieldValue", parsedUrl.getParameterMap().get("fieldProp")[0]);
   }
 
 
@@ -206,7 +228,7 @@ public class ParameterTest extends TestCase
     Map<String, String[]> param = new HashMap<String, String[]>();
     param.put("paramProp", new String[]
     {
-      "valParamProp",
+        "valParamProp",
     });
 
     Handler obj = (Handler) up.process("/mytext/nested/katzeklo", param);
