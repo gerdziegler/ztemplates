@@ -97,7 +97,7 @@ public class ParameterTest extends TestCase
   }
 
 
-  public void testParametersAreAssignedDepthFirst() throws Exception
+  public void testParametersAreAssignedToAllActions() throws Exception
   {
     Map<String, String[]> param = new HashMap<String, String[]>();
     param.put("param1", new String[]
@@ -107,7 +107,7 @@ public class ParameterTest extends TestCase
 
     Handler obj = (Handler) up.process("/mytext/nested/katzeklo", param);
     Assert.assertNotNull(obj);
-    Assert.assertNull(obj.getParam1(), obj.getParam1());
+    Assert.assertNotNull(obj.getParam1(), obj.getParam1());
     Assert.assertEquals(obj.getNested().getParam1(), "value1", obj.getNested().getParam1());
   }
 

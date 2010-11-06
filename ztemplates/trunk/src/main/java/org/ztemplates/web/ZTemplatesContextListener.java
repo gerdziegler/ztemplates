@@ -112,7 +112,6 @@ public class ZTemplatesContextListener implements ServletContextListener
       if (applicationName == null)
       {
         log.info("No <context-param><param-name>applicationName</param-name></context-param> has been found in web.xml --- Using default application name. This is safe if webapp has its own classloader or you use ztemplates only inside a http request. --- If you share classloader between weapps and need access to ztemplates functionality outside of a http request (for example: a scheduled job) set the init parameter 'applicationName' in web.xml to unique name in each webapp and use the applicationName in ZTemplatesStandalone.init()");
-        applicationName = ZApplicationRepositoryStandalone.DEFAULT_APP_NAME;
       }
       ZApplicationRepositoryStandalone.setApplication(applicationName, application);
       log.info("context initialized");

@@ -18,14 +18,23 @@ public class ZApplicationRepositoryStandalone
 
   public static final String DEFAULT_APP_NAME = "";
 
+
   public static ZApplication getApplication(String applicationName)
   {
+    if (applicationName == null)
+    {
+      applicationName = ZApplicationRepositoryStandalone.DEFAULT_APP_NAME;
+    }
     return applications.get(applicationName);
   }
 
 
   public static void setApplication(String applicationName, ZApplication application)
   {
+    if (applicationName == null)
+    {
+      applicationName = ZApplicationRepositoryStandalone.DEFAULT_APP_NAME;
+    }
     applications.put(applicationName, application);
   }
 }

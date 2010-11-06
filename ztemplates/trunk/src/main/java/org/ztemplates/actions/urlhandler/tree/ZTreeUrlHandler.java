@@ -326,7 +326,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
             val = URLDecoder.decode(val, encoding/* , ENCODING */);
             parameterMap.put(key, new String[]
             {
-              val
+                val
             });
           }
         }
@@ -394,7 +394,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         ret.operationToCall = (ZOperation) assignedProp;
       }
       // eat the parameters
-      parameters.remove(name);
+      // parameters.remove(name);
     }
 
     String formName = zmatch.form();
