@@ -112,8 +112,7 @@ public class ZTemplatesStandalone implements ZIServiceRepository
 
     ZISecureUrlDecorator secureUrlDecorator = application.getActionApplication().getSecureUrlDecorator();
     ZMatchTree matchTree = application.getActionApplication().getMatchTree();
-    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityProvider, secureUrlDecorator, application.getActionApplication().getApplicationContext(),
-        encoding);
+    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityProvider, secureUrlDecorator, encoding);
     ZIUrlFactory urlFactory = new ZUrlFactory(secureUrlDecorator, encoding);
     ZIServletService servletService = null;
 

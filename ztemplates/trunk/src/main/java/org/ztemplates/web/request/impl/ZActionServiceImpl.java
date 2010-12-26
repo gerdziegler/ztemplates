@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.ztemplates.actions.ZIUrlFactory;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
+import org.ztemplates.actions.util.impl.ZReflectionUtil;
 import org.ztemplates.web.ZIActionService;
 
 public class ZActionServiceImpl implements ZIActionService
@@ -61,6 +62,18 @@ public class ZActionServiceImpl implements ZIActionService
       shortUrl = shortUrl.substring(prefix.length());
     }
     return urlHandler.process(shortUrl, paramMap);
+  }
+
+
+  public String createNestedUrl(Object nestedAction) throws Exception
+  {
+    Object action = urlHandler.getNestedActionParent();
+    String nestedName = urlHandler.getNestedActionName();
+    Object oldVal = ZReflectionUtil.callReferenceGetter(action, nestedName);
+    ZReflectionUtil.callReferenceSetter(action, nestedName, nestedAction);
+    String ret = createUrl(action);
+    ZReflectionUtil.callReferenceSetter(action, nestedName, oldVal);
+    return ret;
   }
 
 

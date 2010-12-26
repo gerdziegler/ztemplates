@@ -21,5 +21,24 @@ public interface ZIActionService extends ZIService
   public Object process(String url, Map<String, String[]> paramMap) throws Exception;
 
 
+  /**
+   * Creates a url to the specified action object
+   * 
+   * @param action
+   * @return
+   * @throws Exception
+   */
   public String createUrl(Object action) throws Exception;
+
+
+  /**
+   * Creates a url to the specified nested action object, the url is relative to
+   * the current nested action. Can only be while processing a nested action.
+   * 
+   * @param nestedAction
+   * @return
+   * @throws Exception
+   */
+  public String createNestedUrl(Object nestedAction) throws Exception;
+
 }

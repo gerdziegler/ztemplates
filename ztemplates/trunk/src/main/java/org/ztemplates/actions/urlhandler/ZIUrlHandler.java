@@ -25,4 +25,10 @@ public interface ZIUrlHandler
 
 
   public void printInfo(StringBuffer sb);
+
+
+  public Object getNestedActionParent();
+
+
+  public String getNestedActionName();
 }

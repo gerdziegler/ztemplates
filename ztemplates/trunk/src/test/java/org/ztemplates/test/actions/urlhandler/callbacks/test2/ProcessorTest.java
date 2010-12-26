@@ -43,7 +43,7 @@ public class ProcessorTest extends TestCase
     ZTestApplicationContext applicationContext = new ZTestApplicationContext(classRepo);
 
     proc = new ZTreeUrlHandler(new ZMatchTree(classRepo), ZTestUrlHandlerFactory.defaultSecurityService, ZTestUrlHandlerFactory.defaultSecureUrlDecorator,
-        applicationContext, null);
+        null);
   }
 
 

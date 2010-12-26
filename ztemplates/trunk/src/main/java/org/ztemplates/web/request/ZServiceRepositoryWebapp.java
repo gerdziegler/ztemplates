@@ -79,7 +79,7 @@ public class ZServiceRepositoryWebapp implements ZIServiceRepository
     ZMatchTree matchTree = application.getActionApplication().getMatchTree();
 
     ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityService.getSecurityProvider(), securityService.getSecureUrlDecorator(),
-        applicationContext, encoding);
+         encoding);
     ZIUrlFactory urlFactory = new ZUrlFactory(securityService.getSecureUrlDecorator(), encoding);
     actionService = new ZActionServiceImpl(urlHandler, urlFactory, contextPath, prefix);
 

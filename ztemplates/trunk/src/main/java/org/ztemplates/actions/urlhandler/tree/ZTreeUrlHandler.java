@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.actions.ZIFormAction;
 import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
@@ -48,14 +47,18 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
   private final ZISecureUrlDecorator secureUrlDecorator;
 
-  private final ZIActionApplicationContext applicationContext;
+  // private final ZIActionApplicationContext applicationContext;
 
   private final ZMatchTree tree;
 
   private final String encoding;
 
+  private Stack<Object> pojos;
 
-  public ZTreeUrlHandler(ZMatchTree tree, ZISecurityProvider security, ZISecureUrlDecorator secureUrlDecorator, ZIActionApplicationContext applicationContext,
+  private Stack<ZBeginNested> nested;
+
+
+  public ZTreeUrlHandler(ZMatchTree tree, ZISecurityProvider security, ZISecureUrlDecorator secureUrlDecorator,
       String encoding)
   {
     super();
@@ -63,7 +66,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
     this.security = security;
     this.tree = tree;
     this.secureUrlDecorator = secureUrlDecorator;
-    this.applicationContext = applicationContext;
+    // this.applicationContext = applicationContext;
   }
 
 
@@ -192,7 +195,8 @@ public class ZTreeUrlHandler implements ZIUrlHandler
   {
     List<ZIProcessingInstruction> instr = computeInstructions(matched);
     Object rootPojo = null;
-    final Stack<Object> pojos = new Stack<Object>();
+    this.pojos = new Stack<Object>();
+    this.nested = new Stack<ZBeginNested>();
     for (ZIProcessingInstruction et : instr)
     {
       if (et instanceof ZSetVariable)
@@ -206,6 +210,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       else if (et instanceof ZBeginNested)
       {
         ZBeginNested v = (ZBeginNested) et;
+        nested.push(v);
         Object pojo = pojos.peek();
         Object nestedVal = ZReflectionUtil.callReferenceGetter(pojo, v.getName());
         if (nestedVal == null)
@@ -239,6 +244,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         // storeSessionForm(updateResult.sessionForm, updateResult.formWrapper);
         // }
         pojos.pop();
+        nested.pop();
         pojo = pojos.peek();
         ZReflectionUtil.callAfterReference(pojo, v.getName());
         if (zmatch.consume())
@@ -461,5 +467,17 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       ret.operationToCall = op;
     }
     return ret;
+  }
+
+
+  public Object getNestedActionParent()
+  {
+    return pojos.get(pojos.size() - 2);
+  }
+
+
+  public String getNestedActionName()
+  {
+    return nested.peek().getName();
   }
 }
