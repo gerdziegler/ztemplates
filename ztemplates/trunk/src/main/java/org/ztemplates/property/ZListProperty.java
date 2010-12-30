@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Deprecated
 public abstract class ZListProperty<T> extends ZProperty<List<T>>
 {
   private final String separator;
@@ -30,37 +31,36 @@ public abstract class ZListProperty<T> extends ZProperty<List<T>>
   protected abstract T parseListElement(String stringValue) throws Exception;
 
 
-//  @Override
-//  public List<T> getValue() throws Exception
-//  {
-//    List<T> ret = super.getValue();
-//    if (ret == null)
-//    {
-//      ret = new ArrayList<T>();
-//    }
-//    return ret;
-//  }
-//
-//
-//  @Override
-//  public void setValue(List<T> val)
-//  {
-//    if (val == null || val.isEmpty())
-//    {
-//      super.setValue(null);
-//    }
-//    else
-//    {
-//      super.setValue(val);
-//    }
-//  }
-
+  // @Override
+  // public List<T> getValue() throws Exception
+  // {
+  // List<T> ret = super.getValue();
+  // if (ret == null)
+  // {
+  // ret = new ArrayList<T>();
+  // }
+  // return ret;
+  // }
+  //
+  //
+  // @Override
+  // public void setValue(List<T> val)
+  // {
+  // if (val == null || val.isEmpty())
+  // {
+  // super.setValue(null);
+  // }
+  // else
+  // {
+  // super.setValue(val);
+  // }
+  // }
 
   @Override
   public List<T> parse(String formattedValue) throws Exception
   {
     List<T> ret = new ArrayList<T>();
-    if(formattedValue==null)
+    if (formattedValue == null)
     {
       return ret;
     }
@@ -77,7 +77,7 @@ public abstract class ZListProperty<T> extends ZProperty<List<T>>
   @Override
   public String format(List<T> list)
   {
-    if(list.isEmpty())
+    if (list.isEmpty())
     {
       return null;
     }

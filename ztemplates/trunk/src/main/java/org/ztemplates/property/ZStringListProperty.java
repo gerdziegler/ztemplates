@@ -3,6 +3,7 @@
  */
 package org.ztemplates.property;
 
+@Deprecated
 public class ZStringListProperty extends ZListProperty<String>
 {
   public ZStringListProperty()
