@@ -1,11 +1,13 @@
 /*
  * 17.07.2006 @author www.gerdziegler.de
  */
-package org.ztemplates.property;
+package org.ztemplates.property.deprecated;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.ztemplates.property.ZProperty;
 
 @Deprecated
 public abstract class ZListProperty<T> extends ZProperty<List<T>>

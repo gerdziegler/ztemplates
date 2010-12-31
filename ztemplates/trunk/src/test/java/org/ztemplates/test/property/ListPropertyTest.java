@@ -17,7 +17,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.property.ZIntListProperty;
+import org.ztemplates.property.deprecated.ZIntListProperty;
 
 public class ListPropertyTest extends TestCase
 {

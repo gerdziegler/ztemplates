@@ -1,7 +1,7 @@
 /*
  * 11.12.2005 @author www.gerdziegler.de
  */
-package org.ztemplates.property;
+package org.ztemplates.property.deprecated;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,6 +9,7 @@ import java.util.Date;
 
 import org.ztemplates.web.ZTemplates;
 
+@Deprecated
 public class ZDateListProperty extends ZListProperty<Date>
 {
   private final DateFormat df;

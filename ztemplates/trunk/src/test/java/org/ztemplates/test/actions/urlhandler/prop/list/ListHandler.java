@@ -1,8 +1,8 @@
 package org.ztemplates.test.actions.urlhandler.prop.list;
 
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.property.ZIntListProperty;
-import org.ztemplates.property.ZStringListProperty;
+import org.ztemplates.property.deprecated.ZIntListProperty;
+import org.ztemplates.property.deprecated.ZStringListProperty;
 
 /**
  */

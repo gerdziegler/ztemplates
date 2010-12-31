@@ -64,11 +64,12 @@ public class ZFormServiceImpl implements ZIFormService
   }
 
 
-  // public void setRequired(ZIForm form, boolean b) throws Exception
-  // {
-  // ZFormWrapper mirr = new ZFormWrapper(form);
-  // mirr.setRequired(b);
-  // }
+  public void setRequired(ZIForm form, boolean b) throws Exception
+  {
+    ZFormWrapper mirr = new ZFormWrapper(form);
+    mirr.setRequired(b);
+  }
+
 
   // public List<ZProperty> getPropertiesWithError(ZIForm form) throws Exception
   // {

@@ -2,10 +2,11 @@
  * 11.12.2005
  * @author www.gerdziegler.de
  */
-package org.ztemplates.property;
+package org.ztemplates.property.deprecated;
 
 import java.math.BigDecimal;
 
+@Deprecated
 public class ZBigDecimalListProperty extends ZListProperty<BigDecimal>
 {
   public ZBigDecimalListProperty()

@@ -499,21 +499,21 @@ public final class ZFormWrapper implements ZIFormVisitable
     this.visitDepthFirst(visitor);
   }
 
-  // public void setRequired(final boolean b) throws Exception
-  // {
-  // ZIFormVisitor visitor = new ZIFormVisitor()
-  // {
-  // public void visit(ZProperty prop) throws Exception
-  // {
-  // prop.setRequired(b);
-  // }
-  //
-  //
-  // public void visit(ZOperation op) throws Exception
-  // {
-  // }
-  // };
-  // this.visitDepthFirst(visitor);
-  // }
 
+  public void setRequired(final boolean b) throws Exception
+  {
+    ZIFormVisitor visitor = new ZIFormVisitor()
+    {
+      public void visit(ZProperty prop) throws Exception
+    {
+      prop.setRequired(b);
+    }
+
+
+      public void visit(ZOperation op) throws Exception
+    {
+    }
+    };
+    this.visitDepthFirst(visitor);
+  }
 }

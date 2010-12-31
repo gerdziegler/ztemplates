@@ -91,57 +91,73 @@ public class ZMessages
    * @param text
    * @param propertyNameArr
    */
-  public void addInfoMessage(String text, String... propertyNameArr)
+  public void addInfo(String text, String... propertyNameArr)
   {
     addMessage(new ZInfoMessage(text, propertyNameArr));
   }
 
 
+  @Deprecated
+  public void addInfoMessage(String text, String... propertyNameArr)
+  {
+    addInfo(text, propertyNameArr);
+  }
+
+
   /**
    * utilitiy
    * 
    * @param text
    * @param propertyNameArr
    */
-  public void addInfoPropertyMessage(String text, ZProperty... propertyArr)
+  public void addPropertyInfo(String text, ZProperty... propertyArr)
   {
     addMessage(ZMessage.create(ZMessage.INFO, text, propertyArr));
   }
 
 
+  @Deprecated
+  public void addInfoPropertyMessage(String text, ZProperty... propertyArr)
+  {
+    addPropertyInfo(text, propertyArr);
+  }
+
+
   /**
    * utilitiy
    * 
    * @param text
    * @param propertyNameArr
    */
-  public void addErrorMessage(String text, String... propertyNameArr)
+  public void addError(String text, String... propertyNameArr)
   {
     addMessage(new ZErrorMessage(text, propertyNameArr));
   }
 
 
+  @Deprecated
+  public void addErrorMessage(String text, String... propertyNameArr)
+  {
+    addError(text, propertyNameArr);
+  }
+
+
   /**
    * utilitiy
    * 
    * @param text
    * @param propertyNameArr
    */
-  public void addErrorPropertyMessage(String text, ZProperty... propertyArr)
+  public void addPropertyError(String text, ZProperty... propertyArr)
   {
     addMessage(ZMessage.create(ZMessage.ERROR, text, propertyArr));
   }
 
 
-  /**
-   * utilitiy
-   * 
-   * @param text
-   * @param propertyNameArr
-   */
-  public void addWarningMessage(String text, String... propertyNameArr)
+  @Deprecated
+  public void addErrorPropertyMessage(String text, ZProperty... propertyArr)
   {
-    addMessage(new ZWarningMessage(text, propertyNameArr));
+    addPropertyError(text, propertyArr);
   }
 
 
@@ -151,9 +167,35 @@ public class ZMessages
    * @param text
    * @param propertyNameArr
    */
-  public void addWarningPropertyMessage(String text, ZProperty... propertyArr)
+  public void addWarning(String text, String... propertyNameArr)
+  {
+    addMessage(new ZWarningMessage(text, propertyNameArr));
+  }
+
+
+  @Deprecated
+  public void addWarningMessage(String text, String... propertyNameArr)
+  {
+    addWarning(text, propertyNameArr);
+  }
+
+
+  /**
+   * utilitiy
+   * 
+   * @param text
+   * @param propertyNameArr
+   */
+  public void addPropertyWarning(String text, ZProperty... propertyArr)
   {
     addMessage(ZMessage.create(ZMessage.WARNING, text, propertyArr));
+  }
+
+
+  @Deprecated
+  public void addWarningPropertyMessage(String text, ZProperty... propertyArr)
+  {
+    addPropertyWarning(text, propertyArr);
   }
 
 

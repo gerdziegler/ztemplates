@@ -1,7 +1,8 @@
 /*
  * 17.07.2006 @author www.gerdziegler.de
  */
-package org.ztemplates.property;
+package org.ztemplates.property.deprecated;
+
 
 @Deprecated
 public class ZStringListProperty extends ZListProperty<String>
