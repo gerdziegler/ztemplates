@@ -5,12 +5,28 @@
 package org.ztemplates.property;
 
 import org.ztemplates.json.ZExposeJson;
+import org.ztemplates.message.ZMessages;
+import org.ztemplates.validation.ZValidator;
 
 public class ZOperation extends ZProperty<String>
 {
   private String allowedValue;
 
   private ZIOperationListener operationListener;
+
+
+  /**
+   * validates the attached validators
+   * 
+   * @return
+   * @throws Exception
+   */
+  public final ZMessages validate() throws Exception
+  {
+    ZValidator val = new ZValidator();
+    val.getValidators().addAll(getValidators());
+    return val.validate();
+  }
 
 
   public ZOperation(String allowedValue)
