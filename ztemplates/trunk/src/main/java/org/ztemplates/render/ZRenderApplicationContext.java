@@ -1,5 +1,6 @@
 package org.ztemplates.render;
 
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,12 @@ public class ZRenderApplicationContext implements ZIRenderApplicationContext
   {
     super();
     this.encoding = encoding;
+  }
+
+
+  public InputStream getResourceAsStream(String path)
+  {
+    return getClass().getClassLoader().getResourceAsStream(path);
   }
 
 

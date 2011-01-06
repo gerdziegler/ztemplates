@@ -1,5 +1,6 @@
 package org.ztemplates.web.application;
 
+import java.io.InputStream;
 import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
@@ -26,6 +27,12 @@ public class ZApplicationContextWebImpl implements ZIRenderApplicationContext, Z
     this.classRepository = classRepository;
     this.servletContext = servletContext;
     this.encoding = encoding;
+  }
+
+
+  public InputStream getResourceAsStream(String path)
+  {
+    return servletContext.getResourceAsStream(path);
   }
 
 

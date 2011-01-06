@@ -1,5 +1,6 @@
 package org.ztemplates.test;
 
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,12 @@ public class ZTestApplicationContext implements ZIRenderApplicationContext,
   public ZTestApplicationContext(ZIClassRepository classRepository)
   {
     this.classRepository = classRepository;
+  }
+
+
+  public InputStream getResourceAsStream(String path)
+  {
+    return getClass().getClassLoader().getResourceAsStream(path);
   }
 
 

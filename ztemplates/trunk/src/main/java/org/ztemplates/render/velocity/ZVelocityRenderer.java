@@ -14,6 +14,8 @@ package org.ztemplates.render.velocity;
 
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -111,7 +113,7 @@ public class ZVelocityRenderer implements ZIRenderer
   {
     VelocityEngine ve = new VelocityEngine();
 
-    Properties prop = ZVelocityRenderer.getProperties(applicationContext.getClass());
+    Properties prop = ZVelocityRenderer.getProperties(applicationContext);
     String encoding = applicationContext.getEncoding();
     prop.setProperty("input.encoding", encoding);
     log.info("--- Velocity Properties ---");
@@ -122,19 +124,36 @@ public class ZVelocityRenderer implements ZIRenderer
   }
 
 
-  public static Properties getProperties(Class clazz) throws Exception
+  private static Properties getProperties(ZIRenderApplicationContext applicationContext) throws Exception
   {
-    Properties prop = ZVelocityRenderer.getPropertiesFromClassLoader(clazz);
+    Properties prop = ZVelocityRenderer.getPropertiesFromApplicationContext(applicationContext);
     if (prop == null)
     {
       log.info("using default Velocity properties as defined in " + ZVelocityRenderer.class.getName());
       prop = ZVelocityRenderer.getDefaultProperties();
     }
+    String noCache = applicationContext.getInitParameter("ztemplates.velocity.nocache");
+    if ("true".equals(noCache))
+    {
+      List<String> keys = new ArrayList<String>();
+      for (Object o : prop.keySet())
+      {
+        String s = (String) o;
+        if (s.endsWith(".resource.loader.cache"))
+        {
+          keys.add(s);
+        }
+      }
+      for (String s : keys)
+      {
+        prop.setProperty(s, "false");
+      }
+    }
     return prop;
   }
 
 
-  public static Properties getDefaultProperties()
+  private static Properties getDefaultProperties()
   {
     Properties prop = new Properties();
     prop.setProperty("directive.foreach.counter.initial.value", "0");
@@ -152,15 +171,15 @@ public class ZVelocityRenderer implements ZIRenderer
   }
 
 
-  private static Properties getPropertiesFromClassLoader(Class clazz) throws Exception
+  private static Properties getPropertiesFromApplicationContext(ZIRenderApplicationContext applicationContext) throws Exception
   {
     String[] locations =
     {
-        "WEB-INF/velocity.properties", "/WEB-INF/velocity.properties", "velocity.properties", "/velocity.properties"
+        "/WEB-INF/velocity.properties", "WEB-INF/velocity.properties", "/velocity.properties", "velocity.properties"
     };
     for (String loc : locations)
     {
-      Properties prop = ZVelocityRenderer.loadPropertiesFromClassLoader(clazz, loc);
+      Properties prop = ZVelocityRenderer.loadPropertiesFromApplicationContext(applicationContext, loc);
       if (prop != null)
       {
         return prop;
@@ -170,17 +189,17 @@ public class ZVelocityRenderer implements ZIRenderer
   }
 
 
-  private static Properties loadPropertiesFromClassLoader(Class clazz, String propFile) throws Exception
+  private static Properties loadPropertiesFromApplicationContext(ZIRenderApplicationContext applicationContext, String propFile) throws Exception
   {
-    log.info("try loading velocity properties from classloader of class " + clazz.getName() + " and path " + propFile + " ...");
-    InputStream in = clazz.getResourceAsStream(propFile);
+    log.debug("try loading velocity properties from path " + propFile + " ...");
+    InputStream in = applicationContext.getResourceAsStream(propFile);
     if (in != null)
     {
       try
       {
         Properties ret = new Properties();
         ret.load(in);
-        log.info("OK: loaded velocity properties from classloader of class " + clazz.getName() + " and path " + propFile + " ...");
+        log.info("loaded velocity properties from path " + propFile);
         return ret;
       }
       finally
@@ -188,6 +207,7 @@ public class ZVelocityRenderer implements ZIRenderer
         in.close();
       }
     }
+    log.debug("could not load velocity properties from path " + propFile);
     return null;
   }
 }

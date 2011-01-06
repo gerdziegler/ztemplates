@@ -1,5 +1,6 @@
 package org.ztemplates.render;
 
+import java.io.InputStream;
 import java.util.Enumeration;
 
 public interface ZIRenderApplicationContext
@@ -20,4 +21,8 @@ public interface ZIRenderApplicationContext
 
 
   public String getEncoding();
+
+
+  public InputStream getResourceAsStream(String path);
+
 }
