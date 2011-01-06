@@ -15,6 +15,26 @@ public class ZOperation extends ZProperty<String>
   private ZIOperationListener operationListener;
 
 
+  public ZOperation(String name, String allowedValue)
+  {
+    setName(name);
+    this.allowedValue = allowedValue;
+  }
+
+
+  /**
+   * To avoid refactoring errors specify the name as you can now use the
+   * after[OperationName] callback in actions
+   * 
+   * @param allowedValue
+   */
+  @Deprecated
+  public ZOperation(String allowedValue)
+  {
+    this.allowedValue = allowedValue;
+  }
+
+
   /**
    * validates the attached validators
    * 
@@ -26,12 +46,6 @@ public class ZOperation extends ZProperty<String>
     ZValidator val = new ZValidator();
     val.getValidators().addAll(getValidators());
     return val.validate();
-  }
-
-
-  public ZOperation(String allowedValue)
-  {
-    this.allowedValue = allowedValue;
   }
 
 

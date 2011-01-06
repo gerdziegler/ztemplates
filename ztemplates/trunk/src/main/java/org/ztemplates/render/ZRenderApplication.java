@@ -11,90 +11,125 @@ import org.ztemplates.render.impl.ZExposedMethodRepository;
 import org.ztemplates.render.impl.ZICssIdRepository;
 import org.ztemplates.render.impl.ZTemplateNameRepository;
 
-public class ZRenderApplication {
-	private static final Logger log = Logger
-			.getLogger(ZRenderApplication.class);
+public class ZRenderApplication
+{
+  private static final Logger log = Logger
+      .getLogger(ZRenderApplication.class);
 
-	private final ZIRenderApplicationContext applicationContext;
+  private final ZIRenderApplicationContext applicationContext;
 
-	private final ZICssIdRepository cssIdRepository;
+  private final ZICssIdRepository cssIdRepository;
 
-	private final ZITemplateNameRepository templateNameRepository;
+  private final ZITemplateNameRepository templateNameRepository;
 
-	// private final ZIScriptRepository scriptRepository;
+  // private final ZIScriptRepository scriptRepository;
 
-	private final ZExposedMethodRepository exposedMethodRepository;
+  private final ZExposedMethodRepository exposedMethodRepository;
 
-	private final ZCssEngine cssEngine;
+  private final ZCssEngine cssEngine;
 
-	private final ZIClassRepository classRepository;
+  private final ZIClassRepository classRepository;
 
-	public ZRenderApplication(ZIRenderApplicationContext applicationContext,
-			ZIClassRepository classRepository) throws Exception {
-		this.applicationContext = applicationContext;
-		this.classRepository = classRepository;
-		ZCssIdRepository cssIdRepository = new ZCssIdRepository(classRepository);
-		cssIdRepository.preload();
-		this.cssIdRepository = cssIdRepository;
 
-		ZTemplateNameRepository templateNameRepository = new ZTemplateNameRepository();
+  public ZRenderApplication(ZIRenderApplicationContext applicationContext,
+      ZIClassRepository classRepository) throws Exception
+  {
+    this.applicationContext = applicationContext;
+    this.classRepository = classRepository;
+    ZCssIdRepository cssIdRepository = new ZCssIdRepository(classRepository);
+    cssIdRepository.preload();
+    this.cssIdRepository = cssIdRepository;
 
-		List<Class> classesAnnotatedWithRenderer = classRepository
-				.getClassesAnnotatedWith(ZRenderer.class);
-		templateNameRepository.preload(classesAnnotatedWithRenderer);
-		this.templateNameRepository = templateNameRepository;
+    ZTemplateNameRepository templateNameRepository = new ZTemplateNameRepository();
 
-		// this.javaScriptProcessor = javaScriptProcessor;
-		//
-		// this.cssProcessor = cssProcessor;
+    List<Class> classesAnnotatedWithRenderer = classRepository
+        .getClassesAnnotatedWith(ZRenderer.class);
+    templateNameRepository.preload(classesAnnotatedWithRenderer);
+    this.templateNameRepository = templateNameRepository;
 
-		List<ZScript> scripts = new ArrayList<ZScript>();
-		List<Class> scriptClasses = classRepository
-				.getClassesAnnotatedWith(ZScript.class);
-		for (Class c : scriptClasses) {
-			ZScript sc = (ZScript) c.getAnnotation(ZScript.class);
-			scripts.add(sc);
-		}
-		// TODO real meta
-		// ZIJavaScriptMeta jsMeta = new c();
-		// scriptRepository = new ZScriptRepository(jsMeta, scripts);
+    // this.javaScriptProcessor = javaScriptProcessor;
+    //
+    // this.cssProcessor = cssProcessor;
 
-		exposedMethodRepository = new ZExposedMethodRepository();
-		List<Class> exposedClasses = classRepository
-				.getClassesAnnotatedWith(ZRenderer.class);
-		for (Class c : exposedClasses) {
-			exposedMethodRepository.addExposed(c);
-		}
+    List<ZScript> scripts = new ArrayList<ZScript>();
+    List<Class> scriptClasses = classRepository
+        .getClassesAnnotatedWith(ZScript.class);
+    for (Class c : scriptClasses)
+    {
+      ZScript sc = (ZScript) c.getAnnotation(ZScript.class);
+      scripts.add(sc);
+    }
+    // TODO real meta
+    // ZIJavaScriptMeta jsMeta = new c();
+    // scriptRepository = new ZScriptRepository(jsMeta, scripts);
 
-		cssEngine = new ZCssEngine(this);
-	}
+    exposedMethodRepository = new ZExposedMethodRepository();
+    List<Class> exposedClasses = classRepository
+        .getClassesAnnotatedWith(ZRenderer.class);
+    List<String> exceptions = new ArrayList<String>();
+    for (Class c : exposedClasses)
+    {
+      try
+      {
+        exposedMethodRepository.addExposed(c);
+      }
+      catch (Exception e)
+      {
+        exceptions.add(e.getMessage());
+      }
+    }
+    if (!exceptions.isEmpty())
+    {
+      StringBuffer msg = new StringBuffer("Errors in exposed methods:\n");
+      for (String s : exceptions)
+      {
+        msg.append(s);
+        msg.append('\n');
+      }
+      throw new Exception(msg.toString());
+    }
 
-	public ZICssIdRepository getCssIdRepository() {
-		return cssIdRepository;
-	}
+    cssEngine = new ZCssEngine(this);
+  }
 
-	public ZITemplateNameRepository getTemplateNameRepository() {
-		return templateNameRepository;
-	}
 
-	// public ZIScriptRepository getScriptRepository()
-	// {
-	// return scriptRepository;
-	// }
+  public ZICssIdRepository getCssIdRepository()
+  {
+    return cssIdRepository;
+  }
 
-	public ZExposedMethodRepository getExposedMethodRepository() {
-		return exposedMethodRepository;
-	}
 
-	public ZIRenderApplicationContext getApplicationContext() {
-		return applicationContext;
-	}
+  public ZITemplateNameRepository getTemplateNameRepository()
+  {
+    return templateNameRepository;
+  }
 
-	public ZIClassRepository getClassRepository() {
-		return classRepository;
-	}
 
-	public ZCssEngine getCssEngine() {
-		return cssEngine;
-	}
+  // public ZIScriptRepository getScriptRepository()
+  // {
+  // return scriptRepository;
+  // }
+
+  public ZExposedMethodRepository getExposedMethodRepository()
+  {
+    return exposedMethodRepository;
+  }
+
+
+  public ZIRenderApplicationContext getApplicationContext()
+  {
+    return applicationContext;
+  }
+
+
+  public ZIClassRepository getClassRepository()
+  {
+    return classRepository;
+  }
+
+
+  public ZCssEngine getCssEngine()
+  {
+    return cssEngine;
+  }
 }

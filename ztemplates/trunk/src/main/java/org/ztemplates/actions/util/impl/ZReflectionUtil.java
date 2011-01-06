@@ -66,6 +66,19 @@ public class ZReflectionUtil
   }
 
 
+  public static boolean callAfterOperation(Object obj, String operationName) throws Exception
+  {
+    String name = computeAfterOperationName(operationName);
+    Method m = getAfter(obj.getClass(), name);
+    if (m == null)
+    {
+      return false;
+    }
+    invoke(m, obj);
+    return true;
+  }
+
+
   public static void callAfterReference(Object obj, String name) throws Exception
   {
     Method m = getAfter(obj.getClass(), name);
@@ -521,7 +534,7 @@ public class ZReflectionUtil
   }
 
 
-  private static String computeCallbackName(String name)
+  private static String computeAfterOperationName(String name)
   {
     int nameLen = name.length();
     StringBuffer sb = new StringBuffer(nameLen);

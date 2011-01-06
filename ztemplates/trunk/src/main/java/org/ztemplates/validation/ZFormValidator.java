@@ -17,6 +17,36 @@ public class ZFormValidator implements ZIValidator
   private final String requiredMessage;
 
 
+  /**
+   * Convenience method
+   * 
+   * @param form
+   * @param requiredMessage
+   * @return
+   * @throws Exception
+   */
+  public static void validate(ZIForm form, String requiredMessage, ZMessages messages) throws Exception
+  {
+    new ZFormValidator(form, requiredMessage).validate(messages);
+  }
+
+
+  /**
+   * Convenience method
+   * 
+   * @param form
+   * @param requiredMessage
+   * @return
+   * @throws Exception
+   */
+  public static ZMessages validate(ZIForm form, String requiredMessage) throws Exception
+  {
+    ZMessages messages = new ZMessages();
+    new ZFormValidator(form, requiredMessage).validate(messages);
+    return messages;
+  }
+
+
   public ZFormValidator(ZIForm form, String requiredMessage)
   {
     super();
@@ -26,7 +56,7 @@ public class ZFormValidator implements ZIValidator
 
 
   // @Override
-  public void validate(ZMessages res) throws Exception
+  public void validate(ZMessages messages) throws Exception
   {
     final ZFormWrapper wrapper = new ZFormWrapper(form);
     final ZFormMembers members = wrapper.getFormMembers();
@@ -35,7 +65,7 @@ public class ZFormValidator implements ZIValidator
     {
       if (!prop.isEmpty())
       {
-        createValidationMessage(prop, res);
+        createValidationMessage(prop, messages);
       }
       else
       {
@@ -47,26 +77,26 @@ public class ZFormValidator implements ZIValidator
     }
     if (!msg.getPropertyNames().isEmpty())
     {
-      res.addMessage(msg);
+      messages.addMessage(msg);
     }
     for (ZOperation op : members.getOperations())
     {
-      createValidationMessage(op, res);
+      createValidationMessage(op, messages);
     }
   }
 
 
-  private void createValidationMessage(ZProperty prop, ZMessages res)
+  private void createValidationMessage(ZProperty prop, ZMessages messages)
   {
     for (ZIValidator val : (List<ZIValidator>) prop.getValidators())
     {
       try
       {
-        val.validate(res);
+        val.validate(messages);
       }
       catch (Exception e)
       {
-        res.addMessage(new ZErrorMessage(e.getLocalizedMessage(), prop.getName()));
+        messages.addMessage(new ZErrorMessage(e.getLocalizedMessage(), prop.getName()));
       }
     }
     for (String stringValue : prop.getStringValues())
@@ -77,7 +107,7 @@ public class ZFormValidator implements ZIValidator
       }
       catch (Exception e)
       {
-        res.addMessage(new ZErrorMessage(e.getLocalizedMessage(), prop.getName()));
+        messages.addMessage(new ZErrorMessage(e.getLocalizedMessage(), prop.getName()));
       }
     }
   }
