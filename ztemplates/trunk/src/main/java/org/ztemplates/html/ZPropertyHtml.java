@@ -23,7 +23,7 @@ public abstract class ZPropertyHtml
 
   protected static String computeId(ZProperty property)
   {
-    return property.getName();// .replace('.', '_');
+    return property.getName().replace('.', '_');
   }
 
 
