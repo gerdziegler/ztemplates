@@ -57,7 +57,8 @@ public class ZWebRenderContextImpl implements ZIWebRenderContext
 
 
   public ZWebRenderContextImpl(ZRenderApplication application,
-      String contextPath, ZIJavaScriptProcessor javaScriptProcessor,
+      String contextPath,
+      ZIJavaScriptProcessor javaScriptProcessor,
       ZICssProcessor cssProcessor)
   {
     this.application = application;
@@ -232,24 +233,24 @@ public class ZWebRenderContextImpl implements ZIWebRenderContext
 
     incRenderCallCounter();
 
+    if (exposed.get("cssId") == null)
+    {
+      String cssId = getCssIdRepository().getCssId(obj.getClass());
+      exposed.put("cssId", cssId);
+    }
+
+    if (exposed.get("contextPath") == null)
+    {
+      exposed.put("contextPath", getContextPath());
+    }
+
+    exposed.put("renderService", ZTemplates.getRenderService());
+
     // register scripts, needs exposed values
     registerScripts(obj, exposed);
 
     if (rendererAnnot != null)
     {
-      if (/* rendererAnnot.cssId() && */exposed.get("cssId") == null)
-      {
-        String cssId = getCssIdRepository().getCssId(obj.getClass());
-        exposed.put("cssId", cssId);
-      }
-
-      if (/* rendererAnnot.contextPath() && */exposed.get("contextPath") == null)
-      {
-        exposed.put("contextPath", getContextPath());
-      }
-
-      exposed.put("renderService", ZTemplates.getRenderService());
-
       if (rendererAnnot.zscript() && exposed.get("zscript") == null)
       {
         if (getScriptExposedBy() != null)

@@ -14,13 +14,11 @@
  */
 package org.ztemplates.form.impl;
 
-import org.ztemplates.property.ZOperation;
-import org.ztemplates.property.ZProperty;
 
 interface ZIFormVisitor
 {
-  public void visit(ZProperty prop) throws Exception;
+  public void visit(ZPropertyWrapper prop) throws Exception;
 
 
-  public void visit(ZOperation op) throws Exception;
+  public void visit(ZOperationWrapper op) throws Exception;
 }

@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIForm;
 import org.ztemplates.render.ZScriptDependency;
@@ -67,11 +66,10 @@ public class ZFormServiceSpring implements ZIFormService
   }
 
 
-  public ZFormMembers getFormMembers(ZIForm form) throws Exception
-  {
-    return service.getFormMembers(form);
-  }
-
+  // public ZFormMembers getFormMembers(ZIForm form) throws Exception
+  // {
+  // return service.getFormMembers(form);
+  // }
 
   public JSONObject computeJson(ZIForm form) throws Exception
   {

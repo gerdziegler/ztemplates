@@ -55,13 +55,13 @@ public class FormTest extends TestCase
     ZMockServiceRepository repo = ZMock.getMock();
     repo.setServletService(new ZMockServletService());
     ZFormWrapper mirr = new ZFormWrapper(form);
+    mirr.initPropertyNames();
     assertEquals("op1", form.getOp1().getName());
     assertEquals("prop1", form.getProp1().getName());
     assertEquals("topSection.field1", form.getTopSection().getField1().getName());
     assertEquals("topSection.field2", form.getTopSection().getField2().getName());
     assertEquals("topSection.op1", form.getTopSection().getOp1().getName());
   }
-
 
 
   public void testValidationParameterWithDot() throws Exception
@@ -91,11 +91,11 @@ public class FormTest extends TestCase
     Map<String, String[]> param = new HashMap<String, String[]>();
     param.put("form.topSection.field1", new String[]
     {
-      "val1",
+        "val1",
     });
     param.put("katzeko", new String[]
     {
-      "val4",
+        "val4",
     });
 
     try

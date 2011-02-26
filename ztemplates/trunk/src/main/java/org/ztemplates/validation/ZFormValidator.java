@@ -47,7 +47,8 @@ public class ZFormValidator implements ZIValidator
   }
 
 
-  public ZFormValidator(ZIForm form, String requiredMessage)
+  public ZFormValidator(ZIForm form,
+      String requiredMessage)
   {
     super();
     this.form = form;
@@ -59,6 +60,7 @@ public class ZFormValidator implements ZIValidator
   public void validate(ZMessages messages) throws Exception
   {
     final ZFormWrapper wrapper = new ZFormWrapper(form);
+    wrapper.initPropertyNames();
     final ZFormMembers members = wrapper.getFormMembers();
     ZErrorMessage msg = new ZErrorMessage(requiredMessage);
     for (ZProperty prop : members.getProperties())

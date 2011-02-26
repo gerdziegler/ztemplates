@@ -17,7 +17,6 @@ package org.ztemplates.web;
 import java.io.Serializable;
 
 import org.json.JSONObject;
-import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIForm;
 import org.ztemplates.render.ZScriptDependency;
@@ -70,15 +69,14 @@ public interface ZIFormService
   public void setReadable(ZIForm form, boolean b) throws Exception;
 
 
-  /**
-   * lets you iterate over a form to do your own processing
-   * 
-   * @param form
-   * @return
-   * @throws Exception
-   */
-  public ZFormMembers getFormMembers(ZIForm form) throws Exception;
-
+  // /**
+  // * lets you iterate over a form to do your own processing
+  // *
+  // * @param form
+  // * @return
+  // * @throws Exception
+  // */
+  // public ZFormMembers getFormMembers(ZIForm form) throws Exception;
 
   /**
    * computes a JSON representation of a form, used typically in AJAX - Call -

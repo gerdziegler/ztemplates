@@ -23,8 +23,9 @@ public abstract class AbstractFormWithListTest extends TestCase
   public void testFormElementMirror() throws Exception
   {
     FormWithList f = new FormWithList();
-//    ZDynamicFormModel.initPropertyNames(f, "");
+    // ZDynamicFormModel.initPropertyNames(f, "");
     ZFormWrapper mirr = new ZFormWrapper(f);
+    mirr.initPropertyNames();
     assertEquals(2, mirr.getForms().size());
     assertEquals(2, mirr.getProperties().size());
     assertEquals(0, mirr.getOperations().size());

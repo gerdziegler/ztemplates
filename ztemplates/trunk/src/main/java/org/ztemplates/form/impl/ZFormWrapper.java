@@ -50,9 +50,9 @@ public final class ZFormWrapper implements ZIFormVisitable
 
   private final List<ZFormWrapper> forms = new ArrayList<ZFormWrapper>();
 
-  private final List<ZProperty> properties = new ArrayList<ZProperty>();
+  private final List<ZPropertyWrapper> properties = new ArrayList<ZPropertyWrapper>();
 
-  private final List<ZOperation> operations = new ArrayList<ZOperation>();
+  private final List<ZOperationWrapper> operations = new ArrayList<ZOperationWrapper>();
 
 
   /**
@@ -68,13 +68,38 @@ public final class ZFormWrapper implements ZIFormVisitable
 
 
   /**
+   * @throws Exception
+   * 
+   */
+  public void initPropertyNames() throws Exception
+  {
+    ZIFormVisitor visitor = new ZIFormVisitor()
+    {
+      public void visit(ZPropertyWrapper prop) throws Exception
+      {
+        prop.getProperty().setName(prop.getName());
+      }
+
+
+      public void visit(ZOperationWrapper op) throws Exception
+      {
+        op.getOperation().setName(op.getName());
+      }
+    };
+
+    visitDepthFirst(visitor);
+  }
+
+
+  /**
    * creates form Model with specified name
    * 
    * @param obj
    * @param name
    * @throws Exception
    */
-  protected ZFormWrapper(ZIForm obj, String name) throws Exception
+  protected ZFormWrapper(ZIForm obj,
+      String name) throws Exception
   {
     this.name = name;
     String prefix;
@@ -99,12 +124,8 @@ public final class ZFormWrapper implements ZIFormVisitable
         {
           throw new Exception("null value in property " + f);
         }
-        if (op.getName() == null)
-        {
-          String opName = prefix + f.getName();
-          op.setName(opName);
-        }
-        operations.add(op);
+        String opName = op.getName() == null ? prefix +  f.getName() : op.getName();
+        operations.add(new ZOperationWrapper(opName, op));
       }
       // second
       else if (ZProperty.class.isAssignableFrom(type))
@@ -114,12 +135,8 @@ public final class ZFormWrapper implements ZIFormVisitable
         {
           throw new Exception("null value in property " + f);
         }
-        if (prop.getName() == null)
-        {
-          String propName = prefix + f.getName();
-          prop.setName(propName);
-        }
-        properties.add(prop);
+        String propName = prop.getName() == null ? prefix + f.getName() : prop.getName();
+        properties.add(new ZPropertyWrapper(propName, prop));
       }
       // third
       else if (ZFormWrapper.class.isAssignableFrom(type))
@@ -144,8 +161,8 @@ public final class ZFormWrapper implements ZIFormVisitable
         {
           throw new Exception("null value in property " + f);
         }
-        String feName = prefix + f.getName();
-        forms.add(new ZFormWrapper(fe, feName));
+        String feName = f.getName();
+        forms.add(new ZFormWrapper(fe, prefix + feName));
       }
     }
 
@@ -165,12 +182,8 @@ public final class ZFormWrapper implements ZIFormVisitable
           {
             throw new Exception("null op returned from " + m.getName());
           }
-          if (op.getName() == null)
-          {
-            String opName = prefix + ZReflectionUtil.removePrefixName("get", m.getName());
-            op.setName(opName);
-          }
-          operations.add(op);
+          String opName = op.getName() == null ? prefix + ZReflectionUtil.removePrefixName("get", m.getName()) : op.getName();
+          operations.add(new ZOperationWrapper(opName, op));
         }
         // second
         else if (ZProperty.class.isAssignableFrom(type))
@@ -180,12 +193,8 @@ public final class ZFormWrapper implements ZIFormVisitable
           {
             throw new Exception("null prop returned from " + m.getName());
           }
-          if (prop.getName() == null)
-          {
-            String propName = prefix + ZReflectionUtil.removePrefixName("get", m.getName());
-            prop.setName(propName);
-          }
-          properties.add(prop);
+          String propName = prop.getName() == null ? prefix + ZReflectionUtil.removePrefixName("get", m.getName()) : prop.getName();
+          properties.add(new ZPropertyWrapper(propName, prop));
         }
         // third
         else if (ZFormWrapper.class.isAssignableFrom(type))
@@ -210,8 +219,8 @@ public final class ZFormWrapper implements ZIFormVisitable
           {
             throw new Exception("null form model returned from " + m.getName());
           }
-          String feName = prefix + ZReflectionUtil.removePrefixName("get", m.getName());
-          forms.add(new ZFormWrapper(fe, feName));
+          String feName = ZReflectionUtil.removePrefixName("get", m.getName());
+          forms.add(new ZFormWrapper(fe, prefix + feName));
         }
       }
     }
@@ -229,17 +238,17 @@ public final class ZFormWrapper implements ZIFormVisitable
     final Set<ZProperty> ret = new HashSet<ZProperty>();
     ZIFormVisitor visitor = new ZIFormVisitor()
     {
-      public void visit(ZProperty prop) throws Exception
+      public void visit(ZPropertyWrapper prop) throws Exception
       {
-        String name = prop.getName();
+        String name = prop.getProperty().getName();
         if (propNames.contains(name))
         {
-          ret.add(prop);
+          ret.add(prop.getProperty());
         }
       }
 
 
-      public void visit(ZOperation op) throws Exception
+      public void visit(ZOperationWrapper op) throws Exception
       {
       }
     };
@@ -270,26 +279,26 @@ public final class ZFormWrapper implements ZIFormVisitable
     final Map<String, String[]> values = formValues.getValues();
     ZIFormVisitor visitor = new ZIFormVisitor()
     {
-      public void visit(ZProperty prop) throws Exception
+      public void visit(ZPropertyWrapper prop) throws Exception
       {
-        String name = prop.getName();
+        String name = prop.getProperty().getName();
         String[] param = values.get(name);
         if (param != null)
         {
-          prop.setStringValues(param);
-          properties.add(prop);
+          prop.getProperty().setStringValues(param);
+          properties.add(prop.getProperty());
         }
       }
 
 
-      public void visit(ZOperation op) throws Exception
+      public void visit(ZOperationWrapper op) throws Exception
       {
-        String name = op.getName();
+        String name = op.getOperation().getName();
         String[] param = values.get(name);
         if (param != null)
         {
-          op.setStringValues(param);
-          operations.add(op);
+          op.getOperation().setStringValues(param);
+          operations.add(op.getOperation());
         }
       }
     };
@@ -307,19 +316,19 @@ public final class ZFormWrapper implements ZIFormVisitable
 
     ZIFormVisitor visitor = new ZIFormVisitor()
     {
-      public void visit(ZProperty prop) throws Exception
+      public void visit(ZPropertyWrapper prop) throws Exception
       {
-        if (!prop.isEmpty())
+        if (!prop.getProperty().isEmpty())
         {
-          values.put(prop.getName(), new String[]
+          values.put(prop.getProperty().getName(), new String[]
           {
-              prop.getStringValue()
+              prop.getProperty().getStringValue()
           });
         }
       }
 
 
-      public void visit(ZOperation op) throws Exception
+      public void visit(ZOperationWrapper op) throws Exception
       {
         // operations are not written
       }
@@ -353,13 +362,13 @@ public final class ZFormWrapper implements ZIFormVisitable
   }
 
 
-  public List<ZOperation> getOperations()
+  public List<ZOperationWrapper> getOperations()
   {
     return operations;
   }
 
 
-  public List<ZProperty> getProperties()
+  public List<ZPropertyWrapper> getProperties()
   {
     return properties;
   }
@@ -371,13 +380,30 @@ public final class ZFormWrapper implements ZIFormVisitable
     {
       form.visitDepthFirst(vis);
     }
-    for (ZProperty prop : properties)
+    for (ZPropertyWrapper prop : properties)
     {
       vis.visit(prop);
     }
-    for (ZOperation op : operations)
+    for (ZOperationWrapper op : operations)
     {
       vis.visit(op);
+    }
+  }
+
+
+  public void visitBreadthFirst(ZIFormVisitor vis) throws Exception
+  {
+    for (ZPropertyWrapper prop : properties)
+    {
+      vis.visit(prop);
+    }
+    for (ZOperationWrapper op : operations)
+    {
+      vis.visit(op);
+    }
+    for (ZFormWrapper form : forms)
+    {
+      form.visitBreadthFirst(vis);
     }
   }
 
@@ -395,15 +421,15 @@ public final class ZFormWrapper implements ZIFormVisitable
     final List<ZOperation> operations = new ArrayList<ZOperation>();
     ZIFormVisitor vis = new ZIFormVisitor()
     {
-      public void visit(ZProperty prop) throws Exception
+      public void visit(ZPropertyWrapper prop) throws Exception
       {
-        properties.add(prop);
+        properties.add(prop.getProperty());
       }
 
 
-      public void visit(ZOperation op) throws Exception
+      public void visit(ZOperationWrapper op) throws Exception
       {
-        operations.add(op);
+        operations.add(op.getOperation());
       }
     };
     this.visitDepthFirst(vis);
@@ -418,9 +444,9 @@ public final class ZFormWrapper implements ZIFormVisitable
 
     ZIFormVisitor vis = new ZIFormVisitor()
     {
-      public void visit(ZProperty prop) throws Exception
+      public void visit(ZPropertyWrapper prop) throws Exception
       {
-        List<ZIValidator> validators = prop.getValidators();
+        List<ZIValidator> validators = prop.getProperty().getValidators();
         for (ZIValidator val : validators)
         {
           ZScript script = ZFormWrapper.getAnnotation(val.getClass(), ZScript.class);
@@ -432,9 +458,9 @@ public final class ZFormWrapper implements ZIFormVisitable
       }
 
 
-      public void visit(ZOperation op) throws Exception
+      public void visit(ZOperationWrapper op) throws Exception
       {
-        List<ZIValidator> validators = op.getValidators();
+        List<ZIValidator> validators = op.getOperation().getValidators();
         for (ZIValidator val : validators)
         {
           ZScript script = ZFormWrapper.getAnnotation(val.getClass(), ZScript.class);
@@ -466,15 +492,15 @@ public final class ZFormWrapper implements ZIFormVisitable
   {
     ZIFormVisitor visitor = new ZIFormVisitor()
     {
-      public void visit(ZProperty prop) throws Exception
+      public void visit(ZPropertyWrapper prop) throws Exception
       {
-        prop.setWriteable(b);
+        prop.getProperty().setWriteable(b);
       }
 
 
-      public void visit(ZOperation op) throws Exception
+      public void visit(ZOperationWrapper op) throws Exception
       {
-        op.setWriteable(b);
+        op.getOperation().setWriteable(b);
       }
     };
     this.visitDepthFirst(visitor);
@@ -485,15 +511,15 @@ public final class ZFormWrapper implements ZIFormVisitable
   {
     ZIFormVisitor visitor = new ZIFormVisitor()
     {
-      public void visit(ZProperty prop) throws Exception
+      public void visit(ZPropertyWrapper prop) throws Exception
       {
-        prop.setReadable(b);
+        prop.getProperty().setReadable(b);
       }
 
 
-      public void visit(ZOperation op) throws Exception
+      public void visit(ZOperationWrapper op) throws Exception
       {
-        op.setReadable(b);
+        op.getOperation().setReadable(b);
       }
     };
     this.visitDepthFirst(visitor);
@@ -504,15 +530,15 @@ public final class ZFormWrapper implements ZIFormVisitable
   {
     ZIFormVisitor visitor = new ZIFormVisitor()
     {
-      public void visit(ZProperty prop) throws Exception
-    {
-      prop.setRequired(b);
-    }
+      public void visit(ZPropertyWrapper prop) throws Exception
+      {
+        prop.getProperty().setRequired(b);
+      }
 
 
-      public void visit(ZOperation op) throws Exception
-    {
-    }
+      public void visit(ZOperationWrapper op) throws Exception
+      {
+      }
     };
     this.visitDepthFirst(visitor);
   }

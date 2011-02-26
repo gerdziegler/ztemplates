@@ -62,7 +62,9 @@ public class ZTreeUrlHandler implements ZIUrlHandler
   private Stack<ZBeginNested> nested;
 
 
-  public ZTreeUrlHandler(ZMatchTree tree, ZISecurityProvider security, ZISecureUrlDecorator secureUrlDecorator,
+  public ZTreeUrlHandler(ZMatchTree tree,
+      ZISecurityProvider security,
+      ZISecureUrlDecorator secureUrlDecorator,
       String encoding)
   {
     super();
@@ -422,7 +424,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
     // public ZISessionFormModel sessionForm;
 
-    public ZFormWrapper formWrapper;
+    // public ZFormWrapper formWrapper;
   }
 
 
@@ -473,24 +475,9 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
       ZReflectionUtil.callBeforeForm(pojo, formName);
       ZIForm form = (ZIForm) ZReflectionUtil.callFormGetter(pojo, formName);
-      ret.formWrapper = new ZFormWrapper(form);
-
-      // if (form instanceof ZISessionFormModel)
-      // {
-      // ret.sessionForm = (ZISessionFormModel) form;
-      // String key = ret.sessionForm.getSessionKey();
-      // if (key != null)
-      // {
-      // ZFormValues values = (ZFormValues)
-      // applicationContext.getAttribute(key);
-      // if (values != null)
-      // {
-      // ret.formWrapper.readFromValues(values);
-      // }
-      // }
-      // }
-
-      ZFormMembers assigned = ret.formWrapper.readFromValues(formValues);
+      ZFormWrapper formWrapper = new ZFormWrapper(form);
+      formWrapper.initPropertyNames();
+      ZFormMembers assigned = formWrapper.readFromValues(formValues);
       ZOperation op;
       int opCnt = assigned.getOperations().size();
       if (opCnt == 0)
