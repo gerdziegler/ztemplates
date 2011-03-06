@@ -33,12 +33,12 @@ public class ZFormElementMirrorTest extends TestCase
 
     assertEquals("prop1", mirr.getProperties().get(0).getName());
     assertEquals("op1", mirr.getOperations().get(0).getName());
-    assertEquals("topSection.op1", mirr.getForms().get(0).getOperations().get(0).getName());
+    assertEquals("topSection_op1", mirr.getForms().get(0).getOperations().get(0).getName());
     mirr = new ZFormWrapper(f);
     mirr.initPropertyNames();
     assertEquals("prop1", mirr.getProperties().get(0).getName());
     assertEquals("op1", mirr.getOperations().get(0).getName());
-    assertEquals("topSection.op1", mirr.getForms().get(0).getOperations().get(0).getName());
+    assertEquals("topSection_op1", mirr.getForms().get(0).getOperations().get(0).getName());
   }
 
 

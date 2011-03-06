@@ -58,9 +58,9 @@ public class FormTest extends TestCase
     mirr.initPropertyNames();
     assertEquals("op1", form.getOp1().getName());
     assertEquals("prop1", form.getProp1().getName());
-    assertEquals("topSection.field1", form.getTopSection().getField1().getName());
-    assertEquals("topSection.field2", form.getTopSection().getField2().getName());
-    assertEquals("topSection.op1", form.getTopSection().getOp1().getName());
+    assertEquals("topSection_field1", form.getTopSection().getField1().getName());
+    assertEquals("topSection_field2", form.getTopSection().getField2().getName());
+    assertEquals("topSection_op1", form.getTopSection().getOp1().getName());
   }
 
 
@@ -89,7 +89,7 @@ public class FormTest extends TestCase
   public void testParamPropParameterWithDot() throws Exception
   {
     Map<String, String[]> param = new HashMap<String, String[]>();
-    param.put("form.topSection.field1", new String[]
+    param.put("form_topSection_field1", new String[]
     {
         "val1",
     });

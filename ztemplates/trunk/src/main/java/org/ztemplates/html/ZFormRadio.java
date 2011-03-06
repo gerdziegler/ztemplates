@@ -33,8 +33,12 @@ public final class ZFormRadio<T> extends ZPropertyHtml
 
   private final List<ZFormRadioItem> items = new ArrayList<ZFormRadioItem>();
 
+  @ZExpose
+  public ZFormRadioItem selectedItem;
 
-  public ZFormRadio(String id, ZSelectProperty<T> prop)
+
+  public ZFormRadio(String id,
+      ZSelectProperty<T> prop)
   {
     super(id, prop);
 
@@ -47,6 +51,10 @@ public final class ZFormRadio<T> extends ZPropertyHtml
       String value = prop.computeDisplayValue(t);
       boolean selected = key.equals(prop.getStringValue());
       ZFormRadioItem item = new ZFormRadioItem(itemId, key, value, selected);
+      if (selected)
+      {
+        selectedItem = item;
+      }
       items.add(item);
     }
   }

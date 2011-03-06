@@ -105,7 +105,7 @@ public final class ZFormWrapper implements ZIFormVisitable
     String prefix;
     if (name.length() > 0)
     {
-      prefix = name + ".";
+      prefix = name + "_";
     }
     else
     {
@@ -124,7 +124,7 @@ public final class ZFormWrapper implements ZIFormVisitable
         {
           throw new Exception("null value in property " + f);
         }
-        String opName = op.getName() == null ? prefix +  f.getName() : op.getName();
+        String opName = op.getName() == null ? prefix + f.getName() : op.getName();
         operations.add(new ZOperationWrapper(opName, op));
       }
       // second

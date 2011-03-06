@@ -25,9 +25,14 @@ import org.ztemplates.render.velocity.ZVelocityRenderer;
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormSelect extends ZPropertyHtml
 {
-  private final int size;
+  @ZExpose
+  public final int size;
 
-  private final List<ZFormSelectOption> options = new ArrayList<ZFormSelectOption>();
+  @ZExpose
+  public final List<ZFormSelectOption> options = new ArrayList<ZFormSelectOption>();
+
+  @ZExpose
+  public ZFormSelectOption selectedOption;
 
 
   public <T> ZFormSelect(final ZSelectProperty<T> prop)
@@ -36,7 +41,9 @@ public final class ZFormSelect extends ZPropertyHtml
   }
 
 
-  public <T> ZFormSelect(String id, final ZSelectProperty<T> prop, int size)
+  public <T> ZFormSelect(String id,
+      final ZSelectProperty<T> prop,
+      int size)
   {
     super(id, prop);
     this.size = size;
@@ -57,20 +64,10 @@ public final class ZFormSelect extends ZPropertyHtml
       }
       ZFormSelectOption item = new ZFormSelectOption(key, value, selected);
       options.add(item);
+      if (selected)
+      {
+        selectedOption = item;
+      }
     }
-  }
-
-
-  @ZExpose
-  public List<ZFormSelectOption> getOptions() throws Exception
-  {
-    return options;
-  }
-
-
-  @ZExpose
-  public int getSize()
-  {
-    return size;
   }
 }
