@@ -26,7 +26,7 @@ import org.ztemplates.web.ZTemplates;
  * 
  */
 
-@Component("ZIEncryptionService")
+@Component(ZIEncryptionService.SPRING_NAME)
 @Scope("request")
 public class ZEncryptionServiceSpring implements ZIEncryptionService
 {

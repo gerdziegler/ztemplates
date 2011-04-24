@@ -18,6 +18,9 @@ import java.util.Map;
 
 public interface ZIActionService extends ZIService
 {
+  public static final String SPRING_NAME = "ZIActionService";
+
+
   public Object process(String url, Map<String, String[]> paramMap) throws Exception;
 
 

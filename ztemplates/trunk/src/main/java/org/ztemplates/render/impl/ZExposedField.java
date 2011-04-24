@@ -11,7 +11,9 @@ public class ZExposedField implements ZIExposedValue
   private final boolean render;
 
 
-  public ZExposedField(String name, Field field, boolean render)
+  public ZExposedField(String name,
+      Field field,
+      boolean render)
   {
     super();
     this.name = name;
@@ -45,6 +47,10 @@ public class ZExposedField implements ZIExposedValue
    */
   public Object getValue(Object obj) throws Exception
   {
+    if (!field.isAccessible())
+    {
+      field.setAccessible(true);
+    }
     return field.get(obj);
   }
 

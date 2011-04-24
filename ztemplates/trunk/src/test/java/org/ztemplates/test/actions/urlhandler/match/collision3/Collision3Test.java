@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
+import org.ztemplates.actions.urlhandler.tree.match.ZMatchTreeFactory;
 
 public class Collision3Test extends TestCase
 {
@@ -46,7 +47,7 @@ public class Collision3Test extends TestCase
   {
     try
     {
-      ZMatchTree tree = new ZMatchTree(classRepo);
+      ZMatchTree tree = new ZMatchTreeFactory().createMatchTree(classRepo);
       fail("");
     }
     catch (Exception e)

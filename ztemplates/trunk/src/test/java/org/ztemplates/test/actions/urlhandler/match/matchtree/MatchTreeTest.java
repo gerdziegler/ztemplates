@@ -55,7 +55,7 @@ public class MatchTreeTest extends TestCase
 
     tree.add(tl1);
     tree.add(tl2);
-    tree.prepare();
+    tree.sort();
     log.info(tree.toConsoleString());
     ZMatchedUrl mu = tree.match("/123");
     assertEquals(tree.toConsoleString() + "\n " + mu.getTermList(), tl2.toString(), mu
@@ -80,7 +80,7 @@ public class MatchTreeTest extends TestCase
 
     tree.add(tl1);
     tree.add(tl2);
-    tree.prepare();
+    tree.sort();
     log.info(tree.toConsoleString());
     ZMatchedUrl mu = tree.match("/123_456");
     assertEquals(tree.toConsoleString() + "\n " + mu.getTermList(), tl2.toString(), mu
@@ -108,7 +108,7 @@ public class MatchTreeTest extends TestCase
 
     tree.add(tl1);
     tree.add(tl2);
-    tree.prepare();
+    tree.sort();
     log.info(tree.toConsoleString());
     ZMatchedUrl mu = tree.match("/123456789");
     assertEquals(tree.toConsoleString() + "\n " + mu.getTermList(), tl2.toString(), mu

@@ -26,6 +26,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface ZIServletService extends ZIService
 {
+  public static final String SPRING_NAME = "ZIServletService";
+
+
   /**
    * @return the HttpServletRequest object associated with this servlet request
    */

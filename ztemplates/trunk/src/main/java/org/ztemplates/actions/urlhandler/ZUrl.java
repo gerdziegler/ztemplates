@@ -31,7 +31,9 @@ public class ZUrl implements Serializable
   private final ZRoles roles;
 
 
-  public ZUrl(String url, Map<String, String[]> parameterMap, ZRoles roles)
+  public ZUrl(String url,
+      Map<String, String[]> parameterMap,
+      ZRoles roles)
   {
     this.url = url;
     this.parameterMap = parameterMap;

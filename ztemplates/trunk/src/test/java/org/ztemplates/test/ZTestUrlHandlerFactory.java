@@ -26,6 +26,7 @@ import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
+import org.ztemplates.actions.urlhandler.tree.match.ZMatchTreeFactory;
 
 /**
  * 
@@ -78,7 +79,7 @@ public class ZTestUrlHandlerFactory
     ZIClassRepository classRepository = ZClassRepository.create(items, pojoPackage);
     // ZTestApplicationContext applicationContext = new
     // ZTestApplicationContext(classRepository);
-    ZMatchTree matchTree = new ZMatchTree(classRepository);
+    ZMatchTree matchTree = new ZMatchTreeFactory().createMatchTree(classRepository);
     ZIUrlHandler ret = new ZTreeUrlHandler(matchTree, security, defaultSecureUrlDecorator, encoding);
     return ret;
   }

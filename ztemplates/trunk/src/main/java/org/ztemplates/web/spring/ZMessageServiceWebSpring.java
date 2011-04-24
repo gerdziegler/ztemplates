@@ -26,7 +26,7 @@ import org.ztemplates.web.ZTemplates;
  * @author gerd
  * 
  */
-@Component("ZIMessageService")
+@Component(ZIMessageService.SPRING_NAME)
 @Scope("request")
 public class ZMessageServiceWebSpring implements ZIMessageService
 {

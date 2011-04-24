@@ -20,7 +20,8 @@ import java.lang.annotation.Target;
 
 /**
  * maps a action pojo to a url <a
- * href="http://www.ztemplates.org/Wiki.jsp?page=ZMatch">See here for details.</a>
+ * href="http://www.ztemplates.org/Wiki.jsp?page=ZMatch">See here for
+ * details.</a>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(
@@ -29,9 +30,24 @@ import java.lang.annotation.Target;
 })
 public @interface ZMatch
 {
+  // public static final String METHOD_GET = "GET";
+  //
+  // public static final String METHOD_HEAD = "HEAD";
+  //
+  // public static final String METHOD_POST = "POST";
+  //
+  // public static final String METHOD_PUT = "PUT";
+  //
+  // public static final String METHOD_DELETE = "DELETE";
+  //
+  // public static final String METHOD_TRACE = "TRACE";
+  //
+  // public static final String METHOD_CONNECT = "CONNECT";
+
   /**
    * the path matched by this action. <a
-   * href="http://www.ztemplates.org/Wiki.jsp?page=ZMatch">See here for details.</a>
+   * href="http://www.ztemplates.org/Wiki.jsp?page=ZMatch">See here for
+   * details.</a>
    * 
    * @return
    */
@@ -43,15 +59,18 @@ public @interface ZMatch
    * 
    * @return
    */
-  String[] parameters() default {};
+  String[] parameters() default
+  {};
 
 
   /**
-   * Request parameters are mapped by reflection to the form object of type ZIForm accessible through a bean
-   * property with name specified in this property. Example: form="xxx" needs a getter getXxx() in the action-pojo
-   * returning a instance of type ZIForm. 
+   * Request parameters are mapped by reflection to the form object of type
+   * ZIForm accessible through a bean property with name specified in this
+   * property. Example: form="xxx" needs a getter getXxx() in the action-pojo
+   * returning a instance of type ZIForm.
    * <p>
-   * Alternatively implement ZIFormAction in your action-pojo and leave this value blank. 
+   * Alternatively implement ZIFormAction in your action-pojo and leave this
+   * value blank.
    * <p>
    * You could also do both, implement ZIFormAction and set form="form"
    * <p>
@@ -59,9 +78,18 @@ public @interface ZMatch
    * 
    * @return
    */
-   String form() default "";
+  String form() default "";
 
- 
+
+  /**
+   * The HTTP methods this handler should handle. Default is all.
+   * 
+   * @return
+   */
+  String[] methods() default
+  {};
+
+
   /**
    * if true, the action handler will not be assigned to the parent action
    * handler variable. Intended to be used for transient events, like toggling

@@ -30,7 +30,7 @@ import org.ztemplates.web.ZTemplates;
  * 
  */
 
-@Component("ZIExceptionService")
+@Component(ZIExceptionService.SPRING_NAME)
 @Scope("request")
 public class ZExceptionServiceSpring implements ZIExceptionService
 {

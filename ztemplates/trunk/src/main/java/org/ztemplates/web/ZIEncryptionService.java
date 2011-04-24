@@ -16,6 +16,9 @@ package org.ztemplates.web;
 
 public interface ZIEncryptionService extends ZIService
 {
+  public static final String SPRING_NAME = "ZIEncryptionService";
+
+
   /**
    * encrypts the string and its md5hash
    * 

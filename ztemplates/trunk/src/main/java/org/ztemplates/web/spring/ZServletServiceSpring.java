@@ -27,7 +27,7 @@ import org.ztemplates.web.ZTemplates;
  * @author gerd
  * 
  */
-@Component("ZIServletService")
+@Component(ZIServletService.SPRING_NAME)
 @Scope("request")
 public class ZServletServiceSpring implements ZIServletService
 {

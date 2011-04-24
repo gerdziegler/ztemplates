@@ -6,14 +6,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.zclasspath.ZIClassRepository;
-import org.ztemplates.actions.ZMatch;
 import org.ztemplates.actions.urlhandler.ZUrlCollisionException;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeLiteral;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeSlash;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeTail;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeTerm;
-import org.ztemplates.actions.urlhandler.tree.term.ZTreeTermFactory;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeTermList;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeVariable;
 import org.ztemplates.actions.util.ZFormatUtil;
@@ -25,30 +22,7 @@ public class ZMatchTree implements Serializable
   private final List<ZMatchTreeNode> roots = new ArrayList<ZMatchTreeNode>();
 
 
-  public ZMatchTree()
-  {
-  }
-
-
-  public ZMatchTree(ZIClassRepository classRepository) throws Exception
-  {
-    for (Class c : classRepository.getClassesAnnotatedWith(ZMatch.class))
-    {
-      ZMatch m = (ZMatch) c.getAnnotation(ZMatch.class);
-      if (m.value().charAt(0) == '/')
-      {
-        List<ZTreeTermList> terms = ZTreeTermFactory.expand(classRepository, c);
-        for (ZTreeTermList crt : terms)
-        {
-          add(crt);
-        }
-      }
-    }
-    prepare();
-  }
-
-
-  public void prepare()
+  public void sort()
   {
     Collections.sort(roots);
     for (ZMatchTreeNode node : roots)

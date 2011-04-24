@@ -14,7 +14,7 @@ import org.ztemplates.web.ZTemplates;
  * @author gerd
  * 
  */
-@Component("ZIApplicationService")
+@Component(ZIApplicationService.SPRING_NAME)
 @Scope("request")
 public class ZApplicationServiceSpring implements ZIApplicationService
 {

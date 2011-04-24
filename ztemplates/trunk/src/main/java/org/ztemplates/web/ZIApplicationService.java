@@ -6,6 +6,9 @@ import org.ztemplates.render.ZIRenderApplicationContext;
 
 public interface ZIApplicationService extends ZIService
 {
+  public static final String SPRING_NAME = "ZIApplicationService";
+
+
   public ZIClassRepository getClassRepository();
 
 

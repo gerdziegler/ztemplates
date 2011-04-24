@@ -33,7 +33,7 @@ import org.ztemplates.web.ZTemplates;
  * 
  */
 
-@Component("ZIFormService")
+@Component(ZIFormService.SPRING_NAME)
 @Scope("request")
 public class ZFormServiceSpring implements ZIFormService
 {

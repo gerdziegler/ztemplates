@@ -84,8 +84,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
   public Object process(String url) throws Exception
   {
-    ZUrl zurl = parse(url);
-    return process(zurl);
+    return process(url, new HashMap<String, String[]>());
   }
 
 
@@ -93,17 +92,6 @@ public class ZTreeUrlHandler implements ZIUrlHandler
   {
     ZUrl zurl = parse(url);
     zurl.getParameterMap().putAll(paramMap);
-    // for (Map.Entry<String, String[]> en : paramMap.entrySet())
-    // {
-    // String key = en.getKey();
-    // String[] val = en.getValue();
-    // // String[] val = new String[oldVal.length];
-    // // for (int i = 0; i < oldVal.length; i++)
-    // // {
-    // // val[i] = oldVal[i];//URLDecoder.decode(oldVal[i]/* , ENCODING */);
-    // // }
-    // zurl.getParameterMap().put(key, val);
-    // }
     return process(zurl);
   }
 

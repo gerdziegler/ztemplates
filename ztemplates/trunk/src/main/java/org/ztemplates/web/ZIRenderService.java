@@ -18,6 +18,9 @@ import org.ztemplates.render.ZIRenderedObject;
 
 public interface ZIRenderService extends ZIService
 {
+  public static final String SPRING_NAME = "ZIRenderService";
+
+
   /**
    * renders the object to a string
    * 

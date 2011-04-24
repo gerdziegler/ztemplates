@@ -5,6 +5,9 @@ import org.ztemplates.actions.ZISecurityProvider;
 
 public interface ZISecurityService extends ZIService
 {
+  public static final String SPRING_NAME = "ZISecurityService";
+
+
   public ZISecurityProvider getSecurityProvider();
 
 

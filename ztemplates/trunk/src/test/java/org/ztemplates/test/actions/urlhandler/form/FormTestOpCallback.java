@@ -51,7 +51,7 @@ public class FormTestOpCallback extends TestCase
     Map<String, String[]> param = new HashMap<String, String[]>();
     param.put("op", new String[]
     {
-      "called",
+        "called",
     });
 
     FormActionCallback obj = (FormActionCallback) up.process("/act-handler", param);

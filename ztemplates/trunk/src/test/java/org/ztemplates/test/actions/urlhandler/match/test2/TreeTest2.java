@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
+import org.ztemplates.actions.urlhandler.tree.match.ZMatchTreeFactory;
 
 public class TreeTest2 extends TestCase
 {
@@ -44,6 +45,6 @@ public class TreeTest2 extends TestCase
 
   public void testParseTree() throws Exception
   {
-    ZMatchTree tree = new ZMatchTree(classRepo);
+    ZMatchTree tree = new ZMatchTreeFactory().createMatchTree(classRepo);
   }
 }

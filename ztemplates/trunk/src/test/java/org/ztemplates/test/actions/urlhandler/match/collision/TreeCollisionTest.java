@@ -21,6 +21,7 @@ import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.urlhandler.ZUrlCollisionException;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
+import org.ztemplates.actions.urlhandler.tree.match.ZMatchTreeFactory;
 
 public class TreeCollisionTest extends TestCase
 {
@@ -47,7 +48,7 @@ public class TreeCollisionTest extends TestCase
   {
     try
     {
-      ZMatchTree tree = new ZMatchTree(classRepo);
+      ZMatchTree tree = new ZMatchTreeFactory().createMatchTree(classRepo);
       fail("collision not found: " + tree.toConsoleString());
     }
     catch (ZUrlCollisionException e)

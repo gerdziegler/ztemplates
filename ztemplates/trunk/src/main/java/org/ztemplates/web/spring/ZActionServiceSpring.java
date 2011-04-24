@@ -25,7 +25,7 @@ import org.ztemplates.web.ZTemplates;
  * 
  */
 
-@Component("ZIActionService")
+@Component(ZIActionService.SPRING_NAME)
 @Scope("request")
 public class ZActionServiceSpring implements ZIActionService
 {

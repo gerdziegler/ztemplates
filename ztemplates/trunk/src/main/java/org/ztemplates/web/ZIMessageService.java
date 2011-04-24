@@ -16,6 +16,9 @@ package org.ztemplates.web;
 
 public interface ZIMessageService extends ZIService
 {
+  public static final String SPRING_NAME = "ZIMessageService";
+
+
   /**
    * renders a localized message
    * 

@@ -25,7 +25,7 @@ import org.ztemplates.web.ZTemplates;
  * @author gerd
  * 
  */
-@Component("ZIRenderService")
+@Component(ZIRenderService.SPRING_NAME)
 @Scope("request")
 public class ZRenderServiceSpring implements ZIRenderService
 {

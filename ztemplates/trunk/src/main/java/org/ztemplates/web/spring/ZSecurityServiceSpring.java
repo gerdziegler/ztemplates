@@ -13,10 +13,11 @@ import org.ztemplates.web.ZTemplates;
  * @author gerd
  * 
  */
-@Component("ZISecurityService")
+@Component(ZISecurityService.SPRING_NAME)
 @Scope("request")
 public class ZSecurityServiceSpring implements ZISecurityService
 {
+
   private final ZISecurityService service;
 
 

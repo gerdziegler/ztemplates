@@ -28,6 +28,9 @@ import org.ztemplates.render.ZScriptDependency;
  */
 public interface ZIFormService
 {
+  public static final String SPRING_NAME = "ZIFormService";
+
+
   // /**
   // * returns all properties from the form with the provided names
   // *
