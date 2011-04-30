@@ -121,6 +121,8 @@ public class FormTest extends TestCase
     mirr.initPropertyNames();
     assertEquals(1, mirr.getOperations().size());
     assertEquals(1, mirr.getProperties().size());
+    assertEquals(1, mirr.getForms().size());
+
   }
 
   // public void testParamPropForm() throws Exception

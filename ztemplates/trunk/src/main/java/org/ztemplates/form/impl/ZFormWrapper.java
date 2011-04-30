@@ -169,6 +169,7 @@ public final class ZFormWrapper implements ZIFormVisitable
           String feName = prefix + f.getName();
           fe.setName(feName);
         }
+        names.add(fe.getName());
         forms.add(fe);
       }
       // fourth
@@ -179,8 +180,9 @@ public final class ZFormWrapper implements ZIFormVisitable
         {
           throw new Exception("null value in property " + f);
         }
-        String feName = f.getName();
-        forms.add(new ZFormWrapper(fe, prefix + feName));
+        String feName = prefix + f.getName();
+        names.add(feName);
+        forms.add(new ZFormWrapper(fe, feName));
       }
     }
 
@@ -243,7 +245,15 @@ public final class ZFormWrapper implements ZIFormVisitable
             String feName = prefix + ZReflectionUtil.removePrefixName("get", m.getName());
             fe.setName(feName);
           }
-          forms.add(fe);
+          if (names.contains(fe.getName()))
+          {
+            log.warn("duplicate name: " + fe.getName());
+          }
+          else
+          {
+            names.add(fe.getName());
+            forms.add(fe);
+          }
         }
         // fourth
         else if (ZIForm.class.isAssignableFrom(type))
@@ -253,8 +263,16 @@ public final class ZFormWrapper implements ZIFormVisitable
           {
             throw new Exception("null form model returned from " + m.getName());
           }
-          String feName = ZReflectionUtil.removePrefixName("get", m.getName());
-          forms.add(new ZFormWrapper(fe, prefix + feName));
+          String feName = prefix + ZReflectionUtil.removePrefixName("get", m.getName());
+          if (names.contains(feName))
+          {
+            log.warn("duplicate name: " + feName);
+          }
+          else
+          {
+            names.add(feName);
+            forms.add(new ZFormWrapper(fe, feName));
+          }
         }
       }
     }

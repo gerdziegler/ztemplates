@@ -24,6 +24,8 @@ public class FormWithPublicFields implements ZIForm
 
   public final ZOperation op1 = new ZOperation("submit", "submit");
 
+  public final Form form = new Form();
+
 
   public ZStringProperty getProp1()
   {
@@ -34,6 +36,12 @@ public class FormWithPublicFields implements ZIForm
   public ZOperation getOp1()
   {
     return op1;
+  }
+
+
+  public Form getForm()
+  {
+    return form;
   }
 
 }
