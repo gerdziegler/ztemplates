@@ -129,7 +129,7 @@ public final class ZFormWrapper implements ZIFormVisitable
         String opName = op.getName() == null ? prefix + f.getName() : op.getName();
         if (names.contains(opName))
         {
-          log.warn("duplicate name: " + opName);
+          log.warn("duplicate name: " + obj.getClass() + "." + opName);
         }
         else
         {
@@ -148,7 +148,7 @@ public final class ZFormWrapper implements ZIFormVisitable
         String propName = prop.getName() == null ? prefix + f.getName() : prop.getName();
         if (names.contains(propName))
         {
-          log.warn("duplicate name: " + propName);
+          log.warn("duplicate name: " + obj.getClass() + "." + propName);
         }
         else
         {
@@ -205,7 +205,7 @@ public final class ZFormWrapper implements ZIFormVisitable
           String opName = op.getName() == null ? prefix + ZReflectionUtil.removePrefixName("get", m.getName()) : op.getName();
           if (names.contains(opName))
           {
-            log.warn("duplicate name: " + opName);
+            log.warn("duplicate name: " + obj.getClass() + "." + opName);
           }
           else
           {
@@ -224,7 +224,7 @@ public final class ZFormWrapper implements ZIFormVisitable
           String propName = prop.getName() == null ? prefix + ZReflectionUtil.removePrefixName("get", m.getName()) : prop.getName();
           if (names.contains(propName))
           {
-            log.warn("duplicate name: " + propName);
+            log.warn("duplicate name: " + obj.getClass() + "." + propName);
           }
           else
           {
@@ -247,7 +247,7 @@ public final class ZFormWrapper implements ZIFormVisitable
           }
           if (names.contains(fe.getName()))
           {
-            log.warn("duplicate name: " + fe.getName());
+            log.warn("duplicate name: " + obj.getClass() + "." + fe.getName());
           }
           else
           {
@@ -266,7 +266,7 @@ public final class ZFormWrapper implements ZIFormVisitable
           String feName = prefix + ZReflectionUtil.removePrefixName("get", m.getName());
           if (names.contains(feName))
           {
-            log.warn("duplicate name: " + feName);
+            log.warn("duplicate name: " + obj.getClass() + "." + feName);
           }
           else
           {
