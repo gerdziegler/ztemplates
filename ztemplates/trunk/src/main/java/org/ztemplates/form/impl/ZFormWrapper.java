@@ -112,6 +112,8 @@ public final class ZFormWrapper implements ZIFormVisitable
       prefix = "";
     }
 
+    Set<String> names = new HashSet<String>();
+
     for (Field f : obj.getClass().getFields())
     {
       Class type = f.getType();
@@ -125,7 +127,15 @@ public final class ZFormWrapper implements ZIFormVisitable
           throw new Exception("null value in property " + f);
         }
         String opName = op.getName() == null ? prefix + f.getName() : op.getName();
-        operations.add(new ZOperationWrapper(opName, op));
+        if (names.contains(opName))
+        {
+          log.warn("duplicate name: " + opName);
+        }
+        else
+        {
+          names.add(opName);
+          operations.add(new ZOperationWrapper(opName, op));
+        }
       }
       // second
       else if (ZProperty.class.isAssignableFrom(type))
@@ -136,7 +146,15 @@ public final class ZFormWrapper implements ZIFormVisitable
           throw new Exception("null value in property " + f);
         }
         String propName = prop.getName() == null ? prefix + f.getName() : prop.getName();
-        properties.add(new ZPropertyWrapper(propName, prop));
+        if (names.contains(propName))
+        {
+          log.warn("duplicate name: " + propName);
+        }
+        else
+        {
+          names.add(propName);
+          properties.add(new ZPropertyWrapper(propName, prop));
+        }
       }
       // third
       else if (ZFormWrapper.class.isAssignableFrom(type))
@@ -183,7 +201,15 @@ public final class ZFormWrapper implements ZIFormVisitable
             throw new Exception("null op returned from " + m.getName());
           }
           String opName = op.getName() == null ? prefix + ZReflectionUtil.removePrefixName("get", m.getName()) : op.getName();
-          operations.add(new ZOperationWrapper(opName, op));
+          if (names.contains(opName))
+          {
+            log.warn("duplicate name: " + opName);
+          }
+          else
+          {
+            names.add(opName);
+            operations.add(new ZOperationWrapper(opName, op));
+          }
         }
         // second
         else if (ZProperty.class.isAssignableFrom(type))
@@ -194,7 +220,15 @@ public final class ZFormWrapper implements ZIFormVisitable
             throw new Exception("null prop returned from " + m.getName());
           }
           String propName = prop.getName() == null ? prefix + ZReflectionUtil.removePrefixName("get", m.getName()) : prop.getName();
-          properties.add(new ZPropertyWrapper(propName, prop));
+          if (names.contains(propName))
+          {
+            log.warn("duplicate name: " + propName);
+          }
+          else
+          {
+            names.add(propName);
+            properties.add(new ZPropertyWrapper(propName, prop));
+          }
         }
         // third
         else if (ZFormWrapper.class.isAssignableFrom(type))

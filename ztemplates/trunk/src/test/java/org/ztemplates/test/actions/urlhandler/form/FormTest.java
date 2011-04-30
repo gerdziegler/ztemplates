@@ -111,6 +111,18 @@ public class FormTest extends TestCase
     }
   }
 
+
+  public void testPublicNames() throws Exception
+  {
+    FormWithPublicFields form = new FormWithPublicFields();
+    ZMockServiceRepository repo = ZMock.getMock();
+    repo.setServletService(new ZMockServletService());
+    ZFormWrapper mirr = new ZFormWrapper(form);
+    mirr.initPropertyNames();
+    assertEquals(1, mirr.getOperations().size());
+    assertEquals(1, mirr.getProperties().size());
+  }
+
   // public void testParamPropForm() throws Exception
   // {
   // Map<String, String[]> param = new HashMap<String, String[]>();
