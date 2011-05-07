@@ -1,6 +1,6 @@
 <span #if(${cssClass})class="${cssClass}"#end id="${id}">
 #foreach($item in $items)
-<input type="radio" id="${item.id}" name="${name}" value="${item.key}" class="ztemplates-input-radio $!{cssClass}" #if(!$property.writeable)disabled="disabled"#end #if($property.required)required="required"#end $!{htmlAttributes}></input><span class="${cssId}-item-text">$!{item.value}</span>#if($vertical)<br/>#end
+<input type="radio" id="${item.id}" name="${name}" value="${item.key}" #if(${style})style="${style}"#end  class="ztemplates-input-radio $!{cssClass}" #if(!$property.writeable)disabled="disabled"#end #if($property.required)required="required"#end $!{htmlAttributes}></input><span class="${cssId}-item-text">$!{item.value}</span>#if($vertical)<br/>#end
 #end
 </span>
 #if(!$property.writeable)

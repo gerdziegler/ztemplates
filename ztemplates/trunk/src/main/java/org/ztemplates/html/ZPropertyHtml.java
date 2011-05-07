@@ -5,16 +5,24 @@ import org.ztemplates.render.ZExpose;
 
 public abstract class ZPropertyHtml
 {
-  private final String id;
-
+  @ZExpose
   private final ZProperty property;
 
+  @ZExpose
+  private final String id;
+
+  @ZExpose
   private String cssClass;
 
+  @ZExpose
+  private String style;
+
+  @ZExpose
   private String htmlAttributes;
 
 
-  public ZPropertyHtml(String id, ZProperty property)
+  public ZPropertyHtml(String id,
+      ZProperty property)
   {
     this.id = id;
     this.property = property;
@@ -27,35 +35,32 @@ public abstract class ZPropertyHtml
   }
 
 
-  @ZExpose
-  public final String getId()
+  public String getId()
   {
     return id;
   }
 
 
-  @ZExpose
-  public final ZProperty getProperty()
+  public ZProperty getProperty()
   {
     return property;
   }
 
 
   @ZExpose
-  public final String getName()
+  public String getName()
   {
     return property.getName();
   }
 
 
-  @ZExpose
-  public final String getCssClass()
+  public String getCssClass()
   {
     return cssClass;
   }
 
 
-  public final void setCssClass(String cssId)
+  public void setCssClass(String cssId)
   {
     this.cssClass = cssId;
   }
@@ -66,8 +71,7 @@ public abstract class ZPropertyHtml
    * 
    * @return
    */
-  @ZExpose
-  public final String getHtmlAttributes()
+  public String getHtmlAttributes()
   {
     return htmlAttributes;
   }
@@ -78,8 +82,20 @@ public abstract class ZPropertyHtml
    * 
    * @return
    */
-  public final void setHtmlAttributes(String attributes)
+  public void setHtmlAttributes(String attributes)
   {
     this.htmlAttributes = attributes;
+  }
+
+
+  public String getStyle()
+  {
+    return style;
+  }
+
+
+  public void setStyle(String style)
+  {
+    this.style = style;
   }
 }

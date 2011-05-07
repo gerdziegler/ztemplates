@@ -60,7 +60,7 @@ public class ZExposedMethodRepository implements ZIExposedMethodRepository
         else
         {
           throw new Exception("Only getters can be annotated with " + ZExpose.class.getName() + " "
-              + m);
+                + m);
         }
         if (map.containsKey(key))
         {
@@ -83,7 +83,7 @@ public class ZExposedMethodRepository implements ZIExposedMethodRepository
     // all fields, from superclass too
     for (Class c = clazz; c != Object.class && c != null; c = c.getSuperclass())
     {
-      for (Field f : clazz.getDeclaredFields())
+      for (Field f : c.getDeclaredFields())
       {
         ZExpose exp = f.getAnnotation(ZExpose.class);
         if (exp != null)

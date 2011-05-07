@@ -1,1 +1,1 @@
-<input type="text" id="${id}" name="${name}" value="$!{value}" #if(${cssClass})class="${cssClass}"#end #if(!$property.writeable)readonly="readonly"#end #if($property.required)required="required"#end $!{htmlAttributes}></input>
+<input type="text" id="${id}" name="${name}" value="$!{value}" #if(${style})style="${style}"#end #if(${cssClass})class="${cssClass}"#end #if(!$property.writeable)readonly="readonly"#end #if($property.required)required="required"#end $!{htmlAttributes}></input>
