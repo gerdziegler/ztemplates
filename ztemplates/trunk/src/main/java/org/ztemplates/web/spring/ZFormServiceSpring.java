@@ -135,4 +135,11 @@ public class ZFormServiceSpring implements ZIFormService
   {
     service.initPropertyNames(form);
   }
+
+
+  public void initPropertyNames(ZIForm form, String formId) throws Exception
+  {
+    service.initPropertyNames(form, formId);
+  }
+
 }

@@ -98,7 +98,7 @@ public final class ZFormWrapper implements ZIFormVisitable
    * @param name
    * @throws Exception
    */
-  protected ZFormWrapper(ZIForm obj,
+  public ZFormWrapper(ZIForm obj,
       String name) throws Exception
   {
     this.name = name;

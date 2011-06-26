@@ -5,6 +5,7 @@ import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.render.ZIRenderApplicationContext;
 import org.ztemplates.web.ZIApplicationService;
 import org.ztemplates.web.application.ZApplication;
+import org.ztemplates.web.script.zscript.ZIJavaScriptRepository;
 
 public class ZApplicationServiceImpl implements ZIApplicationService
 {
@@ -32,5 +33,11 @@ public class ZApplicationServiceImpl implements ZIApplicationService
   public ZIClassRepository getClassRepository()
   {
     return application.getClassRepository();
+  }
+
+
+  public ZIJavaScriptRepository getJavaScriptRepository()
+  {
+    return application.getJavaScriptRepository();
   }
 }

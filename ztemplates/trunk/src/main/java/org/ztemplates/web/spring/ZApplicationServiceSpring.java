@@ -7,6 +7,7 @@ import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.render.ZIRenderApplicationContext;
 import org.ztemplates.web.ZIApplicationService;
 import org.ztemplates.web.ZTemplates;
+import org.ztemplates.web.script.zscript.ZIJavaScriptRepository;
 
 /**
  * Spring proxy for ZIApplicationService
@@ -43,4 +44,11 @@ public class ZApplicationServiceSpring implements ZIApplicationService
   {
     return service.getActionApplicationContext();
   }
+
+
+  public ZIJavaScriptRepository getJavaScriptRepository()
+  {
+    return service.getJavaScriptRepository();
+  }
+
 }

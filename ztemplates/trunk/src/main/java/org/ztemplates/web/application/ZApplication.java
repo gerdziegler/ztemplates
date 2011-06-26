@@ -5,6 +5,7 @@ import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.ZActionApplication;
 import org.ztemplates.render.ZRenderApplication;
 import org.ztemplates.web.request.impl.ZServiceFactory;
+import org.ztemplates.web.script.zscript.ZIJavaScriptRepository;
 
 /**
  * 
@@ -17,6 +18,8 @@ public class ZApplication
 
   private final ZIClassRepository classRepository;
 
+  private final ZIJavaScriptRepository javaScriptRepository;
+
   private final ZActionApplication actionApplication;
 
   private final ZRenderApplication renderApplication;
@@ -24,9 +27,13 @@ public class ZApplication
   private ZIServiceFactory serviceFactory;
 
 
-  public ZApplication(ZIClassRepository classRepository, ZActionApplication actionApplication, ZRenderApplication renderApplication) throws Exception
+  public ZApplication(ZIClassRepository classRepository,
+      ZIJavaScriptRepository javaScriptRepository,
+      ZActionApplication actionApplication,
+      ZRenderApplication renderApplication) throws Exception
   {
     this.classRepository = classRepository;
+    this.javaScriptRepository = javaScriptRepository;
     this.actionApplication = actionApplication;
     this.renderApplication = renderApplication;
     this.serviceFactory = new ZServiceFactory();
@@ -54,6 +61,12 @@ public class ZApplication
   public ZIServiceFactory getServiceFactory()
   {
     return serviceFactory;
+  }
+
+
+  public ZIJavaScriptRepository getJavaScriptRepository()
+  {
+    return javaScriptRepository;
   }
 
 

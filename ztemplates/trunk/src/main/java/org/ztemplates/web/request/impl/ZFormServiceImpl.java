@@ -123,6 +123,13 @@ public class ZFormServiceImpl implements ZIFormService
   }
 
 
+  public void initPropertyNames(ZIForm form, String formId) throws Exception
+  {
+    ZFormWrapper mirr = new ZFormWrapper(form, formId);
+    mirr.initPropertyNames();
+  }
+
+
   public JSONObject computeJson(ZIForm form) throws Exception
   {
     JSONObject ret = ZJsonUtil.computeJSON(form);

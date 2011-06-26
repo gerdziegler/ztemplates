@@ -193,4 +193,17 @@ public interface ZIFormService
    * @throws Exception
    */
   public void initPropertyNames(ZIForm form) throws Exception;
+
+
+  /**
+   * initialized the property names if the form has not been processed by a
+   * action, but created manually and you have multiple forms on your page, to
+   * ensure the ids are unique
+   * 
+   * @param form
+   * @param formId
+   *          the formId, is prepended to each propertyName
+   * @throws Exception
+   */
+  public void initPropertyNames(ZIForm form, String formId) throws Exception;
 }

@@ -23,9 +23,9 @@ public class ZTestApplication
     ZActionApplication actionApplication = new ZActionApplication(actionContext, classRepository);
     ZRenderApplication renderApplication = new ZRenderApplication(renderContext, classRepository);
 
-//    ZVelocityRenderer.init(renderApplication.getApplicationContext());
+    // ZVelocityRenderer.init(renderApplication.getApplicationContext());
 
-    ZApplication ret = new ZApplication(classRepository, actionApplication, renderApplication);
+    ZApplication ret = new ZApplication(classRepository, null, actionApplication, renderApplication);
     return ret;
   }
 }

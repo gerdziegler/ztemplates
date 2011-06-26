@@ -31,6 +31,8 @@ import org.ztemplates.web.application.ZApplicationContextWebImpl;
 import org.ztemplates.web.application.ZApplicationRepositoryWeb;
 import org.ztemplates.web.script.css.ZCachingCssProcessorData;
 import org.ztemplates.web.script.javascript.ZCachingJavaScriptProcessorData;
+import org.ztemplates.web.script.zscript.ZIJavaScriptRepository;
+import org.ztemplates.web.script.zscript.ZJavaScriptRepositoryAnnotationFactory;
 import org.ztemplates.web.standalone.ZApplicationRepositoryStandalone;
 
 /**
@@ -72,9 +74,6 @@ public class ZTemplatesContextListener implements ServletContextListener
       log.info("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
       ServletContext ctx = ev.getServletContext();
 
-      log.info("creating class repository...");
-      final ZIClassRepository classRepository = createClassRepository(ctx);
-
       String encoding = ctx.getInitParameter("encoding");
       if (encoding == null)
       {
@@ -97,6 +96,13 @@ public class ZTemplatesContextListener implements ServletContextListener
             );
       }
 
+      ZClassPathScanner scanner = createClassPathScanner(ctx);
+      log.info("creating class repository...");
+      final ZIClassRepository classRepository = createClassRepository(scanner);
+
+      log.info("creating javascript repository...");
+      final ZIJavaScriptRepository javaScriptRepository = new ZJavaScriptRepositoryAnnotationFactory(classRepository, encoding).createJavaScriptRepository();
+
       final ZApplicationContextWebImpl applicationContext = new ZApplicationContextWebImpl(classRepository, ctx, encoding);
 
       log.info("creating application...");
@@ -105,7 +111,7 @@ public class ZTemplatesContextListener implements ServletContextListener
       ZCachingCssProcessorData.setInstance(applicationContext, new ZCachingCssProcessorData());
       ZActionApplication actionApplication = new ZActionApplication(applicationContext, classRepository);
       ZRenderApplication renderApplication = new ZRenderApplication(applicationContext, classRepository);
-      ZApplication application = new ZApplication(classRepository, actionApplication, renderApplication);
+      ZApplication application = new ZApplication(classRepository, javaScriptRepository, actionApplication, renderApplication);
       ZApplicationRepositoryWeb.setApplication(ctx, application);
 
       String applicationName = ctx.getInitParameter("applicationName");
@@ -138,8 +144,7 @@ public class ZTemplatesContextListener implements ServletContextListener
   }
 
 
-  // PathMatchingResourcePatternResolver
-  private ZIClassRepository createClassRepository(final ServletContext servletContext) throws Exception
+  private ZClassPathScanner createClassPathScanner(final ServletContext servletContext) throws Exception
   {
     List<ZIClassPathItem> items = ZWebappClassPath.getItems(servletContext);
 
@@ -164,44 +169,23 @@ public class ZTemplatesContextListener implements ServletContextListener
     ZClassPathScanner scanner = new ZClassPathScanner();
     scanner.setClassPathItems(items);
     scanner.setFilter(filter);
+    return scanner;
+  }
 
+
+  // PathMatchingResourcePatternResolver
+  private ZIClassRepository createClassRepository(ZClassPathScanner scanner) throws Exception
+  {
     ZIClassRepository ret = new ZClassRepository(scanner);
-    // PathMatchingResourcePatternResolver
-    // String classpath = System.getProperty("java.class.path");
-    // if (ret.getClasses().isEmpty())
-    // {
-    // System.err.println("no ztemplates classes found in webapp locations /WEB-INF/lib and /WEB-INF/classes, trying / (all resources fron servlet context)...");
-    // items = new ArrayList<ZIClassPathItem>();
-    // ZIClassPathItem all = new ZClassPathItemWebapp(servletContext, "/");
-    // items.add(all);
-    // scanner = new ZClassPathScanner();
-    // scanner.setClassPathItems(items);
-    // ret = new ZClassRepository(scanner);
-    // print(all);
-    // }
     if (ret.getClasses().isEmpty())
     {
       System.err.println("no ztemplates classes found in webapp locations /WEB-INF/lib and /WEB-INF/classes, trying classloader...");
-      items = ZClassPathItemResource.getItems();
+      List<ZIClassPathItem> items = ZClassPathItemResource.getItems();
       // items.add(new ZClassPathItemResource());
       scanner = new ZClassPathScanner();
       scanner.setClassPathItems(items);
       ret = new ZClassRepository(scanner);
     }
-    // if (ret.getClasses().isEmpty())
-    // {
-    // Properties prop = System.getProperties();
-    // for(Object key: prop.keySet())
-    // {
-    // System.err.println(key + "=" + prop.get(key));
-    // }
-    // System.err.println("no ztemplates classes found in java.class.path=" +
-    // classpath + " trying .");
-    // System.err.println(new File(".").getAbsolutePath());
-    // // items = ZJavaClassPath.getItems();
-    // // scanner.setClassPathItems(items);
-    // // ret = new ZClassRepository(scanner);
-    // }
     if (ret.getClasses().isEmpty())
     {
       log.error("###############################################################################");

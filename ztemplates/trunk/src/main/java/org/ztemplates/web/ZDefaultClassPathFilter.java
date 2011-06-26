@@ -4,9 +4,10 @@ import org.apache.log4j.Logger;
 import org.zclasspath.ZIClassPathFilter;
 
 /**
- * Default classpath filter behavior accepts only ztemplates classes and skips all other. 
- * Also scans only web-inf/lib and web-inf/classes. See http://www.ztemplates.org/Edit.jsp?page=Install 
- * for how to override this behavior.
+ * Default classpath filter behavior accepts only ztemplates classes and skips
+ * all other. Also scans only web-inf/lib and web-inf/classes. See
+ * http://www.ztemplates.org/Edit.jsp?page=Install for how to override this
+ * behavior.
  * 
  * @author gerdziegler.de
  * 
@@ -60,6 +61,6 @@ public abstract class ZDefaultClassPathFilter implements ZIClassPathFilter
 
   public boolean acceptResource(String resource) throws Exception
   {
-    return false;
+    return true;
   }
 }

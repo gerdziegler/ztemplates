@@ -181,6 +181,16 @@ public class ZMessages
   }
 
 
+  public JSONObject createMessagesJSON() throws JSONException
+  {
+    cleanup();
+    JSONObject ret = new JSONObject();
+    ret.put("globalMessages", createGlobalMessagesJSON());
+    ret.put("propertyMessages", createPropertyMessagesJSON());
+    return ret;
+  }
+
+
   public String getGlobalMessagesJSON()
   {
     cleanup();
