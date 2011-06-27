@@ -56,15 +56,15 @@ public class ZExposedMethodRepositoryTest extends TestCase
     {
       map.put(val.getName(), val);
     }
-    assertEquals(4, map.size());
+    assertEquals(5, map.size());
     assertTrue(map.containsKey("prop1"));
     assertFalse(map.containsKey("prop2"));
     assertTrue(map.containsKey("prop3"));
-    assertFalse(map.containsKey("prop4"));
+    assertTrue(map.containsKey("prop4"));
     assertTrue(map.containsKey("prop5"));
     assertTrue(map.containsKey("prop6"));
     Pojo1 pojo = new Pojo1();
     ZIExposedValue exp6 = map.get("prop6");
-    assertEquals("prop6FromGetter", exp6.getValue(pojo));
+    assertEquals("prop6FromField", exp6.getValue(pojo));
   }
 }
