@@ -1,0 +1,2 @@
+* added support for zscript javascript library, consists of annotation @ZScriptDefinition
+* added  public void initPropertyNames(ZIForm form, String formId) to ZIFormService to allow unique ids in forms when using multiple forms on the same page
