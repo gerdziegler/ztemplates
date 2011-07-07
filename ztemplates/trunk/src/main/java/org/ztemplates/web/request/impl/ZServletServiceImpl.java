@@ -79,23 +79,21 @@ public class ZServletServiceImpl implements ZIServletService
   }
 
 
-  public void renderJson(JSONObject json) throws Exception
+  // public void renderJson(JSONObject json) throws Exception
+  // {
+  // render(json.toString(2), "text/json", encoding);
+  // }
+
+  public void render(JSONObject json) throws Exception
   {
     render(json.toString(2), "text/json", encoding);
   }
 
 
-  public void render(JSONObject json) throws Exception
-  {
-    render(json, "text/json", encoding);
-  }
-
-
-  public void renderJson(String json) throws Exception
-  {
-    render(json, "text/json", encoding);
-  }
-
+  // public void renderJson(String json) throws Exception
+  // {
+  // render(json, "text/json", encoding);
+  // }
 
   public void render(Object obj, String mimeType, String encoding) throws Exception
   {
