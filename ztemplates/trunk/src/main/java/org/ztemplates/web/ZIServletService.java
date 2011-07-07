@@ -19,6 +19,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
+
 /**
  * interface to servlet. Not available in standalone mode!
  * 
@@ -72,6 +74,20 @@ public interface ZIServletService extends ZIService
    */
   public void render(Object obj, String mimeType, String encoding) throws Exception;
 
+
+  /**
+   * utility as this is often needed for ajax applications, renders as mime-type
+   * "text/json"
+   */
+  public void render(JSONObject json) throws Exception;
+
+
+  /**
+   * utility as this is often needed for ajax applications, renders as mime-type
+   * "text/json"
+   */
+  // public void renderJson(JSONObject json) throws Exception;
+  // public void renderJson(String json) throws Exception;
 
   /**
    * creates a url that calls the referenced action, Use

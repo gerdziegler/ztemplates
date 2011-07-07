@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.ztemplates.web.ZIServletService;
@@ -73,6 +74,22 @@ public class ZServletServiceSpring implements ZIServletService
   }
 
 
+  public void render(JSONObject json) throws Exception
+  {
+    servletService.render(json);
+  }
+
+
+  // public void renderJson(String obj) throws Exception
+  // {
+  // servletService.renderJson(obj);
+  // }
+
+  // public void renderJson(JSONObject json) throws Exception
+  // {
+  // servletService.renderJson(json);
+  // }
+
   /**
    * use actionService.createUrl instead
    */
@@ -99,4 +116,5 @@ public class ZServletServiceSpring implements ZIServletService
   {
     return servletService.getEncoding();
   }
+
 }

@@ -14,12 +14,16 @@
  */
 package org.ztemplates.test.json;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.ztemplates.json.ZJsonUtil;
 import org.ztemplates.test.mock.ZMock;
+import org.ztemplates.test.mock.ZMockServletService;
 
 public class JsonTest extends TestCase
 {
@@ -70,5 +74,24 @@ public class JsonTest extends TestCase
     {
       assertTrue(ret, ret.indexOf(s.getStringProp().getStringValue()) >= 0);
     }
+  }
+
+
+  public void test2() throws Exception
+  {
+    final List<JSONObject> list = new ArrayList<JSONObject>();
+    ZMockServletService ss = new ZMockServletService()
+    {
+      @Override
+      public void render(JSONObject json) throws Exception
+      {
+        list.add(json);
+      }
+    };
+
+    JSONObject json = new JSONObject();
+    ss.render(json);
+
+    assertFalse("" + list.size(), list.isEmpty());
   }
 }

@@ -49,7 +49,8 @@ public class ZRenderServiceImpl implements ZIRenderService
   private final ZRenderEngine renderEngine;
 
 
-  public ZRenderServiceImpl(final ZRenderApplication application, final String contextPath)
+  public ZRenderServiceImpl(final ZRenderApplication application,
+      final String contextPath)
   {
     this.application = application;
 

@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.ztemplates.web.ZIServletService;
 
 public class ZMockServletService implements ZIServletService
@@ -473,5 +474,25 @@ public class ZMockServletService implements ZIServletService
   public String getEncoding()
   {
     return "ISO-8559-1";
+  }
+
+
+  // public void renderJson(String json)
+  // {
+  // // TODO Auto-generated method stub
+  //
+  // }
+  //
+  //
+  // public void renderJson(JSONObject obj) throws Exception
+  // {
+  // // TODO Auto-generated method stub
+  //
+  // }
+
+  public void render(JSONObject json) throws Exception
+  {
+    // TODO Auto-generated method stub
+
   }
 }

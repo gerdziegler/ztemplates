@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.ztemplates.web.ZIActionService;
 import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZIServletService;
@@ -39,8 +40,11 @@ public class ZServletServiceImpl implements ZIServletService
   private final String encoding;
 
 
-  public ZServletServiceImpl(final HttpServletRequest request, final HttpServletResponse response, final ZIActionService actionService,
-      final ZIRenderService renderService, String encoding)
+  public ZServletServiceImpl(final HttpServletRequest request,
+      final HttpServletResponse response,
+      final ZIActionService actionService,
+      final ZIRenderService renderService,
+      String encoding)
   {
     super();
     this.request = request;
@@ -72,6 +76,24 @@ public class ZServletServiceImpl implements ZIServletService
   public void render(Object obj, String mimeType) throws Exception
   {
     render(obj, mimeType, encoding);
+  }
+
+
+  public void renderJson(JSONObject json) throws Exception
+  {
+    render(json.toString(2), "text/json", encoding);
+  }
+
+
+  public void render(JSONObject json) throws Exception
+  {
+    render(json, "text/json", encoding);
+  }
+
+
+  public void renderJson(String json) throws Exception
+  {
+    render(json, "text/json", encoding);
   }
 
 
@@ -149,4 +171,5 @@ public class ZServletServiceImpl implements ZIServletService
   {
     return encoding;
   }
+
 }
