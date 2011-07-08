@@ -1,0 +1,4 @@
+<input type="checkbox" id="${id}" #if(${style})style="${style}"#end #if(${cssClass})class="${cssClass}"#end name="${name}" #if($property.required)required="required"#end value="$!{value}" #if(!$property.writeable)disabled="disabled"#end #if(${checked}) checked="true" #end $!{htmlAttributes}></input>
+#if(!$property.writeable && ${checked})
+<input type="hidden" name="${name}" value="$!{value}"/>
+#end

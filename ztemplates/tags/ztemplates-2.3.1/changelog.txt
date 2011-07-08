@@ -1,0 +1,63 @@
+!!!Changelog
+
+[Sourceforge RSS Feed|https://sourceforge.net/export/rss2_keepsake.php?group_id=157577]
+
+
+This is the ztemplates changelog. Here I will keep you informed about the changes I am currently working on. It also contains the changelog for unreleased versions, so you can see what's coming next. 
+
+snapshot available from [https://oss.sonatype.org/content/repositories/snapshots/org/ztemplates/ztemplates/]
+
+__ztemplates-2.3.1-SNAPSHOT (Not yet released)__ 
+
+* Added method render with parameter JSONObject to ZIServletService
+* Fixed a bug in zscript.js related to console output
+
+__ztemplates-2.3.0 (Released)__ 
+
+* added zscript.js: a small javascript framework for [creating ajax-based applications|BrowserBasedJavascript]
+* added support for zscript javascript library, consists of annotation @ZScriptDefinition
+* added  public void initPropertyNames(ZIForm form, String formId) to ZIFormService to allow unique ids in forms when using multiple forms on the same page
+* fixed a bug that occurs when one declares a public field and a getter for form property or operation
+* now can expose private fields in view pojos, takes precedence over methods
+* added SPRING_NAME constants to spring compatible beans/services
+
+__ztemplates-2.2.1 (Released)__
+* one change in how ZFormProperty generates the ids of form input elements, the ids are now compatible with jQuery selectors
+
+__ztemplates-2.2.0 (Released)__
+* added spring support for ztemplates services, they can now be autowired to action pojos
+* fixed a bug that prevented loading the velocity.properties file from a webapps WEB-INF/velocity.properties
+* added ztemplates.velocity.nocache=true webapp context parameter to disable cache settings from velocity 
+* fixed a bug that prevented velocity.properties to be loaded from WEB-INF/velocity.properties
+* added support for __spring autowiring in action pojos__ just annotate action with @Component
+* added support for afterSubmit callback for form processing
+* added validate method to ZOperation
+
+__ztemplates-2.1.0 (Released)__
+* fixed a bug that happens when creating urls from outside a http request (like a Job, Quartz or Timer) 
+* removed the @ZSetter @ZGetter annotations, as name convention is sufficient
+* added support for using fields in form pojos instead of setters/getters
+* added support for using fields in action pojos instead of setters/getters
+* added support for exposing fields in render pojos
+* ZTemplates.getRenderService().createJavaScriptId() now creates reproductible ids, to facilitate selenium tests
+* ZFormText now uses property name to create JavaScript id, better for selenium tests
+
+__ztemplates-2.0.0 (Released)__
+
+* validation is now done in separate validation classes
+* added separated ZValidator class and ZValidationMessage
+* removed validation from Properties 
+* added classes for html form input tags like input type='text' etc
+* added support for UTF-8 encoding __which is now the default__ so update your IDE/maven pom
+* added better support for javaScript declarations
+* every @ZExpose now exposes the original value too, even when render=true, with suffix 'Bean'
+* some api refactorings
+
+
+
+
+
+
+
+
+![Changelog Older Versions]
