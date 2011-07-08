@@ -1,28 +1,49 @@
 /**
- * zscript 1.0.0 
+ * zscript 1.0.1 
  * (c) 2011 www.gerdziegler.de, www.ztemplates.org
  * Apache Licence 2.0
  * requires jquery http://www.jquery.org
  */
-console.log('processing zscript...');
 if(typeof zscript === 'undefined') {
-	console.log('initializing zscript...');
-	$(document).ajaxComplete(function(e, xhr, settings) {
-		    console.log('ajax complete ' + settings.url);
-	});
-	var zscript = function() {	
-		var definitions = new Array();
+    var zscript = function() {	
+        var hasConsole = typeof console!=='undefined';
+    	
+        $(document).ajaxComplete(function(e, xhr, settings) {
+    	    log('ajax complete ' + settings.url);
+    	});
+        
+        function log(text) {
+        	if(hasConsole) {
+        		console.log(text);
+        	}
+        }
+        
+        function error(text) {
+        	if(hasConsole) {
+        		console.error(text);
+        	}
+        }
+        
+        function info(text) {
+        	if(hasConsole) {
+        		console.info(text);
+        	}
+        }
+
+    	
+    	
+    	var definitions = new Array();
 		var callbackQueue = new Array();
 	    var loading = false;
 		
 		function defineImpl(script, url) {
-			console.log('define: ' + script + ' = ' + url);
+			log('define: ' + script + ' = ' + url);
 			if(typeof definitions[script]==='undefined') {
 				definitions[script] = {'url': url, 'loadRequested':false, 'loaded':false};
 			} else if(definitions[script].url!=url) {
-				console.error('script already defined with another url: ' + script + " --- old: " + definitions[script].url + " --- new: " + url);
+				error('script already defined with another url: ' + script + " --- old: " + definitions[script].url + " --- new: " + url);
 			} else {
-				console.log('script already defined: ' + script);
+				log('script already defined: ' + script);
 			}
 		}
 			
@@ -32,6 +53,9 @@ if(typeof zscript === 'undefined') {
 				scripts = [scriptParam];
 			}
 			for(var idx in scripts){
+				if(typeof scripts[idx]==='undefined') {
+					log.error('undefined script ' + idx + ' call define() first');
+				}
 				var script = scripts[idx];
 				if(definitions[script].loadRequested!==true) {
 					definitions[script].loadRequested = true;
@@ -54,7 +78,7 @@ if(typeof zscript === 'undefined') {
 					def.loaded=true;
 					debug();
 					var scriptLocation = def.url;			
-				 	console.info ('--> loading: ' + idx + ' from ' + scriptLocation);
+				 	info ('--> loading: ' + idx + ' from ' + scriptLocation);
 					//jQuery('head').append('<script src="' + scriptLocation + '" ></script>')
 					//loadScripts();
 					jQuery.ajax({
@@ -62,11 +86,11 @@ if(typeof zscript === 'undefined') {
 						url: scriptLocation,
 						data: null,
 						success: function(data){
-						    console.log('    loaded   ' + idx + ' from ' + scriptLocation);
+						    log('    loaded   ' + idx + ' from ' + scriptLocation);
 							loadScripts();
 						},
 						error: function(XMLHttpRequest, textStatus, errorThrown){
-						    console.error('    failed to load '  + idx + ' from ' + scriptLocation);
+						    error('    failed to load '  + idx + ' from ' + scriptLocation);
 							loadScripts();
 						},
 						dataType: 'script'
@@ -84,13 +108,13 @@ if(typeof zscript === 'undefined') {
 				var call = callbackQueue[0];
 				for(var i=0; i<call.scripts.length;i++){
 					if(definitions[call.scripts[i]].loaded!==true) {
-						console.error('script "' + call.scripts[i] + '" not loaded for callback, nested loads with callback are not allowed: use a script for nested method and declare dependency in the script.\n' +  call.callback);
+						error('script "' + call.scripts[i] + '" not loaded for callback, nested loads with callback are not allowed: use a script for nested method and declare dependency in the script.\n' +  call.callback);
 						loadScripts();
 						return;
 					}
 				}
 				callbackQueue.shift();
-				console.log('*** calling ' + call.callback);
+				log('*** calling ' + call.callback);
 				call.callback();
 			}		
 			loading=false;
@@ -121,7 +145,7 @@ if(typeof zscript === 'undefined') {
 				}
 			}
 			s+= '\n    callbackQueue:' + callbackQueue;
-			console.log(s);		
+			log(s);		
 		}
 	
 		return {
@@ -138,7 +162,5 @@ if(typeof zscript === 'undefined') {
 				return setDebugImpl(enableDebug);
 			}
 		};
-	}();
-} else {
-	console.log('zscript already available');
-}
+	}();	
+} 
