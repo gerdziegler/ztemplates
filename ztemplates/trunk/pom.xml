@@ -8,7 +8,7 @@
 	<groupId>org.ztemplates</groupId>
 	<artifactId>ztemplates</artifactId>
 	<packaging>jar</packaging>
-	<version>2.3.1-SNAPSHOT</version>
+	<version>2.3.1</version>
 	<name>ztemplates</name>
 	<url>http://ztemplates.org</url>
 	<description>   
@@ -31,13 +31,13 @@
 	</licenses>
 	<scm>
 		<url>
-			http://ztemplates.svn.sourceforge.net/svnroot/ztemplates/ztemplates/trunk
+			http://ztemplates.svn.sourceforge.net/svnroot/ztemplates/ztemplates/tags/ztemplates-2.3.1
 		</url>
 		<connection>
-			scm:svn:https://ztemplates.svn.sourceforge.net/svnroot/ztemplates/ztemplates/trunk
+			scm:svn:https://ztemplates.svn.sourceforge.net/svnroot/ztemplates/ztemplates/tags/ztemplates-2.3.1
 		</connection>
 		<developerConnection>
-			scm:svn:https://ztemplates.svn.sourceforge.net/svnroot/ztemplates/ztemplates/trunk
+			scm:svn:https://ztemplates.svn.sourceforge.net/svnroot/ztemplates/ztemplates/tags/ztemplates-2.3.1
 		</developerConnection>
 	</scm>
 	<developers>
