@@ -19,10 +19,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.ztemplates.actions.ZAfter;
 import org.ztemplates.actions.ZBefore;
 import org.ztemplates.actions.ZInit;
 import org.ztemplates.property.ZProperty;
+import org.ztemplates.web.ZTemplates;
 
 public class ZReflectionUtil
 {
@@ -495,19 +499,37 @@ public class ZReflectionUtil
     {
       log.debug("new     " + clazz.getName());
     }
-    Constructor<T> constr = clazz.getDeclaredConstructor();
-    T ret;
-    if (!constr.isAccessible())
+    Component comp = (Component) clazz.getAnnotation(Component.class);
+    if (comp != null)
     {
-      // disable ReflectPermission("suppressAccessChecks") for this to work
-      constr.setAccessible(true);
-      ret = constr.newInstance();
+      WebApplicationContext ctx = WebApplicationContextUtils
+          .getRequiredWebApplicationContext(ZTemplates.getServletService().getRequest().getSession().getServletContext());
+      String name = comp.value();
+      if (name.length() > 0)
+      {
+        return ctx.getBean(name, clazz);
+      }
+      else
+      {
+        return ctx.getBean(clazz);
+      }
     }
     else
     {
-      ret = constr.newInstance();
+      Constructor<T> constr = clazz.getDeclaredConstructor();
+      T ret;
+      if (!constr.isAccessible())
+      {
+        // disable ReflectPermission("suppressAccessChecks") for this to work
+        constr.setAccessible(true);
+        ret = constr.newInstance();
+      }
+      else
+      {
+        ret = constr.newInstance();
+      }
+      return ret;
     }
-    return ret;
   }
 
 

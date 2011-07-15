@@ -8,9 +8,6 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.ztemplates.actions.ZIFormAction;
 import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
@@ -41,7 +38,6 @@ import org.ztemplates.form.ZIForm;
 import org.ztemplates.form.impl.ZFormWrapper;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
-import org.ztemplates.web.ZTemplates;
 
 public class ZTreeUrlHandler implements ZIUrlHandler
 {
@@ -272,26 +268,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
   private Object createActionPojo(Class clazz) throws Exception
   {
-    // is this class spring enabled?
-    Component comp = (Component) clazz.getAnnotation(Component.class);
-    if (comp != null)
-    {
-      WebApplicationContext ctx = WebApplicationContextUtils
-          .getRequiredWebApplicationContext(ZTemplates.getServletService().getRequest().getSession().getServletContext());
-      String name = comp.value();
-      if (name.length() > 0)
-      {
-        return ctx.getBean(name, clazz);
-      }
-      else
-      {
-        return ctx.getBean(clazz);
-      }
-    }
-    else
-    {
-      return ZReflectionUtil.newInstance(clazz);
-    }
+    return ZReflectionUtil.newInstance(clazz);
   }
 
 

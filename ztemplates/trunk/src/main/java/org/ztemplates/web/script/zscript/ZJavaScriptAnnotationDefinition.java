@@ -2,9 +2,7 @@ package org.ztemplates.web.script.zscript;
 
 import java.io.Serializable;
 
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.ztemplates.actions.util.impl.ZReflectionUtil;
 import org.ztemplates.web.ZTemplates;
 
 public class ZJavaScriptAnnotationDefinition implements Serializable, ZIJavaScriptDefinition
@@ -47,27 +45,19 @@ public class ZJavaScriptAnnotationDefinition implements Serializable, ZIJavaScri
    */
   public String getContent() throws Exception
   {
-    Object instance = clazz.newInstance();
-    Component comp = (Component) clazz.getAnnotation(Component.class);
-    if (comp != null)
-    {
-      WebApplicationContext ctx = WebApplicationContextUtils
-          .getRequiredWebApplicationContext(ZTemplates.getServletService().getRequest().getSession().getServletContext());
-      String name = comp.value();
-      if (name.length() > 0)
-      {
-        return ctx.getBean(name, clazz);
-      }
-      else
-      {
-        return ctx.getBean(clazz);
-      }
-
-    }
-    else
-    {
-      clazz.newInstance();
-    }
+    /*
+     * Object instance = clazz.newInstance(); Component comp = (Component)
+     * clazz.getAnnotation(Component.class); if (comp != null) {
+     * WebApplicationContext ctx = WebApplicationContextUtils
+     * .getRequiredWebApplicationContext
+     * (ZTemplates.getServletService().getRequest
+     * ().getSession().getServletContext()); String name = comp.value(); if
+     * (name.length() > 0) { return ctx.getBean(name, clazz); } else { return
+     * ctx.getBean(clazz); }
+     * 
+     * } else { clazz.newInstance(); }
+     */
+    Object instance = ZReflectionUtil.newInstance(clazz);
 
     return ZTemplates.getRenderService().render(instance);
   }
