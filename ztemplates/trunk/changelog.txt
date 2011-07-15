@@ -7,10 +7,14 @@ This is the ztemplates changelog. Here I will keep you informed about the change
 
 snapshot available from [https://oss.sonatype.org/content/repositories/snapshots/org/ztemplates/ztemplates/]
 
-__ztemplates-2.3.1-SNAPSHOT (Not yet released)__ 
+__ztemplates-2.4.0-SNAPSHOT (Not yet released)__ 
 
-* Added method render with parameter JSONObject to ZIServletService
+* added support for spring @Component annotation for classes annotated with @ZScriptDefinition
+
+__ztemplates-2.3.1 (Released)__ 
+
 * Fixed a bug in zscript.js related to console output
+* Added method render with parameter JSONObject to ZIServletService
 
 __ztemplates-2.3.0 (Released)__ 
 
