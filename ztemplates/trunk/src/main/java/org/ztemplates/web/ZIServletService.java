@@ -77,14 +77,14 @@ public interface ZIServletService extends ZIService
 
   /**
    * utility as this is often needed for ajax applications, renders as mime-type
-   * "text/json"
+   * "application/json"
    */
   public void render(JSONObject json) throws Exception;
 
 
   /**
    * utility as this is often needed for ajax applications, renders as mime-type
-   * "text/json"
+   * "application/json"
    */
   // public void renderJson(JSONObject json) throws Exception;
   // public void renderJson(String json) throws Exception;
