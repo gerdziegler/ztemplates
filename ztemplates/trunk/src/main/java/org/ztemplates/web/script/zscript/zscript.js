@@ -1,5 +1,5 @@
 /**
- * zscript 1.0.1 
+ * zscript 1.0.3 
  * (c) 2011 www.gerdziegler.de, www.ztemplates.org
  * Apache Licence 2.0
  * requires jquery http://www.jquery.org
@@ -7,30 +7,11 @@
 if(typeof zscript === 'undefined') {
     var zscript = function() {	
         var hasConsole = typeof console!=='undefined';
-    	
-        $(document).ajaxComplete(function(e, xhr, settings) {
-    	    log('ajax complete ' + settings.url);
-    	});
         
-        function log(text) {
-        	if(hasConsole) {
-        		console.log(text);
-        	}
-        }
-        
-        function error(text) {
-        	if(hasConsole) {
-        		console.error(text);
-        	}
-        }
-        
-        function info(text) {
-        	if(hasConsole) {
-        		console.info(text);
-        	}
-        }
-
-    	
+        var log = hasConsole && (typeof console.log!=='undefined')? function(text){console.log(text)} : function(text){};
+        var info = hasConsole && (typeof console.info!=='undefined')? function(text){console.info(text)} : function(text){log(text)};
+        var warn = hasConsole && (typeof console.warn!=='undefined')? function(text){console.warn(text)} : function(text){log(text)};
+        var error = hasConsole && (typeof console.error!=='undefined')? function(text){console.error(text)} : function(text){log(text)};
     	
     	var definitions = new Array();
 		var callbackQueue = new Array();
@@ -160,6 +141,18 @@ if(typeof zscript === 'undefined') {
 			},
 			setDebug: function(enableDebug) {
 				return setDebugImpl(enableDebug);
+			},
+			log: function(text) {
+				log(text);
+			},
+			info: function(text) {
+				debug(text);
+			},
+			warn: function(text) {
+				warn(text);
+			},
+			error: function(text) {
+				error(text);
 			}
 		};
 	}();	
