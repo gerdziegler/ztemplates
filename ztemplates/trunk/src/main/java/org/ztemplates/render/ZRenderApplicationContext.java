@@ -69,4 +69,10 @@ public class ZRenderApplicationContext implements ZIRenderApplicationContext
     return encoding;
   }
 
+
+  public boolean isDevMode()
+  {
+    return "true".equals(getInitParameter("ztemplates.devMode"));
+  }
+
 }

@@ -25,4 +25,7 @@ public interface ZIRenderApplicationContext
 
   public InputStream getResourceAsStream(String path);
 
+
+  public boolean isDevMode();
+
 }

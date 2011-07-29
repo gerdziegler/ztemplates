@@ -132,8 +132,8 @@ public class ZVelocityRenderer implements ZIRenderer
       log.info("using default Velocity properties as defined in " + ZVelocityRenderer.class.getName());
       prop = ZVelocityRenderer.getDefaultProperties();
     }
-    String noCache = applicationContext.getInitParameter("ztemplates.velocity.nocache");
-    if ("true".equals(noCache))
+    boolean noCache = "true".equals(applicationContext.getInitParameter("ztemplates.velocity.nocache"));
+    if (noCache || applicationContext.isDevMode())
     {
       List<String> keys = new ArrayList<String>();
       for (Object o : prop.keySet())

@@ -21,7 +21,9 @@ public class ZApplicationContextWebImpl implements ZIRenderApplicationContext, Z
   private final String encoding;
 
 
-  public ZApplicationContextWebImpl(ZIClassRepository classRepository, ServletContext servletContext, String encoding) throws Exception
+  public ZApplicationContextWebImpl(ZIClassRepository classRepository,
+      ServletContext servletContext,
+      String encoding) throws Exception
   {
     super();
     this.classRepository = classRepository;
@@ -83,4 +85,9 @@ public class ZApplicationContextWebImpl implements ZIRenderApplicationContext, Z
     return servletContext.getContextPath();
   }
 
+
+  public boolean isDevMode()
+  {
+    return "true".equals(getInitParameter("ztemplates.devMode"));
+  }
 }
