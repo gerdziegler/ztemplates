@@ -19,24 +19,29 @@ public class ZExposedMethodRepository implements ZIExposedMethodRepository
 
   public List<ZIExposedValue> getExposedValues(Class clazz) throws Exception
   {
-    List<ZIExposedValue> ret = cache.get(clazz);
-    if (ret == null)
+    List<ZIExposedValue> exposedValues = cache.get(clazz);
+    if (exposedValues == null)
     {
-      addExposed(clazz);
-      ret = cache.get(clazz);
+      exposedValues = computeExposedValues(clazz);
+      cache.put(clazz, exposedValues);
     }
-    return ret;
+    return exposedValues;
   }
 
 
   public void addExposed(Class clazz) throws Exception
   {
+    cache.put(clazz, computeExposedValues(clazz));
+  }
+
+
+  private List<ZIExposedValue> computeExposedValues(Class clazz) throws Exception
+  {
     Map<String, ZIExposedValue> map = new HashMap<String, ZIExposedValue>();
     // fields first, take precedence over methods
     addExposedFields(clazz, map);
     addExposedMethods(clazz, map);
-    List<ZIExposedValue> ret = new ArrayList<ZIExposedValue>(map.values());
-    cache.put(clazz, ret);
+    return new ArrayList<ZIExposedValue>(map.values());
   }
 
 
