@@ -9,12 +9,22 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.render.ZExpose;
+import org.ztemplates.render.ZIRenderApplicationContext;
 
 public class ZExposedMethodRepository implements ZIExposedMethodRepository
 {
   private static final Logger log = Logger.getLogger(ZExposedMethodRepository.class);
 
   private final Map<Class, List<ZIExposedValue>> cache = new HashMap<Class, List<ZIExposedValue>>();
+
+  private final ZIRenderApplicationContext application;
+
+
+  public ZExposedMethodRepository(ZIRenderApplicationContext application)
+  {
+    super();
+    this.application = application;
+  }
 
 
   public List<ZIExposedValue> getExposedValues(Class clazz) throws Exception
@@ -23,7 +33,10 @@ public class ZExposedMethodRepository implements ZIExposedMethodRepository
     if (exposedValues == null)
     {
       exposedValues = computeExposedValues(clazz);
-      cache.put(clazz, exposedValues);
+      if (!application.isDevMode())
+      {
+        cache.put(clazz, exposedValues);
+      }
     }
     return exposedValues;
   }
@@ -31,6 +44,10 @@ public class ZExposedMethodRepository implements ZIExposedMethodRepository
 
   public void addExposed(Class clazz) throws Exception
   {
+    if (application.isDevMode())
+    {
+      return;
+    }
     cache.put(clazz, computeExposedValues(clazz));
   }
 

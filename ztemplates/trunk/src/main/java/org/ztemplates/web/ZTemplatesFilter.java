@@ -43,10 +43,6 @@ public class ZTemplatesFilter implements Filter
 
   private FilterConfig filterConfig = null;
 
-  private Set<String> passThroughRead = new HashSet<String>();
-
-
-  // private final Set<String> passThroughWrite = new HashSet<String>();
 
   public void init(FilterConfig filterConfig) throws ServletException
   {
@@ -66,6 +62,9 @@ public class ZTemplatesFilter implements Filter
     HttpServletResponse resp = (HttpServletResponse) response;
     try
     {
+      ZApplication application = ZApplicationRepositoryWeb.getApplication(req.getSession().getServletContext());
+      Set<String> passThroughRead = application.getActionApplication().getPassThroughRead();
+
       String uri = req.getRequestURI();
       if (passThroughRead.contains(uri))
       {
@@ -74,7 +73,6 @@ public class ZTemplatesFilter implements Filter
       else
       {
         ZHttpUtil.printParameters(req);
-        ZApplication application = ZApplicationRepositoryWeb.getApplication(req.getSession().getServletContext());
 
         boolean processed = processRequest(application, req, resp);
         if (!processed)
@@ -83,7 +81,9 @@ public class ZTemplatesFilter implements Filter
           // synchronized (passThroughWrite)
           {
             passThroughWrite.add(uri);
-            passThroughRead = passThroughWrite;// new
+            //no need to synchronize as assignment ist atomar
+            application.getActionApplication().setPassThroughRead(passThroughWrite);
+            //            passThroughRead = passThroughWrite;// new
             // HashSet<String>(passThroughWrite);
           }
           chain.doFilter(request, response);

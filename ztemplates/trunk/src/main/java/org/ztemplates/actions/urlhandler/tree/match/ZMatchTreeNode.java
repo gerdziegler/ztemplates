@@ -253,6 +253,8 @@ public class ZMatchTreeNode implements Serializable, Comparable<ZMatchTreeNode>
   {
     StringBuffer sb1 = new StringBuffer();
     int literalCnt1 = 0;
+    int varCnt1 = 0;
+    int tailCnt1 = 0;
     for (ZSegment s : segments)
     {
       if (s instanceof ZSegmentLiteral)
@@ -261,10 +263,20 @@ public class ZMatchTreeNode implements Serializable, Comparable<ZMatchTreeNode>
         sb1.append(sl.getText());
         literalCnt1++;
       }
+      else if (s instanceof ZSegmentVariable)
+      {
+        varCnt1++;
+      }
+      else if (s instanceof ZSegmentTail)
+      {
+        tailCnt1++;
+      }
     }
 
     StringBuffer sb2 = new StringBuffer();
     int literalCnt2 = 0;
+    int varCnt2 = 0;
+    int tailCnt2 = 0;
     for (ZSegment s : n.segments)
     {
       if (s instanceof ZSegmentLiteral)
@@ -273,25 +285,51 @@ public class ZMatchTreeNode implements Serializable, Comparable<ZMatchTreeNode>
         sb2.append(sl.getText());
         literalCnt2++;
       }
+      else if (s instanceof ZSegmentVariable)
+      {
+        varCnt2++;
+      }
+      else if (s instanceof ZSegmentTail)
+      {
+        tailCnt2++;
+      }
     }
 
-    if (sb1.length() < sb2.length())
+    if (varCnt1 < varCnt2)
+    {
+      return -1;
+    }
+    else if (varCnt1 > varCnt2)
     {
       return 1;
     }
-    else if (sb1.length() > sb2.length())
+
+    if (tailCnt1 < tailCnt2)
     {
       return -1;
+    }
+    else if (tailCnt1 > tailCnt2)
+    {
+      return 1;
     }
 
     if (literalCnt1 < literalCnt2)
     {
-      return 1;
+      return -1;
     }
     else if (literalCnt1 > literalCnt2)
     {
-      return -1;
+      return 1;
     }
+
+    //    if (sb1.length() < sb2.length())
+    //    {
+    //      return -1;
+    //    }
+    //    else if (sb1.length() > sb2.length())
+    //    {
+    //      return 1;
+    //    }
 
     return sb1.toString().compareTo(sb2.toString());
   }

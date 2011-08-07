@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 
 import org.ztemplates.form.impl.ZFormWrapper;
 
-public abstract class AbstractFormWithListTest extends TestCase
+public class FormWithListTest extends TestCase
 {
   public void testFormElementMirror() throws Exception
   {
@@ -27,7 +27,7 @@ public abstract class AbstractFormWithListTest extends TestCase
     ZFormWrapper mirr = new ZFormWrapper(f);
     mirr.initPropertyNames();
     assertEquals(2, mirr.getForms().size());
-    assertEquals(2, mirr.getProperties().size());
+    assertEquals(0, mirr.getProperties().size());
     assertEquals(0, mirr.getOperations().size());
 
     // assertEquals("prop1", mirr.getProperties().get(0).getName());

@@ -63,7 +63,7 @@ public class ZRenderApplication
     // ZIJavaScriptMeta jsMeta = new c();
     // scriptRepository = new ZScriptRepository(jsMeta, scripts);
 
-    exposedMethodRepository = new ZExposedMethodRepository();
+    exposedMethodRepository = new ZExposedMethodRepository(applicationContext);
     List<Class> exposedClasses = classRepository
         .getClassesAnnotatedWith(ZRenderer.class);
     List<String> exceptions = new ArrayList<String>();

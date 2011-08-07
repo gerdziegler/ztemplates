@@ -278,6 +278,48 @@ public class ExpressionTest extends TestCase
     // }
   }
 
+  //  public void testSortNodes() throws Exception
+  //  {
+  //    ZMatchTree matchTree = new ZMatchTree();
+  //    
+  //    String[] arr = {"/agb", "/aaaaaaaaaa", "/index"};
+  //    for(String s: arr)
+  //    {
+  //      ZTreeTermList ttl = new ZTreeTermList();
+  //      ZTreeTerm term = new ZTreeTerm()
+  //      ttl.getTerms().add();
+  //      matchTree.add(ttl);
+  //
+  //      ZExpression exp = new ZExpression(s);
+  //      
+  //      ZMatchTreeNode node = new ZMatchTreeNode();
+  //      crt.getSegments().add(new ZSegmentLiteral(tl.getText()));
+  //    }    
+  //    matchTree.sort();
+  //  }
+  //  
+  //  if (term instanceof ZTreeSlash)
+  //  {
+  //    ZMatchTreeNode newNode = new ZMatchTreeNode();
+  //    ret.add(newNode);
+  //    crt = newNode;
+  //  }
+  //  else if (term instanceof ZTreeLiteral)
+  //  {
+  //    ZTreeLiteral tl = (ZTreeLiteral) term;
+  //    crt.getSegments().add(new ZSegmentLiteral(tl.getText()));
+  //  }
+  //  else if (term instanceof ZTreeVariable)
+  //  {
+  //    ZTreeVariable tl = (ZTreeVariable) term;
+  //    crt.getSegments().add(new ZSegmentVariable(tl.getName()));
+  //  }
+  //  else if (term instanceof ZTreeTail)
+  //  {
+  //    ZTreeTail tl = (ZTreeTail) term;
+  //    crt.getSegments().add(new ZSegmentTail(tl.getName()));
+  //  }
+
   // private void doit(String pattern, String match) throws Exception
   // {
   // Expression exp = new Expression(pattern);

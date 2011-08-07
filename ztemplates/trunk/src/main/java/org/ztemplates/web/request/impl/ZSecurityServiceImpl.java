@@ -11,7 +11,8 @@ public class ZSecurityServiceImpl implements ZISecurityService
   private final ZISecureUrlDecorator secureUrlDecorator;
 
 
-  public ZSecurityServiceImpl(ZISecurityProvider securityProvider, ZISecureUrlDecorator secureUrlDecorator)
+  public ZSecurityServiceImpl(ZISecurityProvider securityProvider,
+      ZISecureUrlDecorator secureUrlDecorator)
   {
     this.securityProvider = securityProvider;
     this.secureUrlDecorator = secureUrlDecorator;
@@ -27,5 +28,17 @@ public class ZSecurityServiceImpl implements ZISecurityService
   public ZISecureUrlDecorator getSecureUrlDecorator()
   {
     return secureUrlDecorator;
+  }
+
+
+  public String getUserName() throws Exception
+  {
+    return securityProvider.getUserName();
+  }
+
+
+  public boolean isUserInRole(String role) throws Exception
+  {
+    return securityProvider.isUserInRole(role);
   }
 }

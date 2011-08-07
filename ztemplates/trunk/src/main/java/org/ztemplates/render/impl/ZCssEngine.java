@@ -31,7 +31,7 @@ public class ZCssEngine
 {
   private static Logger log = Logger.getLogger(ZCssEngine.class);
 
-  private final String css;
+  private String css;
 
   private final ZRenderApplication application;
 
@@ -39,6 +39,15 @@ public class ZCssEngine
   public ZCssEngine(ZRenderApplication application) throws Exception
   {
     this.application = application;
+    if (!application.getApplicationContext().isDevMode())
+    {
+      css = renderCss();
+    }
+  }
+
+
+  private String renderCss() throws Exception
+  {
     ZIClassRepository classRepository = application.getClassRepository();
     StringBuffer buff = new StringBuffer();
     for (Class c : classRepository.getClassesAnnotatedWith(ZRenderer.class))
@@ -51,7 +60,7 @@ public class ZCssEngine
         buff.append('\n');
       }
     }
-    css = buff.toString();
+    return buff.toString();
   }
 
 
@@ -60,8 +69,12 @@ public class ZCssEngine
    * 
    * @see org.ztemplates.web.impl.ZICssService#getCss()
    */
-  public String getCss()
+  public String getCss() throws Exception
   {
+    if (application.getApplicationContext().isDevMode())
+    {
+      css = renderCss();
+    }
     return css;
   }
 

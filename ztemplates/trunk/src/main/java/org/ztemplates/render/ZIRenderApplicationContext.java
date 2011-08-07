@@ -28,4 +28,7 @@ public interface ZIRenderApplicationContext
 
   public boolean isDevMode();
 
+
+  public void setDevMode(boolean devMode);
+
 }

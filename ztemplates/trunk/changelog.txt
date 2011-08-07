@@ -9,6 +9,10 @@ snapshot available from [https://oss.sonatype.org/content/repositories/snapshots
 
 __ztemplates-2.4.0-SNAPSHOT (Not yet released)__ 
 
+* added support for system property "ztemplates.devMode" that disables as many caches as possible to support tools like JRebel for no redeploy
+* added devMode /ztemplates/devMode/refresh url to refresh most cached data, like url match tree
+* added devMode /ztemplates/devMode/actions to show actions and matched urls
+* added support for Lists of ZIForms in Forms -> dynamic forms
 * added support for spring @Component annotation for classes annotated with @ZScriptDefinition
 
 __ztemplates-2.3.1 (Released)__ 

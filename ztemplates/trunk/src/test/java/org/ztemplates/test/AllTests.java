@@ -21,6 +21,7 @@ import junit.textui.TestRunner;
 import org.ztemplates.form.ZFormElementMirrorTest;
 import org.ztemplates.form.ZFormValuesTest;
 import org.ztemplates.form.ZSerializeUtilTest;
+import org.ztemplates.form.list.FormWithListTest;
 import org.ztemplates.json.ZJsonTest;
 import org.ztemplates.test.actions.classes.test1.ClassesTest;
 import org.ztemplates.test.actions.expression.test1.ExpressionTest;
@@ -139,6 +140,7 @@ public class AllTests extends TestSuite
     suite.addTestSuite(ZFormValuesTest.class);
     suite.addTestSuite(ZRenderClassRepositoryTest.class);
     suite.addTestSuite(ZExposedMethodRepositoryTest.class);
+    suite.addTestSuite(FormWithListTest.class);
 
     // suite.addTestSuite(ZTemplatesInternalArchitectureTest.class);
 

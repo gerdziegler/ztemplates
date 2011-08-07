@@ -1,5 +1,8 @@
 package org.ztemplates.actions;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
@@ -16,6 +19,8 @@ public class ZActionApplication
 
   private final ZISecureUrlDecorator secureUrlDecorator;
 
+  private Set<String> passThroughRead = new HashSet<String>();
+
 
   public ZActionApplication(ZIActionApplicationContext applicationContext,
       ZIClassRepository classRepository) throws Exception
@@ -24,7 +29,9 @@ public class ZActionApplication
     ZMatchTreeFactory matchTreeFactory = new ZMatchTreeFactory();
     this.matchTree = matchTreeFactory.createMatchTree(classRepository);
     this.secureUrlDecorator = new ZSecureUrlDecoratorImpl();
-    log.info(matchTree.toConsoleString());
+
+    String matchTreeInfo = matchTree.toConsoleString();
+    log.warn(matchTreeInfo);
   }
 
 
@@ -37,6 +44,18 @@ public class ZActionApplication
   public ZMatchTree getMatchTree()
   {
     return matchTree;
+  }
+
+
+  public void setPassThroughRead(Set<String> passThroughRead)
+  {
+    this.passThroughRead = passThroughRead;
+  }
+
+
+  public Set<String> getPassThroughRead()
+  {
+    return passThroughRead;
   }
 
 

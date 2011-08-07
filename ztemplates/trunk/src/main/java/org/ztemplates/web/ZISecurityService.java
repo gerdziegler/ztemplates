@@ -8,7 +8,14 @@ public interface ZISecurityService extends ZIService
   public static final String SPRING_NAME = "ZISecurityService";
 
 
+  @Deprecated
   public ZISecurityProvider getSecurityProvider();
+
+
+  public String getUserName() throws Exception;
+
+
+  public boolean isUserInRole(String role) throws Exception;
 
 
   public ZISecureUrlDecorator getSecureUrlDecorator();

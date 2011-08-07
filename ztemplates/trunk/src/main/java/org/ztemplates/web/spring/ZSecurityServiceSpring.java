@@ -37,4 +37,16 @@ public class ZSecurityServiceSpring implements ZISecurityService
   {
     return service.getSecureUrlDecorator();
   }
+
+
+  public String getUserName() throws Exception
+  {
+    return service.getUserName();
+  }
+
+
+  public boolean isUserInRole(String role) throws Exception
+  {
+    return service.isUserInRole(role);
+  }
 }

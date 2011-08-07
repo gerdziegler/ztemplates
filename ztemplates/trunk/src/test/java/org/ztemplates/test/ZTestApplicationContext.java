@@ -107,4 +107,11 @@ public class ZTestApplicationContext implements ZIRenderApplicationContext,
     return "true".equals(getInitParameter("ztemplates.devMode"));
   }
 
+
+  public void setDevMode(boolean devMode)
+  {
+    // TODO Auto-generated method stub
+
+  }
+
 }

@@ -73,6 +73,7 @@ public final class ZFormWrapper implements ZIFormVisitable
    */
   public void initPropertyNames() throws Exception
   {
+    /*
     ZIFormVisitor visitor = new ZIFormVisitor()
     {
       public void visit(ZPropertyWrapper prop) throws Exception
@@ -88,6 +89,7 @@ public final class ZFormWrapper implements ZIFormVisitable
     };
 
     visitDepthFirst(visitor);
+    */
   }
 
 
@@ -113,7 +115,13 @@ public final class ZFormWrapper implements ZIFormVisitable
     }
 
     Set<String> names = new HashSet<String>();
+    addFields(prefix, obj, names);
+    addMethods(prefix, obj, names);
+  }
 
+
+  private void addFields(String prefix, Object obj, Set<String> names) throws Exception
+  {
     for (Field f : obj.getClass().getFields())
     {
       Class type = f.getType();
@@ -122,71 +130,44 @@ public final class ZFormWrapper implements ZIFormVisitable
       if (ZOperation.class.isAssignableFrom(type))
       {
         ZOperation op = (ZOperation) f.get(obj);
-        if (op == null)
-        {
-          throw new Exception("null value in property " + f);
-        }
-        String opName = op.getName() == null ? prefix + f.getName() : op.getName();
-        if (names.contains(opName))
-        {
-          log.warn("duplicate name: " + obj.getClass() + "." + opName);
-        }
-        else
-        {
-          names.add(opName);
-          operations.add(new ZOperationWrapper(opName, op));
-        }
+        String inferredName = f.getName();
+        addOperation(obj, prefix, inferredName, op, names);
       }
       // second
       else if (ZProperty.class.isAssignableFrom(type))
       {
         ZProperty prop = (ZProperty) f.get(obj);
-        if (prop == null)
-        {
-          throw new Exception("null value in property " + f);
-        }
-        String propName = prop.getName() == null ? prefix + f.getName() : prop.getName();
-        if (names.contains(propName))
-        {
-          log.warn("duplicate name: " + obj.getClass() + "." + propName);
-        }
-        else
-        {
-          names.add(propName);
-          properties.add(new ZPropertyWrapper(propName, prop));
-        }
+        String inferredName = f.getName();
+        addProperty(obj, prefix, inferredName, prop, names);
       }
-      // third
-      else if (ZFormWrapper.class.isAssignableFrom(type))
-      {
-        ZFormWrapper fe = (ZFormWrapper) f.get(obj);
-        if (fe == null)
-        {
-          throw new Exception("null value in property " + f);
-        }
-        if (fe.getName() == null)
-        {
-          String feName = prefix + f.getName();
-          fe.setName(feName);
-        }
-        names.add(fe.getName());
-        forms.add(fe);
-      }
-      // fourth
       else if (ZIForm.class.isAssignableFrom(type))
       {
         ZIForm fe = (ZIForm) f.get(obj);
-        if (fe == null)
-        {
-          throw new Exception("null value in property " + f);
-        }
-        String feName = prefix + f.getName();
-        names.add(feName);
-        forms.add(new ZFormWrapper(fe, feName));
+        String inferredName = f.getName();
+        addForm(obj, prefix, inferredName, fe, names);
+      }
+      else if (List.class.isAssignableFrom(type))
+      {
+        List l = (List) f.get(obj);
+        String inferredName = f.getName();
+        addList(obj, prefix, inferredName, l, names);
+      }
+      else if (ZFormWrapper.class.isAssignableFrom(type))
+      {
+        ZFormWrapper fe = (ZFormWrapper) f.get(obj);
+        String inferredName = f.getName();
+        addFormWrapper(obj, prefix, inferredName, fe, names);
+      }
+      else
+      {
+        log.warn("unsupported form value type: " + obj.getClass() + "." + f.getName() + " " + type);
       }
     }
+  }
 
-    // Methods
+
+  private void addMethods(String prefix, Object obj, Set<String> names) throws Exception
+  {
     for (Method m : obj.getClass().getMethods())
     {
       if (m.getName().startsWith("get") && m.getParameterTypes().length == 0 && Modifier.isPublic(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())
@@ -198,83 +179,136 @@ public final class ZFormWrapper implements ZIFormVisitable
         if (ZOperation.class.isAssignableFrom(type))
         {
           ZOperation op = (ZOperation) m.invoke(obj);
-          if (op == null)
-          {
-            throw new Exception("null op returned from " + m.getName());
-          }
-          String opName = op.getName() == null ? prefix + ZReflectionUtil.removePrefixName("get", m.getName()) : op.getName();
-          if (names.contains(opName))
-          {
-            log.warn("duplicate name: " + obj.getClass() + "." + opName);
-          }
-          else
-          {
-            names.add(opName);
-            operations.add(new ZOperationWrapper(opName, op));
-          }
+          String inferredName = ZReflectionUtil.removePrefixName("get", m.getName());
+          addOperation(obj, prefix, inferredName, op, names);
         }
         // second
         else if (ZProperty.class.isAssignableFrom(type))
         {
           ZProperty prop = (ZProperty) m.invoke(obj);
-          if (prop == null)
-          {
-            throw new Exception("null prop returned from " + m.getName());
-          }
-          String propName = prop.getName() == null ? prefix + ZReflectionUtil.removePrefixName("get", m.getName()) : prop.getName();
-          if (names.contains(propName))
-          {
-            log.warn("duplicate name: " + obj.getClass() + "." + propName);
-          }
-          else
-          {
-            names.add(propName);
-            properties.add(new ZPropertyWrapper(propName, prop));
-          }
+          String inferredName = ZReflectionUtil.removePrefixName("get", m.getName());
+          addProperty(obj, prefix, inferredName, prop, names);
         }
-        // third
-        else if (ZFormWrapper.class.isAssignableFrom(type))
-        {
-          ZFormWrapper fe = (ZFormWrapper) m.invoke(obj);
-          if (fe == null)
-          {
-            throw new Exception("null dynamic form model returned from " + m.getName());
-          }
-          if (fe.getName() == null)
-          {
-            String feName = prefix + ZReflectionUtil.removePrefixName("get", m.getName());
-            fe.setName(feName);
-          }
-          if (names.contains(fe.getName()))
-          {
-            log.warn("duplicate name: " + obj.getClass() + "." + fe.getName());
-          }
-          else
-          {
-            names.add(fe.getName());
-            forms.add(fe);
-          }
-        }
-        // fourth
         else if (ZIForm.class.isAssignableFrom(type))
         {
           ZIForm fe = (ZIForm) m.invoke(obj);
-          if (fe == null)
-          {
-            throw new Exception("null form model returned from " + m.getName());
-          }
-          String feName = prefix + ZReflectionUtil.removePrefixName("get", m.getName());
-          if (names.contains(feName))
-          {
-            log.warn("duplicate name: " + obj.getClass() + "." + feName);
-          }
-          else
-          {
-            names.add(feName);
-            forms.add(new ZFormWrapper(fe, feName));
-          }
+          String inferredName = ZReflectionUtil.removePrefixName("get", m.getName());
+          addForm(obj, prefix, inferredName, fe, names);
+        }
+        else if (List.class.isAssignableFrom(type))
+        {
+          List l = (List) m.invoke(obj);
+          String inferredName = ZReflectionUtil.removePrefixName("get", m.getName());
+          addList(obj, prefix, inferredName, l, names);
+        }
+        else if (ZFormWrapper.class.isAssignableFrom(type))
+        {
+          ZFormWrapper fe = (ZFormWrapper) m.invoke(obj);
+          String inferredName = ZReflectionUtil.removePrefixName("get", m.getName());
+          addFormWrapper(obj, prefix, inferredName, fe, names);
+        }
+        else
+        {
+          log.warn("unsupported form value type: " + obj.getClass() + "." + m.getName() + " " + type);
         }
       }
+    }
+  }
+
+
+  private void addForm(Object obj, String prefix, String inferredName, ZIForm form, Set<String> names) throws Exception
+  {
+    if (form == null)
+    {
+      throw new Exception("null value in " + obj.getClass() + "." + inferredName);
+    }
+
+    String formName = prefix + inferredName;
+    if (!duplicateName(obj, formName, names))
+    {
+      forms.add(new ZFormWrapper(form, formName));
+    }
+  }
+
+
+  private void addFormWrapper(Object obj, String prefix, String inferredName, ZFormWrapper wrap, Set<String> names) throws Exception
+  {
+    if (wrap == null)
+    {
+      throw new Exception("null value in " + obj.getClass() + "." + inferredName);
+    }
+
+    String wrapName = wrap.getName() == null ? prefix + inferredName : wrap.getName();
+    if (!duplicateName(obj, wrapName, names))
+    {
+      wrap.setName(wrapName);
+      forms.add(wrap);
+    }
+  }
+
+
+  private void addOperation(Object obj, String prefix, String inferredName, ZOperation op, Set<String> names) throws Exception
+  {
+    if (op == null)
+    {
+      throw new Exception("null value in " + obj.getClass() + "." + inferredName);
+    }
+
+    String opName = op.getName() == null ? prefix + inferredName : op.getName();
+    if (!duplicateName(obj, opName, names))
+    {
+      op.setName(opName);
+      operations.add(new ZOperationWrapper(opName, op));
+    }
+  }
+
+
+  private void addProperty(Object obj, String prefix, String inferredName, ZProperty prop, Set<String> names) throws Exception
+  {
+    if (prop == null)
+    {
+      throw new Exception("null value in " + obj.getClass() + "." + inferredName);
+    }
+
+    String propName = prop.getName() == null ? prefix + inferredName : prop.getName();
+    if (!duplicateName(obj, propName, names))
+    {
+      prop.setName(propName);
+      properties.add(new ZPropertyWrapper(propName, prop));
+    }
+  }
+
+
+  private void addList(Object obj, String prefix, String inferredName, List l, Set<String> names) throws Exception
+  {
+    if (l == null)
+    {
+      throw new Exception("null value in List property " + obj.getClass() + "." + inferredName);
+    }
+
+    for (int i = 0; i < l.size(); i++)
+    {
+      ZIForm fe = (ZIForm) l.get(i);
+      String feName = prefix + inferredName + "_" + i;
+      if (!duplicateName(obj, feName, names))
+      {
+        forms.add(new ZFormWrapper(fe, feName));
+      }
+    }
+  }
+
+
+  private boolean duplicateName(Object obj, String name, Set<String> names) throws Exception
+  {
+    if (names.contains(name))
+    {
+      log.warn("duplicate name: " + obj.getClass() + "." + name);
+      return true;
+    }
+    else
+    {
+      names.add(name);
+      return false;
     }
   }
 

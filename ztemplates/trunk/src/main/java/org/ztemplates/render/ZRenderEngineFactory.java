@@ -11,7 +11,7 @@ public class ZRenderEngineFactory
 {
   public static ZIRenderEngine createStandalone(ZIRenderApplicationContext applicationContext) throws Exception
   {
-    ZIExposedMethodRepository exposedMethodRepository = new ZExposedMethodRepository();
+    ZIExposedMethodRepository exposedMethodRepository = new ZExposedMethodRepository(applicationContext);
     ZITemplateNameRepository templateNameRepository = new ZTemplateNameRepository();
     ZIRendererRepository rendererRepository = new ZRendererRepository(applicationContext, templateNameRepository);
     return new ZRenderEngine(exposedMethodRepository, rendererRepository);

@@ -21,9 +21,12 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
+import org.zclasspath.ZClassRepository;
+import org.zclasspath.ZIClassRepository;
 import org.ztemplates.render.impl.ZExposedMethodRepository;
 import org.ztemplates.render.impl.ZIExposedMethodRepository;
 import org.ztemplates.render.impl.ZIExposedValue;
+import org.ztemplates.test.ZTestApplication;
 
 public class ZExposedMethodRepositoryTest extends TestCase
 {
@@ -49,7 +52,8 @@ public class ZExposedMethodRepositoryTest extends TestCase
 
   public void testRootExposeRenderTrue() throws Exception
   {
-    ZIExposedMethodRepository repo = new ZExposedMethodRepository();
+    ZIClassRepository classRepo = ZClassRepository.create(Pojo1.class.getPackage().getName());
+    ZIExposedMethodRepository repo = new ZExposedMethodRepository(ZTestApplication.create(classRepo).getRenderApplication().getApplicationContext());
     List<ZIExposedValue> values = repo.getExposedValues(Pojo1.class);
     Map<String, ZIExposedValue> map = new HashMap<String, ZIExposedValue>();
     for (ZIExposedValue val : values)

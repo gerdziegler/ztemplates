@@ -20,6 +20,8 @@ public class ZApplicationContextWebImpl implements ZIRenderApplicationContext, Z
 
   private final String encoding;
 
+  private boolean devMode;
+
 
   public ZApplicationContextWebImpl(ZIClassRepository classRepository,
       ServletContext servletContext,
@@ -29,6 +31,7 @@ public class ZApplicationContextWebImpl implements ZIRenderApplicationContext, Z
     this.classRepository = classRepository;
     this.servletContext = servletContext;
     this.encoding = encoding;
+    this.devMode = "true".equals(servletContext.getInitParameter("ztemplates.devMode"));
   }
 
 
@@ -88,6 +91,13 @@ public class ZApplicationContextWebImpl implements ZIRenderApplicationContext, Z
 
   public boolean isDevMode()
   {
-    return "true".equals(getInitParameter("ztemplates.devMode"));
+    return devMode;
   }
+
+
+  public void setDevMode(boolean devMode)
+  {
+    this.devMode = devMode;
+  }
+
 }

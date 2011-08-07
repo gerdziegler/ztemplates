@@ -67,12 +67,18 @@ public class ZTemplatesContextListener implements ServletContextListener
 
   public void contextInitialized(ServletContextEvent ev)
   {
+    ServletContext ctx = ev.getServletContext();
+    ZTemplatesContextListener.initContext(ctx);
+  }
+
+
+  public static void initContext(ServletContext ctx)
+  {
     try
     {
       log.info("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-      log.info("zzz initializing context " + ev.getServletContext().getContextPath() + " ...");
+      log.info("zzz initializing context " + ctx.getContextPath() + " ...");
       log.info("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-      ServletContext ctx = ev.getServletContext();
 
       String encoding = ctx.getInitParameter("encoding");
       if (encoding == null)
@@ -144,7 +150,7 @@ public class ZTemplatesContextListener implements ServletContextListener
   }
 
 
-  private ZClassPathScanner createClassPathScanner(final ServletContext servletContext) throws Exception
+  private static ZClassPathScanner createClassPathScanner(final ServletContext servletContext) throws Exception
   {
     List<ZIClassPathItem> items = ZWebappClassPath.getItems(servletContext);
 
@@ -174,7 +180,7 @@ public class ZTemplatesContextListener implements ServletContextListener
 
 
   // PathMatchingResourcePatternResolver
-  private ZIClassRepository createClassRepository(ZClassPathScanner scanner) throws Exception
+  private static ZIClassRepository createClassRepository(ZClassPathScanner scanner) throws Exception
   {
     ZIClassRepository ret = new ZClassRepository(scanner);
     if (ret.getClasses().isEmpty())

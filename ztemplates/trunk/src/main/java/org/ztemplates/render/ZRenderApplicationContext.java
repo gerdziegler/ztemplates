@@ -2,23 +2,29 @@ package org.ztemplates.render;
 
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
 public class ZRenderApplicationContext implements ZIRenderApplicationContext
 {
-  private final Map<String, Object> attributes = new HashMap<String, Object>();
+  private final Map<String, Object> attributes;
 
-  private final Map<String, String> initParameters = new HashMap<String, String>();
+  private final Map<String, String> initParameters;
 
   private final String encoding;
 
+  private boolean devMode;
 
-  public ZRenderApplicationContext(String encoding)
+
+  public ZRenderApplicationContext(String encoding,
+      Map<String, String> initParameters,
+      Map<String, Object> attributes)
   {
     super();
     this.encoding = encoding;
+    this.initParameters = initParameters;
+    this.attributes = attributes;
+    this.devMode = "true".equals(getInitParameter("ztemplates.devMode"));
   }
 
 
@@ -72,7 +78,14 @@ public class ZRenderApplicationContext implements ZIRenderApplicationContext
 
   public boolean isDevMode()
   {
-    return "true".equals(getInitParameter("ztemplates.devMode"));
+    return devMode;
+  }
+
+
+  public void setDevMode(boolean devMode)
+  {
+    this.devMode = devMode;
+
   }
 
 }
