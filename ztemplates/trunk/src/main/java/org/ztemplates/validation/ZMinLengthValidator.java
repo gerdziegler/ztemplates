@@ -15,18 +15,13 @@
 package org.ztemplates.validation;
 
 import org.ztemplates.property.ZProperty;
-import org.ztemplates.render.ZJavaScript;
-import org.ztemplates.render.ZScript;
-import org.ztemplates.validation.assets.ZRegexValidatorScriptLoaderAction;
 
-@ZScript(javaScript =
-{
-    @ZJavaScript(ZRegexValidatorScriptLoaderAction.REGEX_VALIDATOR_JS)
-})
 public class ZMinLengthValidator extends ZLengthValidator
 {
-  public ZMinLengthValidator(int minlength, String message, ZProperty prop)
+  public ZMinLengthValidator(int minlength,
+      String message,
+      ZProperty<String> prop)
   {
-    super(minlength, 0, message, prop);
+    super(minlength, Integer.MAX_VALUE, message, prop);
   }
 }

@@ -14,19 +14,46 @@
  */
 package org.ztemplates.validation;
 
+import org.ztemplates.message.ZMessages;
 import org.ztemplates.property.ZProperty;
-import org.ztemplates.render.ZJavaScript;
-import org.ztemplates.render.ZScript;
-import org.ztemplates.validation.assets.ZRegexValidatorScriptLoaderAction;
 
-@ZScript(javaScript =
+public class ZLengthValidator implements ZIValidator
 {
-    @ZJavaScript(ZRegexValidatorScriptLoaderAction.REGEX_VALIDATOR_JS)
-})
-public class ZLengthValidator extends ZRegexValidator
-{
-  public ZLengthValidator(int minlength, int maxlength, String message, ZProperty prop)
+  private final int minlength;
+
+  private final int maxlength;
+
+  private final String message;
+
+  private final ZProperty<String> prop;
+
+
+  public ZLengthValidator(int minlength,
+      int maxlength,
+      String message,
+      ZProperty<String> prop)
   {
-    super("^.{" + minlength + "," + maxlength + "}$", message, prop);
+    this.minlength = minlength;
+    this.maxlength = maxlength;
+    this.message = message;
+    this.prop = prop;
+  }
+
+
+  public void validate(ZMessages messages) throws Exception
+  {
+    if (prop.isEmpty())
+    {
+      return;
+    }
+    String val = prop.getValue();
+    if (val.length() > maxlength)
+    {
+      messages.addError(message, prop);
+    }
+    else if (val.length() < minlength)
+    {
+      messages.addError(message, prop);
+    }
   }
 }

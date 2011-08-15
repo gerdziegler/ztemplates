@@ -15,17 +15,12 @@
 package org.ztemplates.validation;
 
 import org.ztemplates.property.ZProperty;
-import org.ztemplates.render.ZJavaScript;
-import org.ztemplates.render.ZScript;
-import org.ztemplates.validation.assets.ZRegexValidatorScriptLoaderAction;
 
-@ZScript(javaScript =
-{
-    @ZJavaScript(ZRegexValidatorScriptLoaderAction.REGEX_VALIDATOR_JS)
-})
 public class ZMaxLengthValidator extends ZLengthValidator
 {
-  public ZMaxLengthValidator(int maxlength, String message, ZProperty prop)
+  public ZMaxLengthValidator(int maxlength,
+      String message,
+      ZProperty<String> prop)
   {
     super(0, maxlength, message, prop);
   }
