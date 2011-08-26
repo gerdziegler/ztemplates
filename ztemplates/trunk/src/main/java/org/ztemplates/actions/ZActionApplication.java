@@ -31,7 +31,7 @@ public class ZActionApplication
     this.secureUrlDecorator = new ZSecureUrlDecoratorImpl();
 
     String matchTreeInfo = matchTree.toConsoleString();
-    log.warn(matchTreeInfo);
+    log.info(matchTreeInfo);
   }
 
 

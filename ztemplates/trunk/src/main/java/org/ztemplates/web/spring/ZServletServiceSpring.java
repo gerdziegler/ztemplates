@@ -56,25 +56,25 @@ public class ZServletServiceSpring implements ZIServletService
   }
 
 
-  public void render(Object obj) throws Exception
+  public void render(Object obj)
   {
     servletService.render(obj);
   }
 
 
-  public void render(Object obj, String mimeType) throws Exception
+  public void render(Object obj, String mimeType)
   {
     servletService.render(obj, mimeType);
   }
 
 
-  public void render(Object obj, String mimeType, String encoding) throws Exception
+  public void render(Object obj, String mimeType, String encoding)
   {
     servletService.render(obj, mimeType, encoding);
   }
 
 
-  public void render(JSONObject json) throws Exception
+  public void render(JSONObject json)
   {
     servletService.render(json);
   }

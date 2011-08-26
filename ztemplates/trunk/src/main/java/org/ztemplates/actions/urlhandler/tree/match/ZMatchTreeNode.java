@@ -322,15 +322,17 @@ public class ZMatchTreeNode implements Serializable, Comparable<ZMatchTreeNode>
       return 1;
     }
 
-    //    if (sb1.length() < sb2.length())
-    //    {
-    //      return -1;
-    //    }
-    //    else if (sb1.length() > sb2.length())
-    //    {
-    //      return 1;
-    //    }
+    String s1 = sb1.toString();
+    String s2 = sb2.toString();
+    if (s1.length() < s2.length() && s2.startsWith(s1))
+    {
+      return 1;
+    }
+    else if (sb1.length() > sb2.length() && s1.startsWith(s2))
+    {
+      return -1;
+    }
 
-    return sb1.toString().compareTo(sb2.toString());
+    return s1.compareTo(s2);
   }
 }

@@ -31,7 +31,7 @@ public class ZDevModeRefreshAction
     HttpServletResponse resp = ZTemplates.getServletService().getResponse();
     ServletContext ctx = req.getSession().getServletContext();
 
-    ZApplication oldApp = ZApplicationRepositoryWeb.getApplication(ctx);
+    //    ZApplication oldApp = ZApplicationRepositoryWeb.getApplication(ctx);
     req.getSession().invalidate();
 
     ZTemplatesContextListener.initContext(ctx);
@@ -44,8 +44,8 @@ public class ZDevModeRefreshAction
     PrintWriter pw = resp.getWriter();
     pw.println("<pre>");
     pw.println("OK --- refreshed in " + (time2 - time) + " ms");
-    pw.println("OLD ztemplates app: " + oldApp);
-    pw.println("NEW ztemplates app: " + newApp);
+    //    pw.println("OLD ztemplates app: " + oldApp);
+    //    pw.println("NEW ztemplates app: " + newApp);
     pw.println("NEW match tree");
     pw.println(matchTree.toConsoleString());
     pw.println("</pre>");

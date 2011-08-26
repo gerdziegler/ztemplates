@@ -83,7 +83,7 @@ public class JsonTest extends TestCase
     ZMockServletService ss = new ZMockServletService()
     {
       @Override
-      public void render(JSONObject json) throws Exception
+      public void render(JSONObject json)
       {
         list.add(json);
       }

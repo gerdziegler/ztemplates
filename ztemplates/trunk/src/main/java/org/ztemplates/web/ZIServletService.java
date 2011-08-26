@@ -48,7 +48,7 @@ public interface ZIServletService extends ZIService
    * 
    * @param obj
    */
-  public void render(Object obj) throws Exception;
+  public void render(Object obj);
 
 
   /**
@@ -59,7 +59,7 @@ public interface ZIServletService extends ZIService
    * @param mimeType
    *          mime type to use
    */
-  public void render(Object obj, String mimeType) throws Exception;
+  public void render(Object obj, String mimeType);
 
 
   /**
@@ -72,14 +72,14 @@ public interface ZIServletService extends ZIService
    * @param mimeType
    *          encoding to use
    */
-  public void render(Object obj, String mimeType, String encoding) throws Exception;
+  public void render(Object obj, String mimeType, String encoding);
 
 
   /**
    * utility as this is often needed for ajax applications, renders as mime-type
    * "application/json"
    */
-  public void render(JSONObject json) throws Exception;
+  public void render(JSONObject json);
 
 
   /**

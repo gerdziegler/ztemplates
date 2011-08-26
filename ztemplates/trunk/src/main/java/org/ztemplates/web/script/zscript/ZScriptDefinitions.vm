@@ -1,14 +1,15 @@
 #foreach($def in $definitions)
-if(typeof ${def.name}=='undefined') {
-	zscript.define('$def.name', '${contextPath}/ztemplates/zscript/${def.name}.js');
-	zscript.setLoaded('${def.name}');
-}
-
+zscript.define('$def.name', '${contextPath}/ztemplates/zscript/${def.name}.js');
 #end
 
 #foreach($def in $definitions)
-if(typeof ${def.name}=='undefined') {
+zscript.setLoaded('${def.name}');
+#end
+
+#foreach($def in $definitions)
+
+
 $def.content
-}
+
 
 #end

@@ -21,6 +21,7 @@ import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchedUrl;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeLiteral;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeSlash;
+import org.ztemplates.actions.urlhandler.tree.term.ZTreeTail;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeTermList;
 import org.ztemplates.actions.urlhandler.tree.term.ZTreeVariable;
 
@@ -114,4 +115,37 @@ public class MatchTreeTest extends TestCase
     assertEquals(tree.toConsoleString() + "\n " + mu.getTermList(), tl2.toString(), mu
         .getTermList().toString());
   }
+
+
+  public void testMatchOrder4() throws Exception
+  {
+    ZMatchTree tree = new ZMatchTree();
+
+    ZTreeTermList tl0 = new ZTreeTermList();
+    tl0.getTerms().add(new ZTreeSlash(this.getClass()));
+    tl0.getTerms().add(new ZTreeLiteral(this.getClass(), "ajquery-breadcrumb"));
+
+    ZTreeTermList tl1 = new ZTreeTermList();
+    tl1.getTerms().add(new ZTreeSlash(this.getClass()));
+    tl1.getTerms().add(new ZTreeLiteral(this.getClass(), "jquery"));
+    tl1.getTerms().add(new ZTreeTail(this.getClass(), "resourcePath"));
+
+    ZTreeTermList tl2 = new ZTreeTermList();
+    tl2.getTerms().add(new ZTreeSlash(this.getClass()));
+    tl2.getTerms().add(new ZTreeLiteral(this.getClass(), "jquery-breadcrumb"));
+    tl2.getTerms().add(new ZTreeTail(this.getClass(), "resourcePath"));
+
+    tree.add(tl0);
+    tree.add(tl1);
+    tree.add(tl2);
+    tree.sort();
+    String treeString = tree.toConsoleString();
+    int idx1 = treeString.indexOf("/ajquery-breadcrumb");
+    int idx2 = treeString.indexOf("/jquery*{resourcePath}");
+    int idx3 = treeString.indexOf("/jquery-breadcrumb*{resourcePath}");
+
+    assertTrue(treeString, idx1 < idx3);
+    assertTrue(treeString, idx3 < idx2);
+  }
+
 }

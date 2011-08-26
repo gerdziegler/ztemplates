@@ -1,5 +1,5 @@
 /**
- * zscript 1.0.3 
+ * zscript 1.1
  * (c) 2011 www.gerdziegler.de, www.ztemplates.org
  * Apache Licence 2.0
  * requires jquery http://www.jquery.org
@@ -14,28 +14,27 @@ if(typeof zscript === 'undefined') {
         var error = hasConsole && (typeof console.error!=='undefined')? function(text){console.error(text)} : function(text){log(text)};
     	
     	var definitions = new Array();
+		var callbackQueuePrio = new Array();
 		var callbackQueue = new Array();
 	    var loading = false;
 		
 		function defineImpl(script, url) {
-			log('define: ' + script + ' = ' + url);
+			log('*** define: ' + script + ' = ' + url);
 			if(typeof definitions[script]==='undefined') {
 				definitions[script] = {'url': url, 'loadRequested':false, 'loaded':false};
 			} else if(definitions[script].url!=url) {
-				error('script already defined with another url: ' + script + " --- old: " + definitions[script].url + " --- new: " + url);
-			} else {
-				log('script already defined: ' + script);
-			}
+				error('*** script already defined with another url: ' + script + " --- old: " + definitions[script].url + " --- new: " + url);
+			} 
 		}
 			
-		function loadImpl(scriptParam, callback) {
+		function requires(scriptParam, callback, prio) {
 			var scripts = scriptParam;
 			if(!jQuery.isArray(scriptParam)){
 				scripts = [scriptParam];
 			}
 			for(var idx in scripts){
 				if(typeof scripts[idx]==='undefined') {
-					log.error('undefined script ' + idx + ' call define() first');
+					log.error('*** undefined script ' + idx + ' call define() first');
 				}
 				var script = scripts[idx];
 				if(definitions[script].loadRequested!==true) {
@@ -43,7 +42,12 @@ if(typeof zscript === 'undefined') {
 				}
 			}
 			if(typeof callback!=='undefined') {
-				callbackQueue.push({'scripts': scripts, 'callback': callback});			
+				if(prio) {
+					callbackQueuePrio.unshift({'scripts': scripts, 'callback': callback});
+				} else {
+					callbackQueue.push({'scripts': scripts, 'callback': callback});			
+				}
+				
 			}
 			if(loading) {
 				return;
@@ -59,7 +63,7 @@ if(typeof zscript === 'undefined') {
 					def.loaded=true;
 					debug();
 					var scriptLocation = def.url;			
-				 	info ('--> loading: ' + idx + ' from ' + scriptLocation);
+				 	//info ('--> loading: ' + idx + ' from ' + scriptLocation);
 					//jQuery('head').append('<script src="' + scriptLocation + '" ></script>')
 					//loadScripts();
 					jQuery.ajax({
@@ -67,11 +71,11 @@ if(typeof zscript === 'undefined') {
 						url: scriptLocation,
 						data: null,
 						success: function(data){
-						    log('    loaded   ' + idx + ' from ' + scriptLocation);
+						    log('*** loaded   ' + idx + ' from ' + scriptLocation);
 							loadScripts();
 						},
 						error: function(XMLHttpRequest, textStatus, errorThrown){
-						    error('    failed to load '  + idx + ' from ' + scriptLocation);
+						    error('*** failed to load '  + idx + ' from ' + scriptLocation);
 							loadScripts();
 						},
 						dataType: 'script'
@@ -80,16 +84,25 @@ if(typeof zscript === 'undefined') {
 					return;
 				}				
 			}
+			processCallbackQueuePrio();
 			processCallbackQueue();
 		}	
-		
+
+		function processCallbackQueuePrio() {
+			while(callbackQueuePrio.length>0) {
+				var call = callbackQueuePrio.shift();
+				log('*** calling prio ' + call.callback);
+				call.callback();
+			}
+		}	
+
 		function processCallbackQueue() {
 			debug();
 			while(callbackQueue.length>0) {
 				var call = callbackQueue[0];
 				for(var i=0; i<call.scripts.length;i++){
 					if(definitions[call.scripts[i]].loaded!==true) {
-						error('script "' + call.scripts[i] + '" not loaded for callback, nested loads with callback are not allowed: use a script for nested method and declare dependency in the script.\n' +  call.callback);
+						error('*** script "' + call.scripts[i] + '" not loaded for callback, nested loads with callback are not allowed: use a script for nested method and declare dependency in the script.\n' +  call.callback);
 						loadScripts();
 						return;
 					}
@@ -134,7 +147,10 @@ if(typeof zscript === 'undefined') {
 				return defineImpl(script, url);
 			},
 			requires: function(scripts, callback) {
-				return loadImpl(scripts, callback);
+				return requires(scripts, callback, false);
+			},
+			requiresInScript: function(scripts, callback) {
+				return requires(scripts, callback, true);
 			},
 			setLoaded: function(script) {
 				return setLoadedImpl(script);

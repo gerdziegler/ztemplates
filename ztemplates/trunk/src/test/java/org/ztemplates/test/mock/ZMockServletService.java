@@ -444,14 +444,14 @@ public class ZMockServletService implements ZIServletService
   }
 
 
-  public void render(Object obj) throws Exception
+  public void render(Object obj)
   {
     // TODO Auto-generated method stub
 
   }
 
 
-  public void render(Object obj, String mimeType) throws Exception
+  public void render(Object obj, String mimeType)
   {
     // TODO Auto-generated method stub
 
@@ -465,7 +465,7 @@ public class ZMockServletService implements ZIServletService
   }
 
 
-  public void render(Object obj, String mimeType, String encoding) throws Exception
+  public void render(Object obj, String mimeType, String encoding)
   {
     // TODO Auto-generated method stub
   }
@@ -490,7 +490,7 @@ public class ZMockServletService implements ZIServletService
   //
   // }
 
-  public void render(JSONObject json) throws Exception
+  public void render(JSONObject json)
   {
     // TODO Auto-generated method stub
 

@@ -67,49 +67,65 @@ public class ZServletServiceImpl implements ZIServletService
   }
 
 
-  public void render(Object obj) throws Exception
+  public void render(Object obj)
   {
     render(obj, "text/html", encoding);
   }
 
 
-  public void render(Object obj, String mimeType) throws Exception
+  public void render(Object obj, String mimeType)
   {
     render(obj, mimeType, encoding);
   }
 
 
-  public void render(JSONObject json) throws Exception
+  public void render(JSONObject json)
   {
-    render(json.toString(2), "application/json", encoding);
+    try
+    {
+      render(json.toString(2), "application/json", encoding);
+    }
+    catch (Exception e)
+    {
+      log.error("", e);
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
 
 
-  public void render(Object obj, String mimeType, String encoding) throws Exception
+  public void render(Object obj, String mimeType, String encoding)
   {
-    String value = obj == null ? null : renderService.render(obj);
-    if (obj != null)
+    try
     {
-      ZHttpHeaders headers = obj.getClass().getAnnotation(ZHttpHeaders.class);
-      if (headers != null)
+      String value = obj == null ? null : renderService.render(obj);
+      if (obj != null)
       {
-        for (ZHttpHeader h : headers.value())
+        ZHttpHeaders headers = obj.getClass().getAnnotation(ZHttpHeaders.class);
+        if (headers != null)
         {
-          response.setHeader(h.name(), h.value());
+          for (ZHttpHeader h : headers.value())
+          {
+            response.setHeader(h.name(), h.value());
+          }
         }
       }
+      if (encoding != null)
+      {
+        response.setCharacterEncoding(encoding);
+      }
+      if (mimeType != null)
+      {
+        response.setContentType(mimeType);
+      }
+      PrintWriter pw = response.getWriter();
+      pw.print(value);
+      pw.flush();
     }
-    if (encoding != null)
+    catch (Exception e)
     {
-      response.setCharacterEncoding(encoding);
+      log.error("", e);
+      throw new RuntimeException(e.getMessage(), e);
     }
-    if (mimeType != null)
-    {
-      response.setContentType(mimeType);
-    }
-    PrintWriter pw = response.getWriter();
-    pw.print(value);
-    pw.flush();
   }
 
 
