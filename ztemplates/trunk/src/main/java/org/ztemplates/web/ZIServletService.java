@@ -19,6 +19,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -80,6 +81,13 @@ public interface ZIServletService extends ZIService
    * "application/json"
    */
   public void render(JSONObject json);
+
+
+  /**
+   * utility as this is often needed for ajax applications, renders as mime-type
+   * "application/json"
+   */
+  public void render(JSONArray json);
 
 
   /**

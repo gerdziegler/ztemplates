@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.ztemplates.web.ZIActionService;
 import org.ztemplates.web.ZIRenderService;
@@ -80,6 +81,20 @@ public class ZServletServiceImpl implements ZIServletService
 
 
   public void render(JSONObject json)
+  {
+    try
+    {
+      render(json.toString(2), "application/json", encoding);
+    }
+    catch (Exception e)
+    {
+      log.error("", e);
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+
+
+  public void render(JSONArray json)
   {
     try
     {

@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.ztemplates.web.ZIServletService;
 
@@ -491,6 +492,13 @@ public class ZMockServletService implements ZIServletService
   // }
 
   public void render(JSONObject json)
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+
+  public void render(JSONArray json)
   {
     // TODO Auto-generated method stub
 

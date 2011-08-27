@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -75,6 +76,12 @@ public class ZServletServiceSpring implements ZIServletService
 
 
   public void render(JSONObject json)
+  {
+    servletService.render(json);
+  }
+
+
+  public void render(JSONArray json)
   {
     servletService.render(json);
   }
