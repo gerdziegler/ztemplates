@@ -1,0 +1,15 @@
+#foreach($def in $definitions)
+zscript.define('$def.name', '${contextPath}/ztemplates/zscript/${def.name}.js');
+#end
+
+#foreach($def in $definitions)
+zscript.setLoaded('${def.name}');
+#end
+
+#foreach($def in $definitions)
+
+
+$def.content
+
+
+#end
