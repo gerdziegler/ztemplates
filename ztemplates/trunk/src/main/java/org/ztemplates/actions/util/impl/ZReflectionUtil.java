@@ -376,7 +376,12 @@ public class ZReflectionUtil
   {
     try
     {
-      return clazz.getField(name);
+      Field f = clazz.getDeclaredField(name);
+      if (!f.isAccessible())
+      {
+        f.setAccessible(true);
+      }
+      return f;
     }
     catch (NoSuchFieldException e)
     {

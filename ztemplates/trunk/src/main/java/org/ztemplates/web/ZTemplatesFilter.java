@@ -115,6 +115,8 @@ public class ZTemplatesFilter implements Filter
     {
       Map httpParamMap = req.getParameterMap();
       Map<String, String[]> paramMap = new HashMap<String, String[]>(httpParamMap);
+      paramMap = normalizeJQueryArrayParameterNames(paramMap);
+
       String requestEncoding = req.getCharacterEncoding();
       if (requestEncoding == null)
       {
@@ -148,6 +150,22 @@ public class ZTemplatesFilter implements Filter
           }
         }
       }
+    }
+    return ret;
+  }
+
+
+  private Map<String, String[]> normalizeJQueryArrayParameterNames(Map<String, String[]> paramMap)
+  {
+    Map<String, String[]> ret = new HashMap<String, String[]>();
+    for (Map.Entry<String, String[]> en : paramMap.entrySet())
+    {
+      String key = en.getKey();
+      if (key.endsWith("[]"))
+      {
+        key = key.substring(0, key.length() - 2);
+      }
+      ret.put(key, en.getValue());
     }
     return ret;
   }

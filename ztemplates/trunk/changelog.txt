@@ -9,6 +9,8 @@ snapshot available from [https://oss.sonatype.org/content/repositories/snapshots
 
 __ztemplates-2.4.0-SNAPSHOT (Not yet released)__ 
 
+* added support for jquery.ajax 'feature' that creates parameter names like 'name[]'. ztemplates will remove the trailing [] so you can use a private String[] name in your actions code to match that value. 
+* now can use private fields in Actions for request parameters, no need to declare getter and setter anymore
 * added method ZIRenderService.render(JSONArray)
 * added support for context parameter property "ztemplates.devMode" (servletContext.getInitParameter("ztemplates.devMode")) that disables as many caches as possible to support tools like JRebel for no redeploy
 * added devMode /ztemplates/devMode/refresh url to refresh most cached data, like url match tree

@@ -16,6 +16,10 @@ public class ZSetParameter_Field implements ZSetParameter
 
   public void setValue(Object obj, Object value) throws IllegalArgumentException, IllegalAccessException
   {
+    if (!field.isAccessible())
+    {
+      field.setAccessible(true);
+    }
     field.set(obj, value);
   }
 

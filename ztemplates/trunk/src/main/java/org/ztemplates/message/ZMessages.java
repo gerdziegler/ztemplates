@@ -385,6 +385,32 @@ public class ZMessages
   }
 
 
+  public boolean isPropertyWarnings()
+  {
+    for (ZMessage v : messages)
+    {
+      if (v.isWarning() && !v.getPropertyNames().isEmpty())
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  public boolean isPropertyErrors()
+  {
+    for (ZMessage v : messages)
+    {
+      if (v.isError() && !v.getPropertyNames().isEmpty())
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
   public boolean isInfos()
   {
     for (ZMessage v : messages)
