@@ -20,7 +20,7 @@ public class ZCachingCssProcessor implements ZICssProcessor
   }
 
 
-  public String computeHtmlTags(List<String> cssExposed, ZICssPreprocessor preprocessor) throws Exception
+  public String computeHtmlTags(List<String> cssExposed, ZICssPreprocessor preprocessor, String ztemplatesCssDigest) throws Exception
   {
     List<String> preprocessed = preprocessor.preprocessCss(cssExposed);
 
@@ -40,7 +40,7 @@ public class ZCachingCssProcessor implements ZICssProcessor
       }
       sb.append('\n');
     }
-    addLink(sb, contextPath, "/ztemplates.css", path2DigestMap);
+    addLink(sb, contextPath, "/ztemplates.css?md5=" + ztemplatesCssDigest, path2DigestMap);
     return sb.toString();
   }
 

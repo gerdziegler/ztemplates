@@ -15,11 +15,11 @@ public class ZCssProcessor implements ZICssProcessor
   {
     super();
     this.contextPath = contextPath;
-    this.ztemplatesCssUrl = "/ztemplates.css?ver=" + System.currentTimeMillis();
+    this.ztemplatesCssUrl = "/ztemplates.css";
   }
 
 
-  public String computeHtmlTags(List<String> cssExposed, ZICssPreprocessor preprocessor) throws Exception
+  public String computeHtmlTags(List<String> cssExposed, ZICssPreprocessor preprocessor, String ztemplatesCssDigest) throws Exception
   {
     List<String> preprocessed = preprocessor.preprocessCss(cssExposed);
     StringBuffer sb = new StringBuffer();
@@ -33,17 +33,16 @@ public class ZCssProcessor implements ZICssProcessor
       sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + cssPath + "\">");
       sb.append('\n');
     }
-
+    String path;
     if (contextPath != null)
     {
-      String path = contextPath + ztemplatesCssUrl;
-      sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "\">\n");
+      path = contextPath + ztemplatesCssUrl + "?md5=" + ztemplatesCssDigest;
     }
     else
     {
-      String path = ztemplatesCssUrl;
-      sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "\">\n");
+      path = ztemplatesCssUrl + "?md5=" + ztemplatesCssDigest;
     }
+    sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "\">\n");
 
     return sb.toString();
   }

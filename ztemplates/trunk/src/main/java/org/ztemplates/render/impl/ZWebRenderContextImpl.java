@@ -140,7 +140,8 @@ public class ZWebRenderContextImpl implements ZIWebRenderContext
   private String computeHtmlCssTags(ZICssPreprocessor cssPreprocessor) throws Exception
   {
     List<String> css = mergeScripts(cssExposed);
-    String ret = cssProcessor.computeHtmlTags(css, cssPreprocessor);
+    String ztemplatesCssDigest = application.getCssEngine().getCssDigest();
+    String ret = cssProcessor.computeHtmlTags(css, cssPreprocessor, ztemplatesCssDigest);
     return ret;
   }
 
@@ -251,6 +252,10 @@ public class ZWebRenderContextImpl implements ZIWebRenderContext
 
     if (rendererAnnot != null)
     {
+      if (rendererAnnot.zscript() && exposed.get("ztemplatesCssDigest") == null)
+      {
+        exposed.put("ztemplatesCssDigest", application.getCssEngine().getCssDigest());
+      }
       if (rendererAnnot.zscript() && exposed.get("zscript") == null)
       {
         if (getScriptExposedBy() != null)
@@ -284,6 +289,7 @@ public class ZWebRenderContextImpl implements ZIWebRenderContext
         }
         exposed.put("zscript", zscript);
       }
+
     }
   }
 

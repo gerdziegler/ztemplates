@@ -15,9 +15,11 @@ package org.ztemplates.render.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.render.ZRenderApplication;
@@ -33,6 +35,8 @@ public class ZCssEngine
 
   private String css;
 
+  private String cssDigest;
+
   private final ZRenderApplication application;
 
 
@@ -41,18 +45,19 @@ public class ZCssEngine
     this.application = application;
     if (!application.getApplicationContext().isDevMode())
     {
-      css = renderCss();
+      refreshCss();
+      refreshCssDigest();
     }
   }
 
 
-  private String renderCss() throws Exception
+  private void refreshCss() throws Exception
   {
     ZIClassRepository classRepository = application.getClassRepository();
     StringBuffer buff = new StringBuffer();
     for (Class c : classRepository.getClassesAnnotatedWith(ZRenderer.class))
     {
-      String css = mergeCss(c);
+      String css = renderCss(c);
 
       if (css != null)
       {
@@ -60,7 +65,15 @@ public class ZCssEngine
         buff.append('\n');
       }
     }
-    return buff.toString();
+    css = buff.toString();
+  }
+
+
+  private void refreshCssDigest() throws Exception
+  {
+    MessageDigest md = MessageDigest.getInstance("MD5");
+    byte[] digestBytes = md.digest(css.getBytes());
+    cssDigest = Base64.encodeBase64String(digestBytes);
   }
 
 
@@ -73,13 +86,27 @@ public class ZCssEngine
   {
     if (application.getApplicationContext().isDevMode())
     {
-      css = renderCss();
+      refreshCss();
     }
     return css;
   }
 
 
-  private String mergeCss(Class clazz) throws Exception
+  public String getCssDigest() throws Exception
+  {
+    if (application.getApplicationContext().isDevMode())
+    {
+      if (css == null)
+      {
+        refreshCss();
+      }
+      refreshCssDigest();
+    }
+    return cssDigest;
+  }
+
+
+  private String renderCss(Class clazz) throws Exception
   {
     String template = "/" + application.getTemplateNameRepository().getTemplateName(clazz) + ".css";
 

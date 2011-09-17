@@ -7,7 +7,11 @@ This is the ztemplates changelog. Here I will keep you informed about the change
 
 snapshot available from [https://oss.sonatype.org/content/repositories/snapshots/org/ztemplates/ztemplates/]
 
-__ztemplates-2.4.0-SNAPSHOT (Not yet released)__ 
+__ztemplates-2.5.0-SNAPSHOT (Not yet released)__ 
+
+* added property ztemplatesCssDigest that can be used from templates when ZRenderEngine.zscript is set to true to reload ztemplates.css from the browser only if content changed.
+
+__ztemplates-2.4.0-SNAPSHOT (Released)__ 
 
 * added support for jquery.ajax 'feature' that creates parameter names like 'name[]'. ztemplates will remove the trailing [] so you can use a private String[] name in your actions code to match that value. 
 * now can use private fields in Actions for request parameters, no need to declare getter and setter anymore
