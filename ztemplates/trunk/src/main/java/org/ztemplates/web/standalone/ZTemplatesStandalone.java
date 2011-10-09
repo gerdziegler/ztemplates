@@ -7,6 +7,7 @@ import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.ZIUrlFactory;
+import org.ztemplates.actions.ZMatch;
 import org.ztemplates.actions.ZUrlFactory;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
@@ -105,7 +106,11 @@ public class ZTemplatesStandalone implements ZIServiceRepository
       throw new Exception("no ztemplates application found for applicationName: '" + applicationName + "'");
     }
     ZIActionApplicationContext applicationContext = application.getActionApplication().getApplicationContext();
-    String prefix = applicationContext.getInitParameter("prefix");
+
+    String scheme = "http";
+    String httpsPrefix = applicationContext.getInitParameter(ZMatch.Protocol.HTTPS.getContextParameterName());
+    String httpPrefix = applicationContext.getInitParameter(ZMatch.Protocol.HTTP.getContextParameterName());
+
     String encryptPassword = applicationContext.getInitParameter("encryptPassword");
     String encryptSalt = applicationContext.getInitParameter("encryptSalt");
     String encoding = applicationContext.getEncoding();
@@ -118,7 +123,7 @@ public class ZTemplatesStandalone implements ZIServiceRepository
 
     ZIApplicationService applicationService = new ZApplicationServiceImpl(application);
     String contextPath = application.getActionApplication().getApplicationContext().getContextPath();
-    ZIActionService actionService = new ZActionServiceImpl(urlHandler, urlFactory, contextPath, prefix);
+    ZIActionService actionService = new ZActionServiceImpl(urlHandler, urlFactory, contextPath, scheme, httpPrefix, httpsPrefix);
     ZIRenderService renderService = new ZRenderServiceImpl(application.getRenderApplication(), contextPath);
 
     ZIEncryptionService encryptionService = new ZEncryptionServiceImpl(encryptPassword, encryptSalt);
@@ -132,9 +137,15 @@ public class ZTemplatesStandalone implements ZIServiceRepository
   }
 
 
-  public ZTemplatesStandalone(ZIServletService servletService, ZIApplicationService applicationService, ZIActionService actionService,
-      ZIRenderService renderService, ZIEncryptionService encryptionService, ZISecurityService securityService, ZIExceptionService exceptionService,
-      ZIMessageService messageService, ZIFormService formService)
+  public ZTemplatesStandalone(ZIServletService servletService,
+      ZIApplicationService applicationService,
+      ZIActionService actionService,
+      ZIRenderService renderService,
+      ZIEncryptionService encryptionService,
+      ZISecurityService securityService,
+      ZIExceptionService exceptionService,
+      ZIMessageService messageService,
+      ZIFormService formService)
   {
     super();
     this.servletService = servletService;

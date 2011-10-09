@@ -107,11 +107,10 @@ public class ZServletServiceSpring implements ZIServletService
   }
 
 
-  public String createExternalUrl(Object action) throws Exception
-  {
-    return servletService.createExternalUrl(action);
-  }
-
+  //  public String createExternalUrl(Object action) throws Exception
+  //  {
+  //    return servletService.createExternalUrl(action);
+  //  }
 
   public void sendRedirect(Object action) throws Exception
   {

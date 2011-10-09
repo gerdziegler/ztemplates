@@ -16,12 +16,20 @@ package org.ztemplates.actions.urlhandler;
 
 import java.util.Map;
 
+import org.ztemplates.actions.ZMatch;
+
 public interface ZIUrlHandler
 {
   public Object process(String url) throws Exception;
 
 
+  public Object process(ZMatch.Protocol protocol, String url) throws Exception;
+
+
   public Object process(String url, Map<String, String[]> paramMap) throws Exception;
+
+
+  public Object process(ZMatch.Protocol protocol, String url, Map<String, String[]> paramMap) throws Exception;
 
 
   public void printInfo(StringBuffer sb);

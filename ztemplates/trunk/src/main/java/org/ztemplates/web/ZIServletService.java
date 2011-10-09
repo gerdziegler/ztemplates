@@ -109,15 +109,14 @@ public interface ZIServletService extends ZIService
   public String createUrl(Object action);
 
 
-  /**
-   * Creates a url including http://servername:port as provided by HttpRequest
-   * 
-   * @param action
-   * @return
-   * @throws Exception
-   */
-  public String createExternalUrl(Object action) throws Exception;
-
+  //  /**
+  //   * Creates a url including http://servername:port as provided by HttpRequest
+  //   * 
+  //   * @param action
+  //   * @return
+  //   * @throws Exception
+  //   */
+  //  public String createExternalUrl(Object action) throws Exception;
 
   /**
    * sends a redirect to the action

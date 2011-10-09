@@ -15,6 +15,8 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.ztemplates.actions.ZMatch;
+import org.ztemplates.actions.ZMatch.Protocol;
 import org.ztemplates.web.ZIActionService;
 import org.ztemplates.web.ZTemplates;
 
@@ -38,9 +40,9 @@ public class ZActionServiceSpring implements ZIActionService
   }
 
 
-  public Object process(String url, Map<String, String[]> paramMap) throws Exception
+  public Object process(ZMatch.Protocol protocol, String url, Map<String, String[]> paramMap) throws Exception
   {
-    return service.process(url, paramMap);
+    return service.process(protocol, url, paramMap);
   }
 
 
@@ -50,8 +52,20 @@ public class ZActionServiceSpring implements ZIActionService
   }
 
 
+  public String createUrl(ZMatch.Protocol requiresProtocol, Object action) throws Exception
+  {
+    return service.createUrl(requiresProtocol, action);
+  }
+
+
   public String createNestedUrl(Object nestedAction) throws Exception
   {
     return service.createNestedUrl(nestedAction);
+  }
+
+
+  public String createUrl(Protocol requiresProtocol, String path) throws Exception
+  {
+    return service.createUrl(requiresProtocol, path);
   }
 }

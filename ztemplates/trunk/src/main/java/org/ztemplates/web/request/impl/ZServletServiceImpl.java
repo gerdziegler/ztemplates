@@ -162,22 +162,21 @@ public class ZServletServiceImpl implements ZIServletService
   }
 
 
-  public String createExternalUrl(Object action) throws Exception
-  {
-    String url = actionService.createUrl(action);
-    String scheme = request.getScheme();
-    String serverName = request.getServerName();
-    int serverPort = request.getServerPort();
-    StringBuffer ret = new StringBuffer();
-    ret.append(scheme);
-    ret.append("://");
-    ret.append(serverName);
-    ret.append(':');
-    ret.append(serverPort);
-    ret.append(url);
-    return ret.toString();
-  }
-
+  //  public String createExternalUrl(Object action) throws Exception
+  //  {
+  //    String url = actionService.createUrl(action);
+  //    String scheme = request.getScheme();
+  //    String serverName = request.getServerName();
+  //    int serverPort = request.getServerPort();
+  //    StringBuffer ret = new StringBuffer();
+  //    ret.append(scheme);
+  //    ret.append("://");
+  //    ret.append(serverName);
+  //    ret.append(':');
+  //    ret.append(serverPort);
+  //    ret.append(url);
+  //    return ret.toString();
+  //  }
 
   public void sendRedirect(Object action) throws Exception
   {

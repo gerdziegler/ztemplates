@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.actions.ZIUrlFactory;
+import org.ztemplates.actions.ZMatch;
 import org.ztemplates.actions.ZUrlFactory;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
@@ -60,7 +61,9 @@ public class ZServiceRepositoryWebapp implements ZIServiceRepository
   private ZIFormService formService;
 
 
-  public ZServiceRepositoryWebapp(ZApplication application, ZIServiceFactory serviceFactory, final HttpServletRequest request,
+  public ZServiceRepositoryWebapp(ZApplication application,
+      ZIServiceFactory serviceFactory,
+      final HttpServletRequest request,
       final HttpServletResponse response)
   {
     super();
@@ -73,7 +76,10 @@ public class ZServiceRepositoryWebapp implements ZIServiceRepository
 
     ZIActionApplicationContext applicationContext = application.getActionApplication().getApplicationContext();
 
-    String prefix = applicationContext.getInitParameter("prefix");
+    String scheme = request.getScheme();
+    String httpsPrefix = applicationContext.getInitParameter(ZMatch.Protocol.HTTPS.getContextParameterName());
+    String httpPrefix = applicationContext.getInitParameter(ZMatch.Protocol.HTTP.getContextParameterName());
+    //    String defaultPrefix = applicationContext.getInitParameter(ZMatch.Protocol.DEFAULT.getContextParameterName());
     String encoding = applicationContext.getEncoding();
     response.setCharacterEncoding(encoding);
     ZMatchTree matchTree = application.getActionApplication().getMatchTree();
@@ -81,7 +87,7 @@ public class ZServiceRepositoryWebapp implements ZIServiceRepository
     ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityService.getSecurityProvider(), securityService.getSecureUrlDecorator(),
          encoding);
     ZIUrlFactory urlFactory = new ZUrlFactory(securityService.getSecureUrlDecorator(), encoding);
-    actionService = new ZActionServiceImpl(urlHandler, urlFactory, contextPath, prefix);
+    actionService = new ZActionServiceImpl(urlHandler, urlFactory, contextPath, scheme, httpPrefix, httpsPrefix);
 
     this.renderService = new ZRenderServiceImpl(application.getRenderApplication(), contextPath);
     this.servletService = new ZServletServiceImpl(request, response, actionService, renderService, encoding);

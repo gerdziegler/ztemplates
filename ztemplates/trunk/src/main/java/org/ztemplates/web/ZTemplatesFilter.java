@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.actions.ZMatch;
 import org.ztemplates.web.application.ZApplication;
 import org.ztemplates.web.application.ZApplicationRepositoryWeb;
 import org.ztemplates.web.application.ZHttpUtil;
@@ -124,7 +125,10 @@ public class ZTemplatesFilter implements Filter
       }
       String myEncoding = serviceRepository.getServletService().getEncoding();
       decodeRequestParam(paramMap, requestEncoding, myEncoding);
-      Object handler = serviceRepository.getActionService().process(url, paramMap);
+
+      ZMatch.Protocol protocol = computeProtocol(req);
+
+      Object handler = serviceRepository.getActionService().process(protocol, url, paramMap);
       ret = handler != null;
       return ret;
     }
@@ -152,6 +156,21 @@ public class ZTemplatesFilter implements Filter
       }
     }
     return ret;
+  }
+
+
+  private ZMatch.Protocol computeProtocol(HttpServletRequest req)
+  {
+    String scheme = req.getScheme();
+    if (scheme.equalsIgnoreCase("https"))
+    {
+      return ZMatch.Protocol.HTTPS;
+    }
+    if (scheme.equalsIgnoreCase("http"))
+    {
+      return ZMatch.Protocol.HTTP;
+    }
+    return ZMatch.Protocol.DEFAULT;
   }
 
 

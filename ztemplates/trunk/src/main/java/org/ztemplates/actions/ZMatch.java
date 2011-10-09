@@ -30,6 +30,25 @@ import java.lang.annotation.Target;
 })
 public @interface ZMatch
 {
+  public enum Protocol
+  {
+    HTTP("ztemplates.url.prefix.http"), HTTPS("ztemplates.url.prefix.https"), DEFAULT("");
+    private String contextParameterName;
+
+
+    private Protocol(String contextParameterName)
+    {
+      this.contextParameterName = contextParameterName;
+    }
+
+
+    public String getContextParameterName()
+    {
+      return contextParameterName;
+    }
+  }
+
+
   // public static final String METHOD_GET = "GET";
   //
   // public static final String METHOD_HEAD = "HEAD";
@@ -64,6 +83,15 @@ public @interface ZMatch
 
 
   /**
+   * if set to a protocol creating urls will honor this, 
+   * also there will be redirects if url is called from another
+   * protocol   
+   * @return
+   */
+  Protocol requiresProtocol() default Protocol.DEFAULT;
+
+
+  /**
    * Request parameters are mapped by reflection to the form object of type
    * ZIForm accessible through a bean property with name specified in this
    * property. Example: form="xxx" needs a getter getXxx() in the action-pojo
@@ -86,9 +114,8 @@ public @interface ZMatch
    * 
    * @return
    */
-  String[] methods() default
-  {};
-
+  //  String[] methods() default
+  //  {};
 
   /**
    * if true, the action handler will not be assigned to the parent action

@@ -14,13 +14,19 @@ package org.ztemplates.web.request.impl;
 import java.util.Map;
 
 import org.ztemplates.actions.ZIUrlFactory;
+import org.ztemplates.actions.ZMatch;
+import org.ztemplates.actions.ZSecure;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.util.impl.ZReflectionUtil;
 import org.ztemplates.web.ZIActionService;
 
 public class ZActionServiceImpl implements ZIActionService
 {
-  private final String prefix;
+  private final String scheme;
+
+  private final String httpPrefix;
+
+  private final String httpsPrefix;
 
   private final String contextPath;
 
@@ -29,16 +35,23 @@ public class ZActionServiceImpl implements ZIActionService
   private final ZIUrlFactory urlFactory;
 
 
-  public ZActionServiceImpl(ZIUrlHandler urlHandler, ZIUrlFactory urlFactory, String contextPath, String prefix)
+  public ZActionServiceImpl(ZIUrlHandler urlHandler,
+      ZIUrlFactory urlFactory,
+      String contextPath,
+      String scheme,
+      String httpPrefix,
+      String httpsPrefix)
   {
-    this.prefix = prefix;
+    this.scheme = scheme;
+    this.httpPrefix = httpPrefix;
+    this.httpsPrefix = httpsPrefix;
     this.contextPath = contextPath;
     this.urlHandler = urlHandler;
     this.urlFactory = urlFactory;
   }
 
 
-  public Object process(String url, Map<String, String[]> paramMap) throws Exception
+  public Object process(ZMatch.Protocol protocol, String url, Map<String, String[]> paramMap) throws Exception
   {
     String shortUrl;
     if (contextPath != null)
@@ -53,15 +66,7 @@ public class ZActionServiceImpl implements ZIActionService
     {
       shortUrl = url;
     }
-    if (prefix != null)
-    {
-      if (!shortUrl.startsWith(prefix))
-      {
-        throw new Exception("url does not start with prefix: [url with contextPath" + url + "] --- " + shortUrl + " --- " + prefix);
-      }
-      shortUrl = shortUrl.substring(prefix.length());
-    }
-    return urlHandler.process(shortUrl, paramMap);
+    return urlHandler.process(protocol, shortUrl, paramMap);
   }
 
 
@@ -77,6 +82,55 @@ public class ZActionServiceImpl implements ZIActionService
   }
 
 
+  public String createUrl(ZMatch.Protocol requiresProtocol, String path) throws Exception
+  {
+    if (requiresProtocol == ZMatch.Protocol.HTTPS)
+    {
+      if (httpsPrefix == null)
+      {
+        throw new Exception("servletContext.getInitParameter('" + ZMatch.Protocol.HTTPS.getContextParameterName()
+            + "') is empty but you use class that requires Protocol " + ZMatch.Protocol.HTTPS + " --- " + path);
+      }
+      return httpsPrefix + contextPath + path;
+    }
+
+    if (requiresProtocol == ZMatch.Protocol.HTTP)
+    {
+      if (httpPrefix == null)
+      {
+        throw new Exception("servletContext.getInitParameter('" + ZMatch.Protocol.HTTP.getContextParameterName()
+            + "') is empty but you use class that requires Protocol " + ZMatch.Protocol.HTTP + " --- " + path);
+      }
+      return httpPrefix + contextPath + path;
+    }
+
+    if ("http".equals(scheme) && httpPrefix != null)
+    {
+      return httpPrefix + contextPath + path;
+    }
+    if ("https".equals(scheme) && httpsPrefix != null)
+    {
+      return httpsPrefix + contextPath + path;
+    }
+
+    return contextPath + path;
+  }
+
+
+  public String createUrl(ZMatch.Protocol requiresProtocol, Object action) throws Exception
+  {
+    // this is to avoid reentrant calls which would prepend the prefix multiple
+    // times
+    if (action instanceof String)
+    {
+      return (String) action;
+    }
+
+    String path = urlFactory.createUrl(action);
+    return createUrl(requiresProtocol, path);
+  }
+
+
   public String createUrl(Object action) throws Exception
   {
     // this is to avoid reentrant calls which would prepend the prefix multiple
@@ -86,18 +140,74 @@ public class ZActionServiceImpl implements ZIActionService
       return (String) action;
     }
 
-    String ret = urlFactory.createUrl(action);
+    String path = urlFactory.createUrl(action);
 
-    String prepend;
-    if (prefix != null)
+    ZMatch.Protocol requiresProtocol = ZMatch.Protocol.DEFAULT;
+
+    Class actionClass = action.getClass();
+    ZMatch match = (ZMatch) actionClass.getAnnotation(ZMatch.class);
+    if (match != null)
     {
-      prepend = contextPath + prefix;
+      requiresProtocol = match.requiresProtocol();
     }
-    else
+
+    boolean isSecure = actionClass.isAnnotationPresent(ZSecure.class);
+    if (isSecure && httpsPrefix != null)
     {
-      prepend = contextPath;
+      requiresProtocol = ZMatch.Protocol.HTTPS;
     }
-    ret = prepend + ret;
-    return ret;
+
+    return createUrl(requiresProtocol, path);
   }
+
+  //  public String createUrl(Object action) throws Exception
+  //  {
+  //    // this is to avoid reentrant calls which would prepend the prefix multiple
+  //    // times
+  //    if (action instanceof String)
+  //    {
+  //      return (String) action;
+  //    }
+  //
+  //    String path = urlFactory.createUrl(action);
+  //
+  //    Class actionClass = action.getClass();
+  //
+  //    ZMatch match = (ZMatch) actionClass.getAnnotation(ZMatch.class);
+  //    if (match != null)
+  //    {
+  //      ZMatch.Protocol requiresProtocol = match.requiresProtocol();
+  //      if (requiresProtocol == ZMatch.Protocol.HTTPS)
+  //      {
+  //        if (httpsPrefix == null)
+  //        {
+  //          throw new Exception("servletContext.getInitParameter('" + ZMatch.Protocol.HTTPS.getContextParameterName()
+  //              + "') is empty but you use class that requires Protocol " + ZMatch.Protocol.HTTPS + " --- " + actionClass.getName());
+  //        }
+  //        return httpsPrefix + contextPath + path;
+  //      }
+  //      if (requiresProtocol == ZMatch.Protocol.HTTP)
+  //      {
+  //        if (httpPrefix == null)
+  //        {
+  //          throw new Exception("servletContext.getInitParameter('" + ZMatch.Protocol.HTTP.getContextParameterName()
+  //              + "') is empty but you use class that requires Protocol " + ZMatch.Protocol.HTTP + " --- " + actionClass.getName());
+  //        }
+  //        return httpPrefix + contextPath + path;
+  //      }
+  //    }
+  //
+  //    boolean isSecure = actionClass.isAnnotationPresent(ZSecure.class);
+  //    if (isSecure && httpsPrefix != null)
+  //    {
+  //      return httpsPrefix + contextPath + path;
+  //    }
+  //
+  //    if (httpPrefix != null)
+  //    {
+  //      return httpPrefix + contextPath + path;
+  //    }
+  //
+  //    return contextPath + path;
+  //  }
 }

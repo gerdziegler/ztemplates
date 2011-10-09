@@ -16,12 +16,14 @@ package org.ztemplates.web;
 
 import java.util.Map;
 
+import org.ztemplates.actions.ZMatch;
+
 public interface ZIActionService extends ZIService
 {
   public static final String SPRING_NAME = "ZIActionService";
 
 
-  public Object process(String url, Map<String, String[]> paramMap) throws Exception;
+  public Object process(ZMatch.Protocol protocol, String url, Map<String, String[]> paramMap) throws Exception;
 
 
   /**
@@ -32,6 +34,12 @@ public interface ZIActionService extends ZIService
    * @throws Exception
    */
   public String createUrl(Object action) throws Exception;
+
+
+  public String createUrl(ZMatch.Protocol requiresProtocol, String path) throws Exception;
+
+
+  public String createUrl(ZMatch.Protocol requiresProtocol, Object action) throws Exception;
 
 
   /**

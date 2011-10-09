@@ -9,6 +9,8 @@ snapshot available from [https://oss.sonatype.org/content/repositories/snapshots
 
 __ztemplates-2.5.0-SNAPSHOT (Not yet released)__ 
 
+* added annotation ZMatch.requiresProtocol (@ZMatch.Protocol.HTTP/HTTPS) where you can specify that a action needs to be called under a specified protocol. If not sends a redirect to the correct protocol.
+* added init property (servletContext.getInitParameter()) 'ztemplates.url.prefix.https' and 'zemplates.url.prefix.http' that are added when creating urls with ZIActionService. If set these are propended to urls. If Action is annotated with @ZSecure it will use https otherwise http. 
 * added property ztemplatesCssDigest that can be used from templates when ZRenderEngine.zscript is set to true to reload ztemplates.css from the browser only if content changed.
 
 __ztemplates-2.4.0-SNAPSHOT (Released)__ 

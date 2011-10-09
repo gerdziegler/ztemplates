@@ -7,11 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.ZIFormAction;
 import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.ZMatch;
+import org.ztemplates.actions.ZMatch.Protocol;
 import org.ztemplates.actions.security.ZRoles;
 import org.ztemplates.actions.security.ZSecurityException;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
@@ -38,6 +42,9 @@ import org.ztemplates.form.ZIForm;
 import org.ztemplates.form.impl.ZFormWrapper;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
+import org.ztemplates.web.ZIActionService;
+import org.ztemplates.web.ZIServletService;
+import org.ztemplates.web.ZTemplates;
 
 public class ZTreeUrlHandler implements ZIUrlHandler
 {
@@ -80,19 +87,31 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
   public Object process(String url) throws Exception
   {
-    return process(url, new HashMap<String, String[]>());
+    return process(ZMatch.Protocol.DEFAULT, url, new HashMap<String, String[]>());
+  }
+
+
+  public Object process(ZMatch.Protocol protocol, String url) throws Exception
+  {
+    return process(protocol, url, new HashMap<String, String[]>());
   }
 
 
   public Object process(String url, Map<String, String[]> paramMap) throws Exception
   {
-    ZUrl zurl = parse(url);
-    zurl.getParameterMap().putAll(paramMap);
-    return process(zurl);
+    return process(ZMatch.Protocol.DEFAULT, url, paramMap);
   }
 
 
-  private Object process(ZUrl zurl) throws Exception
+  public Object process(ZMatch.Protocol protocol, String url, Map<String, String[]> paramMap) throws Exception
+  {
+    ZUrl zurl = parse(url);
+    zurl.getParameterMap().putAll(paramMap);
+    return process(protocol, zurl);
+  }
+
+
+  private Object process(ZMatch.Protocol protocol, ZUrl zurl) throws Exception
   {
     Map<String, String[]> paramMap = zurl.getParameterMap();
     String url = zurl.getUrl();
@@ -108,7 +127,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       return null;
     }
     checkSecurity(matched);
-    Object ret = process(matched, paramMap);
+    Object ret = process(protocol, matched, paramMap);
     return ret;
   }
 
@@ -181,7 +200,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
   }
 
 
-  private Object process(ZMatchedUrl matched, Map<String, String[]> parameters) throws Exception
+  private Object process(ZMatch.Protocol protocol, ZMatchedUrl matched, Map<String, String[]> parameters) throws Exception
   {
     List<ZIProcessingInstruction> instr = computeInstructions(matched);
     Object rootPojo = null;
@@ -235,7 +254,12 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       else if (et instanceof ZBeginInstruction)
       {
         ZBeginInstruction v = (ZBeginInstruction) et;
-        rootPojo = createActionPojo(v.getClazz());
+        Class rootClass = v.getClazz();
+        rootPojo = createActionPojo(rootClass);
+        if (redirect(protocol, rootClass))
+        {
+          return rootPojo;
+        }
         ZReflectionUtil.callBefore(rootPojo);
         pojos.push(rootPojo);
       }
@@ -263,6 +287,32 @@ public class ZTreeUrlHandler implements ZIUrlHandler
     }
 
     return rootPojo;
+  }
+
+
+  private boolean redirect(Protocol protocol, Class rootClass) throws Exception
+  {
+    ZMatch m = (ZMatch) rootClass.getAnnotation(ZMatch.class);
+    ZMatch.Protocol requiredProtocol = m.requiresProtocol();
+    if (requiredProtocol == ZMatch.Protocol.HTTP && protocol != ZMatch.Protocol.HTTP || requiredProtocol == ZMatch.Protocol.HTTPS
+        && protocol != ZMatch.Protocol.HTTPS)
+    {
+      ZIServletService ss = ZTemplates.getServletService();
+      ZIActionService as = ZTemplates.getActionService();
+      HttpServletRequest req = ss.getRequest();
+      String uri = req.getRequestURI();
+      //      String
+      if (req.getQueryString() != null)
+      {
+        uri = uri + "?" + req.getQueryString();
+      }
+      String url = as.createUrl(requiredProtocol, uri);
+      HttpServletResponse resp = ss.getResponse();
+      resp.sendRedirect(url);
+      return true;
+    }
+
+    return false;
   }
 
 
@@ -476,4 +526,5 @@ public class ZTreeUrlHandler implements ZIUrlHandler
   {
     return nested.peek().getName();
   }
+
 }
