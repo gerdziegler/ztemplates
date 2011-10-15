@@ -14,6 +14,6 @@ public class ZRenderEngineFactory
     ZIExposedMethodRepository exposedMethodRepository = new ZExposedMethodRepository(applicationContext);
     ZITemplateNameRepository templateNameRepository = new ZTemplateNameRepository();
     ZIRendererRepository rendererRepository = new ZRendererRepository(applicationContext, templateNameRepository);
-    return new ZRenderEngine(exposedMethodRepository, rendererRepository);
+    return new ZRenderEngine(exposedMethodRepository, rendererRepository, false);
   }
 }

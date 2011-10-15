@@ -66,6 +66,13 @@ public @interface ZRenderer
 
 
   /**
+   * mime-type of rendered content, use this in conjunction with init property 'ztemplates.devMode.html.comments'
+   * to give hints about how to create comments 
+   */
+  String mimeType() default "text/html";
+
+
+  /**
    * it set to true a property called "zscript" will be exposed to the template
    * containing the javascript and css html tags.
    * 

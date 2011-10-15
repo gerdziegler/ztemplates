@@ -16,4 +16,5 @@ package org.ztemplates.render.impl;
 
 public interface ZIRenderContext extends ZIRenderEngineListener, ZIExposedMethodRepository, ZIRendererRepository
 {
+  public boolean isDebugRenderComments();
 }

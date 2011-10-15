@@ -55,6 +55,8 @@ public class ZWebRenderContextImpl implements ZIWebRenderContext
 
   private final ZRendererRepository rendererRepository;
 
+  private final boolean debugRenderComments;
+
 
   public ZWebRenderContextImpl(ZRenderApplication application,
       String contextPath,
@@ -68,6 +70,7 @@ public class ZWebRenderContextImpl implements ZIWebRenderContext
     this.rendererRepository = new ZRendererRepository(
         application.getApplicationContext(),
         application.getTemplateNameRepository());
+    this.debugRenderComments = "true".equals(application.getApplicationContext().getInitParameter("ztemplates.devMode.html.comments"));
   }
 
 
@@ -297,6 +300,12 @@ public class ZWebRenderContextImpl implements ZIWebRenderContext
   private static String computeZscriptExposedBy(Object obj)
   {
     return obj.getClass().getSimpleName() + "[" + obj + "]";
+  }
+
+
+  public boolean isDebugRenderComments()
+  {
+    return debugRenderComments;
   }
 
 }

@@ -100,15 +100,22 @@ public class ZRenderServiceImpl implements ZIRenderService
       return (String) obj;
     }
 
-    long time = System.currentTimeMillis();
-    String ret = renderEngine.render(obj);
-    long delta = (System.currentTimeMillis() - time);
-    if (delta > 20)
+    long time = 0;
+    if (ctx.isDebugRenderComments())
     {
-      int cnt = ctx.getRenderCallCounter();
-      long avg = (delta / cnt);
-      String msg = "rendered " + obj.getClass().getName() + " [" + delta + " ms] " + cnt + " calls " + avg;
-      log.info(msg);
+      time = System.currentTimeMillis();
+    }
+    String ret = renderEngine.render(obj);
+    if (ctx.isDebugRenderComments())
+    {
+      long delta = (System.currentTimeMillis() - time);
+      if (delta > 20)
+      {
+        int cnt = ctx.getRenderCallCounter();
+        long avg = (delta / cnt);
+        String msg = "rendered " + obj.getClass().getName() + " [" + delta + " ms] " + cnt + " calls " + avg;
+        log.info(msg);
+      }
     }
     return ret;
   }

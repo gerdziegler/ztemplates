@@ -25,6 +25,7 @@ import org.ztemplates.render.ZIRenderEngine;
 import org.ztemplates.render.ZIRenderedObject;
 import org.ztemplates.render.ZIRenderer;
 import org.ztemplates.render.ZRenderer;
+import org.ztemplates.web.script.zscript.ZScriptDefinition;
 
 public class ZRenderEngine implements ZIRenderEngine
 {
@@ -36,29 +37,40 @@ public class ZRenderEngine implements ZIRenderEngine
 
   private ZIRenderEngineListener listener;
 
+  private final boolean debugRenderComments;
+
+  private int depth = 0;
+
 
   public ZRenderEngine(ZIRenderContext ctx)
   {
-    // this.ctx = ctx;
     this.listener = ctx;
     this.exposedMethodRepository = ctx;
     this.rendererRepository = ctx;
+    this.debugRenderComments = ctx.isDebugRenderComments();
   }
 
 
-  public ZRenderEngine(ZIExposedMethodRepository exposedMethodRepository, ZIRendererRepository rendererRepository, ZIRenderEngineListener listener)
+  public ZRenderEngine(ZIExposedMethodRepository exposedMethodRepository,
+      ZIRendererRepository rendererRepository,
+      ZIRenderEngineListener listener,
+      boolean debugRenderComments)
   {
     this.exposedMethodRepository = exposedMethodRepository;
     this.rendererRepository = rendererRepository;
     this.listener = listener;
+    this.debugRenderComments = debugRenderComments;
   }
 
 
-  public ZRenderEngine(ZIExposedMethodRepository exposedMethodRepository, ZIRendererRepository rendererRepository)
+  public ZRenderEngine(ZIExposedMethodRepository exposedMethodRepository,
+      ZIRendererRepository rendererRepository,
+      boolean debugRenderComments)
   {
     this.exposedMethodRepository = exposedMethodRepository;
     this.rendererRepository = rendererRepository;
     this.listener = null;
+    this.debugRenderComments = debugRenderComments;
   }
 
 
@@ -73,6 +85,8 @@ public class ZRenderEngine implements ZIRenderEngine
       return (String) obj;
     }
 
+    depth++;
+
     // always compute this to get scripts
     Map<String, Object> exposed = getExposed(obj);
 
@@ -84,26 +98,75 @@ public class ZRenderEngine implements ZIRenderEngine
     if (obj instanceof ZIRenderedObject)
     {
       ZIRenderedObject ro = (ZIRenderedObject) obj;
+      depth--;
       return ro.getText();
     }
 
+    Class<?> clazz = obj.getClass();
     ZRenderer rendererAnnot = obj.getClass().getAnnotation(ZRenderer.class);
     if (rendererAnnot == null)
     {
+      depth--;
       return obj.toString();
     }
     else
     {
       ZIRenderer renderer = rendererRepository.getRenderer(rendererAnnot.value());
-      long time = System.currentTimeMillis();
-      String ret = renderer.render(obj.getClass(), exposed);
-      long delta = System.currentTimeMillis() - time;
-      if (delta > 20)
+      StringBuffer ret = new StringBuffer();
+      long time = 0;
+      String commentPrefix = null;
+      String commentSuffix = null;
+      if (debugRenderComments)
       {
-        log.info("    engine " + obj.getClass().getName() + " [" + delta + " ms]");
+        ZScriptDefinition script = clazz.getAnnotation(ZScriptDefinition.class);
+        if (script != null || "text/javascript".equals(rendererAnnot.mimeType()) || "application/x-javascript".equals(rendererAnnot.mimeType()))
+        {
+          commentPrefix = "\n//";
+          commentSuffix = "\n";
+        }
+        else if ("text/html".equals(rendererAnnot.mimeType()) || "text/xml".equals(rendererAnnot.mimeType()))
+        {
+          commentPrefix = "\n" + indent() + "<!-- ";
+          commentSuffix = "-->\n";
+        }
+        if (commentPrefix != null)
+        {
+          time = System.currentTimeMillis();
+          ret.append(commentPrefix);
+          ret.append(" BEGIN ");
+          ret.append(clazz.getName());
+          ret.append(commentSuffix);
+        }
       }
-      return ret;
+      ret.append(renderer.render(obj.getClass(), exposed));
+      if (debugRenderComments)
+      {
+        if (commentPrefix != null)
+        {
+          long delta = System.currentTimeMillis() - time;
+          time = System.currentTimeMillis();
+          ret.append(commentPrefix);
+          ret.append(" END ");
+          ret.append(clazz.getName());
+          ret.append(" [" + delta + " ms]");
+          ret.append(commentSuffix);
+        }
+      }
+      depth--;
+      return ret.toString();
     }
+  }
+
+
+  private String indent()
+  {
+    StringBuffer sb = new StringBuffer(" ");
+    sb.append(depth);
+    for (int i = 0; i < depth; i++)
+    {
+      sb.append("    ");
+    }
+    return sb.toString();
   }
 
 
