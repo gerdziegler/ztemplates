@@ -12,6 +12,12 @@ public class ZLongProperty extends ZProperty<Long>
   }
 
 
+  public ZLongProperty(String name)
+  {
+    setName(name);
+  }
+
+
   public Long parse(String formattedValue) throws Exception
   {
     Long i = Long.valueOf(formattedValue);

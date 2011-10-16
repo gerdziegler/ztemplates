@@ -17,6 +17,12 @@ public class ZBooleanProperty extends ZProperty<Boolean>
   }
 
 
+  public ZBooleanProperty(String name)
+  {
+    setName(name);
+  }
+
+
   public ZBooleanProperty()
   {
     this(Boolean.FALSE);

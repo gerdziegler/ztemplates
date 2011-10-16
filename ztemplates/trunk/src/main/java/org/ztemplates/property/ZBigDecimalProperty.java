@@ -18,7 +18,14 @@ public class ZBigDecimalProperty extends ZProperty<BigDecimal>
   }
 
 
-  public ZBigDecimalProperty(int scale, int roundingMode)
+  public ZBigDecimalProperty(String name)
+  {
+    setName(name);
+  }
+
+
+  public ZBigDecimalProperty(int scale,
+      int roundingMode)
   {
     this.scale = scale;
     this.roundingMode = roundingMode;

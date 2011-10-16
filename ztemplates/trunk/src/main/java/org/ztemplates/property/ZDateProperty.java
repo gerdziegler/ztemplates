@@ -12,6 +12,14 @@ public class ZDateProperty extends ZProperty<Date>
   private final DateFormat df;
 
 
+  public ZDateProperty(String name,
+      DateFormat df)
+  {
+    this(df);
+    setName(name);
+  }
+
+
   public ZDateProperty(DateFormat df)
   {
     this.df = df;

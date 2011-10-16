@@ -16,6 +16,12 @@ public class ZDoubleProperty extends ZProperty<Double>
   }
 
 
+  public ZDoubleProperty(String name)
+  {
+    setName(name);
+  }
+
+
   @Override
   public Double parse(String formattedValue) throws Exception
   {
