@@ -11,6 +11,13 @@ public class ZStringProperty extends ZProperty<String>
   }
 
 
+  public ZStringProperty(String name)
+  {
+    super();
+    setName(name);
+  }
+
+
   @Override
   public String parse(String formattedValue)
   {

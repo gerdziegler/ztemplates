@@ -11,6 +11,12 @@ public class ZIntProperty extends ZProperty<Integer>
   }
 
 
+  public ZIntProperty(String name)
+  {
+    setName(name);
+  }
+
+
   @Override
   public Integer parse(String formattedValue) throws Exception
   {

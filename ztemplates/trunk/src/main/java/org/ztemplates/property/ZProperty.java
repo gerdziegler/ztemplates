@@ -179,6 +179,22 @@ public abstract class ZProperty<T>
   }
 
 
+  public void setStringValue(String s)
+  {
+    if (s == null || s.length() == 0)
+    {
+      this.stringValues = EMPTY;
+    }
+    else
+    {
+      this.stringValues = new String[]
+      {
+        s
+      };
+    }
+  }
+
+
   /**
    * Override this to validate <b>this property only</b>, without any access to
    * some persistency layer, this is <b>called every time the value or the
