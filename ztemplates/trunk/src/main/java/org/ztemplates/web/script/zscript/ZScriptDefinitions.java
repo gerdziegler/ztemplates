@@ -6,7 +6,7 @@ import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 
-@ZRenderer(ZVelocityRenderer.class)
+@ZRenderer(value = ZVelocityRenderer.class, mimeType = "text/javascript")
 public class ZScriptDefinitions
 {
   @ZExpose

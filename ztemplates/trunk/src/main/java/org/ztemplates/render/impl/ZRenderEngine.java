@@ -126,7 +126,7 @@ public class ZRenderEngine implements ZIRenderEngine
         }
         else if ("text/html".equals(rendererAnnot.mimeType()) || "text/xml".equals(rendererAnnot.mimeType()))
         {
-          commentPrefix = "\n" + indent() + "<!-- ";
+          commentPrefix = "\n" + indent() + "<!-- " + depth + " ";
           commentSuffix = "-->\n";
         }
         if (commentPrefix != null)
@@ -161,7 +161,6 @@ public class ZRenderEngine implements ZIRenderEngine
   private String indent()
   {
     StringBuffer sb = new StringBuffer(" ");
-    sb.append(depth);
     for (int i = 0; i < depth; i++)
     {
       sb.append("    ");
