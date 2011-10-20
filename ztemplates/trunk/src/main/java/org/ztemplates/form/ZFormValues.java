@@ -32,6 +32,7 @@ import org.ztemplates.actions.util.ZBase64Util;
  */
 public class ZFormValues implements Serializable
 {
+  //HashMap because of encode/decode
   private HashMap<String, String[]> values = new HashMap<String, String[]>();
 
 
@@ -120,4 +121,5 @@ public class ZFormValues implements Serializable
   {
     this.values = (HashMap<String, String[]>) ZBase64Util.decodeToObject(base64);
   }
+
 }

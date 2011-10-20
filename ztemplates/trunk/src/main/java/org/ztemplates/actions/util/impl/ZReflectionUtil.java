@@ -374,19 +374,22 @@ public class ZReflectionUtil
 
   private static Field getField(Class clazz, String name)
   {
-    try
+    for (Class crtClass = clazz; crtClass != null && crtClass != Object.class; crtClass = crtClass.getSuperclass())
     {
-      Field f = clazz.getDeclaredField(name);
-      if (!f.isAccessible())
+      try
       {
-        f.setAccessible(true);
+        Field f = crtClass.getDeclaredField(name);
+        if (!f.isAccessible())
+        {
+          f.setAccessible(true);
+        }
+        return f;
       }
-      return f;
+      catch (NoSuchFieldException e)
+      {
+      }
     }
-    catch (NoSuchFieldException e)
-    {
-      return null;
-    }
+    return null;
   }
 
 
