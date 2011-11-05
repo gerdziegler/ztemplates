@@ -116,7 +116,7 @@ public class ZRenderEngine implements ZIRenderEngine
       long time = 0;
       String commentPrefix = null;
       String commentSuffix = null;
-      if (debugRenderComments)
+      if (debugRenderComments && depth > 1)
       {
         ZScriptDefinition script = clazz.getAnnotation(ZScriptDefinition.class);
         if (script != null || "text/javascript".equals(rendererAnnot.mimeType()) || "application/x-javascript".equals(rendererAnnot.mimeType()))

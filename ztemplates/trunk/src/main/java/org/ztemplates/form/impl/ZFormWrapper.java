@@ -406,10 +406,7 @@ public final class ZFormWrapper implements ZIFormVisitable
       {
         if (!prop.getProperty().isEmpty())
         {
-          values.put(prop.getProperty().getName(), new String[]
-          {
-              prop.getProperty().getStringValue()
-          });
+          values.put(prop.getProperty().getName(), prop.getProperty().getStringValues());
         }
       }
 

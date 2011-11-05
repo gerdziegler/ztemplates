@@ -22,21 +22,53 @@ import org.ztemplates.render.velocity.ZVelocityRenderer;
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormText extends ZPropertyHtml
 {
-  public ZFormText(String id, final ZProperty prop)
+  @ZExpose
+  int idx = 0;
+
+
+  /**
+   * 
+   * @param id
+   * @param prop
+   * @param idx the index to assign to this text field for multivalued properties
+   */
+  public ZFormText(String id,
+      final ZProperty prop,
+      int idx)
   {
     super(id, prop);
+    this.idx = idx;
+  }
+
+
+  public ZFormText(String id,
+      final ZProperty prop)
+  {
+    this(id, prop, 0);
   }
 
 
   public ZFormText(final ZProperty prop)
   {
-    this(computeId(prop), prop);
+    this(computeId(prop, 0), prop, 0);
+  }
+
+
+  public ZFormText(final ZProperty prop,
+      int idx)
+  {
+    this(computeId(prop, idx), prop, idx);
   }
 
 
   @ZExpose
   public String getValue()
   {
-    return getProperty().getStringValue();
+    String[] values = getProperty().getStringValues();
+    if (idx > values.length - 1)
+    {
+      return null;
+    }
+    return values[idx];
   }
 }

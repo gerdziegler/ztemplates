@@ -31,7 +31,18 @@ public abstract class ZPropertyHtml
 
   protected static String computeId(ZProperty property)
   {
-    return property.getName().replace('.', '_');
+    return computeId(property, 0);
+  }
+
+
+  protected static String computeId(ZProperty property, int idx)
+  {
+    String ret = property.getName().replace('.', '_');
+    if (idx > 0)
+    {
+      ret += idx;
+    }
+    return ret;
   }
 
 

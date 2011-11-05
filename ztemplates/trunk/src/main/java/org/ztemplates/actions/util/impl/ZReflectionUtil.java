@@ -14,6 +14,7 @@
 
 package org.ztemplates.actions.util.impl;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -200,6 +201,14 @@ public class ZReflectionUtil
         {
           setter.setValue(obj, Enum.valueOf(paramType, val));
         }
+        else if (paramType.isAssignableFrom(Integer.class))
+        {
+          setter.setValue(obj, Integer.valueOf(val));
+        }
+        else if (paramType.isAssignableFrom(Long.class))
+        {
+          setter.setValue(obj, Long.valueOf(val));
+        }
         else
         {
           setter.setValue(obj, val);
@@ -342,6 +351,22 @@ public class ZReflectionUtil
       };
     }
 
+    if (ret instanceof Integer)
+    {
+      return new String[]
+      {
+        (String) ((Integer) ret).toString()
+      };
+    }
+
+    if (ret instanceof Long)
+    {
+      return new String[]
+      {
+        (String) ((Long) ret).toString()
+      };
+    }
+
     throw new Exception("parameter getter/field must be String, String[], Enum, Enum[]: '" + name + "' in " + obj.getClass());
   }
 
@@ -387,6 +412,20 @@ public class ZReflectionUtil
       }
       catch (NoSuchFieldException e)
       {
+      }
+    }
+    return null;
+  }
+
+
+  public static <T extends Annotation> T getAnnotation(Class clazz, Class<T> ann)
+  {
+    for (Class crtClass = clazz; crtClass != null && crtClass != Object.class; crtClass = crtClass.getSuperclass())
+    {
+      T ret = (T) crtClass.getAnnotation(ann);
+      if (ret != null)
+      {
+        return ret;
       }
     }
     return null;
