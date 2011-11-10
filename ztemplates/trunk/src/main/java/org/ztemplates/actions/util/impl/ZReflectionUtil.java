@@ -148,29 +148,29 @@ public class ZReflectionUtil
   {
     ZSetParameter setter;
     Class clazz = obj.getClass();
-    Method m = getSetter(clazz, name);
-    if (m != null)
+    Field f = getField(clazz, name);
+    if (f != null)
     {
-      if (ZProperty.class.isAssignableFrom(m.getReturnType()))
+      if (ZProperty.class.isAssignableFrom(f.getType()))
       {
-        ZProperty prop = (ZProperty) invoke(m, obj);
+        ZProperty prop = (ZProperty) f.get(obj);
         prop.setStringValues(value);
         return prop;
       }
-      setter = new ZSetParameter_Method(m);
+      setter = new ZSetParameter_Field(f);
     }
     else
     {
-      Field f = getField(clazz, name);
-      if (f != null)
+      Method m = getSetter(clazz, name);
+      if (m != null)
       {
-        if (ZProperty.class.isAssignableFrom(f.getType()))
+        if (ZProperty.class.isAssignableFrom(m.getReturnType()))
         {
-          ZProperty prop = (ZProperty) f.get(obj);
+          ZProperty prop = (ZProperty) invoke(m, obj);
           prop.setStringValues(value);
           return prop;
         }
-        setter = new ZSetParameter_Field(f);
+        setter = new ZSetParameter_Method(m);
       }
       else
       {
@@ -293,17 +293,17 @@ public class ZReflectionUtil
 
     Class clazz = obj.getClass();
     String getterName = computePrefixName("get", name);
-    Method m = getMethod(clazz, getterName);
-    if (m != null)
+    Field f = getField(clazz, name);
+    if (f != null)
     {
-      ret = invoke(m, obj);
+      ret = f.get(obj);
     }
     else
     {
-      Field f = getField(clazz, name);
-      if (f != null)
+      Method m = getMethod(clazz, getterName);
+      if (m != null)
       {
-        ret = f.get(obj);
+        ret = invoke(m, obj);
       }
       else
       {

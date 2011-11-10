@@ -104,6 +104,12 @@ public abstract class ZProperty<T>
   }
 
 
+  public void clear()
+  {
+    stringValues = EMPTY;
+  }
+
+
   @ZExposeJson
   public boolean isWriteable()
   {
@@ -189,7 +195,7 @@ public abstract class ZProperty<T>
     {
       this.stringValues = new String[]
       {
-        s
+          s
       };
     }
   }
