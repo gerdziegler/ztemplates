@@ -162,6 +162,12 @@ public class ZRenderServiceImpl implements ZIRenderService
   }
 
 
+  public String createJavaScriptId(String prefix)
+  {
+    return prefix + (crtId++);
+  }
+
+
   public String getJavaScriptIdPrefix()
   {
     return javaScriptIdPrefix;

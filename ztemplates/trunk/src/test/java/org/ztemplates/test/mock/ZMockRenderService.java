@@ -65,4 +65,11 @@ public class ZMockRenderService implements ZIRenderService
     this.javaScriptIdPrefix = javaScriptIdPrefix;
 
   }
+
+
+  public String createJavaScriptId(String prefix)
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

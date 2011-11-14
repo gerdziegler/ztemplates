@@ -64,6 +64,12 @@ public class ZRenderServiceSpring implements ZIRenderService
   }
 
 
+  public String createJavaScriptId(String prefix)
+  {
+    return service.createJavaScriptId(prefix);
+  }
+
+
   public void setJavaScriptIdPrefix(String javaScriptIdPrefix)
   {
     service.setJavaScriptIdPrefix(javaScriptIdPrefix);

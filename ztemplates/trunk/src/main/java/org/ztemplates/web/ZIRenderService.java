@@ -58,6 +58,14 @@ public interface ZIRenderService extends ZIService
 
 
   /**
+   * creates a per request unique id for usage in javascript. Ids are guaranteed
+   * to be unique in request scope as well as for future requests of the same
+   * user, so one can safely cache prerendered pojos.
+   */
+  public String createJavaScriptId(String prefix);
+
+
+  /**
    * manually sets the prefix used when creating JavaScriptIds, use to have full
    * control over the ids created
    * 
