@@ -25,6 +25,7 @@ import org.ztemplates.render.ZIRenderEngine;
 import org.ztemplates.render.ZIRenderedObject;
 import org.ztemplates.render.ZIRenderer;
 import org.ztemplates.render.ZRenderer;
+import org.ztemplates.web.ZIActiveView;
 import org.ztemplates.web.script.zscript.ZScriptDefinition;
 
 public class ZRenderEngine implements ZIRenderEngine
@@ -87,6 +88,11 @@ public class ZRenderEngine implements ZIRenderEngine
 
     depth++;
 
+    if (obj instanceof ZIActiveView)
+    {
+      ((ZIActiveView) obj).beforeRendering();
+    }
+
     // always compute this to get scripts
     Map<String, Object> exposed = getExposed(obj);
 
@@ -103,7 +109,7 @@ public class ZRenderEngine implements ZIRenderEngine
     }
 
     Class<?> clazz = obj.getClass();
-    ZRenderer rendererAnnot = obj.getClass().getAnnotation(ZRenderer.class);
+    ZRenderer rendererAnnot = clazz.getAnnotation(ZRenderer.class);
     if (rendererAnnot == null)
     {
       depth--;

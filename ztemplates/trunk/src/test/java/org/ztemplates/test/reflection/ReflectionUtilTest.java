@@ -48,10 +48,11 @@ public class ReflectionUtilTest extends TestCase
     String s = (String) getObjectByBeanPath(tc, "list[0].value");
     assertEquals("val1", s);
   }
-  
+
+
   //*
   //Saved here from ZReflectionUtil
-  
+
   @Deprecated
   public static Object getObjectByBeanPath(Object obj, String path) throws Exception
   {
@@ -118,7 +119,7 @@ public class ReflectionUtilTest extends TestCase
     assertEquals(TestClass1.TestEnum.ENUM1.name(), vals[0]);
     ZReflectionUtil.callParameterSetter(tc, "enumVal", new String[]
     {
-      TestClass1.TestEnum.ENUM2.name()
+        TestClass1.TestEnum.ENUM2.name()
     });
     assertEquals(TestClass1.TestEnum.ENUM2, tc.getEnumVal());
 
@@ -137,5 +138,33 @@ public class ReflectionUtilTest extends TestCase
 
     String vals2 = ZReflectionUtil.callVariableGetter(tc, "enumVal");
     assertEquals(TestClass1.TestEnum.ENUM2.name(), vals2);
+  }
+
+
+  public void test_convertToStringArray() throws Exception
+  {
+
+    convertToStringArrayHelper(new String[]
+    {
+        "1"
+    }, 1);
+    convertToStringArrayHelper(new String[]
+    {
+        "2"
+    }, 2);
+    convertToStringArrayHelper(new String[]
+    {
+        "true"
+    }, true);
+  }
+
+
+  private void convertToStringArrayHelper(String[] vals, Object arr) throws Exception
+  {
+    String[] computed = ZReflectionUtil.convertToStringArray(arr);
+    for (int i = 0; i < vals.length; i++)
+    {
+      assertEquals(vals[i], computed[i]);
+    }
   }
 }

@@ -22,6 +22,14 @@ public interface ZIRenderService extends ZIService
 
 
   /**
+   * creates a view pojo instance, if annotated with @Component the instance will come from spring
+   * 
+   * @param obj
+   */
+  public <T extends ZIActiveView> T createActiveView(Class<T> clazz) throws Exception;
+
+
+  /**
    * renders the object to a string
    * 
    * @param obj

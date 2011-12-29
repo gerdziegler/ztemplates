@@ -15,6 +15,7 @@
 package org.ztemplates.test.mock;
 
 import org.ztemplates.render.ZIRenderedObject;
+import org.ztemplates.web.ZIActiveView;
 import org.ztemplates.web.ZIRenderService;
 
 public class ZMockRenderService implements ZIRenderService
@@ -68,6 +69,13 @@ public class ZMockRenderService implements ZIRenderService
 
 
   public String createJavaScriptId(String prefix)
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
+  public <T extends ZIActiveView> T createActiveView(Class<T> clazz) throws Exception
   {
     // TODO Auto-generated method stub
     return null;

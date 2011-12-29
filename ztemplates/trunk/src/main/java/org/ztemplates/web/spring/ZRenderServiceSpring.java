@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.ztemplates.render.ZIRenderedObject;
+import org.ztemplates.web.ZIActiveView;
 import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.ZTemplates;
 
@@ -85,5 +86,11 @@ public class ZRenderServiceSpring implements ZIRenderService
   public String getCssId(Class clazz)
   {
     return service.getCssId(clazz);
+  }
+
+
+  public <T extends ZIActiveView> T createActiveView(Class<T> clazz) throws Exception
+  {
+    return service.createActiveView(clazz);
   }
 }

@@ -15,6 +15,7 @@ package org.ztemplates.web.request.impl;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.actions.util.impl.ZReflectionUtil;
 import org.ztemplates.render.ZIRenderedObject;
 import org.ztemplates.render.ZRenderApplication;
 import org.ztemplates.render.impl.ZIWebRenderContext;
@@ -22,6 +23,7 @@ import org.ztemplates.render.impl.ZRenderEngine;
 import org.ztemplates.render.impl.ZWebRenderContextImpl;
 import org.ztemplates.render.script.ZICssProcessor;
 import org.ztemplates.render.script.ZIJavaScriptProcessor;
+import org.ztemplates.web.ZIActiveView;
 import org.ztemplates.web.ZIRenderService;
 import org.ztemplates.web.application.ZMergeUtil;
 import org.ztemplates.web.script.css.ZCachingCssProcessor;
@@ -165,6 +167,12 @@ public class ZRenderServiceImpl implements ZIRenderService
   public String createJavaScriptId(String prefix)
   {
     return prefix + (crtId++);
+  }
+
+
+  public <T extends ZIActiveView> T createActiveView(Class<T> clazz) throws Exception
+  {
+    return ZReflectionUtil.newInstance(clazz);
   }
 
 

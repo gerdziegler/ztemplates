@@ -144,7 +144,7 @@ public class ZReflectionUtil
   }
 
 
-  public static ZProperty callParameterSetter(Object obj, String name, String[] value) throws Exception
+  public static ZProperty callParameterSetter(Object obj, String name, String... value) throws Exception
   {
     ZSetParameter setter;
     Class clazz = obj.getClass();
@@ -201,13 +201,17 @@ public class ZReflectionUtil
         {
           setter.setValue(obj, Enum.valueOf(paramType, val));
         }
-        else if (paramType.isAssignableFrom(Integer.class))
+        else if (Integer.class.equals(paramType) || int.class.equals(paramType))
         {
           setter.setValue(obj, Integer.valueOf(val));
         }
-        else if (paramType.isAssignableFrom(Long.class))
+        else if (Long.class.equals(paramType) || long.class.equals(paramType))
         {
           setter.setValue(obj, Long.valueOf(val));
+        }
+        else if (Boolean.class.equals(paramType) || boolean.class.equals(paramType))
+        {
+          setter.setValue(obj, Boolean.valueOf(val));
         }
         else
         {
@@ -216,7 +220,7 @@ public class ZReflectionUtil
       }
       else
       {
-        throw new Exception("cannot assign multiple values to non array property: " + name + " " + value);
+        throw new Exception("cannot assign multiple values to non array property: " + obj.getClass() + "." + name + " " + value);
       }
     }
 
@@ -224,55 +228,135 @@ public class ZReflectionUtil
   }
 
 
+  //  public static ZProperty callParameterSetter(Object obj, String name, String... value) throws Exception
+  //  {
+  //    ZSetParameter setter;
+  //    Class clazz = obj.getClass();
+  //    Field f = getField(clazz, name);
+  //    if (f != null)
+  //    {
+  //      if (ZProperty.class.isAssignableFrom(f.getType()))
+  //      {
+  //        ZProperty prop = (ZProperty) f.get(obj);
+  //        prop.setStringValues(value);
+  //        return prop;
+  //      }
+  //      setter = new ZSetParameter_Field(f);
+  //    }
+  //    else
+  //    {
+  //      Method m = getSetter(clazz, name);
+  //      if (m != null)
+  //      {
+  //        if (ZProperty.class.isAssignableFrom(m.getReturnType()))
+  //        {
+  //          ZProperty prop = (ZProperty) invoke(m, obj);
+  //          prop.setStringValues(value);
+  //          return prop;
+  //        }
+  //        setter = new ZSetParameter_Method(m);
+  //      }
+  //      else
+  //      {
+  //        throw new Exception("parameter setter not found: '" + name + "' in " + obj.getClass().getName());
+  //      }
+  //    }
+  //
+  //    Class paramType = setter.getType();
+  //    if (paramType.isArray())
+  //    {
+  //      setter.setValue(obj, (Object) value);
+  //    }
+  //    else
+  //    {
+  //      if (value == null)
+  //      {
+  //        setter.setValue(obj, (Object) null);
+  //      }
+  //      else if (value.length == 1)
+  //      {
+  //        String val = value[0];
+  //        if ("".equals(val))
+  //        {
+  //          val = null;
+  //        }
+  //
+  //        if (paramType.isEnum())
+  //        {
+  //          setter.setValue(obj, Enum.valueOf(paramType, val));
+  //        }
+  //        else if (paramType.isAssignableFrom(Integer.class))
+  //        {
+  //          setter.setValue(obj, Integer.valueOf(val));
+  //        }
+  //        else if (paramType.isAssignableFrom(Long.class))
+  //        {
+  //          setter.setValue(obj, Long.valueOf(val));
+  //        }
+  //        else
+  //        {
+  //          setter.setValue(obj, val);
+  //        }
+  //      }
+  //      else
+  //      {
+  //        throw new Exception("cannot assign multiple values to non array property: " + name + " " + value);
+  //      }
+  //    }
+  //
+  //    return null;
+  //  }
+
   public static void callVariableSetter(Object obj, String name, String value) throws Exception
   {
-    ZSetParameter setter;
-    Class clazz = obj.getClass();
-    Method m = getSetter(clazz, name);
-    if (m != null)
-    {
-      if (ZProperty.class.isAssignableFrom(m.getReturnType()))
-      {
-        ZProperty prop = (ZProperty) invoke(m, obj);
-        prop.setStringValues(new String[]
-        {
-            value
-        });
-        return;
-      }
-      setter = new ZSetParameter_Method(m);
-    }
-    else
-    {
-      Field f = getField(clazz, name);
-      if (f != null)
-      {
-        if (ZProperty.class.isAssignableFrom(f.getType()))
-        {
-          ZProperty prop = (ZProperty) f.get(obj);
-          prop.setStringValues(new String[]
-          {
-              value
-          });
-          return;
-        }
-        setter = new ZSetParameter_Field(f);
-      }
-      else
-      {
-        throw new Exception("variable setter not found: '" + name + "' in " + obj.getClass().getName());
-      }
-    }
-
-    if (setter.getType().isEnum())
-    {
-      Class paramType = m.getParameterTypes()[0];
-      setter.setValue(obj, Enum.valueOf(paramType, value));
-    }
-    else
-    {
-      setter.setValue(obj, value);
-    }
+    callParameterSetter(obj, name, value);
+    //    ZSetParameter setter;
+    //    Class clazz = obj.getClass();
+    //    Method m = getSetter(clazz, name);
+    //    if (m != null)
+    //    {
+    //      if (ZProperty.class.isAssignableFrom(m.getReturnType()))
+    //      {
+    //        ZProperty prop = (ZProperty) invoke(m, obj);
+    //        prop.setStringValues(new String[]
+    //        {
+    //            value
+    //        });
+    //        return;
+    //      }
+    //      setter = new ZSetParameter_Method(m);
+    //    }
+    //    else
+    //    {
+    //      Field f = getField(clazz, name);
+    //      if (f != null)
+    //      {
+    //        if (ZProperty.class.isAssignableFrom(f.getType()))
+    //        {
+    //          ZProperty prop = (ZProperty) f.get(obj);
+    //          prop.setStringValues(new String[]
+    //          {
+    //              value
+    //          });
+    //          return;
+    //        }
+    //        setter = new ZSetParameter_Field(f);
+    //      }
+    //      else
+    //      {
+    //        throw new Exception("variable setter not found: '" + name + "' in " + obj.getClass().getName());
+    //      }
+    //    }
+    //
+    //    if (setter.getType().isEnum())
+    //    {
+    //      Class paramType = m.getParameterTypes()[0];
+    //      setter.setValue(obj, Enum.valueOf(paramType, value));
+    //    }
+    //    else
+    //    {
+    //      setter.setValue(obj, value);
+    //    }
   }
 
 
@@ -324,50 +408,58 @@ public class ZReflectionUtil
         return null;
       }
 
-      return new String[]
-      {
-        prop.getStringValue()
-      };
+      return prop.getStringValues();
     }
 
-    if (ret.getClass().isArray())
+    try
     {
-      return (String[]) ret;
-    }
-
-    if (ret.getClass().isEnum())
-    {
-      return new String[]
+      if (ret.getClass().isArray())
       {
-        ((Enum) ret).name()
-      };
-    }
-
-    if (ret instanceof String)
-    {
-      return new String[]
+        return (String[]) ret;
+      }
+      else
       {
-        (String) ret
-      };
+        return convertToStringArray(ret);
+      }
     }
-
-    if (ret instanceof Integer)
+    catch (Exception e)
     {
-      return new String[]
-      {
-        (String) ((Integer) ret).toString()
-      };
+      throw new Exception("error while getting value '" + name + "' in " + obj.getClass() + " " + e.getMessage());
     }
+  }
 
-    if (ret instanceof Long)
+
+  public static String[] convertToStringArray(Object val) throws Exception
+  {
+    String[] ret = new String[1];
+    Class type = val.getClass();
+    if (String.class.equals(type))
     {
-      return new String[]
-      {
-        (String) ((Long) ret).toString()
-      };
+      ret[0] = (String) val;
+    }
+    else if (Integer.class.equals(type) || int.class.equals(type))
+    {
+      ret[0] = ((Integer) val).toString();
+    }
+    else if (type.isEnum())
+    {
+      ret[0] = ((Enum) val).name();
+    }
+    else if (Long.class.equals(type) || long.class.equals(type))
+    {
+      ret[0] = ((Long) val).toString();
+    }
+    else if (Boolean.class.equals(type) || boolean.class.equals(type))
+    {
+      ret[0] = ((Boolean) val).toString();
+    }
+    else
+    {
+      throw new Exception("getter/field type must be one of String, Enum, Integer, int, Long, long, Boolean, boolean, String[] '"
+          + type);
     }
 
-    throw new Exception("parameter getter/field must be String, String[], Enum, Enum[]: '" + name + "' in " + obj.getClass());
+    return ret;
   }
 
 
@@ -447,55 +539,60 @@ public class ZReflectionUtil
 
   public static String callVariableGetter(Object obj, String name) throws Exception
   {
-    Object ret;
-
-    Class clazz = obj.getClass();
-    String getterName = computePrefixName("get", name);
-    Method m = getMethod(clazz, getterName);
-    if (m != null)
-    {
-      ret = invoke(m, obj);
-    }
-    else
-    {
-      Field f = getField(clazz, name);
-      if (f != null)
-      {
-        ret = f.get(obj);
-      }
-      else
-      {
-        throw new Exception("variable getter/field not found: '" + name + "' in " + obj.getClass());
-      }
-    }
-
-    if (ret == null)
+    String[] vals = callParameterGetter(obj, name);
+    if (vals == null || vals.length == 0)
     {
       return null;
     }
-
-    if (ret instanceof ZProperty)
-    {
-      ZProperty prop = (ZProperty) ret;
-      return prop.getStringValue();
-    }
-
-    if (ret.getClass().isEnum())
-    {
-      Enum val = (Enum) invoke(m, obj);
-      if (val == null)
-      {
-        return null;
-      }
-      return val.name();
-    }
-
-    if (ret instanceof String)
-    {
-      return (String) ret;
-    }
-
-    throw new Exception("variable getter/field must be String or Enum: '" + name + "' in " + obj.getClass());
+    return vals[0];
+    //    Object ret;
+    //    Class clazz = obj.getClass();
+    //    String getterName = computePrefixName("get", name);
+    //    Method m = getMethod(clazz, getterName);
+    //    if (m != null)
+    //    {
+    //      ret = invoke(m, obj);
+    //    }
+    //    else
+    //    {
+    //      Field f = getField(clazz, name);
+    //      if (f != null)
+    //      {
+    //        ret = f.get(obj);
+    //      }
+    //      else
+    //      {
+    //        throw new Exception("variable getter/field not found: '" + name + "' in " + obj.getClass());
+    //      }
+    //    }
+    //
+    //    if (ret == null)
+    //    {
+    //      return null;
+    //    }
+    //
+    //    if (ret instanceof ZProperty)
+    //    {
+    //      ZProperty prop = (ZProperty) ret;
+    //      return prop.getStringValue();
+    //    }
+    //
+    //    if (ret.getClass().isEnum())
+    //    {
+    //      Enum val = (Enum) invoke(m, obj);
+    //      if (val == null)
+    //      {
+    //        return null;
+    //      }
+    //      return val.name();
+    //    }
+    //
+    //    if (ret instanceof String)
+    //    {
+    //      return (String) ret;
+    //    }
+    //
+    //    throw new Exception("variable getter/field must be String or Enum: '" + name + "' in " + obj.getClass());
   }
 
 
@@ -765,5 +862,19 @@ public class ZReflectionUtil
     int prefixLen = prefix.length();
     String ret = Character.toLowerCase(name.charAt(prefixLen)) + name.substring(prefixLen + 1);
     return ret;
+  }
+
+
+  public static void callBeforeRendering(Object obj) throws Exception
+  {
+    try
+    {
+      Method m = obj.getClass().getMethod("beforeRendering");
+      invoke(m, obj);
+    }
+    catch (NoSuchMethodException e)
+    {
+      //OK if not found
+    }
   }
 }

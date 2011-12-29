@@ -45,18 +45,6 @@ public class ZJavaScriptAnnotationDefinition implements Serializable, ZIJavaScri
    */
   public String getContent() throws Exception
   {
-    /*
-     * Object instance = clazz.newInstance(); Component comp = (Component)
-     * clazz.getAnnotation(Component.class); if (comp != null) {
-     * WebApplicationContext ctx = WebApplicationContextUtils
-     * .getRequiredWebApplicationContext
-     * (ZTemplates.getServletService().getRequest
-     * ().getSession().getServletContext()); String name = comp.value(); if
-     * (name.length() > 0) { return ctx.getBean(name, clazz); } else { return
-     * ctx.getBean(clazz); }
-     * 
-     * } else { clazz.newInstance(); }
-     */
     Object instance = ZReflectionUtil.newInstance(clazz);
 
     return ZTemplates.getRenderService().render(instance);

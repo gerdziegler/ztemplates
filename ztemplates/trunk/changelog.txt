@@ -9,6 +9,10 @@ snapshot available from [https://oss.sonatype.org/content/repositories/snapshots
 
 __ztemplates-2.5.0-SNAPSHOT (Not yet released)__ 
 
+* added ZIRenderService method public T createRenderPojo(Class<T> clazz) to add spring support for render pojos. Now you can create smart pojos if you must.
+* added interface ZIActiveView that provides a beforeRendering() method to render pojos. The callback is called in the rendering process before the values are exposed to the template. 
+* added support for boolean and long parameter value injection in actions.
+* added new createJavascriptId method to ZIRenderService
 * added init property (servletContext.getInitParameter()) 'ztemplates.devMode.html.comments' that adds html comments with debug infos to the output. Comments will be generated only when ZRenderer.mimeType is set, and only for mime-type text/html and text/javascript.
 * added annotation ZMatch.requiresProtocol (@ZMatch.Protocol.HTTP/HTTPS) where you can specify that a action needs to be called under a specified protocol. If not sends a redirect to the correct protocol.
 * added init property (servletContext.getInitParameter()) 'ztemplates.url.prefix.https' and 'zemplates.url.prefix.http' that are added when creating urls with ZIActionService. If set these are propended to urls. If Action is annotated with @ZSecure it will use https otherwise http. 
