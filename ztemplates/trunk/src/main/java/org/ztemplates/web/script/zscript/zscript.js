@@ -34,9 +34,12 @@ if(typeof zscript === 'undefined') {
 			}
 			for(var idx in scripts){
 				if(typeof scripts[idx]==='undefined') {
-					log.error('*** undefined script ' + idx + ' call define() first');
+					error('*** undefined script "' + idx + '" call define() first');
 				}
 				var script = scripts[idx];
+				if(typeof definitions[script]=='undefined') {
+					error('*** undefined script "' + script + '" call define() first');
+				}
 				if(definitions[script].loadRequested!==true) {
 					definitions[script].loadRequested = true;
 				}
