@@ -75,7 +75,7 @@ public class ZTail implements ZTerm
 
   public String toString()
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append("<tail>");
     sb.append(getName());
     sb.append("</tail>");
@@ -83,7 +83,7 @@ public class ZTail implements ZTerm
   }
 
 
-  public void toXml(StringBuffer sb, int depth)
+  public void toXml(StringBuilder sb, int depth)
   {
     ZFormatUtil.indent(sb, depth);
     sb.append("<tail>");
@@ -94,7 +94,7 @@ public class ZTail implements ZTerm
 
   public String toDefinition()
   {
-    StringBuffer sb = new StringBuffer("*{");
+    StringBuilder sb = new StringBuilder("*{");
     sb.append(getName());
     sb.append("}");
     return sb.toString();

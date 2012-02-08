@@ -19,7 +19,7 @@ public class ZJavaScriptProcessor implements ZIJavaScriptProcessor
 
   public String computeHtmlTags(List<String> javaScriptExposed, ZIJavaScriptPreprocessor replacingStrategy, ZIJavaScriptGroupingStrategy groupingStrategy)
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
 
     for (String jsPath : javaScriptExposed)
     {

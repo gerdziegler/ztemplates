@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public abstract class ZSegment implements Serializable
 {
-  public abstract void toXml(StringBuffer sb, int depth);
+  public abstract void toXml(StringBuilder sb, int depth);
 
 
   public abstract boolean isMatchingTheSame(ZSegment other);

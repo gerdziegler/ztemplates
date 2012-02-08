@@ -4,7 +4,6 @@
  */
 package org.ztemplates.property;
 
-import org.ztemplates.web.ZTemplates;
 
 public class ZDoubleProperty extends ZProperty<Double>
 {
@@ -23,7 +22,7 @@ public class ZDoubleProperty extends ZProperty<Double>
 
 
   @Override
-  public Double parse(String formattedValue) throws Exception
+  public Double parse(String formattedValue) throws ZPropertyException
   {
     try
     {
@@ -36,8 +35,7 @@ public class ZDoubleProperty extends ZProperty<Double>
     }
     catch (NumberFormatException e)
     {
-      throw new Exception(ZTemplates.getMessageService()
-          .getMessage(ZDoubleProperty.class.getName(), "ParseException"));
+      throw new ZPropertyException(e, this);
     }
   }
 

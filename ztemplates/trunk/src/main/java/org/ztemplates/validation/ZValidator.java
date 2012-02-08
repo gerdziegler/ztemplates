@@ -15,23 +15,27 @@ public class ZValidator implements ZIValidator
   }
 
 
-  public ZMessages validate() throws Exception
+  public ZMessages validate()
   {
     ZMessages ret = new ZMessages();
-    for (ZIValidator v : validators)
-    {
-      v.validate(ret);
-    }
+    validate(ret);
     return ret;
   }
 
 
   // @Override
-  public void validate(ZMessages res) throws Exception
+  public void validate(ZMessages res)
   {
     for (ZIValidator v : validators)
     {
-      v.validate(res);
+      try
+      {
+        v.validate(res);
+      }
+      catch (Exception e)
+      {
+        res.addError(e.getLocalizedMessage());
+      }
     }
   }
 
@@ -39,5 +43,17 @@ public class ZValidator implements ZIValidator
   public List<ZIValidator> getValidators()
   {
     return validators;
+  }
+
+
+  public void add(ZIValidator val)
+  {
+    validators.add(val);
+  }
+
+
+  public void clear()
+  {
+    validators.clear();
   }
 }

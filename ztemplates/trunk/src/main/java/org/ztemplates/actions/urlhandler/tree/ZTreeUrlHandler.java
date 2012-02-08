@@ -79,7 +79,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
   }
 
 
-  public void printInfo(StringBuffer sb)
+  public void printInfo(StringBuilder sb)
   {
     sb.append(tree.toConsoleString());
   }
@@ -464,55 +464,77 @@ public class ZTreeUrlHandler implements ZIUrlHandler
       // parameters.remove(name);
     }
 
-    String formName = zmatch.form();
-    boolean isActionForm = pojo instanceof ZIFormAction;
-    if (formName.length() > 0 || isActionForm)
+    //assign forms
+    ZFormValues formValues = new ZFormValues();
+    formValues.getValues().putAll(parameters);
+
+    boolean defaultFormProcessed = false;
+    if (pojo instanceof ZIFormAction)
     {
-      if (isActionForm)
+      defaultFormProcessed = true;
+      //default Form
+      ZOperation op = updateForm("form", pojo, formValues);
+      if (op != null)
       {
-        if (formName.length() > 0)
-        {
-          if (!formName.equals("form"))
-          {
-            throw new Exception("action pojo class [" + pojo.getClass().getName() + "] implements " + ZIFormAction.class.getName()
-                + " and has wrong value in annotation " + ZMatch.class.getName() + ": form='" + formName
-                + "'. Change to form='form' or do not specify at all (leave empty).");
-          }
-        }
-        else
-        {
-          formName = "form";
-        }
+        ret.operationToCall = op;
       }
-
-      ZFormValues formValues = new ZFormValues();
-      formValues.getValues().putAll(parameters);
-
-      ZReflectionUtil.callBeforeForm(pojo, formName);
-      ZIForm form = (ZIForm) ZReflectionUtil.callFormGetter(pojo, formName);
-      ZFormWrapper formWrapper = new ZFormWrapper(form);
-      formWrapper.initPropertyNames();
-      ZFormMembers assigned = formWrapper.readFromValues(formValues);
-      ZOperation op;
-      int opCnt = assigned.getOperations().size();
-      if (opCnt == 0)
-      {
-        op = null;
-      }
-      else if (opCnt == 1)
-      {
-        op = assigned.getOperations().get(0);
-      }
-      else
-      // if (opCnt > 1)
-      {
-        throw new Exception("Only one operation call per request allowed: " + assigned.getOperations());
-      }
-
-      ZReflectionUtil.callAfterForm(pojo, "form");
-      ret.operationToCall = op;
     }
+
+    String[] formNames = zmatch.form();
+    for (String formName : formNames)
+    {
+      if (defaultFormProcessed && "form".equals(formName))
+      {
+        //skip default form if already done because of ZIFormAction
+        continue;
+      }
+      ZOperation op = updateForm(formName, pojo, formValues);
+      if (op != null)
+      {
+        ret.operationToCall = op;
+      }
+    }
+
     return ret;
+  }
+
+
+  private ZOperation updateForm(String formName, Object pojo, ZFormValues formValues) throws Exception
+  {
+    ZReflectionUtil.callBeforeForm(pojo, formName);
+
+    ZIForm form = (ZIForm) ZReflectionUtil.callFormGetter(pojo, formName);
+
+    ZFormWrapper formWrapper;
+    if ("form".equals(formName))
+    {
+      //ignore form prefix for default form name
+      formWrapper = new ZFormWrapper(form);
+    }
+    else
+    {
+      //use prefix to allow multiple forms in same action
+      formWrapper = new ZFormWrapper(form, formName);
+    }
+
+    ZFormMembers assigned = formWrapper.readFromValues(formValues);
+    ZOperation op;
+    int opCnt = assigned.getOperations().size();
+    if (opCnt == 0)
+    {
+      op = null;
+    }
+    else if (opCnt == 1)
+    {
+      op = assigned.getOperations().get(0);
+    }
+    else
+    // if (opCnt > 1)
+    {
+      throw new Exception("Only one operation call per request allowed: " + assigned.getOperations());
+    }
+    ZReflectionUtil.callAfterForm(pojo, "form");
+    return op;
   }
 
 

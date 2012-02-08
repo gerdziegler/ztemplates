@@ -110,7 +110,13 @@ public interface ZIFormService
    * @return
    * @throws Exception
    */
-  public Object deserialize(String s) throws Exception;
+  public Serializable deserialize(String s) throws Exception;
+
+
+  public String serializeForm(ZIForm form) throws Exception;
+
+
+  public void deserializeForm(String s, ZIForm form) throws Exception;
 
 
   /**

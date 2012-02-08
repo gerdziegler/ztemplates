@@ -118,7 +118,7 @@ public class ZRenderEngine implements ZIRenderEngine
     else
     {
       ZIRenderer renderer = rendererRepository.getRenderer(rendererAnnot.value());
-      StringBuffer ret = new StringBuffer();
+      StringBuilder ret = new StringBuilder();
       long time = 0;
       String commentPrefix = null;
       String commentSuffix = null;
@@ -166,7 +166,7 @@ public class ZRenderEngine implements ZIRenderEngine
 
   private String indent()
   {
-    StringBuffer sb = new StringBuffer(" ");
+    StringBuilder sb = new StringBuilder(" ");
     for (int i = 0; i < depth; i++)
     {
       sb.append("    ");

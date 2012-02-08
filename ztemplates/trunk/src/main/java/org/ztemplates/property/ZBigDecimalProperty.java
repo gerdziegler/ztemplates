@@ -38,14 +38,21 @@ public class ZBigDecimalProperty extends ZProperty<BigDecimal>
   }
 
 
-  public BigDecimal parse(String formattedValue) throws Exception
+  public BigDecimal parse(String formattedValue) throws ZPropertyException
   {
-    BigDecimal i = new BigDecimal(formattedValue);
-    if (scale >= 0)
+    try
     {
-      i.setScale(scale, roundingMode);
+      BigDecimal i = new BigDecimal(formattedValue);
+      if (scale >= 0)
+      {
+        i.setScale(scale, roundingMode);
+      }
+      return i;
     }
-    return i;
+    catch (NumberFormatException e)
+    {
+      throw new ZPropertyException(e, this);
+    }
   }
 
 
@@ -59,4 +66,5 @@ public class ZBigDecimalProperty extends ZProperty<BigDecimal>
   {
     return scale;
   }
+
 }

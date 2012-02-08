@@ -40,7 +40,6 @@ import org.ztemplates.test.actions.urlhandler.match.handler.tail.TailParseTreeTe
 import org.ztemplates.test.actions.urlhandler.match.matchtree.MatchTreeTest;
 import org.ztemplates.test.actions.urlhandler.match.test1.TreeTest;
 import org.ztemplates.test.actions.urlhandler.match.test2.TreeTest2;
-import org.ztemplates.test.actions.urlhandler.prop.list.ListPropTest;
 import org.ztemplates.test.actions.urlhandler.prop.plain.PropTest;
 import org.ztemplates.test.actions.urlhandler.repository.nested.NestedHandlerTest;
 import org.ztemplates.test.actions.urlhandler.repository.simple.UrlHandlerRepositoryTest;
@@ -50,7 +49,6 @@ import org.ztemplates.test.actions.urlhandler.secure.nested.NestedSecureTest;
 import org.ztemplates.test.actions.urlhandler.secure.simple.SimpleSecureTest;
 import org.ztemplates.test.actions.urlhandler.tree.collision.test1.UrlHandlerRepositoryCollisionTest;
 import org.ztemplates.test.actions.urlhandler.tree.parameters.ParameterTest;
-import org.ztemplates.test.property.ListPropertyTest;
 import org.ztemplates.test.property.PropertiesTest;
 import org.ztemplates.test.property.PropertyTest;
 import org.ztemplates.test.reflection.ReflectionUtilTest;
@@ -105,9 +103,7 @@ public class AllTests extends TestSuite
     suite.addTestSuite(TrailingSlashTest.class);
     suite.addTestSuite(CallbacksTest.class);
     suite.addTestSuite(PropTest.class);
-    suite.addTestSuite(ListPropTest.class);
     suite.addTestSuite(PropertyTest.class);
-    suite.addTestSuite(ListPropertyTest.class);
     suite.addTestSuite(CssTest.class);
     suite.addTestSuite(TreeTest.class);
     suite.addTestSuite(TreeTest2.class);

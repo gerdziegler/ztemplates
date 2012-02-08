@@ -76,7 +76,7 @@ public class ZUrlFactory implements ZIUrlFactory
       surl = secureUrlDecorator.addSecurityToUrl(surl, url.getRoles().getRoles());
     }
 
-    StringBuffer sb = new StringBuffer(surl);
+    StringBuilder sb = new StringBuilder(surl);
     boolean first = true;
     for (Map.Entry<String, String[]> en : url.getParameterMap().entrySet())
     {
@@ -108,7 +108,7 @@ public class ZUrlFactory implements ZIUrlFactory
   {
     Map<String, String[]> parameterMap = new HashMap<String, String[]>();
     ZRoles roles = new ZRoles();
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     boolean empty = compute(obj, sb, parameterMap, roles);
     if (empty)
     {
@@ -120,7 +120,7 @@ public class ZUrlFactory implements ZIUrlFactory
   }
 
 
-  protected boolean compute(Object obj, StringBuffer sb, Map<String, String[]> parameterMap, ZRoles roles) throws Exception
+  protected boolean compute(Object obj, StringBuilder sb, Map<String, String[]> parameterMap, ZRoles roles) throws Exception
   {
     Class clazz = obj.getClass();
     ZMatch match = (ZMatch) clazz.getAnnotation(ZMatch.class);
@@ -152,11 +152,11 @@ public class ZUrlFactory implements ZIUrlFactory
   }
 
 
-  private boolean compute(ZExpression expression, Object obj, StringBuffer sb, Map<String, String[]> parameterMap, ZRoles roles) throws Exception
+  private boolean compute(ZExpression expression, Object obj, StringBuilder sb, Map<String, String[]> parameterMap, ZRoles roles) throws Exception
   {
     boolean empty = false;
 
-    StringBuffer crtsb = new StringBuffer();
+    StringBuilder crtsb = new StringBuilder();
     for (ZTerm t : expression.getContent())
     {
       if (t instanceof ZLiteral)
@@ -193,19 +193,19 @@ public class ZUrlFactory implements ZIUrlFactory
   }
 
 
-  private void compute(ZLiteral l, Object handler, StringBuffer sb) throws Exception
+  private void compute(ZLiteral l, Object handler, StringBuilder sb) throws Exception
   {
     sb.append(l.getText());
   }
 
 
-  private void compute(ZSlash l, Object handler, StringBuffer sb) throws Exception
+  private void compute(ZSlash l, Object handler, StringBuilder sb) throws Exception
   {
     sb.append(l.getText());
   }
 
 
-  private boolean compute(ZVariable v, Object obj, StringBuffer sb) throws Exception
+  private boolean compute(ZVariable v, Object obj, StringBuilder sb) throws Exception
   {
     String val = ZReflectionUtil.callVariableGetter(obj, v.getName());
     if (val == null)
@@ -224,7 +224,7 @@ public class ZUrlFactory implements ZIUrlFactory
   }
 
 
-  private boolean compute(ZTail v, Object obj, StringBuffer sb) throws Exception
+  private boolean compute(ZTail v, Object obj, StringBuilder sb) throws Exception
   {
     String val = ZReflectionUtil.callVariableGetter(obj, v.getName());
     if (val == null)
@@ -244,9 +244,9 @@ public class ZUrlFactory implements ZIUrlFactory
   }
 
 
-  private void compute(ZOptionalExpression oe, Object obj, StringBuffer sb, Map<String, String[]> parameterMap, ZRoles roles) throws Exception
+  private void compute(ZOptionalExpression oe, Object obj, StringBuilder sb, Map<String, String[]> parameterMap, ZRoles roles) throws Exception
   {
-    StringBuffer crtsb = new StringBuffer();
+    StringBuilder crtsb = new StringBuilder();
     boolean empty = compute(oe.getOptionalExpression(), obj, crtsb, parameterMap, roles);
     if (!empty)
     {
@@ -255,7 +255,7 @@ public class ZUrlFactory implements ZIUrlFactory
   }
 
 
-  private boolean compute(ZNestedExpression ne, Object obj, StringBuffer sb, Map<String, String[]> parameterMap, ZRoles roles) throws Exception
+  private boolean compute(ZNestedExpression ne, Object obj, StringBuilder sb, Map<String, String[]> parameterMap, ZRoles roles) throws Exception
   {
     Object nested = ZReflectionUtil.callReferenceGetter(obj, ne.getName());
     if (nested != null)

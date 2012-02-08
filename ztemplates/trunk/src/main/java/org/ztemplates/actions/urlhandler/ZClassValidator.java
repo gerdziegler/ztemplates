@@ -22,7 +22,7 @@ public class ZClassValidator
   // {
   // ZMatch match = (ZMatch) clazz.getAnnotation(ZMatch.class);
   //
-  // StringBuffer buff = new StringBuffer();
+  // StringBuilder buff = new StringBuilder();
   //
   // ZExpression expression = new ZExpression(match.value());
   //
@@ -47,7 +47,7 @@ public class ZClassValidator
   // }
   //
   //
-  // private static void validate(StringBuffer buff, ZExpression expression,
+  // private static void validate(StringBuilder buff, ZExpression expression,
   // Class clazz)
   // throws Exception
   // {

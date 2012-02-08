@@ -32,7 +32,7 @@ public interface ZIUrlHandler
   public Object process(ZMatch.Protocol protocol, String url, Map<String, String[]> paramMap) throws Exception;
 
 
-  public void printInfo(StringBuffer sb);
+  public void printInfo(StringBuilder sb);
 
 
   public Object getNestedActionParent();

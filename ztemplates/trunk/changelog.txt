@@ -9,6 +9,14 @@ snapshot available from [https://oss.sonatype.org/content/repositories/snapshots
 
 __ztemplates-2.5.0-SNAPSHOT (Not yet released)__ 
 
+* removed ZIFormAction.getForm() because now the field can be accessed directly by the framework 
+* added support for multiple forms in the same action, use ZMatch annotation
+* added ZPropertyException to ZProperty.parse/getValue/getValues method to allow better automatic error handling in validations.
+* added methods ZIFormService.serializeForm() and deserializeForm
+* refactored ZMessages
+* added class ZMessagesJSON that converts the messages to JSON
+* added ZProperty.requiredValidator to allow override of required validation message
+* added ZProperty.updateValue and updateStringValues methods. These methods aid integration with [zdependency|https://sourceforge.net/projects/zdependency/] framework for form value updates
 * added ZIRenderService method public T createRenderPojo(Class<T> clazz) to add spring support for render pojos. Now you can create smart pojos if you must.
 * added interface ZIActiveView that provides a beforeRendering() method to render pojos. The callback is called in the rendering process before the values are exposed to the template. 
 * added support for boolean and long parameter value injection in actions.

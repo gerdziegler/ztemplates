@@ -14,11 +14,11 @@ public abstract class ZOnlyNotEmptyValidator implements ZIValidator
   }
 
 
-  public abstract void validateNotEmpty(ZMessages res) throws Exception;
+  public abstract void validateNotEmpty(ZMessages res);
 
 
   // @Override
-  public void validate(ZMessages res) throws Exception
+  public void validate(ZMessages res)
   {
     for (ZProperty prop : props)
     {

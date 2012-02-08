@@ -1,9 +1,6 @@
 package org.ztemplates.message;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.ztemplates.property.ZProperty;
+import org.apache.commons.lang.StringUtils;
 
 public class ZMessage
 {
@@ -17,26 +14,41 @@ public class ZMessage
 
   private final String text;
 
-  private final List<String> propertyNames = new ArrayList<String>();
 
-
-  public ZMessage(String type, String text, String... propertyNameArr)
+  public ZMessage(String type,
+      String text)
   {
     this.type = type;
     this.text = text;
-    for (String propName : propertyNameArr)
-    {
-      propertyNames.add(propName);
-    }
   }
 
 
-  public static ZMessage create(String type, String text, ZProperty... propertyArr)
+  public boolean equals(Object other)
   {
-    ZMessage ret = new ZMessage(type, text);
-    for (ZProperty prop : propertyArr)
+    if (other == null)
     {
-      ret.propertyNames.add(prop.getName());
+      return false;
+    }
+    ZMessage msg = (ZMessage) other;
+    if (!type.equals(msg.type))
+    {
+      return false;
+    }
+    //can be null, so must test like this
+    if (!StringUtils.equals(text, msg.text))
+    {
+      return false;
+    }
+    return true;
+  }
+
+
+  public int hashCode()
+  {
+    int ret = type.hashCode();
+    if (text != null)
+    {
+      ret = ret + text.hashCode();
     }
     return ret;
   }
@@ -78,9 +90,9 @@ public class ZMessage
   }
 
 
-  public List<String> getPropertyNames()
+  @Override
+  public String toString()
   {
-    return propertyNames;
+    return "[ZMessage " + type + " " + text + "]";
   }
-
 }

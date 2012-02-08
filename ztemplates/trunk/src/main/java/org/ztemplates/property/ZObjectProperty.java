@@ -29,13 +29,20 @@ public class ZObjectProperty<T extends Serializable> extends ZProperty<T>
   }
 
 
-  public T parse(String formattedValue) throws Exception
+  public T parse(String formattedValue) throws ZPropertyException
   {
     if (formattedValue == null)
     {
       return null;
     }
 
-    return (T) ZSerializeUtil.deserialize(formattedValue);
+    try
+    {
+      return (T) ZSerializeUtil.deserialize(formattedValue);
+    }
+    catch (Exception e)
+    {
+      throw new ZPropertyException(e, this);
+    }
   }
 }

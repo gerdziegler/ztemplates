@@ -32,7 +32,7 @@ public class ZCachingJavaScriptProcessor implements ZIJavaScriptProcessor
 
     List<ZJavaScriptTag> merged = merge(grouped);
 
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     for (ZJavaScriptTag entry : merged)
     {
       if (entry.getMergedFrom().size() > 0)
@@ -140,7 +140,7 @@ public class ZCachingJavaScriptProcessor implements ZIJavaScriptProcessor
 
   private static String computeCacheKey(List<String> merge)
   {
-    StringBuffer keyBuff = new StringBuffer();
+    StringBuilder keyBuff = new StringBuilder();
     for (String url : merge)
     {
       keyBuff.append(url);

@@ -1,23 +1,21 @@
 package org.ztemplates.message;
 
-import org.ztemplates.property.ZProperty;
-
 public class ZWarningMessage extends ZMessage
 {
 
-  public ZWarningMessage(String text, String... propertyNameArr)
+  public ZWarningMessage(String text)
   {
-    super(ZMessage.WARNING, text, propertyNameArr);
+    super(ZMessage.WARNING, text);
   }
 
-
-  public static ZWarningMessage create(String text, ZProperty... propertyArr)
-  {
-    ZWarningMessage ret = new ZWarningMessage(text);
-    for (ZProperty prop : propertyArr)
-    {
-      ret.getPropertyNames().add(prop.getName());
-    }
-    return ret;
-  }
+  //
+  //  public static ZWarningMessage create(String text, ZProperty... propertyArr)
+  //  {
+  //    ZWarningMessage ret = new ZWarningMessage(text);
+  //    for (ZProperty prop : propertyArr)
+  //    {
+  //      ret.getPropertyNames().add(prop.getName());
+  //    }
+  //    return ret;
+  //  }
 }

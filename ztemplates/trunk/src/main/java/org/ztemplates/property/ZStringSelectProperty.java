@@ -14,7 +14,7 @@ public class ZStringSelectProperty extends ZSelectProperty<String>
   }
 
 
-  public String parse(String stringValue) throws Exception
+  public String parse(String stringValue)
   {
     return stringValue;
   }

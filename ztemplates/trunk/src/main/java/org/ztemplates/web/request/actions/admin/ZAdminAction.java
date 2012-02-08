@@ -10,7 +10,7 @@ public class ZAdminAction
 {
   public void after() throws Exception
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     ZAdminView view = new ZAdminView();
     view.setInfo(sb.toString());
     ZTemplates.getServletService().render(view);

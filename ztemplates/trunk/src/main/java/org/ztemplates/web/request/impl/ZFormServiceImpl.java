@@ -80,14 +80,14 @@ public class ZFormServiceImpl implements ZIFormService
   // public ZFormMembers getFormMembers(ZIForm form) throws Exception
   // {
   // ZFormWrapper mirr = new ZFormWrapper(form);
-  // mirr.initPropertyNames();
+  // 
   // return mirr.getFormMembers();
   // }
 
   public ZScriptDependency getJavaScriptDependency(ZIForm form) throws Exception
   {
     ZFormWrapper mirr = new ZFormWrapper(form);
-    mirr.initPropertyNames();
+
     return mirr.getJavaScriptDependency();
   }
 
@@ -95,7 +95,7 @@ public class ZFormServiceImpl implements ZIFormService
   public void copyValuesToForm(ZFormValues values, ZIForm form) throws Exception
   {
     ZFormWrapper mirr = new ZFormWrapper(form);
-    mirr.initPropertyNames();
+
     mirr.readFromValues(values);
   }
 
@@ -103,7 +103,7 @@ public class ZFormServiceImpl implements ZIFormService
   public void copyFormToValues(ZIForm form, ZFormValues values) throws Exception
   {
     ZFormWrapper mirr = new ZFormWrapper(form);
-    mirr.initPropertyNames();
+
     mirr.writeToValues(values);
   }
 
@@ -111,7 +111,7 @@ public class ZFormServiceImpl implements ZIFormService
   public Set<ZProperty> getPropertiesByName(ZIForm form, Set<String> propNames) throws Exception
   {
     ZFormWrapper mirr = new ZFormWrapper(form);
-    mirr.initPropertyNames();
+
     return mirr.getPropertiesByName(propNames);
   }
 
@@ -119,14 +119,14 @@ public class ZFormServiceImpl implements ZIFormService
   public void initPropertyNames(ZIForm form) throws Exception
   {
     ZFormWrapper mirr = new ZFormWrapper(form);
-    mirr.initPropertyNames();
+
   }
 
 
   public void initPropertyNames(ZIForm form, String formId) throws Exception
   {
     ZFormWrapper mirr = new ZFormWrapper(form, formId);
-    mirr.initPropertyNames();
+
   }
 
 
@@ -145,11 +145,31 @@ public class ZFormServiceImpl implements ZIFormService
   }
 
 
-  public Object deserialize(String s) throws Exception
+  public Serializable deserialize(String s) throws Exception
   {
     // String decoded = URLDecoder.decode(s, "ISO-8859-1");
-    Object ret = ZBase64Util.decodeToObject(s);
+    Serializable ret = ZBase64Util.decodeToObject(s);
     return ret;
+  }
+
+
+  public String serializeForm(ZIForm form) throws Exception
+  {
+    ZFormValues values = new ZFormValues();
+    ZFormWrapper mirr = new ZFormWrapper(form);
+
+    mirr.writeToValues(values);
+    String base64 = ZBase64Util.encodeObject(values, ZBase64Util.GZIP | ZBase64Util.DONT_BREAK_LINES);
+    return base64;
+  }
+
+
+  public void deserializeForm(String s, ZIForm form) throws Exception
+  {
+    ZFormValues values = (ZFormValues) ZBase64Util.decodeToObject(s);
+    ZFormWrapper mirr = new ZFormWrapper(form);
+
+    mirr.readFromValues(values);
   }
 
 

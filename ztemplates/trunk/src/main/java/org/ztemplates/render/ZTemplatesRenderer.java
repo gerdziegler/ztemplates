@@ -37,7 +37,7 @@ public class ZTemplatesRenderer implements ZIRenderer
   {
     String template = templateNameRepository.getTemplateName(clazz) + ".zt";
 
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     InputStream inStream = clazz.getResourceAsStream(template);
     if (inStream == null && !template.startsWith("/"))
     {

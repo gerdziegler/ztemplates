@@ -24,7 +24,7 @@ public class ZCachingCssProcessor implements ZICssProcessor
   {
     List<String> preprocessed = preprocessor.preprocessCss(cssExposed);
 
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     String contextPath = ZTemplates.getServletService().getRequest().getContextPath();
     Map<String, String> path2DigestMap = data.getPath2DigestMap();
     for (int i = 0; i < preprocessed.size(); i++)
@@ -45,7 +45,7 @@ public class ZCachingCssProcessor implements ZICssProcessor
   }
 
 
-  private void addLink(StringBuffer sb, String contextPath, String path, Map<String, String> path2DigestMap) throws Exception
+  private void addLink(StringBuilder sb, String contextPath, String path, Map<String, String> path2DigestMap) throws Exception
   {
     // String digest = path2DigestMap.get(path);
     // if (digest == null)

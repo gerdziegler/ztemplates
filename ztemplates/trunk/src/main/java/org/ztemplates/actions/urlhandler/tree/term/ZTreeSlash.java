@@ -12,7 +12,7 @@ public class ZTreeSlash extends ZTreeTerm
   }
 
 
-  public void toXml(StringBuffer sb, int depth)
+  public void toXml(StringBuilder sb, int depth)
   {
     ZFormatUtil.indent(sb, depth);
     sb.append("<slash/>");

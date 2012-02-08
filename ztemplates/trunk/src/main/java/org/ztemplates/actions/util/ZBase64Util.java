@@ -1,5 +1,7 @@
 package org.ztemplates.actions.util;
 
+import java.io.Serializable;
+
 /**
  * <p>
  * Encodes and decodes to and from Base64 notation.
@@ -1612,21 +1614,21 @@ public class ZBase64Util
    * @return The decoded and deserialized object
    * @since 1.5
    */
-  public static Object decodeToObject(String encodedObject)
+  public static Serializable decodeToObject(String encodedObject)
   {
     // Decode and gunzip if necessary
     byte[] objBytes = decode(encodedObject);
 
     java.io.ByteArrayInputStream bais = null;
     java.io.ObjectInputStream ois = null;
-    Object obj = null;
+    Serializable obj = null;
 
     try
     {
       bais = new java.io.ByteArrayInputStream(objBytes);
       ois = new java.io.ObjectInputStream(bais);
 
-      obj = ois.readObject();
+      obj = (Serializable) ois.readObject();
     } // end try
     catch (java.io.IOException e)
     {
@@ -2003,7 +2005,8 @@ public class ZBase64Util
      * @see ZBase64Util#DONT_BREAK_LINES
      * @since 2.0
      */
-    public InputStream(java.io.InputStream in, int options)
+    public InputStream(java.io.InputStream in,
+        int options)
     {
       super(in);
       this.breakLines = (options & DONT_BREAK_LINES) != DONT_BREAK_LINES;
@@ -2258,7 +2261,8 @@ public class ZBase64Util
      * @see ZBase64Util#DONT_BREAK_LINES
      * @since 1.3
      */
-    public OutputStream(java.io.OutputStream out, int options)
+    public OutputStream(java.io.OutputStream out,
+        int options)
     {
       super(out);
       this.breakLines = (options & DONT_BREAK_LINES) != DONT_BREAK_LINES;

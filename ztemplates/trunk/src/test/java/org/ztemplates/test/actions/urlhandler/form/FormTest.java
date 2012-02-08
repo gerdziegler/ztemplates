@@ -55,7 +55,6 @@ public class FormTest extends TestCase
     ZMockServiceRepository repo = ZMock.getMock();
     repo.setServletService(new ZMockServletService());
     ZFormWrapper mirr = new ZFormWrapper(form);
-    mirr.initPropertyNames();
     assertEquals("op1", form.getOp1().getName());
     assertEquals("prop1", form.getProp1().getName());
     assertEquals("topSection_field1", form.getTopSection().getField1().getName());
@@ -118,7 +117,6 @@ public class FormTest extends TestCase
     ZMockServiceRepository repo = ZMock.getMock();
     repo.setServletService(new ZMockServletService());
     ZFormWrapper mirr = new ZFormWrapper(form);
-    mirr.initPropertyNames();
     assertEquals(1, mirr.getOperations().size());
     assertEquals(1, mirr.getProperties().size());
     assertEquals(1, mirr.getForms().size());

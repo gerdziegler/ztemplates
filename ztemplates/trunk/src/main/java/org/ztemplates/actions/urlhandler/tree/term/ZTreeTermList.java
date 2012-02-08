@@ -49,14 +49,14 @@ public class ZTreeTermList
   @Override
   public String toString()
   {
-    // StringBuffer sb = new StringBuffer();
+    // StringBuilder sb = new StringBuilder();
     // toXml(sb, 0);
     // return sb.toString();
     return printToConsole();
   }
 
 
-  public void toXml(StringBuffer sb, int depth)
+  public void toXml(StringBuilder sb, int depth)
   {
     ZFormatUtil.indent(sb, depth);
     sb.append("<parsed-term-list>");
@@ -71,7 +71,7 @@ public class ZTreeTermList
 
   public String printToConsole()
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
 
     Set<String> handlerSet = new TreeSet<String>();
     for (ZTreeTerm t : terms)

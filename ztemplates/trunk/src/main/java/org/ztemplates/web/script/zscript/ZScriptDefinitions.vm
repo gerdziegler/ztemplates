@@ -1,3 +1,14 @@
+#if($prefix)
+#if($devMode)
+//--- /ztemplates/zscript-definitions.js
+$prefix
+//---
+#else
+$prefix
+#end
+#else  
+	#if($devMode)//create file /ztemplates/zscript-definitions.js to insert code here #end 
+#end
 #foreach($def in $definitions)
 zscript.define('$def.name', '${contextPath}/ztemplates/zscript/${def.name}.js');
 #end

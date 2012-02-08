@@ -24,9 +24,9 @@ public class ZScriptDefinitionsAction
     // boolean nomergeScripts =
     // "true".equals(appService.getRenderApplicationContext().getInitParameter("ztemplates.zscript.nomerge"));
 
+    String prefix = repo.getPrefix();
     List<ZIJavaScriptDefinition> definitions = new ArrayList<ZIJavaScriptDefinition>(repo.getDefinitions().values());
-
-    ZScriptDefinitions defs = new ZScriptDefinitions(definitions);
+    ZScriptDefinitions defs = new ZScriptDefinitions(prefix, definitions);
     ZTemplates.getServletService().render(defs, "text/javascript");
     return;
   }

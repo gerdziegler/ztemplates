@@ -25,7 +25,7 @@ public class MergeUtilTest extends TestCase
 {
   public void test1() throws Exception
   {
-    StringBuffer in = new StringBuffer("${var}");
+    StringBuilder in = new StringBuilder("${var}");
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("var", "katzeklo");
     ZReplaceUtil.merge(in, map);
@@ -36,7 +36,7 @@ public class MergeUtilTest extends TestCase
 
   public void test11() throws Exception
   {
-    StringBuffer in = new StringBuffer("${var}");
+    StringBuilder in = new StringBuilder("${var}");
     Map<String, Object> map = new HashMap<String, Object>();
     ZReplaceUtil.merge(in, map);
     String ret = in.toString();
@@ -46,7 +46,7 @@ public class MergeUtilTest extends TestCase
 
   public void test12() throws Exception
   {
-    StringBuffer in = new StringBuffer("${}");
+    StringBuilder in = new StringBuilder("${}");
     Map<String, Object> map = new HashMap<String, Object>();
     ZReplaceUtil.merge(in, map);
     String ret = in.toString();
@@ -56,7 +56,7 @@ public class MergeUtilTest extends TestCase
 
   public void test2() throws Exception
   {
-    StringBuffer in = new StringBuffer("--$--${var}--$-}");
+    StringBuilder in = new StringBuilder("--$--${var}--$-}");
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("var", "katzeklo");
     ZReplaceUtil.merge(in, map);
@@ -67,7 +67,7 @@ public class MergeUtilTest extends TestCase
 
   public void test3() throws Exception
   {
-    StringBuffer in = new StringBuffer("--$--$-{var}--$-}");
+    StringBuilder in = new StringBuilder("--$--$-{var}--$-}");
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("var", "katzeklo");
     ZReplaceUtil.merge(in, map);
@@ -78,7 +78,7 @@ public class MergeUtilTest extends TestCase
 
   public void test4() throws Exception
   {
-    StringBuffer in = new StringBuffer("--$--${var{--$-{");
+    StringBuilder in = new StringBuilder("--$--${var{--$-{");
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("var", "katzeklo");
     ZReplaceUtil.merge(in, map);
@@ -89,7 +89,7 @@ public class MergeUtilTest extends TestCase
 
   public void test5() throws Exception
   {
-    StringBuffer in = new StringBuffer("--$--${var{--$-}");
+    StringBuilder in = new StringBuilder("--$--${var{--$-}");
     Map<String, Object> map = new HashMap<String, Object>();
     ZReplaceUtil.merge(in, map);
     String ret = in.toString();

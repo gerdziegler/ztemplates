@@ -47,7 +47,7 @@ public class ZOptionalExpression implements ZTerm
 
   public String toString()
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append("<optional>\n");
     sb.append(optionalExpression);
     sb.append("\n</optional>");
@@ -55,7 +55,7 @@ public class ZOptionalExpression implements ZTerm
   }
 
 
-  public void toXml(StringBuffer sb, int depth)
+  public void toXml(StringBuilder sb, int depth)
   {
     ZFormatUtil.indent(sb, depth);
     sb.append("<optional>");

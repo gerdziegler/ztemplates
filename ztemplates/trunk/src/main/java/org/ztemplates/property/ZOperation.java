@@ -5,8 +5,6 @@
 package org.ztemplates.property;
 
 import org.ztemplates.json.ZExposeJson;
-import org.ztemplates.message.ZMessages;
-import org.ztemplates.validation.ZValidator;
 
 public class ZOperation extends ZProperty<String>
 {
@@ -15,7 +13,8 @@ public class ZOperation extends ZProperty<String>
   private ZIOperationListener operationListener;
 
 
-  public ZOperation(String name, String allowedValue)
+  public ZOperation(String name,
+      String allowedValue)
   {
     setName(name);
     this.allowedValue = allowedValue;
@@ -35,19 +34,18 @@ public class ZOperation extends ZProperty<String>
   }
 
 
-  /**
-   * validates the attached validators
-   * 
-   * @return
-   * @throws Exception
-   */
-  public final ZMessages validate() throws Exception
-  {
-    ZValidator val = new ZValidator();
-    val.getValidators().addAll(getValidators());
-    return val.validate();
-  }
-
+  //  /**
+  //   * validates the attached validators
+  //   * 
+  //   * @return
+  //   * @throws Exception
+  //   */
+  //  public final ZMessages validate()
+  //  {
+  //    ZValidator val = new ZValidator();
+  //    val.getValidators().addAll(getValidators());
+  //    return val.validate();
+  //  }
 
   public ZIOperationListener getOperationListener()
   {
@@ -61,7 +59,7 @@ public class ZOperation extends ZProperty<String>
   }
 
 
-  public String parse(String s) throws Exception
+  public String parse(String s) throws ZPropertyException
   {
     return s;
   }

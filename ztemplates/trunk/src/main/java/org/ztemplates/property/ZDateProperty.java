@@ -1,10 +1,10 @@
 /*
- * 11.12.2005
  * @author www.gerdziegler.de
  */
 package org.ztemplates.property;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 
 public class ZDateProperty extends ZProperty<Date>
@@ -32,13 +32,19 @@ public class ZDateProperty extends ZProperty<Date>
   }
 
 
-  public Date parse(String formattedValue) throws Exception
+  public Date parse(String formattedValue) throws ZPropertyException
   {
     if (formattedValue == null)
     {
       return null;
     }
-
-    return df.parse(formattedValue);
+    try
+    {
+      return df.parse(formattedValue);
+    }
+    catch (ParseException e)
+    {
+      throw new ZPropertyException(e, this);
+    }
   }
 }

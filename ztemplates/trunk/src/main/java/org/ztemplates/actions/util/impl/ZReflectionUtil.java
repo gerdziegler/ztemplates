@@ -526,6 +526,12 @@ public class ZReflectionUtil
 
   public static Object callFormGetter(Object obj, String name) throws Exception
   {
+    Field f = getField(obj.getClass(), name);
+    if (f != null)
+    {
+      return f.get(obj);
+    }
+
     String formGetter = computePrefixName("get", name);
     Method m = getMethod(obj.getClass(), formGetter);
     if (m != null)
@@ -691,7 +697,7 @@ public class ZReflectionUtil
     else
     {
       int prefixLen = prefix.length();
-      StringBuffer sb = new StringBuffer(prefixLen + nameLen);
+      StringBuilder sb = new StringBuilder(prefixLen + nameLen);
       sb.append(prefix);
       sb.append(name);
       sb.setCharAt(prefixLen, Character.toUpperCase(name.charAt(0)));
@@ -703,7 +709,7 @@ public class ZReflectionUtil
   private static String computeAfterOperationName(String name)
   {
     int nameLen = name.length();
-    StringBuffer sb = new StringBuffer(nameLen);
+    StringBuilder sb = new StringBuilder(nameLen);
     for (int i = 0; i < nameLen; i++)
     {
       if (name.charAt(i) == '.')

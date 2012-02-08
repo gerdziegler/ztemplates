@@ -25,8 +25,8 @@ public class ZExceptionProperty extends ZProperty<Throwable>
 
 
   @Override
-  public Throwable parse(String stringValue) throws Exception
+  public Throwable parse(String stringValue) throws ZPropertyException
   {
-    throw new Exception("exception parsing not available");
+    throw new ZPropertyException("exception parsing not available", this);
   }
 }

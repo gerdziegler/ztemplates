@@ -128,13 +128,13 @@ public class ZMatchTree implements Serializable
   public String toString()
   {
     return toConsoleString();
-    // StringBuffer sb = new StringBuffer();
+    // StringBuilder sb = new StringBuilder();
     // toXml(sb, 0);
     // return sb.toString();
   }
 
 
-  public void toXml(StringBuffer sb, int depth)
+  public void toXml(StringBuilder sb, int depth)
   {
     ZFormatUtil.indentTree(sb, depth);
     sb.append("<parse-tree>");
@@ -151,14 +151,14 @@ public class ZMatchTree implements Serializable
   {
     // first, compute max width of tree
     int fill = Integer.MIN_VALUE;
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     for (ZMatchTreeNode node : roots)
     {
       fill = Math.max(fill, printToConsole(sb, node, "", 0));
     }
     fill += 4;
     // then print tree
-    sb = new StringBuffer();
+    sb = new StringBuilder();
     for (ZMatchTreeNode node : roots)
     {
       printToConsole(sb, node, "", fill);
@@ -167,9 +167,9 @@ public class ZMatchTree implements Serializable
   }
 
 
-  private int printToConsole(StringBuffer ret, ZMatchTreeNode node, String prefix, int fill)
+  private int printToConsole(StringBuilder ret, ZMatchTreeNode node, String prefix, int fill)
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append('\n');
     if (prefix.length() > 0)
     {

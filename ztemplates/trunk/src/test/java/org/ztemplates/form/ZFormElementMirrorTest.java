@@ -26,7 +26,6 @@ public class ZFormElementMirrorTest extends TestCase
     Form f = new Form();
     // ZDynamicFormModel.initPropertyNames(f, "");
     ZFormWrapper mirr = new ZFormWrapper(f);
-    mirr.initPropertyNames();
     assertEquals(2, mirr.getProperties().size());
     assertEquals(1, mirr.getOperations().size());
     assertEquals(1, mirr.getForms().size());
@@ -35,7 +34,6 @@ public class ZFormElementMirrorTest extends TestCase
     assertEquals("op1", mirr.getOperations().get(0).getName());
     assertEquals("topSection_op1", mirr.getForms().get(0).getOperations().get(0).getName());
     mirr = new ZFormWrapper(f);
-    mirr.initPropertyNames();
     assertEquals("prop1", mirr.getProperties().get(0).getName());
     assertEquals("op1", mirr.getOperations().get(0).getName());
     assertEquals("topSection_op1", mirr.getForms().get(0).getOperations().get(0).getName());
@@ -47,7 +45,6 @@ public class ZFormElementMirrorTest extends TestCase
     FormModel2 f = new FormModel2();
     // ZDynamicFormModel.initPropertyNames(f, "");
     ZFormWrapper mirr = new ZFormWrapper(f);
-    mirr.initPropertyNames();
     assertEquals("myName", f.getProp().getName());
     assertEquals("prop1", f.getProp1().getName());
   }

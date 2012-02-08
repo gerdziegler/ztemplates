@@ -10,18 +10,16 @@ import org.ztemplates.render.velocity.ZVelocityRenderer;
 public class ZScriptDefinitions
 {
   @ZExpose
-  private final List<ZIJavaScriptDefinition> definitions;
+  final List<ZIJavaScriptDefinition> definitions;
+
+  @ZExpose
+  String prefix;
 
 
-  public ZScriptDefinitions(List<ZIJavaScriptDefinition> definitions)
+  public ZScriptDefinitions(String prefix,
+      List<ZIJavaScriptDefinition> definitions)
   {
+    this.prefix = prefix;
     this.definitions = definitions;
   }
-
-
-  public List<ZIJavaScriptDefinition> getDefinitions()
-  {
-    return definitions;
-  }
-
 }

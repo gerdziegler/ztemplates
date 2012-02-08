@@ -16,7 +16,7 @@ package org.ztemplates.actions.util;
 
 public class ZFormatUtil
 {
-  public static void indent(StringBuffer sb, int depth)
+  public static void indent(StringBuilder sb, int depth)
   {
     sb.append('\n');
     for (int i = 0; i < depth; i++)
@@ -26,7 +26,7 @@ public class ZFormatUtil
   }
 
 
-  public static void indentTree(StringBuffer sb, int depth)
+  public static void indentTree(StringBuilder sb, int depth)
   {
     sb.append('\n');
     for (int i = 0; i < depth - 1; i++)
@@ -40,7 +40,7 @@ public class ZFormatUtil
   }
 
 
-  public static void fillRight(StringBuffer sb, int depth, char c)
+  public static void fillRight(StringBuilder sb, int depth, char c)
   {
     for (int i = sb.length(); i < depth; i++)
     {
@@ -49,7 +49,7 @@ public class ZFormatUtil
   }
 
 
-  public static void fillLeft(StringBuffer sb, int depth, String s, char c)
+  public static void fillLeft(StringBuilder sb, int depth, String s, char c)
   {
     for (int i = s.length(); i < depth; i++)
     {

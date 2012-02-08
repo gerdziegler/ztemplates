@@ -17,7 +17,6 @@ package org.ztemplates.validation;
 import java.util.regex.Pattern;
 
 import org.ztemplates.json.ZExposeJson;
-import org.ztemplates.message.ZErrorMessage;
 import org.ztemplates.message.ZMessages;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZJavaScript;
@@ -39,7 +38,9 @@ public class ZRegexValidator implements ZIValidator, ZIJavaScriptValidator
   private final Pattern pattern;
 
 
-  public ZRegexValidator(String regex, String message, ZProperty prop)
+  public ZRegexValidator(String regex,
+      String message,
+      ZProperty prop)
   {
     super();
     this.prop = prop;
@@ -50,14 +51,14 @@ public class ZRegexValidator implements ZIValidator, ZIJavaScriptValidator
 
 
   // @Override
-  public void validate(ZMessages res) throws Exception
+  public void validate(ZMessages res)
   {
     for (String value : prop.getStringValues())
     {
       boolean match = pattern.matcher(value).matches();
       if (!match)
       {
-        res.addMessage(new ZErrorMessage(message, prop.getName()));
+        res.addError(message, prop);
       }
     }
   }

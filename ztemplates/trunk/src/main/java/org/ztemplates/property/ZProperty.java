@@ -16,11 +16,13 @@
 package org.ztemplates.property;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.validation.ZIValidator;
+import org.ztemplates.validation.ZRequiredValidator;
 
 public abstract class ZProperty<T>
 {
@@ -31,6 +33,8 @@ public abstract class ZProperty<T>
   private static final String[] EMPTY = new String[0];
 
   private String[] stringValues = EMPTY;
+
+  private ZRequiredValidator requiredValidator;
 
   private final List<ZIValidator> validators = new ArrayList<ZIValidator>();
 
@@ -46,7 +50,7 @@ public abstract class ZProperty<T>
   public abstract String format(T obj);
 
 
-  public abstract T parse(String stringValue) throws Exception;
+  public abstract T parse(String stringValue) throws ZPropertyException;
 
 
   public ZProperty()
@@ -59,7 +63,7 @@ public abstract class ZProperty<T>
    * 
    * @return true if the value has changed
    */
-  public final T getValue() throws Exception
+  public final T getValue() throws ZPropertyException
   {
     return isEmpty() ? null : parse(stringValues[0]);
   }
@@ -72,25 +76,34 @@ public abstract class ZProperty<T>
    * @return
    * @throws Exception
    */
-  public final List<T> getValues() throws Exception
+  public final List<T> getValues() throws ZPropertyException
   {
     List<T> ret = new ArrayList<T>(stringValues.length);
     for (int i = 0; i < stringValues.length; i++)
     {
-      ret.add(parse(stringValues[i]));
+      ret.add(stringValues[i] == null ? null : parse(stringValues[i]));
     }
     return ret;
   }
 
 
-  /**
-   * formats only not null objects
-   * 
-   * @return true if the value has changed
-   */
   public void setValue(T val)
   {
     setStringValues(val == null ? null : new String[]
+    {
+        format(val)
+    });
+  }
+
+
+  /**
+   * same as setValue except it returns true if value has changed
+   * 
+   * @return true if the value has changed
+   */
+  public boolean updateValue(T val)
+  {
+    return updateStringValues(val == null ? EMPTY : new String[]
     {
         format(val)
     });
@@ -125,7 +138,16 @@ public abstract class ZProperty<T>
 
   public String toString()
   {
-    return "[" + getClass().getSimpleName() + " name='" + getName() + "' stringValues='" + stringValues + "']";
+    StringBuilder sb = new StringBuilder("[" + getClass().getSimpleName() + " name='" + getName() + "' stringValues='");
+    if (stringValues != null)
+    {
+      for (String s : stringValues)
+      {
+        sb.append("'" + s + "' ");
+      }
+    }
+    sb.append("']");
+    return sb.toString();
   }
 
 
@@ -172,9 +194,23 @@ public abstract class ZProperty<T>
   /**
    * 
    * @param newStringValue
-   * @return true if the value has changed
    */
   public void setStringValues(String[] newStringValues)
+  {
+    if (newStringValues == null)
+    {
+      newStringValues = EMPTY;
+    }
+    this.stringValues = newStringValues;
+  }
+
+
+  /**
+   * same as setStringValues except returns true if values changed 
+   * @param newStringValue
+   * @return true if the value has changed
+   */
+  public boolean updateStringValues(String[] newStringValues)
   {
     String[] oldStringValues = this.stringValues;
     if (newStringValues == null)
@@ -182,6 +218,30 @@ public abstract class ZProperty<T>
       newStringValues = EMPTY;
     }
     this.stringValues = newStringValues;
+    return !Arrays.equals(oldStringValues, newStringValues);
+  }
+
+
+  /**
+   * same as setStringValue except returns true if values changed 
+   * @param newStringValue
+   * @return true if the value has changed
+   */
+  public boolean updateStringValue(String s)
+  {
+    String[] newStringValues;
+    if (s == null || s.length() == 0)
+    {
+      newStringValues = EMPTY;
+    }
+    else
+    {
+      newStringValues = new String[]
+      {
+          s
+      };
+    }
+    return updateStringValues(newStringValues);
   }
 
 
@@ -283,5 +343,25 @@ public abstract class ZProperty<T>
   public List<ZIValidator> getValidators()
   {
     return validators;
+  }
+
+
+  /**
+   * the validator to use for checking empty value
+   * @return
+   */
+  public ZRequiredValidator getRequiredValidator()
+  {
+    return requiredValidator;
+  }
+
+
+  /**
+   * set the validator to use for checking empty value
+   * @return
+   */
+  public void setRequiredValidator(ZRequiredValidator requiredValidator)
+  {
+    this.requiredValidator = requiredValidator;
   }
 }

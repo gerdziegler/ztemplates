@@ -106,10 +106,11 @@ public class ZTemplatesContextListener implements ServletContextListener
       log.info("creating class repository...");
       final ZIClassRepository classRepository = createClassRepository(scanner);
 
-      log.info("creating javascript repository...");
-      final ZIJavaScriptRepository javaScriptRepository = new ZJavaScriptRepositoryAnnotationFactory(classRepository, encoding).createJavaScriptRepository();
-
       final ZApplicationContextWebImpl applicationContext = new ZApplicationContextWebImpl(classRepository, ctx, encoding);
+
+      log.info("creating javascript repository...");
+      final ZIJavaScriptRepository javaScriptRepository = new ZJavaScriptRepositoryAnnotationFactory(applicationContext, ctx, classRepository, encoding)
+          .createJavaScriptRepository();
 
       log.info("creating application...");
 

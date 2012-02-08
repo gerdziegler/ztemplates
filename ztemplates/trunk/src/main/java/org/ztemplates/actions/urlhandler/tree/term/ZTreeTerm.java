@@ -22,19 +22,19 @@ public abstract class ZTreeTerm implements Serializable
   }
 
 
-  public abstract void toXml(StringBuffer sb, int i);
+  public abstract void toXml(StringBuilder sb, int i);
 
 
   public abstract String toDefinition();
 
   // @Override
   // public String toString() {
-  // StringBuffer sb = new StringBuffer();
+  // StringBuilder sb = new StringBuilder();
   // toXml(sb, 0);
   // return sb.toString();
   // }
   //
-  // public void toXml(StringBuffer sb, int depth) {
+  // public void toXml(StringBuilder sb, int depth) {
   // ZFormatUtil.indent(sb, depth);
   // sb.append("<parsed-term>");
   // term.toXml(sb, depth + 1);

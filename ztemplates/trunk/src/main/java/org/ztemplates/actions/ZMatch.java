@@ -93,9 +93,10 @@ public @interface ZMatch
 
   /**
    * Request parameters are mapped by reflection to the form object of type
-   * ZIForm accessible through a bean property with name specified in this
+   * ZIForm accessible through a bean property with names specified in this
    * property. Example: form="xxx" needs a getter getXxx() in the action-pojo
-   * returning a instance of type ZIForm.
+   * returning a instance of type ZIForm. The input values are prefixed by the name
+   * of the form, except if the name equals "form".
    * <p>
    * Alternatively implement ZIFormAction in your action-pojo and leave this
    * value blank.
@@ -106,16 +107,9 @@ public @interface ZMatch
    * 
    * @return
    */
-  String form() default "";
+  String[] form() default
+  {};
 
-
-  /**
-   * The HTTP methods this handler should handle. Default is all.
-   * 
-   * @return
-   */
-  //  String[] methods() default
-  //  {};
 
   /**
    * if true, the action handler will not be assigned to the parent action

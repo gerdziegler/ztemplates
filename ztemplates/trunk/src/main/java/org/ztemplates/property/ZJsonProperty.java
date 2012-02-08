@@ -22,9 +22,16 @@ public class ZJsonProperty extends ZProperty<JSONObject>
 
 
   @Override
-  public JSONObject parse(String formattedValue) throws JSONException
+  public JSONObject parse(String formattedValue) throws ZPropertyException
   {
-    return new JSONObject(formattedValue);
+    try
+    {
+      return new JSONObject(formattedValue);
+    }
+    catch (JSONException e)
+    {
+      throw new ZPropertyException(e, this);
+    }
   }
 
 

@@ -80,7 +80,7 @@ public class ZRenderApplication
     }
     if (!exceptions.isEmpty())
     {
-      StringBuffer msg = new StringBuffer("Errors in exposed methods:\n");
+      StringBuilder msg = new StringBuilder("Errors in exposed methods:\n");
       for (String s : exceptions)
       {
         msg.append(s);

@@ -18,10 +18,17 @@ public class ZLongProperty extends ZProperty<Long>
   }
 
 
-  public Long parse(String formattedValue) throws Exception
+  public Long parse(String formattedValue) throws ZPropertyException
   {
-    Long i = Long.valueOf(formattedValue);
-    return i;
+    try
+    {
+      Long i = Long.valueOf(formattedValue);
+      return i;
+    }
+    catch (NumberFormatException e)
+    {
+      throw new ZPropertyException(e, this);
+    }
   }
 
 

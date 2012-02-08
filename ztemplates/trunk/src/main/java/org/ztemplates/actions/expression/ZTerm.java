@@ -20,7 +20,7 @@ public abstract interface ZTerm extends Serializable
   public abstract String parse(String definition) throws ZParserException;
 
 
-  public abstract void toXml(StringBuffer sb, int depth);
+  public abstract void toXml(StringBuilder sb, int depth);
 
 
   public abstract String toDefinition();

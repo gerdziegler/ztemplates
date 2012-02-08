@@ -15,8 +15,11 @@
 package org.ztemplates.form;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -119,7 +122,49 @@ public class ZFormValues implements Serializable
    */
   public void readFromString(String base64)
   {
-    this.values = (HashMap<String, String[]>) ZBase64Util.decodeToObject(base64);
+    if (base64 == null)
+    {
+      this.values = new HashMap<String, String[]>();
+    }
+    else
+    {
+      this.values = (HashMap<String, String[]>) ZBase64Util.decodeToObject(base64);
+    }
   }
 
+
+  @Override
+  public String toString()
+  {
+    StringBuilder sb = new StringBuilder("[");
+    List<String> l = new ArrayList<String>(values.keySet());
+    Collections.sort(l);
+    for (int i = 0; i < l.size(); i++)
+    {
+      String name = l.get(i);
+      if (i > 0)
+      {
+        sb.append(", ");
+      }
+      sb.append(name);
+      sb.append("=");
+      String[] vals = values.get(name);
+      if (vals == null)
+      {
+        sb.append("null");
+      }
+      sb.append("[");
+      for (int j = 0; j < vals.length; j++)
+      {
+        if (j > 0)
+        {
+          sb.append(", ");
+        }
+        sb.append(vals[j]);
+      }
+      sb.append("]");
+    }
+    sb.append("]");
+    return sb.toString();
+  }
 }

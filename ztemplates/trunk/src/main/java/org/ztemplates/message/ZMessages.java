@@ -1,17 +1,17 @@
 package org.ztemplates.message;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.ztemplates.property.ZProperty;
+import org.ztemplates.property.ZPropertyException;
 
 /**
  * container for messages, keeps messages created by a validator or any other
@@ -24,13 +24,15 @@ public class ZMessages
 {
   private static final Logger log = Logger.getLogger(ZMessages.class);
 
-  private final List<ZMessage> messages = new ArrayList<ZMessage>();
+  //  private final List<ZMessage> messages = SetUniqueList.decorate(new ArrayList<ZMessage>());
 
-  private final Map<String, List<ZMessage>> propertyMessagesMap = new HashMap<String, List<ZMessage>>();
+  private final Map<String, ListOrderedSet> propertyName2MessageMap = new HashMap<String, ListOrderedSet>();
 
-  private final List<ZMessage> globalMessages = new ArrayList<ZMessage>();
+  private final Map<ZMessage, Set<String>> message2propertyNameMap = new HashMap<ZMessage, Set<String>>();
 
-  private boolean dirty = false;
+  private final Set<ZMessage> propertyMessages = new HashSet<ZMessage>();
+
+  private final ListOrderedSet globalMessages = new ListOrderedSet();
 
 
   public ZMessages()
@@ -38,62 +40,72 @@ public class ZMessages
   }
 
 
-  private void cleanup()
-  {
-    if (!dirty)
-    {
-      return;
-    }
-    dirty = false;
-    propertyMessagesMap.clear();
-    globalMessages.clear();
-
-    for (ZMessage msg : messages)
-    {
-      if (msg.getPropertyNames().isEmpty())
-      {
-        globalMessages.add(msg);
-      }
-      else
-      {
-        for (String propName : msg.getPropertyNames())
-        {
-          List<ZMessage> pm = propertyMessagesMap.get(propName);
-          if (pm == null)
-          {
-            pm = new ArrayList<ZMessage>();
-            propertyMessagesMap.put(propName, pm);
-          }
-          pm.add(msg);
-        }
-      }
-    }
-  }
-
-
   public void clearMessages()
   {
-    dirty = true;
-    messages.clear();
+    globalMessages.clear();
+    propertyMessages.clear();
+    propertyName2MessageMap.clear();
+    message2propertyNameMap.clear();
   }
 
 
-  public void addMessage(ZMessage msg)
+  private void addMessage(ZMessage msg, String... propertyNameArr)
   {
-    dirty = true;
-    messages.add(msg);
+    if (propertyNameArr.length == 0)
+    {
+      globalMessages.add(msg);
+    }
+    else
+    {
+      propertyMessages.add(msg);
+
+      //propertyName2MessageMap
+      for (String propName : propertyNameArr)
+      {
+        ListOrderedSet pm = propertyName2MessageMap.get(propName);
+        if (pm == null)
+        {
+          pm = new ListOrderedSet();
+          propertyName2MessageMap.put(propName, pm);
+        }
+        pm.add(msg);
+      }
+
+      //message2propertyNameMap
+      Set<String> names = message2propertyNameMap.get(msg);
+      if (names == null)
+      {
+        names = new HashSet<String>();
+        message2propertyNameMap.put(msg, names);
+      }
+      for (String propName : propertyNameArr)
+      {
+        names.add(propName);
+      }
+    }
+  }
+
+
+  private void addMessage(ZMessage msg, ZProperty... properties)
+  {
+    String[] propNames = new String[properties.length];
+    for (int i = 0; i < properties.length; i++)
+    {
+      propNames[i] = properties[i].getName();
+    }
+    addMessage(msg, propNames);
   }
 
 
   /**
-   * utilitiy
+   * utility
    * 
    * @param text
    * @param propertyNameArr
    */
   public void addInfoPropertyNames(String text, String... propertyNameArr)
   {
-    addMessage(new ZInfoMessage(text, propertyNameArr));
+    addMessage(new ZInfoMessage(text), propertyNameArr);
   }
 
 
@@ -105,7 +117,7 @@ public class ZMessages
    */
   public void addInfo(String text, ZProperty... propertyArr)
   {
-    addMessage(ZMessage.create(ZMessage.INFO, text, propertyArr));
+    addMessage(new ZMessage(ZMessage.INFO, text), propertyArr);
   }
 
 
@@ -117,7 +129,7 @@ public class ZMessages
    */
   public void addErrorPropertyNames(String text, String... propertyNameArr)
   {
-    addMessage(new ZErrorMessage(text, propertyNameArr));
+    addMessage(new ZErrorMessage(text), propertyNameArr);
   }
 
 
@@ -129,7 +141,7 @@ public class ZMessages
    */
   public void addError(String text, ZProperty... propertyArr)
   {
-    addMessage(ZMessage.create(ZMessage.ERROR, text, propertyArr));
+    addMessage(new ZErrorMessage(text), propertyArr);
   }
 
 
@@ -141,7 +153,7 @@ public class ZMessages
    */
   public void addWarningPropertyNames(String text, String... propertyNameArr)
   {
-    addMessage(new ZWarningMessage(text, propertyNameArr));
+    addMessage(new ZWarningMessage(text), propertyNameArr);
   }
 
 
@@ -153,114 +165,51 @@ public class ZMessages
    */
   public void addWarning(String text, ZProperty... propertyArr)
   {
-    addMessage(ZMessage.create(ZMessage.WARNING, text, propertyArr));
+    addMessage(new ZWarningMessage(text), propertyArr);
   }
 
 
-  public List<ZMessage> getMessages()
+  //  public List<ZMessage> getMessages()
+  //  {
+  //    return Collections.unmodifiableList(messages);
+  //  }
+
+  /**
+   * 
+   * @param prop
+   * @return true if there is an error
+   */
+  public boolean isError(ZProperty prop)
   {
-    return Collections.unmodifiableList(messages);
+    return isMessage(ZMessage.ERROR, prop);
   }
 
 
-  public String getMessagesJSON()
+  /**
+   * 
+   * @param prop
+   * @return true if there is an error
+   */
+  public boolean isWarnings(ZProperty prop)
   {
-    cleanup();
-    try
-    {
-      JSONObject ret = new JSONObject();
-      ret.put("globalMessages", createGlobalMessagesJSON());
-      ret.put("propertyMessages", createPropertyMessagesJSON());
-      return ret.toString(2);
-    }
-    catch (JSONException e)
-    {
-      log.error("", e);
-      return e.getLocalizedMessage();
-    }
+    return isMessage(ZMessage.ERROR, prop);
   }
 
 
-  public JSONObject createMessagesJSON() throws JSONException
+  public boolean isMessage(String type, ZProperty prop)
   {
-    cleanup();
-    JSONObject ret = new JSONObject();
-    ret.put("globalMessages", createGlobalMessagesJSON());
-    ret.put("propertyMessages", createPropertyMessagesJSON());
-    return ret;
-  }
-
-
-  public String getGlobalMessagesJSON()
-  {
-    cleanup();
-    try
+    Collection<ZMessage> messages = propertyName2MessageMap.get(prop.getName());
+    if (messages != null)
     {
-      return createGlobalMessagesJSON().toString(2);
-    }
-    catch (JSONException e)
-    {
-      log.error("", e);
-      return e.getLocalizedMessage();
-    }
-  }
-
-
-  public String getPropertyMessagesJSON()
-  {
-    cleanup();
-    try
-    {
-      return createPropertyMessagesJSON().toString(2);
-    }
-    catch (JSONException e)
-    {
-      log.error("", e);
-      return e.getLocalizedMessage();
-    }
-  }
-
-
-  public JSONArray createGlobalMessagesJSON() throws JSONException
-  {
-    cleanup();
-    JSONArray globalMessagesJSON = new JSONArray();
-    for (ZMessage msg : globalMessages)
-    {
-      JSONObject msgJSON = new JSONObject();
-      msgJSON.put("type", msg.getType());
-      msgJSON.put("text", msg.getText());
-      globalMessagesJSON.put(msgJSON);
-    }
-    return globalMessagesJSON;
-  }
-
-
-  public JSONObject createPropertyMessagesJSON() throws JSONException
-  {
-    cleanup();
-    JSONObject propertyMessagesJSON = new JSONObject();
-    for (Map.Entry<String, List<ZMessage>> entry : propertyMessagesMap.entrySet())
-    {
-      String name = entry.getKey();
-      List<ZMessage> val = entry.getValue();
-      JSONArray arr = new JSONArray();
-      for (ZMessage msg : val)
+      for (ZMessage msg : messages)
       {
-        JSONObject msgJSON = new JSONObject();
-        msgJSON.put("type", msg.getType());
-        msgJSON.put("text", msg.getText());
-        JSONArray propsJSON = new JSONArray();
-        for (String propName : msg.getPropertyNames())
+        if (type.equals(msg.getType()))
         {
-          propsJSON.put(propName);
+          return true;
         }
-        msgJSON.put("propertyNames", propsJSON);
-        arr.put(msgJSON);
       }
-      propertyMessagesJSON.put(name, arr);
     }
-    return propertyMessagesJSON;
+    return false;
   }
 
 
@@ -270,17 +219,46 @@ public class ZMessages
    * @param propName
    * @return
    */
-  public List<ZMessage> getPropertyMessages(String propName)
+  public List<ZMessage> getPropertyMessages(String... propNames)
   {
-    cleanup();
-    return propertyMessagesMap.get(propName);
+    List<ZMessage> ret = new ArrayList<ZMessage>();
+    for (String name : propNames)
+    {
+      Collection<ZMessage> propMessages = propertyName2MessageMap.get(name);
+      if (propMessages != null)
+      {
+        ret.addAll(propMessages);
+      }
+    }
+    return ret;
+  }
+
+
+  public Set<String> getPropertyNames(ZMessage msg)
+  {
+    Set<String> ret = message2propertyNameMap.get(msg);
+    if (ret == null)
+    {
+      ret = new HashSet<String>();
+    }
+    return ret;
+  }
+
+
+  public List<ZMessage> getPropertyMessages(ZProperty... prop)
+  {
+    String[] names = new String[prop.length];
+    for (int i = 0; i < prop.length; i++)
+    {
+      names[i] = prop[i].getName();
+    }
+    return getPropertyMessages(names);
   }
 
 
   public Set<String> getPropertyNames()
   {
-    cleanup();
-    return propertyMessagesMap.keySet();
+    return propertyName2MessageMap.keySet();
   }
 
 
@@ -290,80 +268,76 @@ public class ZMessages
    * 
    * @return
    */
-  public List<ZMessage> getGlobalMessages()
+  public Collection<ZMessage> getGlobalMessages()
   {
-    cleanup();
     return globalMessages;
   }
 
 
-  public List<ZMessage> getErrors()
-  {
-    List<ZMessage> ret = new ArrayList<ZMessage>();
-    for (ZMessage v : messages)
-    {
-      if (v.isError())
-      {
-        ret.add(v);
-      }
-    }
-    return ret;
-  }
+  //  public List<ZMessage> getErrors()
+  //  {
+  //    List<ZMessage> ret = new ArrayList<ZMessage>();
+  //    for (ZMessage v : messages)
+  //    {
+  //      if (v.isError())
+  //      {
+  //        ret.add(v);
+  //      }
+  //    }
+  //    return ret;
+  //  }
 
+  //  public List<ZMessage> getWarnings()
+  //  {
+  //    List<ZMessage> ret = new ArrayList<ZMessage>();
+  //    for (ZMessage v : messages)
+  //    {
+  //      if (v.isWarning())
+  //      {
+  //        ret.add(v);
+  //      }
+  //    }
+  //    return ret;
+  //  }
+  //
+  //
+  //  public List<ZMessage> getInfo()
+  //  {
+  //    List<ZMessage> ret = new ArrayList<ZMessage>();
+  //    for (ZMessage v : messages)
+  //    {
+  //      if (v.isInfo())
+  //      {
+  //        ret.add(v);
+  //      }
+  //    }
+  //    return ret;
+  //  }
 
-  public List<ZMessage> getWarnings()
-  {
-    List<ZMessage> ret = new ArrayList<ZMessage>();
-    for (ZMessage v : messages)
-    {
-      if (v.isWarning())
-      {
-        ret.add(v);
-      }
-    }
-    return ret;
-  }
-
-
-  public List<ZMessage> getInfo()
-  {
-    List<ZMessage> ret = new ArrayList<ZMessage>();
-    for (ZMessage v : messages)
-    {
-      if (v.isInfo())
-      {
-        ret.add(v);
-      }
-    }
-    return ret;
-  }
-
-
-  public List<ZMessage> getType(String type)
-  {
-    List<ZMessage> ret = new ArrayList<ZMessage>();
-    for (ZMessage v : messages)
-    {
-      if (v.isType(type))
-      {
-        ret.add(v);
-      }
-    }
-    return ret;
-  }
-
+  //  public List<ZMessage> getType(String type)
+  //  {
+  //    List<ZMessage> ret = new ArrayList<ZMessage>();
+  //    for (ZMessage v : messages)
+  //    {
+  //      if (v.isType(type))
+  //      {
+  //        ret.add(v);
+  //      }
+  //    }
+  //    return ret;
+  //  }
 
   public boolean isEmpty()
   {
-    return messages.isEmpty();
+    return globalMessages.isEmpty() && propertyName2MessageMap.isEmpty();
   }
 
 
-  public boolean isErrors()
+  private boolean isMessage(String type, Collection<ZMessage> coll)
   {
-    for (ZMessage v : messages)
+    for (ZMessage v : coll)
     {
-      if (v.isError())
+      if (type.equals(v.getType()))
       {
         return true;
       }
@@ -372,112 +346,93 @@ public class ZMessages
   }
 
 
-  public boolean isWarnings()
+  public boolean isPropertyMessage(String type)
   {
-    for (ZMessage v : messages)
-    {
-      if (v.isWarning())
-      {
-        return true;
-      }
-    }
-    return false;
+    return isMessage(type, propertyMessages);
   }
 
 
   public boolean isPropertyWarnings()
   {
-    for (ZMessage v : messages)
-    {
-      if (v.isWarning() && !v.getPropertyNames().isEmpty())
-      {
-        return true;
-      }
-    }
-    return false;
+    return isPropertyMessage(ZMessage.WARNING);
   }
 
 
   public boolean isPropertyErrors()
   {
-    for (ZMessage v : messages)
-    {
-      if (v.isError() && !v.getPropertyNames().isEmpty())
-      {
-        return true;
-      }
-    }
-    return false;
+    return isPropertyMessage(ZMessage.ERROR);
+  }
+
+
+  public boolean isPropertyInfo()
+  {
+    return isPropertyMessage(ZMessage.INFO);
+  }
+
+
+  public boolean isGlobalMessage(String type)
+  {
+    return isMessage(type, globalMessages);
+  }
+
+
+  public boolean isGlobalWarnings()
+  {
+    return isGlobalMessage(ZMessage.WARNING);
+  }
+
+
+  public boolean isGlobalErrors()
+  {
+    return isGlobalMessage(ZMessage.ERROR);
+  }
+
+
+  public boolean isGlobalInfo()
+  {
+    return isGlobalMessage(ZMessage.INFO);
+  }
+
+
+  public boolean isErrors()
+  {
+    return isMessage(ZMessage.ERROR);
   }
 
 
   public boolean isInfos()
   {
-    for (ZMessage v : messages)
+    return isMessage(ZMessage.INFO);
+  }
+
+
+  public boolean isWarnings()
+  {
+    return isMessage(ZMessage.WARNING);
+  }
+
+
+  public boolean isMessage(String type)
+  {
+    return isGlobalMessage(type) || isPropertyMessage(type);
+  }
+
+
+  public void addError(Exception e)
+  {
+    if (e instanceof ZPropertyException)
     {
-      if (v.isInfo())
-      {
-        return true;
-      }
+      addError(e.getLocalizedMessage(), ((ZPropertyException) e).getProperties());
     }
-    return false;
-  }
-
-
-  public boolean isType(String type)
-  {
-    for (ZMessage v : messages)
+    else if (e.getMessage() == null)
     {
-      if (v.isType(type))
-      {
-        return true;
-      }
+      log.error("", e);
+      addError(e.getClass().getName());
     }
-    return false;
-  }
-
-
-  // ////////////////////////////////////
-
-  @Deprecated
-  public void addInfoMessage(String text, String... propertyNameArr)
-  {
-    addMessage(new ZInfoMessage(text, propertyNameArr));
-  }
-
-
-  @Deprecated
-  public void addInfoPropertyMessage(String text, ZProperty... propertyArr)
-  {
-    addMessage(ZMessage.create(ZMessage.INFO, text, propertyArr));
-  }
-
-
-  @Deprecated
-  public void addErrorMessage(String text, String... propertyNameArr)
-  {
-    addMessage(new ZErrorMessage(text, propertyNameArr));
-  }
-
-
-  @Deprecated
-  public void addErrorPropertyMessage(String text, ZProperty... propertyArr)
-  {
-    addMessage(ZMessage.create(ZMessage.ERROR, text, propertyArr));
-  }
-
-
-  @Deprecated
-  public void addWarningMessage(String text, String... propertyNameArr)
-  {
-    addMessage(new ZWarningMessage(text, propertyNameArr));
-  }
-
-
-  @Deprecated
-  public void addWarningPropertyMessage(String text, ZProperty... propertyArr)
-  {
-    addMessage(ZMessage.create(ZMessage.WARNING, text, propertyArr));
+    else
+    {
+      addError(e.getLocalizedMessage());
+    }
   }
 
 }

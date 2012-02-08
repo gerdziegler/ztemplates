@@ -219,7 +219,7 @@ public class ZWebRenderContextImpl implements ZIWebRenderContext
   private static Object callGetter(Object obj, String name) throws Exception
   {
     int nameLen = name.length();
-    StringBuffer sb = new StringBuffer(3 + nameLen);
+    StringBuilder sb = new StringBuilder(3 + nameLen);
     sb.append("get");
     sb.append(Character.toUpperCase(name.charAt(0)));
     sb.append(name.substring(1));
@@ -249,6 +249,10 @@ public class ZWebRenderContextImpl implements ZIWebRenderContext
     }
 
     exposed.put("renderService", ZTemplates.getRenderService());
+    if (exposed.get("devMode") == null)
+    {
+      exposed.put("devMode", application.getApplicationContext().isDevMode());
+    }
 
     // register scripts, needs exposed values
     registerScripts(obj, exposed);

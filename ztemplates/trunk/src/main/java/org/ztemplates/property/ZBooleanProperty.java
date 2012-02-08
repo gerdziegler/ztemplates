@@ -4,7 +4,6 @@
  */
 package org.ztemplates.property;
 
-import org.ztemplates.web.ZTemplates;
 
 public class ZBooleanProperty extends ZProperty<Boolean>
 {
@@ -29,7 +28,7 @@ public class ZBooleanProperty extends ZProperty<Boolean>
   }
 
 
-  public Boolean parse(String formattedValue) throws Exception
+  public Boolean parse(String formattedValue) throws ZPropertyException
   {
     try
     {
@@ -42,9 +41,7 @@ public class ZBooleanProperty extends ZProperty<Boolean>
       {
         log.debug(formattedValue, e);
       }
-      throw new Exception(ZTemplates.getMessageService().getMessage(ZBooleanProperty.class
-          .getName(),
-          "ParseException"));
+      throw new ZPropertyException(e, this);
     }
   }
 

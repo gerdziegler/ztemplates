@@ -54,7 +54,7 @@ public class ZCssEngine
   private void refreshCss() throws Exception
   {
     ZIClassRepository classRepository = application.getClassRepository();
-    StringBuffer buff = new StringBuffer();
+    StringBuilder buff = new StringBuilder();
     for (Class c : classRepository.getClassesAnnotatedWith(ZRenderer.class))
     {
       String css = renderCss(c);
@@ -134,7 +134,7 @@ public class ZCssEngine
     map.put("cssId", cssId);
 
     String s = out.toString();
-    StringBuffer sb = new StringBuffer(s);
+    StringBuilder sb = new StringBuilder(s);
     ZReplaceUtil.merge(sb, map);
     return sb.toString();
   }

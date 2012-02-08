@@ -75,7 +75,7 @@ public class ZNestedExpression implements ZTerm
 
   public String toString()
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append("<nested>");
     sb.append(getName());
     sb.append("</nested>");
@@ -83,7 +83,7 @@ public class ZNestedExpression implements ZTerm
   }
 
 
-  public void toXml(StringBuffer sb, int depth)
+  public void toXml(StringBuilder sb, int depth)
   {
     ZFormatUtil.indent(sb, depth);
     sb.append("<nested>" + getName() + "</nested>");

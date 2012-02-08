@@ -40,13 +40,13 @@ public class ZMatchTreeNode implements Serializable, Comparable<ZMatchTreeNode>
   @Override
   public String toString()
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     toXml(sb, 0);
     return sb.toString();
   }
 
 
-  public void toXml(StringBuffer sb, int depth)
+  public void toXml(StringBuilder sb, int depth)
   {
     ZFormatUtil.indent(sb, depth);
     sb.append("<match-tree-node>");
@@ -251,7 +251,7 @@ public class ZMatchTreeNode implements Serializable, Comparable<ZMatchTreeNode>
 
   public int compareTo(ZMatchTreeNode n)
   {
-    StringBuffer sb1 = new StringBuffer();
+    StringBuilder sb1 = new StringBuilder();
     int literalCnt1 = 0;
     int varCnt1 = 0;
     int tailCnt1 = 0;
@@ -273,7 +273,7 @@ public class ZMatchTreeNode implements Serializable, Comparable<ZMatchTreeNode>
       }
     }
 
-    StringBuffer sb2 = new StringBuffer();
+    StringBuilder sb2 = new StringBuilder();
     int literalCnt2 = 0;
     int varCnt2 = 0;
     int tailCnt2 = 0;

@@ -25,7 +25,7 @@ public class ZTreeNestedBegin extends ZTreeTerm
 
 
   @Override
-  public void toXml(StringBuffer sb, int depth)
+  public void toXml(StringBuilder sb, int depth)
   {
     ZFormatUtil.indent(sb, depth);
     sb.append("<nested-begin name=\"" + name + "\" nestedClass=\"" + nestedClass.getSimpleName()

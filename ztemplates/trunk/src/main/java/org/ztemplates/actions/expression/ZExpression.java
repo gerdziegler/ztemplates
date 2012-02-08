@@ -150,13 +150,13 @@ public class ZExpression implements ZTerm
 
   public String toXml()
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     toXml(sb, 0);
     return sb.toString();
   }
 
 
-  public void toXml(StringBuffer sb, int depth)
+  public void toXml(StringBuilder sb, int depth)
   {
     ZFormatUtil.indent(sb, depth);
     sb.append("<expression>");
@@ -171,7 +171,7 @@ public class ZExpression implements ZTerm
 
   public String toDefinition()
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     for (ZTerm t : content)
     {
       sb.append(t.toDefinition());

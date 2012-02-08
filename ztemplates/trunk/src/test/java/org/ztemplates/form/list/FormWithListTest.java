@@ -25,7 +25,6 @@ public class FormWithListTest extends TestCase
     FormWithList f = new FormWithList();
     // ZDynamicFormModel.initPropertyNames(f, "");
     ZFormWrapper mirr = new ZFormWrapper(f);
-    mirr.initPropertyNames();
     assertEquals(2, mirr.getForms().size());
     assertEquals(0, mirr.getProperties().size());
     assertEquals(0, mirr.getOperations().size());

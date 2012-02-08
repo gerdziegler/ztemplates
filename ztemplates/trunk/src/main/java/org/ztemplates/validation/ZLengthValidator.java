@@ -40,13 +40,13 @@ public class ZLengthValidator implements ZIValidator
   }
 
 
-  public void validate(ZMessages messages) throws Exception
+  public void validate(ZMessages messages)
   {
     if (prop.isEmpty())
     {
       return;
     }
-    String val = prop.getValue();
+    String val = prop.getStringValue();
     if (val.length() > maxlength)
     {
       messages.addError(message, prop);

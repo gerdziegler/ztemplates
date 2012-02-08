@@ -20,7 +20,7 @@ public class ZLiteral implements ZTerm
 {
   private static Logger log = Logger.getLogger(ZLiteral.class);
 
-  private StringBuffer text = new StringBuffer();
+  private StringBuilder text = new StringBuilder();
 
 
   public String getText()
@@ -60,7 +60,7 @@ public class ZLiteral implements ZTerm
 
   public String toString()
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append("<literal>");
     sb.append(getText());
     sb.append("</literal>");
@@ -68,7 +68,7 @@ public class ZLiteral implements ZTerm
   }
 
 
-  public void toXml(StringBuffer sb, int depth)
+  public void toXml(StringBuilder sb, int depth)
   {
     ZFormatUtil.indent(sb, depth);
     sb.append("<literal>");

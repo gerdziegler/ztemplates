@@ -18,14 +18,21 @@ public class ZIntProperty extends ZProperty<Integer>
 
 
   @Override
-  public Integer parse(String formattedValue) throws Exception
+  public Integer parse(String formattedValue) throws ZPropertyException
   {
     if (formattedValue == null || formattedValue.length() == 0)
     {
       return null;
     }
-    Integer i = Integer.valueOf(formattedValue);
-    return i;
+    try
+    {
+      Integer i = Integer.valueOf(formattedValue);
+      return i;
+    }
+    catch (NumberFormatException e)
+    {
+      throw new ZPropertyException(e, this);
+    }
   }
 
 

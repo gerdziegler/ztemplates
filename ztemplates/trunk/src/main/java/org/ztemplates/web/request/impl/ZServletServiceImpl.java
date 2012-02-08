@@ -134,6 +134,11 @@ public class ZServletServiceImpl implements ZIServletService
       }
       PrintWriter pw = response.getWriter();
       pw.print(value);
+      String respContentType = response.getContentType();
+      if (respContentType != null && respContentType.indexOf("text/html") >= 0)
+      {
+        pw.println("\n<!-- powered by http://www.ztemplates.org -->\n");
+      }
       pw.flush();
     }
     catch (Exception e)
@@ -168,7 +173,7 @@ public class ZServletServiceImpl implements ZIServletService
   //    String scheme = request.getScheme();
   //    String serverName = request.getServerName();
   //    int serverPort = request.getServerPort();
-  //    StringBuffer ret = new StringBuffer();
+  //    StringBuilder ret = new StringBuilder();
   //    ret.append(scheme);
   //    ret.append("://");
   //    ret.append(serverName);

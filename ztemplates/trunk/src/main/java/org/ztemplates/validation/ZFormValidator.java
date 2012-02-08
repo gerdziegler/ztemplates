@@ -1,50 +1,26 @@
 package org.ztemplates.validation;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZIForm;
 import org.ztemplates.form.impl.ZFormWrapper;
-import org.ztemplates.message.ZErrorMessage;
 import org.ztemplates.message.ZMessages;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
+import org.ztemplates.property.ZPropertyException;
 
 public class ZFormValidator implements ZIValidator
 {
+  static final Logger log = Logger.getLogger(ZFormValidator.class);
+
   private final ZIForm form;
 
   private final String requiredMessage;
 
-
-  /**
-   * Convenience method
-   * 
-   * @param form
-   * @param requiredMessage
-   * @return
-   * @throws Exception
-   */
-  public static void validate(ZIForm form, String requiredMessage, ZMessages messages) throws Exception
-  {
-    new ZFormValidator(form, requiredMessage).validate(messages);
-  }
-
-
-  /**
-   * Convenience method
-   * 
-   * @param form
-   * @param requiredMessage
-   * @return
-   * @throws Exception
-   */
-  public static ZMessages validate(ZIForm form, String requiredMessage) throws Exception
-  {
-    ZMessages messages = new ZMessages();
-    new ZFormValidator(form, requiredMessage).validate(messages);
-    return messages;
-  }
+  private final List<ZIValidator> validators = new ArrayList<ZIValidator>();
 
 
   public ZFormValidator(ZIForm form,
@@ -57,61 +33,89 @@ public class ZFormValidator implements ZIValidator
 
 
   // @Override
-  public void validate(ZMessages messages) throws Exception
+  public void validate(ZMessages messages)
   {
-    final ZFormWrapper wrapper = new ZFormWrapper(form);
-    wrapper.initPropertyNames();
-    final ZFormMembers members = wrapper.getFormMembers();
-    ZErrorMessage msg = new ZErrorMessage(requiredMessage);
+    final ZFormMembers members;
+    try
+    {
+      final ZFormWrapper wrapper = new ZFormWrapper(form);
+      members = wrapper.getFormMembers();
+    }
+    catch (Exception e)
+    {
+      log.error("error while processing form " + form, e);
+      return;
+    }
     for (ZProperty prop : members.getProperties())
     {
-      if (!prop.isEmpty())
+      if (prop.getRequiredValidator() == null)
       {
-        createValidationMessage(prop, messages);
+        prop.setRequiredValidator(new ZRequiredValidator(requiredMessage, prop));
       }
-      else
-      {
-        if (prop.isRequired())
-        {
-          msg.getPropertyNames().add(prop.getName());
-        }
-      }
-    }
-    if (!msg.getPropertyNames().isEmpty())
-    {
-      messages.addMessage(msg);
+      prop.getRequiredValidator().validate(messages);
+      validateProperty(prop, messages);
     }
     for (ZOperation op : members.getOperations())
     {
-      createValidationMessage(op, messages);
+      validateProperty(op, messages);
+    }
+    for (ZIValidator val : validators)
+    {
+      try
+      {
+        val.validate(messages);
+      }
+      catch (ZPropertyException e)
+      {
+        messages.addError(e.getMessage(), e.getProperties());
+      }
     }
   }
 
 
-  private void createValidationMessage(ZProperty prop, ZMessages messages)
+  private void validateProperty(ZProperty prop, ZMessages messages)
   {
+    //don't validate empty values
+    if (prop.isEmpty())
+    {
+      return;
+    }
+    //parse all string values to check correct format
+    for (String stringValue : prop.getStringValues())
+    {
+      if (stringValue != null)
+      {
+        try
+        {
+          prop.parse(stringValue);
+        }
+        catch (ZPropertyException e)
+        {
+          messages.addError(e.getMessage(), e.getProperties());
+        }
+      }
+    }
+    //only validate further if parsing succeeded
+    if (messages.isError(prop))
+    {
+      return;
+    }
     for (ZIValidator val : (List<ZIValidator>) prop.getValidators())
     {
       try
       {
         val.validate(messages);
       }
-      catch (Exception e)
+      catch (ZPropertyException e)
       {
-        messages.addMessage(new ZErrorMessage(e.getLocalizedMessage(), prop.getName()));
-      }
-    }
-    for (String stringValue : prop.getStringValues())
-    {
-      try
-      {
-        prop.parse(stringValue);
-      }
-      catch (Exception e)
-      {
-        messages.addMessage(new ZErrorMessage(e.getLocalizedMessage(), prop.getName()));
+        messages.addError(e.getMessage(), e.getProperties());
       }
     }
   }
 
+
+  public void add(ZIValidator val)
+  {
+    validators.add(val);
+  }
 }

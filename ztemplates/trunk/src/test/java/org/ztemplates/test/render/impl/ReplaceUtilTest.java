@@ -25,7 +25,7 @@ public class ReplaceUtilTest extends TestCase
 {
   public void test1() throws Exception
   {
-    StringBuffer in = new StringBuffer("${var}");
+    StringBuilder in = new StringBuilder("${var}");
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("var", "katzeklo");
     String ret = ZReplaceUtil.replace(in, map);
@@ -35,7 +35,7 @@ public class ReplaceUtilTest extends TestCase
 
   public void test1_3() throws Exception
   {
-    StringBuffer in = new StringBuffer("${var}");
+    StringBuilder in = new StringBuilder("${var}");
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("var", "k");
     String ret = ZReplaceUtil.replace(in, map);
@@ -45,7 +45,7 @@ public class ReplaceUtilTest extends TestCase
 
   public void test1_1() throws Exception
   {
-    StringBuffer in = new StringBuffer("${var}");
+    StringBuilder in = new StringBuilder("${var}");
     Map<String, Object> map = new HashMap<String, Object>();
     String ret = ZReplaceUtil.replace(in, map);
     assertEquals(ret, "${var}", ret);
@@ -54,7 +54,7 @@ public class ReplaceUtilTest extends TestCase
 
   public void test12() throws Exception
   {
-    StringBuffer in = new StringBuffer("${}");
+    StringBuilder in = new StringBuilder("${}");
     Map<String, Object> map = new HashMap<String, Object>();
     String ret = ZReplaceUtil.replace(in, map);
     assertEquals(ret, "${}", ret);
@@ -63,7 +63,7 @@ public class ReplaceUtilTest extends TestCase
 
   public void test2() throws Exception
   {
-    StringBuffer in = new StringBuffer("--$--${var}--$-}");
+    StringBuilder in = new StringBuilder("--$--${var}--$-}");
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("var", "katzeklo");
     String ret = ZReplaceUtil.replace(in, map);
@@ -73,7 +73,7 @@ public class ReplaceUtilTest extends TestCase
 
   public void test3() throws Exception
   {
-    StringBuffer in = new StringBuffer("--$--$-{var}--$-}");
+    StringBuilder in = new StringBuilder("--$--$-{var}--$-}");
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("var", "katzeklo");
     String ret = ZReplaceUtil.replace(in, map);
@@ -83,7 +83,7 @@ public class ReplaceUtilTest extends TestCase
 
   public void test4() throws Exception
   {
-    StringBuffer in = new StringBuffer("--$--${var{--$-{");
+    StringBuilder in = new StringBuilder("--$--${var{--$-{");
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("var", "katzeklo");
     String ret = ZReplaceUtil.replace(in, map);
@@ -93,7 +93,7 @@ public class ReplaceUtilTest extends TestCase
 
   public void test5() throws Exception
   {
-    StringBuffer in = new StringBuffer("--$--${var{--$-}");
+    StringBuilder in = new StringBuilder("--$--${var{--$-}");
     Map<String, Object> map = new HashMap<String, Object>();
     String ret = ZReplaceUtil.replace(in, map);
     assertEquals(ret, "--$--${var{--$-}", ret);

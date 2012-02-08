@@ -83,7 +83,7 @@ public class ZFormServiceSpring implements ZIFormService
   }
 
 
-  public Object deserialize(String s) throws Exception
+  public Serializable deserialize(String s) throws Exception
   {
     return service.deserialize(s);
   }
@@ -140,6 +140,18 @@ public class ZFormServiceSpring implements ZIFormService
   public void initPropertyNames(ZIForm form, String formId) throws Exception
   {
     service.initPropertyNames(form, formId);
+  }
+
+
+  public String serializeForm(ZIForm form) throws Exception
+  {
+    return service.serializeForm(form);
+  }
+
+
+  public void deserializeForm(String s, ZIForm form) throws Exception
+  {
+    service.deserializeForm(s, form);
   }
 
 }
