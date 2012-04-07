@@ -9,6 +9,7 @@ snapshot available from [https://oss.sonatype.org/content/repositories/snapshots
 
 __ztemplates-2.5.0-SNAPSHOT (Not yet released)__ 
 
+* removed class ZISecureUrlDecorator, specify the complete url now
 * removed ZIFormAction.getForm() because now the field can be accessed directly by the framework 
 * added support for multiple forms in the same action, use ZMatch annotation
 * added ZPropertyException to ZProperty.parse/getValue/getValues method to allow better automatic error handling in validations.

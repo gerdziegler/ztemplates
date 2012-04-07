@@ -322,7 +322,6 @@ public final class ZFormWrapper implements ZIFormVisitable
   {
     if (names.contains(name))
     {
-      log.warn("duplicate name: " + obj.getClass() + "." + name);
       return true;
     }
     else

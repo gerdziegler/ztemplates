@@ -16,10 +16,19 @@ public class ZMessagesJSON extends JSONObject
 {
   private static final Logger log = Logger.getLogger(ZMessagesJSON.class);
 
+  private final ZMessages messages;
+
+
+  public boolean isEmpty()
+  {
+    return messages == null || messages.isEmpty();
+  }
+
 
   public ZMessagesJSON(ZMessages messages)
   {
     super();
+    this.messages = messages;
     try
     {
       put("globalMessages", createGlobalMessagesJSON(messages));
@@ -29,6 +38,12 @@ public class ZMessagesJSON extends JSONObject
     {
       log.error(messages, e);
     }
+  }
+
+
+  public ZMessagesJSON()
+  {
+    this(null);
   }
 
 
@@ -82,6 +97,10 @@ public class ZMessagesJSON extends JSONObject
   private JSONArray createGlobalMessagesJSON(ZMessages messages) throws JSONException
   {
     JSONArray globalMessagesJSON = new JSONArray();
+    if (messages == null)
+    {
+      return globalMessagesJSON;
+    }
     for (ZMessage msg : messages.getGlobalMessages())
     {
       JSONObject msgJSON = new JSONObject();
@@ -96,6 +115,11 @@ public class ZMessagesJSON extends JSONObject
   private JSONObject createPropertyMessagesJSON(ZMessages messages) throws JSONException
   {
     JSONObject propertyMessagesJSON = new JSONObject();
+    if (messages == null)
+    {
+      return propertyMessagesJSON;
+    }
+
     for (String name : messages.getPropertyNames())
     {
       List<ZMessage> val = messages.getPropertyMessages(name);

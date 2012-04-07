@@ -23,7 +23,7 @@ if(typeof zscript === 'undefined') {
 			if(typeof definitions[script]==='undefined') {
 				definitions[script] = {'url': url, 'loadRequested':false, 'loaded':false};
 			} else if(definitions[script].url!=url) {
-				error('*** script already defined with another url: ' + script + " --- old: " + definitions[script].url + " --- new: " + url);
+				log('*** script already defined, keeping current: ' + script + " --- current: " + definitions[script].url + " --- skipped: " + url);
 			} 
 		}
 			

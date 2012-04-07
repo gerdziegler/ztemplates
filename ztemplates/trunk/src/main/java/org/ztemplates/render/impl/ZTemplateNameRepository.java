@@ -1,18 +1,19 @@
 package org.ztemplates.render.impl;
 
-import java.lang.reflect.Modifier;
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.render.ZITemplateNameRepository;
+import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.ZTemplate;
 
 public class ZTemplateNameRepository implements ZITemplateNameRepository
 {
   private final static Logger log = Logger.getLogger(ZTemplateNameRepository.class);
-  
+
   private final Map<String, String> cache = new HashMap<String, String>();
 
 
@@ -33,11 +34,6 @@ public class ZTemplateNameRepository implements ZITemplateNameRepository
 
   public String registerTemplateName(final Class clazz)
   {
-    if(!Modifier.isFinal(clazz.getModifiers()))
-    {
-      log.warn("class annotated with @ZRenderer should be final: " + clazz.getName());
-    }
-    
     final String key = clazz.getName();
     String ret;
     Class pojoClass = clazz;
@@ -61,15 +57,32 @@ public class ZTemplateNameRepository implements ZITemplateNameRepository
     }
     else
     {
-      String className = pojoClass.getName();
-      if (className.lastIndexOf('$') >= 0)
-      {
-        className = pojoClass.getSuperclass().getName();
-      }
-      ret = className.replace('.', '/');
+      ret = computeTemplateNameFromClass(pojoClass);
     }
     cache.put(key, ret);
     return ret;
+  }
+
+
+  private String computeTemplateNameFromClass(Class clazz)
+  {
+    for (Class crtClass = clazz; crtClass != Object.class; crtClass = crtClass.getSuperclass())
+    {
+      Annotation[] anns = crtClass.getDeclaredAnnotations();
+      for (Annotation ann : anns)
+      {
+        if (ann instanceof ZRenderer)
+        {
+          String className = crtClass.getName();
+          //      if (className.lastIndexOf('$') >= 0)
+          //      {
+          //        className = pojoClass.getSuperclass().getName();
+          //      }
+          return className.replace('.', '/');
+        }
+      }
+    }
+    return null;
   }
 
 
