@@ -14,14 +14,12 @@
 package org.ztemplates.test;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassPathItem;
 import org.zclasspath.ZIClassRepository;
 import org.zclasspath.ZJavaClassPath;
-import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
@@ -52,20 +50,20 @@ public class ZTestUrlHandlerFactory
 
   };
 
-  public static final ZISecureUrlDecorator defaultSecureUrlDecorator = new ZISecureUrlDecorator()
-  {
-    public String addSecurityToUrl(String url, Set<String> roles)
-    {
-      return url;
-    }
 
-
-    public String removeSecurityFromUrl(String url)
-    {
-      return url;
-    }
-  };
-
+  //  public static final ZISecureUrlDecorator defaultSecureUrlDecorator = new ZISecureUrlDecorator()
+  //  {
+  //    public String addSecurityToUrl(String url, Set<String> roles)
+  //    {
+  //      return url;
+  //    }
+  //
+  //
+  //    public String removeSecurityFromUrl(String url)
+  //    {
+  //      return url;
+  //    }
+  //  };
 
   public static ZIUrlHandler create(String pojoPackage, ZISecurityProvider security) throws Exception
   {
@@ -80,7 +78,7 @@ public class ZTestUrlHandlerFactory
     // ZTestApplicationContext applicationContext = new
     // ZTestApplicationContext(classRepository);
     ZMatchTree matchTree = new ZMatchTreeFactory().createMatchTree(classRepository);
-    ZIUrlHandler ret = new ZTreeUrlHandler(matchTree, security, defaultSecureUrlDecorator, encoding);
+    ZIUrlHandler ret = new ZTreeUrlHandler(matchTree, security, encoding);
     return ret;
   }
 }

@@ -67,7 +67,7 @@ public class NestedHandlerTest extends TestCase
 
     obj.getNested().setValue("froh");
 
-    ZIUrlFactory urlFactory = new ZUrlFactory(ZTestUrlHandlerFactory.defaultSecureUrlDecorator, "utf-8");
+    ZIUrlFactory urlFactory = new ZUrlFactory("utf-8");
     String s = urlFactory.createUrl(obj);
     log.debug(s);
 

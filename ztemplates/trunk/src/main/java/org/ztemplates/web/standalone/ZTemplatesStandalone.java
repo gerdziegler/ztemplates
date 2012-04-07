@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.ZIActionApplicationContext;
-import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.ZIUrlFactory;
 import org.ztemplates.actions.ZMatch;
@@ -115,10 +114,9 @@ public class ZTemplatesStandalone implements ZIServiceRepository
     String encryptSalt = applicationContext.getInitParameter("encryptSalt");
     String encoding = applicationContext.getEncoding();
 
-    ZISecureUrlDecorator secureUrlDecorator = application.getActionApplication().getSecureUrlDecorator();
     ZMatchTree matchTree = application.getActionApplication().getMatchTree();
-    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityProvider, secureUrlDecorator, encoding);
-    ZIUrlFactory urlFactory = new ZUrlFactory(secureUrlDecorator, encoding);
+    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityProvider, encoding);
+    ZIUrlFactory urlFactory = new ZUrlFactory(encoding);
     ZIServletService servletService = null;
 
     ZIApplicationService applicationService = new ZApplicationServiceImpl(application);
@@ -127,7 +125,7 @@ public class ZTemplatesStandalone implements ZIServiceRepository
     ZIRenderService renderService = new ZRenderServiceImpl(application.getRenderApplication(), contextPath);
 
     ZIEncryptionService encryptionService = new ZEncryptionServiceImpl(encryptPassword, encryptSalt);
-    ZISecurityService securityService = new ZSecurityServiceImpl(securityProvider, secureUrlDecorator);
+    ZISecurityService securityService = new ZSecurityServiceImpl(securityProvider);
     ZIExceptionService exceptionService = new ZExceptionServiceImpl();
     ZIMessageService messageService = new ZMessageServiceStandaloneImpl(locale);
 

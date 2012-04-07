@@ -3,7 +3,6 @@ package org.ztemplates.actions;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.expression.ZExpression;
@@ -22,41 +21,12 @@ public class ZUrlFactory implements ZIUrlFactory
 {
   static Logger log = Logger.getLogger(ZUrlFactory.class);
 
-  private final ZISecureUrlDecorator secureUrlDecorator;
-
   private final String encoding;
-
-
-  public ZUrlFactory(ZISecureUrlDecorator secureUrlDecorator, String encoding)
-  {
-    this.secureUrlDecorator = secureUrlDecorator;
-    this.encoding = encoding;
-  }
 
 
   public ZUrlFactory(String encoding)
   {
     this.encoding = encoding != null ? encoding : "ISO-8859-1";
-    this.secureUrlDecorator = new ZISecureUrlDecorator()
-    {
-      public String removeSecurityFromUrl(String url)
-      {
-        if (url.startsWith("/secure"))
-        {
-          return url.substring("/secure".length());
-        }
-        else
-        {
-          return url;
-        }
-      }
-
-
-      public String addSecurityToUrl(String url, Set<String> roles)
-      {
-        return "/secure" + url;
-      }
-    };
   }
 
 
@@ -70,11 +40,6 @@ public class ZUrlFactory implements ZIUrlFactory
     ZUrl url = createZUrl(action);
 
     String surl = url.getUrl();
-
-    if (secureUrlDecorator != null && url.getRoles().isSecure())
-    {
-      surl = secureUrlDecorator.addSecurityToUrl(surl, url.getRoles().getRoles());
-    }
 
     StringBuilder sb = new StringBuilder(surl);
     boolean first = true;

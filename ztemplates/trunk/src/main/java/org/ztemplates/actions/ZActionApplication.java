@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTreeFactory;
-import org.ztemplates.web.request.impl.ZSecureUrlDecoratorImpl;
 
 public class ZActionApplication
 {
@@ -16,8 +15,6 @@ public class ZActionApplication
   private final ZIActionApplicationContext applicationContext;
 
   private final ZMatchTree matchTree;
-
-  private final ZISecureUrlDecorator secureUrlDecorator;
 
   private Set<String> passThroughRead = new HashSet<String>();
 
@@ -28,7 +25,6 @@ public class ZActionApplication
     this.applicationContext = applicationContext;
     ZMatchTreeFactory matchTreeFactory = new ZMatchTreeFactory();
     this.matchTree = matchTreeFactory.createMatchTree(classRepository);
-    this.secureUrlDecorator = new ZSecureUrlDecoratorImpl();
 
     String matchTreeInfo = matchTree.toConsoleString();
     log.info(matchTreeInfo);
@@ -56,11 +52,5 @@ public class ZActionApplication
   public Set<String> getPassThroughRead()
   {
     return passThroughRead;
-  }
-
-
-  public ZISecureUrlDecorator getSecureUrlDecorator()
-  {
-    return secureUrlDecorator;
   }
 }

@@ -43,7 +43,7 @@ public class ParameterTest extends TestCase
     super.setUp();
     ZMock.setUp();
     up = (ZTreeUrlHandler) ZTestUrlHandlerFactory.create(ParameterTest.class.getPackage().getName(), ZTestUrlHandlerFactory.defaultSecurityService);
-    urlFactory = new ZUrlFactory(ZTestUrlHandlerFactory.defaultSecureUrlDecorator, "utf-8");
+    urlFactory = new ZUrlFactory("utf-8");
   }
 
 

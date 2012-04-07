@@ -42,7 +42,7 @@ public class PropTest extends TestCase
     super.setUp();
     ZMock.setUp();
 
-    urlFactory = new ZUrlFactory(ZTestUrlHandlerFactory.defaultSecureUrlDecorator, "utf-8");
+    urlFactory = new ZUrlFactory("utf-8");
 
     up = ZTestUrlHandlerFactory.create(PropTest.class.getPackage().getName(), ZTestUrlHandlerFactory.defaultSecurityService);
   }

@@ -37,7 +37,7 @@ public class I18nTest extends TestCase
   {
     super.setUp();
     up = ZTestUrlHandlerFactory.create(I18nTest.class.getPackage().getName(), ZTestUrlHandlerFactory.defaultSecurityService, "utf-8");
-    urlFactory = new ZUrlFactory(ZTestUrlHandlerFactory.defaultSecureUrlDecorator, "utf-8");
+    urlFactory = new ZUrlFactory("utf-8");
   }
 
 

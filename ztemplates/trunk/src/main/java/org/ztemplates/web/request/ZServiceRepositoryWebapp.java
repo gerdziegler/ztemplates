@@ -84,9 +84,8 @@ public class ZServiceRepositoryWebapp implements ZIServiceRepository
     response.setCharacterEncoding(encoding);
     ZMatchTree matchTree = application.getActionApplication().getMatchTree();
 
-    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityService.getSecurityProvider(), securityService.getSecureUrlDecorator(),
-         encoding);
-    ZIUrlFactory urlFactory = new ZUrlFactory(securityService.getSecureUrlDecorator(), encoding);
+    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityService.getSecurityProvider(), encoding);
+    ZIUrlFactory urlFactory = new ZUrlFactory(encoding);
     actionService = new ZActionServiceImpl(urlHandler, urlFactory, contextPath, scheme, httpPrefix, httpsPrefix);
 
     this.renderService = new ZRenderServiceImpl(application.getRenderApplication(), contextPath);

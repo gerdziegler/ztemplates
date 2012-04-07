@@ -37,7 +37,7 @@ public class TrailingSlashTest extends TestCase
   {
     super.setUp();
     up = ZTestUrlHandlerFactory.create(TrailingSlashTest.class.getPackage().getName(), ZTestUrlHandlerFactory.defaultSecurityService);
-    urlFactory = new ZUrlFactory(ZTestUrlHandlerFactory.defaultSecureUrlDecorator, "utf-8");
+    urlFactory = new ZUrlFactory("utf-8");
 
   }
 

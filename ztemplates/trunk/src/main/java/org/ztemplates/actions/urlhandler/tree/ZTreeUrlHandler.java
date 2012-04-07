@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.ZIFormAction;
-import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.ZMatch;
 import org.ztemplates.actions.ZMatch.Protocol;
@@ -52,7 +51,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
   private final ZISecurityProvider security;
 
-  private final ZISecureUrlDecorator secureUrlDecorator;
+  //  private final ZISecureUrlDecorator secureUrlDecorator;
 
   // private final ZIActionApplicationContext applicationContext;
 
@@ -67,14 +66,14 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
   public ZTreeUrlHandler(ZMatchTree tree,
       ZISecurityProvider security,
-      ZISecureUrlDecorator secureUrlDecorator,
+      //      ZISecureUrlDecorator secureUrlDecorator,
       String encoding)
   {
     super();
     this.encoding = encoding != null ? encoding : "ISO-8859-1";
     this.security = security;
     this.tree = tree;
-    this.secureUrlDecorator = secureUrlDecorator;
+    //    this.secureUrlDecorator = secureUrlDecorator;
     // this.applicationContext = applicationContext;
   }
 
@@ -411,11 +410,11 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
     url = URLDecoder.decode(url/* , ENCODING */);
 
-    // remove security
-    if (secureUrlDecorator != null)
-    {
-      url = secureUrlDecorator.removeSecurityFromUrl(url);
-    }
+    //    // remove security
+    //    if (secureUrlDecorator != null)
+    //    {
+    //      url = secureUrlDecorator.removeSecurityFromUrl(url);
+    //    }
 
     // add last cut trailing slash
     if (url.length() > 1 && url.charAt(url.length() - 1) == '/')

@@ -14,13 +14,10 @@
  */
 package org.ztemplates.test.actions.urlhandler.secure.simple;
 
-import java.util.Set;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZIUrlFactory;
 import org.ztemplates.actions.ZUrlFactory;
 
@@ -48,31 +45,16 @@ public class SimpleSecureTest extends TestCase
     Handler1 h1 = new Handler1();
     ZIUrlFactory urlFactory = new ZUrlFactory("utf-8");
     String url = urlFactory.createUrl(h1);
-    Assert.assertEquals("/secure/test", url);
+    Assert.assertEquals("/test", url);
   }
 
 
   public void test2() throws Exception
   {
     Handler1 h1 = new Handler1();
-    ZISecureUrlDecorator sec = new ZISecureUrlDecorator()
-    {
-      public String addSecurityToUrl(String url, Set<String> roles)
-      {
-        Assert.assertEquals(1, roles.size());
-        Assert.assertEquals("katze", roles.iterator().next());
-        return "/mysec" + url;
-      }
 
-
-      public String removeSecurityFromUrl(String url)
-      {
-        return null;
-      }
-    };
-
-    ZIUrlFactory urlFactory = new ZUrlFactory(sec, "utf-8");
+    ZIUrlFactory urlFactory = new ZUrlFactory("utf-8");
     String url = urlFactory.createUrl(h1);
-    Assert.assertEquals("/mysec/test", url);
+    Assert.assertEquals("/test", url);
   }
 }

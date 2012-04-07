@@ -45,7 +45,6 @@ public class ProcessorTest extends TestCase
     proc = new ZTreeUrlHandler(
         new ZMatchTreeFactory().createMatchTree(classRepo),
         ZTestUrlHandlerFactory.defaultSecurityService,
-        ZTestUrlHandlerFactory.defaultSecureUrlDecorator,
         null);
   }
 

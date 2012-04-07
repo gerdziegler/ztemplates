@@ -15,7 +15,6 @@
 package org.ztemplates.web.request.impl;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.ZISecureUrlDecorator;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.web.ZIEncryptionService;
 import org.ztemplates.web.ZIExceptionService;
@@ -43,8 +42,7 @@ public class ZServiceFactory implements ZIServiceFactory
   public ZISecurityService createSecurityService(ZApplication application)
   {
     ZISecurityProvider securityProvider = new ZSecurityProviderImpl();
-    ZISecureUrlDecorator secureUrlDecorator = new ZSecureUrlDecoratorImpl();
-    return new ZSecurityServiceImpl(securityProvider, secureUrlDecorator);
+    return new ZSecurityServiceImpl(securityProvider);
   }
 
 
