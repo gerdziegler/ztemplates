@@ -11,13 +11,14 @@ public class ZMatchTreeFactory
 {
   public ZMatchTree createMatchTree(ZIClassRepository classRepository) throws Exception
   {
+    ZTreeTermFactory factory = new ZTreeTermFactory();
     ZMatchTree ret = new ZMatchTree();
     for (Class c : classRepository.getClassesAnnotatedWith(ZMatch.class))
     {
       ZMatch m = (ZMatch) c.getAnnotation(ZMatch.class);
       if (m.value().charAt(0) == '/')
       {
-        List<ZTreeTermList> terms = ZTreeTermFactory.expand(classRepository, c);
+        List<ZTreeTermList> terms = factory.expand(classRepository, c);
         for (ZTreeTermList crt : terms)
         {
           ret.add(crt);

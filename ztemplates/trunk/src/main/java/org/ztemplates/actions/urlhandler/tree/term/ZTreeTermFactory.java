@@ -31,16 +31,23 @@ import org.ztemplates.actions.util.impl.ZReflectionUtil;
 
 public class ZTreeTermFactory
 {
-  public static List<ZTreeTermList> expand(ZIClassRepository repo, Class clazz) throws Exception
+  public List<ZTreeTermList> expand(ZIClassRepository repo, Class clazz) throws Exception
   {
     ZMatch match = (ZMatch) clazz.getAnnotation(ZMatch.class);
-    ZExpression expression = new ZExpression(match.value());
+    String matchExpression = match.value();
+    return expand(repo, clazz, matchExpression);
+  }
+
+
+  public List<ZTreeTermList> expand(ZIClassRepository repo, Class clazz, String matchExpression) throws Exception
+  {
+    ZExpression expression = new ZExpression(matchExpression);
     List<ZTreeTermList> ret = expand(expression, repo, clazz);
     return ret;
   }
 
 
-  private static List<ZTreeTermList> expand(ZExpression expression, ZIClassRepository repo,
+  private List<ZTreeTermList> expand(ZExpression expression, ZIClassRepository repo,
       Class clazz) throws Exception
   {
     List<ZTreeTermList> ret = new ArrayList<ZTreeTermList>();
@@ -80,7 +87,7 @@ public class ZTreeTermFactory
   }
 
 
-  private static List<ZTreeTermList> expand(ZLiteral l, Class clazz) throws Exception
+  private List<ZTreeTermList> expand(ZLiteral l, Class clazz) throws Exception
   {
     List<ZTreeTermList> ret = new ArrayList<ZTreeTermList>();
     ZTreeTermList tl = new ZTreeTermList();
@@ -90,7 +97,7 @@ public class ZTreeTermFactory
   }
 
 
-  private static List<ZTreeTermList> expand(ZSlash l, Class clazz) throws Exception
+  private List<ZTreeTermList> expand(ZSlash l, Class clazz) throws Exception
   {
     List<ZTreeTermList> ret = new ArrayList<ZTreeTermList>();
     ZTreeTermList tl = new ZTreeTermList();
@@ -100,7 +107,7 @@ public class ZTreeTermFactory
   }
 
 
-  private static List<ZTreeTermList> expand(ZVariable l, Class clazz) throws Exception
+  private List<ZTreeTermList> expand(ZVariable l, Class clazz) throws Exception
   {
     List<ZTreeTermList> ret = new ArrayList<ZTreeTermList>();
     ZTreeTermList tl = new ZTreeTermList();
@@ -110,7 +117,7 @@ public class ZTreeTermFactory
   }
 
 
-  private static List<ZTreeTermList> expand(ZTail l, Class clazz) throws Exception
+  private List<ZTreeTermList> expand(ZTail l, Class clazz) throws Exception
   {
     List<ZTreeTermList> ret = new ArrayList<ZTreeTermList>();
     ZTreeTermList tl = new ZTreeTermList();
@@ -120,7 +127,7 @@ public class ZTreeTermFactory
   }
 
 
-  private static List<ZTreeTermList> expand(ZOptionalExpression e, ZIClassRepository repo,
+  private List<ZTreeTermList> expand(ZOptionalExpression e, ZIClassRepository repo,
       Class clazz) throws Exception
   {
     List<ZTreeTermList> ret = expand(e.getOptionalExpression(), repo, clazz);
@@ -129,7 +136,7 @@ public class ZTreeTermFactory
   }
 
 
-  private static List<ZTreeTermList> expand(ZNestedExpression ne, ZIClassRepository repo,
+  private List<ZTreeTermList> expand(ZNestedExpression ne, ZIClassRepository repo,
       Class clazz) throws Exception
   {
     List<ZTreeTermList> ret = new ArrayList<ZTreeTermList>();
@@ -152,7 +159,7 @@ public class ZTreeTermFactory
   }
 
 
-  private static List<ZTreeTermList> append(List<ZTreeTermList> l1, List<ZTreeTermList> l2)
+  private List<ZTreeTermList> append(List<ZTreeTermList> l1, List<ZTreeTermList> l2)
   {
     List<ZTreeTermList> ret = new ArrayList<ZTreeTermList>();
 

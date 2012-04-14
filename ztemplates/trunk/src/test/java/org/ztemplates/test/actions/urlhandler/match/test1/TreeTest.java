@@ -50,7 +50,9 @@ public class TreeTest extends TestCase
 
   public void test1() throws Exception
   {
-    List<ZTreeTermList> l = ZTreeTermFactory.expand(classRepo, Handler1.class);
+    ZTreeTermFactory factory = new ZTreeTermFactory();
+
+    List<ZTreeTermList> l = factory.expand(classRepo, Handler1.class);
     log.info(l);
     assertEquals(1, l.size());
   }
