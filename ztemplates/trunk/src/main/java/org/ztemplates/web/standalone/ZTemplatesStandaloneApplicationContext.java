@@ -1,4 +1,4 @@
-package org.ztemplates.test;
+package org.ztemplates.web.standalone;
 
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -10,7 +10,7 @@ import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.render.ZIRenderApplicationContext;
 
-public class ZTestApplicationContext implements ZIRenderApplicationContext,
+public class ZTemplatesStandaloneApplicationContext implements ZIRenderApplicationContext,
     ZIActionApplicationContext
 {
   private final Map<String, Object> attributes = new HashMap<String, Object>();
@@ -24,7 +24,7 @@ public class ZTestApplicationContext implements ZIRenderApplicationContext,
   private String encoding = "UTF-8";
 
 
-  public ZTestApplicationContext(ZIClassRepository classRepository)
+  public ZTemplatesStandaloneApplicationContext(ZIClassRepository classRepository)
   {
     this.classRepository = classRepository;
   }
@@ -110,8 +110,13 @@ public class ZTestApplicationContext implements ZIRenderApplicationContext,
 
   public void setDevMode(boolean devMode)
   {
-    // TODO Auto-generated method stub
-
+    if (devMode)
+    {
+      attributes.put("ztemplates.devMode", "true");
+    }
+    else
+    {
+      attributes.put("ztemplates.devMode", "false");
+    }
   }
-
 }

@@ -14,7 +14,6 @@
  */
 package org.ztemplates.actions;
 
-import org.ztemplates.form.ZIForm;
 
 /**
  * Tagging interface for form actions with default form, leads to parameter 
@@ -24,9 +23,9 @@ import org.ztemplates.form.ZIForm;
  * 
  * @author www.gerdziegler.de
  */
-public interface ZIFormAction<T extends ZIForm> extends ZIAction
+public interface ZIFormAction extends ZIAction
 {
-  public void beforeForm() throws Exception;
+  //  public void beforeForm() throws Exception;
 
   //  public T getForm() throws Exception;
 }

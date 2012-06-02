@@ -3,6 +3,11 @@ package org.ztemplates.web.standalone;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.zclasspath.ZClassPathScanner;
+import org.zclasspath.ZClassRepository;
+import org.zclasspath.ZIClassPathFilter;
+import org.zclasspath.ZIClassRepository;
+import org.zclasspath.ZJavaClassPath;
 import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.ZIUrlFactory;
@@ -75,7 +80,7 @@ public class ZTemplatesStandalone implements ZIServiceRepository
 
 
   /**
-   * use this if you provide a applicationName servletContext initParameter to
+   * Use this per thread if you provide a applicationName servletContext initParameter to
    * explicitly set a application name. This is needed if you explicitly
    * configure your application server to share the classloader between webapps.
    * 
@@ -88,6 +93,31 @@ public class ZTemplatesStandalone implements ZIServiceRepository
   {
     ZIServiceRepository repo = ZTemplatesStandalone.createServiceRepository(applicationName, locale, securityProvider);
     ZTemplates.setServiceRepository(repo);
+  }
+
+
+  /**
+   * Use this once (at startup) to setup your ztemplates application
+   * @param applicationName
+   * @param filter
+   * @throws Exception
+   */
+  public static void initApplication(String applicationName, ZIClassPathFilter filter) throws Exception
+  {
+    ZApplication application = ZApplicationRepositoryStandalone.getApplication(applicationName);
+    log.debug("initializing application: " + applicationName);
+
+    log.debug("initializing context...");
+    ZClassPathScanner scanner = new ZClassPathScanner();
+    scanner.setFilter(filter);
+    scanner.setClassPathItems(ZJavaClassPath.getItems());
+    log.debug("creating class repository...");
+    final ZIClassRepository classRepository = new ZClassRepository(scanner);
+    log.debug("creating application...");
+    application = ZTemplatesStandaloneApplication.create(classRepository);
+    ZApplicationRepositoryStandalone.setApplication(applicationName, application);
+    log.debug("context initialized");
+    log.debug("application initialized: " + applicationName);
   }
 
 

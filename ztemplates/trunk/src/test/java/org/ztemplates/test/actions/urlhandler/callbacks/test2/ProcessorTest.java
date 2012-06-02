@@ -23,8 +23,8 @@ import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTreeFactory;
-import org.ztemplates.test.ZTestApplicationContext;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
+import org.ztemplates.web.standalone.ZTemplatesStandaloneApplicationContext;
 
 public class ProcessorTest extends TestCase
 {
@@ -40,7 +40,7 @@ public class ProcessorTest extends TestCase
   {
     super.setUp();
     classRepo = ZClassRepository.create(ProcessorTest.class);
-    ZTestApplicationContext applicationContext = new ZTestApplicationContext(classRepo);
+    ZTemplatesStandaloneApplicationContext applicationContext = new ZTemplatesStandaloneApplicationContext(classRepo);
 
     proc = new ZTreeUrlHandler(
         new ZMatchTreeFactory().createMatchTree(classRepo),

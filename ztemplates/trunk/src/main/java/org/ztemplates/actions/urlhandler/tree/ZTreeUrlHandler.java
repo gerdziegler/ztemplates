@@ -467,10 +467,10 @@ public class ZTreeUrlHandler implements ZIUrlHandler
     ZFormValues formValues = new ZFormValues();
     formValues.getValues().putAll(parameters);
 
-    boolean defaultFormProcessed = false;
-    if (pojo instanceof ZIFormAction)
+    String[] formNames = zmatch.form();
+    //if ZIFormAction and no form names specified use form as default name
+    if (pojo instanceof ZIFormAction && formNames.length == 0)
     {
-      defaultFormProcessed = true;
       //default Form
       ZOperation op = updateForm("form", pojo, formValues);
       if (op != null)
@@ -478,19 +478,15 @@ public class ZTreeUrlHandler implements ZIUrlHandler
         ret.operationToCall = op;
       }
     }
-
-    String[] formNames = zmatch.form();
-    for (String formName : formNames)
+    else
     {
-      if (defaultFormProcessed && "form".equals(formName))
+      for (String formName : formNames)
       {
-        //skip default form if already done because of ZIFormAction
-        continue;
-      }
-      ZOperation op = updateForm(formName, pojo, formValues);
-      if (op != null)
-      {
-        ret.operationToCall = op;
+        ZOperation op = updateForm(formName, pojo, formValues);
+        if (op != null)
+        {
+          ret.operationToCall = op;
+        }
       }
     }
 

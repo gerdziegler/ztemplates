@@ -19,8 +19,8 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
-import org.ztemplates.test.ZTestApplication;
 import org.ztemplates.web.application.ZApplication;
+import org.ztemplates.web.standalone.ZTemplatesStandaloneApplication;
 
 public class ZRenderClassRepositoryTest extends TestCase
 {
@@ -35,7 +35,7 @@ public class ZRenderClassRepositoryTest extends TestCase
   {
     super.setUp();
     classRepo = ZClassRepository.create(Root.class);
-    application = ZTestApplication.create(classRepo);
+    application = ZTemplatesStandaloneApplication.create(classRepo);
   }
 
 

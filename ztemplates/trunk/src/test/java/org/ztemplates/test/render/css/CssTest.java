@@ -20,8 +20,8 @@ import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.render.impl.ZCssEngine;
-import org.ztemplates.test.ZTestApplication;
 import org.ztemplates.web.application.ZApplication;
+import org.ztemplates.web.standalone.ZTemplatesStandaloneApplication;
 
 public class CssTest extends TestCase
 {
@@ -34,7 +34,7 @@ public class CssTest extends TestCase
   {
     super.setUp();
     ZIClassRepository classRepository = ZClassRepository.create(CssTest.class);
-    application = ZTestApplication.create(classRepository);
+    application = ZTemplatesStandaloneApplication.create(classRepository);
   }
 
 

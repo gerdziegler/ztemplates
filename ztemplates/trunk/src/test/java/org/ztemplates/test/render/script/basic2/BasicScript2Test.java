@@ -21,9 +21,9 @@ import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.render.impl.ZIWebRenderContext;
 import org.ztemplates.render.impl.ZRenderEngine;
-import org.ztemplates.test.ZTestApplication;
 import org.ztemplates.test.ZTestWebRenderContextFactory;
 import org.ztemplates.web.application.ZApplication;
+import org.ztemplates.web.standalone.ZTemplatesStandaloneApplication;
 
 public class BasicScript2Test extends TestCase
 {
@@ -37,7 +37,7 @@ public class BasicScript2Test extends TestCase
     super.setUp();
     ZIClassRepository classRepository = ZClassRepository.create(BasicScript2Test.class);
 
-    application = ZTestApplication.create(classRepository);
+    application = ZTemplatesStandaloneApplication.create(classRepository);
   }
 
 
