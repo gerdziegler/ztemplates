@@ -9,7 +9,7 @@ snapshot available from [https://oss.sonatype.org/content/repositories/snapshots
 
 __ztemplates-3.0.0-SNAPSHOT (Not yet released)__ 
 
-* modified ZSelectProperty and ZFormSelect to use ZIFormatter and ZIMarshaller
+* modified ZProperty, ZSelectProperty and ZFormSelect to use ZIFormatter and ZIMarshaller
 * added ZIMarshaller and ZIFormatter and diverse implementations for modular and reusable Properties  
 * change ZIFormAction no longer has a type parameter 
 * removed method ZIFormAction.beforeForm because form could be named other than "form" and would require inutile override of beforeForm   
