@@ -17,6 +17,9 @@ package org.ztemplates.html;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.ztemplates.formatter.ZIFormatter;
+import org.ztemplates.property.ZProperty;
 import org.ztemplates.property.ZSelectProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
@@ -25,49 +28,101 @@ import org.ztemplates.render.velocity.ZVelocityRenderer;
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormSelect extends ZPropertyHtml
 {
-  @ZExpose
-  public final int size;
+  static final Logger log = Logger.getLogger(ZFormSelect.class);
 
   @ZExpose
-  public final List<ZFormSelectOption> options = new ArrayList<ZFormSelectOption>();
+  int size = 1;
 
   @ZExpose
-  public ZFormSelectOption selectedOption;
+  final List<ZFormSelectOption> options = new ArrayList<ZFormSelectOption>();
 
 
-  public <T> ZFormSelect(final ZSelectProperty<T> prop)
+  public <T> ZFormSelect(final ZSelectProperty<T> prop,
+      ZIFormatter<T> formatter)
   {
-    this(computeId(prop), prop, 1);
+    super(computeId(prop), prop);
+    init(prop, prop.getAllowedValues(), formatter);
+    size = 1;
   }
 
 
   public <T> ZFormSelect(String id,
       final ZSelectProperty<T> prop,
+      ZIFormatter<T> formatter,
       int size)
   {
     super(id, prop);
+    init(prop, prop.getAllowedValues(), formatter);
     this.size = size;
+  }
 
-    String stringValue = prop.getStringValue();
-    for (T t : prop.getAllowedValues())
+
+  public <T> ZFormSelect(
+        final ZProperty<T> prop,
+        List<T> allowedValues,
+        ZIFormatter<T> formatter)
+  {
+    this(computeId(prop), prop, allowedValues, formatter);
+  }
+
+
+  public <T> ZFormSelect(
+        String id,
+        ZProperty<T> prop,
+        List<T> allowedValues,
+        ZIFormatter<T> formatter)
+  {
+    super(id, prop);
+    init(prop, allowedValues, formatter);
+  }
+
+
+  private <T> void init(ZProperty<T> prop,
+      List<T> allowedValues,
+      ZIFormatter<T> formatter)
+  {
+    String[] values = prop.getStringValues();
+    for (T allowedValue : allowedValues)
     {
-      String key = prop.format(t);
-      String value = prop.computeDisplayValue(t);
-      boolean selected;
-      if (key == null)
+      String key = prop.format(allowedValue);
+      String value = formatter.computeDisplayValue(allowedValue);
+      boolean selected = false;
+      for (String stringValue : values)
       {
-        selected = stringValue == null;
-      }
-      else
-      {
-        selected = stringValue != null && key.equals(stringValue);
+        if (key == null)
+        {
+          selected = stringValue == null;
+        }
+        else
+        {
+          selected = stringValue != null && key.equals(stringValue);
+        }
+        if (selected)
+        {
+          break;
+        }
       }
       ZFormSelectOption item = new ZFormSelectOption(key, value, selected);
       options.add(item);
-      if (selected)
-      {
-        selectedOption = item;
-      }
     }
   }
+
+
+  public int getSize()
+  {
+    return size;
+  }
+
+
+  public void setSize(int size)
+  {
+    this.size = size;
+  }
+
+
+  public List<ZFormSelectOption> getOptions()
+  {
+    return options;
+  }
+
 }

@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ztemplates.formatter.ZIFormatter;
 import org.ztemplates.property.ZSelectProperty;
 import org.ztemplates.render.ZExpose;
 import org.ztemplates.render.ZRenderer;
@@ -38,7 +39,8 @@ public final class ZFormRadio<T> extends ZPropertyHtml
 
 
   public ZFormRadio(String id,
-      ZSelectProperty<T> prop)
+      ZSelectProperty<T> prop,
+      ZIFormatter<T> formatter)
   {
     super(id, prop);
 
@@ -48,7 +50,7 @@ public final class ZFormRadio<T> extends ZPropertyHtml
       T t = prop.getAllowedValues().get(i);
       String itemId = myId + "RB" + i;
       String key = prop.format(t);
-      String value = prop.computeDisplayValue(t);
+      String value = formatter.computeDisplayValue(t);
       boolean selected = key.equals(prop.getStringValue());
       ZFormRadioItem item = new ZFormRadioItem(itemId, key, value, selected);
       if (selected)
@@ -60,9 +62,10 @@ public final class ZFormRadio<T> extends ZPropertyHtml
   }
 
 
-  public ZFormRadio(final ZSelectProperty<T> prop)
+  public ZFormRadio(final ZSelectProperty<T> prop,
+      ZIFormatter<T> formatter)
   {
-    this(computeId(prop), prop);
+    this(computeId(prop), prop, formatter);
   }
 
 

@@ -4,41 +4,19 @@
  */
 package org.ztemplates.property;
 
+import org.ztemplates.marshaller.ZIntMarshaller;
+
 public class ZIntProperty extends ZProperty<Integer>
 {
   public ZIntProperty()
   {
+    super(new ZIntMarshaller());
   }
 
 
   public ZIntProperty(String name)
   {
+    super(new ZIntMarshaller());
     setName(name);
-  }
-
-
-  @Override
-  public Integer parse(String formattedValue) throws ZPropertyException
-  {
-    if (formattedValue == null || formattedValue.length() == 0)
-    {
-      return null;
-    }
-    try
-    {
-      Integer i = Integer.valueOf(formattedValue);
-      return i;
-    }
-    catch (NumberFormatException e)
-    {
-      throw new ZPropertyException(e, this);
-    }
-  }
-
-
-  @Override
-  public String format(Integer obj)
-  {
-    return obj == null ? "" : obj.toString();
   }
 }

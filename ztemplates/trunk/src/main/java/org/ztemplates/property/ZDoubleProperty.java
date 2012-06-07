@@ -4,45 +4,19 @@
  */
 package org.ztemplates.property;
 
+import org.ztemplates.marshaller.ZDoubleMarshaller;
 
 public class ZDoubleProperty extends ZProperty<Double>
 {
-  public static final String MESSAGE_ID_ParseException = "ParseException";
-
-
   public ZDoubleProperty()
   {
+    super(new ZDoubleMarshaller());
   }
 
 
   public ZDoubleProperty(String name)
   {
+    super(new ZDoubleMarshaller());
     setName(name);
-  }
-
-
-  @Override
-  public Double parse(String formattedValue) throws ZPropertyException
-  {
-    try
-    {
-      if (formattedValue == null || formattedValue.length() == 0)
-      {
-        return null;
-      }
-      Double i = Double.valueOf(formattedValue);
-      return i;
-    }
-    catch (NumberFormatException e)
-    {
-      throw new ZPropertyException(e, this);
-    }
-  }
-
-
-  @Override
-  public String format(Double obj)
-  {
-    return obj == null ? "" : obj.toString();
   }
 }

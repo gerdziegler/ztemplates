@@ -21,10 +21,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.json.ZExposeJson;
+import org.ztemplates.marshaller.ZIMarshaller;
+import org.ztemplates.marshaller.ZMarshallerException;
 import org.ztemplates.validation.ZIValidator;
 import org.ztemplates.validation.ZRequiredValidator;
 
-public abstract class ZProperty<T>
+public class ZProperty<T>
 {
   protected static final long serialVersionUID = 1L;
 
@@ -46,15 +48,40 @@ public abstract class ZProperty<T>
 
   private boolean writeable = true;
 
-
-  public abstract String format(T obj);
-
-
-  public abstract T parse(String stringValue) throws ZPropertyException;
+  private ZIMarshaller<T> marshaller;
 
 
-  public ZProperty()
+  public T parse(String stringValue) throws ZPropertyException
   {
+    try
+    {
+      return marshaller.unmarshal(stringValue);
+    }
+    catch (ZMarshallerException e)
+    {
+      throw new ZPropertyException(e, this);
+    }
+  }
+
+
+  public String format(T obj)
+  {
+    return marshaller.marshal(obj);
+  }
+
+
+  /**
+   * use marshaller instead
+   */
+  @Deprecated
+  protected ZProperty()
+  {
+  }
+
+
+  public ZProperty(ZIMarshaller<T> marshaller)
+  {
+    this.marshaller = marshaller;
   }
 
 
@@ -93,6 +120,58 @@ public abstract class ZProperty<T>
     {
         format(val)
     });
+  }
+
+
+  public void setValues(T... values)
+  {
+    if (values == null)
+    {
+      setStringValues(null);
+      return;
+    }
+
+    String[] arr = new String[values.length];
+    for (int i = 0; i < arr.length; i++)
+    {
+      T val = values[i];
+      arr[i] = val == null ? null : format(val);
+    }
+    this.stringValues = arr;
+  }
+
+
+  public void setValues(List<T> values)
+  {
+    if (values == null)
+    {
+      setStringValues(null);
+      return;
+    }
+
+    String[] arr = new String[values.size()];
+    for (int i = 0; i < arr.length; i++)
+    {
+      T val = values.get(i);
+      arr[i] = val == null ? null : format(val);
+    }
+    this.stringValues = arr;
+  }
+
+
+  public void addValues(List<T> values)
+  {
+    String[] arr = new String[stringValues.length + values.size()];
+    for (int i = 0; i < stringValues.length; i++)
+    {
+      arr[i] = stringValues[i];
+    }
+    for (int i = stringValues.length; i < arr.length; i++)
+    {
+      T val = values.get(i - stringValues.length);
+      arr[i] = val == null ? null : format(val);
+    }
+    this.stringValues = arr;
   }
 
 

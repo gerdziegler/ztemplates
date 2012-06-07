@@ -17,51 +17,29 @@ package org.ztemplates.property;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ztemplates.json.ZExposeJson;
+import org.ztemplates.marshaller.ZIMarshaller;
 
 public abstract class ZSelectProperty<T> extends ZProperty<T>
 {
   private List<T> allowedValues = new ArrayList<T>();
 
 
-  public ZSelectProperty()
+  public ZSelectProperty(ZIMarshaller<T> marshaller)
+  {
+    super(marshaller);
+  }
+
+
+  @Deprecated
+  protected ZSelectProperty()
   {
   }
 
 
-  public abstract String computeDisplayValue(T value);
-
-
-  @ZExposeJson
-  public String getDisplayValue() throws Exception
-  {
-    return computeDisplayValue(getValue());
-  }
-
-
-  @ZExposeJson
-  public List<String> getAllowedDisplayValues()
-  {
-    List<String> ret = new ArrayList<String>();
-    for (T t : allowedValues)
-    {
-      ret.add(computeDisplayValue(t));
-    }
-    return ret;
-  }
-
-
-  @ZExposeJson
-  public List<String> getAllowedStringValues()
-  {
-    List<String> ret = new ArrayList<String>();
-    for (T t : allowedValues)
-    {
-      ret.add(format(t));
-    }
-    return ret;
-  }
-
+  //  public String computeDisplayValue(T value)
+  //  {
+  //    return displayValues.get(value);
+  //  }
 
   public List<T> getAllowedValues()
   {

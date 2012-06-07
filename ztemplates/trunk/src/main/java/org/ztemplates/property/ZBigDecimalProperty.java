@@ -6,20 +6,19 @@ package org.ztemplates.property;
 
 import java.math.BigDecimal;
 
+import org.ztemplates.marshaller.ZBigDecimalMarshaller;
+
 public class ZBigDecimalProperty extends ZProperty<BigDecimal>
 {
-  private int scale = -1;
-
-  private int roundingMode = BigDecimal.ROUND_HALF_UP;
-
-
   public ZBigDecimalProperty()
   {
+    super(new ZBigDecimalMarshaller(-1, BigDecimal.ROUND_HALF_UP));
   }
 
 
   public ZBigDecimalProperty(String name)
   {
+    super(new ZBigDecimalMarshaller(-1, BigDecimal.ROUND_HALF_UP));
     setName(name);
   }
 
@@ -27,44 +26,13 @@ public class ZBigDecimalProperty extends ZProperty<BigDecimal>
   public ZBigDecimalProperty(int scale,
       int roundingMode)
   {
-    this.scale = scale;
-    this.roundingMode = roundingMode;
+    super(new ZBigDecimalMarshaller(scale, roundingMode));
   }
 
 
   public ZBigDecimalProperty(BigDecimal val)
   {
+    super(new ZBigDecimalMarshaller(val.scale(), BigDecimal.ROUND_HALF_UP));
     setValue(val);
   }
-
-
-  public BigDecimal parse(String formattedValue) throws ZPropertyException
-  {
-    try
-    {
-      BigDecimal i = new BigDecimal(formattedValue);
-      if (scale >= 0)
-      {
-        i.setScale(scale, roundingMode);
-      }
-      return i;
-    }
-    catch (NumberFormatException e)
-    {
-      throw new ZPropertyException(e, this);
-    }
-  }
-
-
-  public String format(BigDecimal obj)
-  {
-    return obj == null ? null : obj.toString();
-  }
-
-
-  public int getScale()
-  {
-    return scale;
-  }
-
 }

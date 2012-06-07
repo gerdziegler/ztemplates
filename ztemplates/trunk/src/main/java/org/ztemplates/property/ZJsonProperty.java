@@ -4,40 +4,25 @@
  */
 package org.ztemplates.property;
 
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.ztemplates.marshaller.ZJsonObjectMarshaller;
 
+/**
+ * 
+ * @author gerd
+ *
+ */
 public class ZJsonProperty extends ZProperty<JSONObject>
 {
   public ZJsonProperty()
   {
+    super(new ZJsonObjectMarshaller());
   }
 
 
   public ZJsonProperty(String name)
   {
-    super();
+    super(new ZJsonObjectMarshaller());
     setName(name);
-  }
-
-
-  @Override
-  public JSONObject parse(String formattedValue) throws ZPropertyException
-  {
-    try
-    {
-      return new JSONObject(formattedValue);
-    }
-    catch (JSONException e)
-    {
-      throw new ZPropertyException(e, this);
-    }
-  }
-
-
-  @Override
-  public String format(JSONObject obj)
-  {
-    return obj.toString();
   }
 }

@@ -4,6 +4,7 @@
  */
 package org.ztemplates.property;
 
+import org.ztemplates.marshaller.ZBooleanMarshaller;
 
 public class ZBooleanProperty extends ZProperty<Boolean>
 {
@@ -12,12 +13,14 @@ public class ZBooleanProperty extends ZProperty<Boolean>
 
   public ZBooleanProperty(Boolean value)
   {
+    super(new ZBooleanMarshaller());
     setValue(value);
   }
 
 
   public ZBooleanProperty(String name)
   {
+    super(new ZBooleanMarshaller());
     setName(name);
   }
 
@@ -25,29 +28,5 @@ public class ZBooleanProperty extends ZProperty<Boolean>
   public ZBooleanProperty()
   {
     this(Boolean.FALSE);
-  }
-
-
-  public Boolean parse(String formattedValue) throws ZPropertyException
-  {
-    try
-    {
-      Boolean i = Boolean.valueOf(formattedValue);
-      return i;
-    }
-    catch (NumberFormatException e)
-    {
-      if (log.isDebugEnabled())
-      {
-        log.debug(formattedValue, e);
-      }
-      throw new ZPropertyException(e, this);
-    }
-  }
-
-
-  public String format(Boolean obj)
-  {
-    return obj.toString();
   }
 }

@@ -4,5 +4,9 @@
 #end
 </select>
 #if(!$property.writeable)
-<input type="hidden" name="${name}" value="$!{selectedOption.key}"/>
+#foreach($option in $options)
+#if($option.selected)
+<input type="hidden" name="${name}" value="$!{option.key}"/>
+#end
+#end
 #end

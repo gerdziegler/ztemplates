@@ -159,10 +159,10 @@ public final class ZFormWrapper implements ZIFormVisitable
         String inferredName = f.getName();
         addFormWrapper(obj, prefix, inferredName, fe, names);
       }
-      else
+      /*else
       {
         log.warn("unsupported form value type: " + obj.getClass() + "." + f.getName() + " " + type);
-      }
+      }*/
     }
   }
 
@@ -213,10 +213,10 @@ public final class ZFormWrapper implements ZIFormVisitable
           String inferredName = ZReflectionUtil.removePrefixName("get", m.getName());
           addFormWrapper(obj, prefix, inferredName, fe, names);
         }
-        else
-        {
-          log.warn("unsupported form value type: " + obj.getClass() + "." + m.getName() + " " + type);
-        }
+        /*       else
+               {
+                 log.warn("unsupported form value type: " + obj.getClass() + "." + m.getName() + " " + type);
+               }*/
       }
     }
   }
@@ -308,11 +308,19 @@ public final class ZFormWrapper implements ZIFormVisitable
 
     for (int i = 0; i < l.size(); i++)
     {
-      ZIForm fe = (ZIForm) l.get(i);
-      String feName = prefix + inferredName + "_" + i;
-      if (!duplicateName(obj, feName, names))
+      Object crt = l.get(i);
+      if (crt instanceof ZIForm)
       {
-        forms.add(new ZFormWrapper(fe, feName, enforcePrefix));
+        ZIForm fe = (ZIForm) crt;
+        String feName = prefix + inferredName + "_" + i;
+        if (!duplicateName(obj, feName, names))
+        {
+          forms.add(new ZFormWrapper(fe, feName, enforcePrefix));
+        }
+      }
+      else
+      {
+        break;
       }
     }
   }
