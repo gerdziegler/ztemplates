@@ -14,12 +14,29 @@
  */
 package org.ztemplates.form.list;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ztemplates.form.ZIForm;
 import org.ztemplates.property.ZStringProperty;
 
 public class FormModelWithListNested implements ZIForm
 {
   private final ZStringProperty prop = new ZStringProperty();
+
+  private final List<FormModelWithListNested2> nested = new ArrayList<FormModelWithListNested2>();
+
+  int initNestedCalled = 0;
+
+
+  public void initNested(int size)
+  {
+    initNestedCalled++;
+    for (int i = 0; i < size; i++)
+    {
+      nested.add(new FormModelWithListNested2());
+    }
+  }
 
 
   public ZStringProperty getProp()

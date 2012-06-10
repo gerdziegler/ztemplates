@@ -476,7 +476,7 @@ public class ZReflectionUtil
   }
 
 
-  private static Method getMethod(Class clazz, String name)
+  public static Method getMethod(Class clazz, String name)
   {
     try
     {
@@ -489,7 +489,7 @@ public class ZReflectionUtil
   }
 
 
-  private static Field getField(Class clazz, String name)
+  public static Field getField(Class clazz, String name)
   {
     for (Class crtClass = clazz; crtClass != null && crtClass != Object.class; crtClass = crtClass.getSuperclass())
     {

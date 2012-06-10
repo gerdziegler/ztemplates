@@ -5,6 +5,7 @@
 package org.ztemplates.property;
 
 import org.ztemplates.json.ZExposeJson;
+import org.ztemplates.marshaller.ZStringMarshaller;
 
 public class ZOperation extends ZProperty<String>
 {
@@ -13,9 +14,16 @@ public class ZOperation extends ZProperty<String>
   private ZIOperationListener operationListener;
 
 
+  public ZOperation()
+  {
+    super(new ZStringMarshaller());
+  }
+
+
   public ZOperation(String name,
       String allowedValue)
   {
+    super(new ZStringMarshaller());
     setName(name);
     this.allowedValue = allowedValue;
   }
@@ -30,22 +38,10 @@ public class ZOperation extends ZProperty<String>
   @Deprecated
   public ZOperation(String allowedValue)
   {
+    super(new ZStringMarshaller());
     this.allowedValue = allowedValue;
   }
 
-
-  //  /**
-  //   * validates the attached validators
-  //   * 
-  //   * @return
-  //   * @throws Exception
-  //   */
-  //  public final ZMessages validate()
-  //  {
-  //    ZValidator val = new ZValidator();
-  //    val.getValidators().addAll(getValidators());
-  //    return val.validate();
-  //  }
 
   public ZIOperationListener getOperationListener()
   {
@@ -56,18 +52,6 @@ public class ZOperation extends ZProperty<String>
   public void setOperationListener(ZIOperationListener callback)
   {
     this.operationListener = callback;
-  }
-
-
-  public String parse(String s) throws ZPropertyException
-  {
-    return s;
-  }
-
-
-  public String format(String s)
-  {
-    return s;
   }
 
 

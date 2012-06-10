@@ -22,10 +22,28 @@ import org.ztemplates.render.velocity.ZVelocityRenderer;
 @ZRenderer(ZVelocityRenderer.class)
 public final class ZFormSubmit extends ZPropertyHtml
 {
-  private final String allowedValue;
+  @ZExpose
+  final String allowedValue;
 
 
-  public ZFormSubmit(String id, final ZOperation prop)
+  public ZFormSubmit(String id,
+      final ZOperation prop,
+      String text)
+  {
+    super(id, prop);
+    this.allowedValue = text;
+  }
+
+
+  public ZFormSubmit(final ZOperation prop,
+      String text)
+  {
+    this(computeId(prop), prop, text);
+  }
+
+
+  public ZFormSubmit(String id,
+      final ZOperation prop)
   {
     super(id, prop);
     this.allowedValue = prop.getAllowedValue();
@@ -35,12 +53,5 @@ public final class ZFormSubmit extends ZPropertyHtml
   public ZFormSubmit(final ZOperation prop)
   {
     this(computeId(prop), prop);
-  }
-
-
-  @ZExpose
-  public String getAllowedValue()
-  {
-    return allowedValue;
   }
 }

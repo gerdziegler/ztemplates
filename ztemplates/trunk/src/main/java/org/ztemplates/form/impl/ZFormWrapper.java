@@ -46,6 +46,10 @@ public final class ZFormWrapper implements ZIFormVisitable
 {
   static final Logger log = Logger.getLogger(ZFormWrapper.class);
 
+  static final char LIST_SEPARATOR = '-';
+
+  static final char PROP_SEPARATOR = '_';
+
   private final boolean enforcePrefix;
 
   private String name;
@@ -55,6 +59,8 @@ public final class ZFormWrapper implements ZIFormVisitable
   private final List<ZPropertyWrapper> properties = new ArrayList<ZPropertyWrapper>();
 
   private final List<ZOperationWrapper> operations = new ArrayList<ZOperationWrapper>();
+
+  private final ZIForm obj;
 
 
   /**
@@ -87,12 +93,13 @@ public final class ZFormWrapper implements ZIFormVisitable
       String name,
       boolean enforcePrefix)
   {
+    this.obj = obj;
     this.enforcePrefix = enforcePrefix;
     this.name = name;
     String prefix;
     if (name.length() > 0)
     {
-      prefix = name + "_";
+      prefix = name + PROP_SEPARATOR;
     }
     else
     {
@@ -149,9 +156,9 @@ public final class ZFormWrapper implements ZIFormVisitable
       }
       else if (List.class.isAssignableFrom(type))
       {
-        List l = (List) f.get(obj);
+        List list = (List) f.get(obj);
         String inferredName = f.getName();
-        addList(obj, prefix, inferredName, l, names);
+        addList(obj, prefix, inferredName, list, names);
       }
       else if (ZFormWrapper.class.isAssignableFrom(type))
       {
@@ -278,6 +285,10 @@ public final class ZFormWrapper implements ZIFormVisitable
     if (!duplicateName(obj, opName, names))
     {
       op.setName(opName);
+      if (op.getAllowedValue() == null)
+      {
+        op.setAllowedValue(opName);
+      }
       operations.add(new ZOperationWrapper(opName, op));
     }
   }
@@ -299,23 +310,27 @@ public final class ZFormWrapper implements ZIFormVisitable
   }
 
 
-  private void addList(Object obj, String prefix, String inferredName, List l, Set<String> names)
+  private List<ZFormWrapper> addList(Object obj, String prefix, String inferredName, List list, Set<String> names)
   {
-    if (l == null)
+    if (list == null)
     {
       throw new RuntimeException("null value in List property " + obj.getClass() + "." + inferredName);
     }
 
-    for (int i = 0; i < l.size(); i++)
+    List<ZFormWrapper> ret = new ArrayList<ZFormWrapper>();
+    int listSize = list.size();
+    for (int i = 0; i < listSize; i++)
     {
-      Object crt = l.get(i);
+      Object crt = list.get(i);
       if (crt instanceof ZIForm)
       {
         ZIForm fe = (ZIForm) crt;
-        String feName = prefix + inferredName + "_" + i;
+        String feName = prefix + inferredName + LIST_SEPARATOR + i + LIST_SEPARATOR + listSize;
         if (!duplicateName(obj, feName, names))
         {
-          forms.add(new ZFormWrapper(fe, feName, enforcePrefix));
+          ZFormWrapper fw = new ZFormWrapper(fe, feName, enforcePrefix);
+          forms.add(fw);
+          ret.add(fw);
         }
       }
       else
@@ -323,6 +338,7 @@ public final class ZFormWrapper implements ZIFormVisitable
         break;
       }
     }
+    return ret;
   }
 
 
@@ -387,6 +403,7 @@ public final class ZFormWrapper implements ZIFormVisitable
    */
   public ZFormMembers readFromValues(ZFormValues formValues)
   {
+    updateListElements(formValues);
     final List<ZOperation> operations = new ArrayList<ZOperation>();
     final List<ZProperty> properties = new ArrayList<ZProperty>();
     final Map<String, String[]> values = formValues.getValues();
@@ -419,6 +436,87 @@ public final class ZFormWrapper implements ZIFormVisitable
     visitDepthFirst(visitor);
 
     return new ZFormMembers(properties, operations);
+  }
+
+
+  /**
+   * creates ListElement subforms based on the passed values.
+   * @param formValues
+   */
+  private void updateListElements(ZFormValues formValues)
+  {
+    Set<String> processedListNames = new HashSet<String>();
+    try
+    {
+      String formPrefix = name.length() == 0 ? "" : name + PROP_SEPARATOR;
+      int formPrefixIdx = formPrefix.length();
+      for (Map.Entry<String, String[]> en : formValues.getValues().entrySet())
+      {
+        String propName = en.getKey();
+        int idx1 = propName.indexOf(LIST_SEPARATOR, formPrefixIdx);
+        if (idx1 < 0)
+        {
+          //not a list property
+          continue;
+        }
+        String fieldName = propName.substring(formPrefixIdx, idx1);
+        if (processedListNames.contains(fieldName))
+        {
+          continue;
+        }
+        int idx2 = propName.indexOf(LIST_SEPARATOR, idx1 + 1);
+        int idx3 = propName.indexOf(PROP_SEPARATOR, idx2 + 1);
+        String indexName = propName.substring(idx1 + 1, idx2);
+        String sizeName = propName.substring(idx2 + 1, idx3);
+        int size = Integer.valueOf(sizeName);
+        Field field = ZReflectionUtil.getField(obj.getClass(), fieldName);
+        List list = (List) field.get(obj);
+        if (list.size() == size)
+        {
+          //list initialized by program
+          processedListNames.add(fieldName);
+          continue;
+        }
+        String methodName = ZReflectionUtil.computePrefixName("init", fieldName);
+        try
+        {
+          String prefix = formPrefix + fieldName + LIST_SEPARATOR;
+          List<ZFormWrapper> formList = new ArrayList<ZFormWrapper>(forms);
+          for (ZFormWrapper fw : formList)
+          {
+            if (fw.getName().startsWith(prefix))
+            {
+              forms.remove(fw);
+            }
+          }
+          Method listInitializer = obj.getClass().getMethod(methodName, int.class);
+          list.clear();
+          listInitializer.invoke(obj, size);
+          list = (List) field.get(obj);
+          List<ZFormWrapper> newForms = addList(obj, formPrefix, fieldName, list, processedListNames);
+          for (ZFormWrapper fw : newForms)
+          {
+            fw.updateListElements(formValues);
+          }
+        }
+        catch (NoSuchMethodException e)
+        {
+          //OK, need no initializer
+        }
+        processedListNames.add(fieldName);
+      }
+    }
+    catch (Exception e)
+    {
+      throw new RuntimeException("cannot initialize lists " + obj, e);
+    }
+  }
+
+
+  @Override
+  public String toString()
+  {
+    return getClass().getName() + "+" + name;
   }
 
 
