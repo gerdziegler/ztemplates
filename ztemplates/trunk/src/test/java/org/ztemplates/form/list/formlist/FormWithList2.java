@@ -12,39 +12,30 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.form.list;
+package org.ztemplates.form.list.formlist;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.ztemplates.form.ZFormList;
 import org.ztemplates.form.ZIForm;
 
-public class FormWithList implements ZIForm
+public class FormWithList2 implements ZIForm
 {
-  private final List<FormModelWithListNested> models = new ArrayList<FormModelWithListNested>();
-
-  int initModelsCalled = 0;
-
-
-  public FormWithList()
+  private final ZFormList<FormWithListNested2> models = new ZFormList<FormWithListNested2>()
   {
-    models.add(new FormModelWithListNested());
-    models.add(new FormModelWithListNested());
+    @Override
+    public FormWithListNested2 createForm(int idx, int size)
+    {
+      return new FormWithListNested2();
+    }
+  };
+
+
+  public FormWithList2()
+  {
   }
 
 
-  public List<FormModelWithListNested> getModels()
+  public ZFormList<FormWithListNested2> getModels()
   {
     return models;
-  }
-
-
-  public void initModels(int size)
-  {
-    initModelsCalled++;
-    for (int i = 0; i < size; i++)
-    {
-      models.add(new FormModelWithListNested());
-    }
   }
 }

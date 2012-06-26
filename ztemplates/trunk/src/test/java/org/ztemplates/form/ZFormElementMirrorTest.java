@@ -17,22 +17,30 @@ package org.ztemplates.form;
 import junit.framework.TestCase;
 
 import org.ztemplates.form.impl.ZFormWrapper;
+import org.ztemplates.form.mirr.ZFormMirror;
+import org.ztemplates.form.mirr.ZFormMirrorFactory;
 import org.ztemplates.test.actions.urlhandler.form.Form;
 
 public class ZFormElementMirrorTest extends TestCase
 {
+  private ZFormMirrorFactory formMirrorFactory = new ZFormMirrorFactory();
+
+
   public void testFormElementMirror() throws Exception
   {
     Form f = new Form();
-    ZFormWrapper mirr = new ZFormWrapper(f);
+    ZFormWrapper wrapper = new ZFormWrapper(f);
+    ZFormMirror mirr = formMirrorFactory.createFormMirror(f);
     assertEquals(2, mirr.getProperties().size());
     assertEquals(1, mirr.getOperations().size());
     assertEquals(1, mirr.getForms().size());
+    assertEquals(0, mirr.getFormHolders().size());
+    assertEquals(0, mirr.getFormLists().size());
 
     assertEquals("predefined", mirr.getProperties().get(0).getName());
     assertEquals("op1", mirr.getOperations().get(0).getName());
     assertEquals("topSection_op1", mirr.getForms().get(0).getOperations().get(0).getName());
-    mirr = new ZFormWrapper(f);
+    wrapper = new ZFormWrapper(f);
     assertEquals("predefined", mirr.getProperties().get(0).getName());
     assertEquals("op1", mirr.getOperations().get(0).getName());
     assertEquals("topSection_op1", mirr.getForms().get(0).getOperations().get(0).getName());

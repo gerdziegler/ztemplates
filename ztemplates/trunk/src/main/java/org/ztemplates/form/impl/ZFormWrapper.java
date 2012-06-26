@@ -15,21 +15,25 @@
 package org.ztemplates.form.impl;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.util.impl.ZReflectionUtil;
+import org.ztemplates.form.ZForm;
+import org.ztemplates.form.ZFormList;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.mirr.ZFormMirror;
+import org.ztemplates.form.mirr.ZIFormMirror;
+import org.ztemplates.form.visitor.ZAbstractFormVisitor;
+import org.ztemplates.form.visitor.ZFormWalker;
+import org.ztemplates.form.visitor.ZIFormVisitor;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZScript;
@@ -42,25 +46,24 @@ import org.ztemplates.validation.ZIValidator;
  * @author gerdziegler.de
  * 
  */
-public final class ZFormWrapper implements ZIFormVisitable
+public final class ZFormWrapper
 {
   static final Logger log = Logger.getLogger(ZFormWrapper.class);
 
-  static final char LIST_SEPARATOR = '-';
+  public static final char LIST_SEPARATOR = '-';
 
-  static final char PROP_SEPARATOR = '_';
+  public static final char PROP_SEPARATOR = '_';
 
-  private final boolean enforcePrefix;
-
+  //  private final boolean enforcePrefix;
+  //
   private String name;
 
-  private final List<ZFormWrapper> forms = new ArrayList<ZFormWrapper>();
-
-  private final List<ZPropertyWrapper> properties = new ArrayList<ZPropertyWrapper>();
-
-  private final List<ZOperationWrapper> operations = new ArrayList<ZOperationWrapper>();
-
+  //
   private final ZIForm obj;
+
+  private ZFormMirror formMirror;
+
+  private ZFormWalker walker = new ZFormWalker();
 
 
   /**
@@ -89,308 +92,193 @@ public final class ZFormWrapper implements ZIFormVisitable
   }
 
 
-  private ZFormWrapper(ZIForm obj,
+  public ZFormWrapper(ZIForm obj,
       String name,
       boolean enforcePrefix)
   {
     this.obj = obj;
-    this.enforcePrefix = enforcePrefix;
     this.name = name;
-    String prefix;
-    if (name.length() > 0)
+    updateNames(name, enforcePrefix);
+  }
+
+
+  public void updateNames(final String name, final boolean enforcePrefix)
+  {
+
+    final Stack<String> prefixStack = new Stack<String>();
+    prefixStack.push(name);
+
+    final Stack<ZIFormMirror> mirrorStack = new Stack<ZIFormMirror>();
+    formMirror = new ZFormMirror(obj);
+    mirrorStack.push(formMirror);
+
+    ZIFormVisitor visitor = new ZIFormVisitor()
     {
-      prefix = name + PROP_SEPARATOR;
+      public void before(String fieldName, ZProperty prop)
+      {
+        String crtName = computeName(prop.getName(), prefixStack.peek(), fieldName, enforcePrefix);
+        prefixStack.push(crtName);
+      }
+
+
+      public void visit(ZProperty prop)
+      {
+        prop.setName(prefixStack.peek());
+      }
+
+
+      public void after(String fieldName, ZProperty prop)
+      {
+        prefixStack.pop();
+      }
+
+
+      public void before(String fieldName, ZOperation op)
+      {
+        String crtName = computeName(op.getName(), prefixStack.peek(), fieldName, enforcePrefix);
+        prefixStack.push(crtName);
+      }
+
+
+      public void visit(ZOperation op)
+      {
+        op.setName(prefixStack.peek());
+      }
+
+
+      public void after(String fieldName, ZOperation op)
+      {
+        prefixStack.pop();
+      }
+
+
+      public void before(String fieldName, ZIForm form)
+      {
+        String crtName = computeName(null, prefixStack.peek(), fieldName, enforcePrefix);
+        prefixStack.push(crtName);
+      }
+
+
+      public void before(String fieldName, ZIForm form, int idx, int cnt)
+      {
+        String crtName = computeName(prefixStack.peek(), fieldName, idx, cnt);
+        prefixStack.push(crtName);
+      }
+
+
+      public void visit(ZIForm form)
+      {
+      }
+
+
+      public void after(String fieldName, ZIForm form, int idx, int cnt)
+      {
+        prefixStack.pop();
+      }
+
+
+      public void after(String fieldName, ZIForm form)
+      {
+        prefixStack.pop();
+      }
+
+
+      public void before(String fieldName, ZFormList<ZIForm> list)
+      {
+        String crtName = computeName(list.getName(), prefixStack.peek(), fieldName, enforcePrefix);
+        prefixStack.push(crtName);
+      }
+
+
+      public void visit(ZFormList<ZIForm> list)
+      {
+        list.setName(prefixStack.peek());
+      }
+
+
+      public void after(String fieldName, ZFormList<ZIForm> list)
+      {
+        prefixStack.pop();
+      }
+
+
+      public void before(String fieldName, ZForm form)
+      {
+        String crtName = computeName(form.getName(), prefixStack.peek(), fieldName, enforcePrefix);
+        prefixStack.push(crtName);
+      }
+
+
+      public void visit(ZForm form)
+      {
+        String name = prefixStack.peek();
+        form.setName(name);
+      }
+
+
+      public void after(String fieldName, ZForm form)
+      {
+        prefixStack.pop();
+      }
+    };
+    walker.visitDepthFirst(obj, visitor);
+  }
+
+
+  private static String computeName(String name, String prefix, String inferredName, boolean enforcePrefix)
+  {
+    if (prefix.length() > 0)
+    {
+      prefix = prefix + PROP_SEPARATOR;
     }
     else
     {
       prefix = "";
     }
 
-    Set<String> names = new HashSet<String>();
-    try
-    {
-      for (Class clazz = obj.getClass(); ZIForm.class.isAssignableFrom(clazz); clazz = clazz.getSuperclass())
-      {
-        addFields(prefix, clazz, obj, names);
-        addMethods(prefix, clazz, obj, names);
-      }
-    }
-    catch (Exception e)
-    {
-      String msg = obj + " " + name;
-      log.error(msg, e);
-      throw new RuntimeException(msg, e);
-    }
-  }
-
-
-  private void addFields(String prefix, Class clazz, Object obj, Set<String> names) throws Exception
-  {
-    for (Field f : clazz.getDeclaredFields())
-    {
-      Class type = f.getType();
-      if (!f.isAccessible())
-      {
-        f.setAccessible(true);
-      }
-      // ORDER given by extends relation
-      // first
-      if (ZOperation.class.isAssignableFrom(type))
-      {
-        ZOperation op = (ZOperation) f.get(obj);
-        String inferredName = f.getName();
-        addOperation(obj, prefix, inferredName, op, names);
-      }
-      // second
-      else if (ZProperty.class.isAssignableFrom(type))
-      {
-        ZProperty prop = (ZProperty) f.get(obj);
-        String inferredName = f.getName();
-        addProperty(obj, prefix, inferredName, prop, names);
-      }
-      else if (ZIForm.class.isAssignableFrom(type))
-      {
-        ZIForm fe = (ZIForm) f.get(obj);
-        String inferredName = f.getName();
-        addForm(obj, prefix, inferredName, fe, names);
-      }
-      else if (List.class.isAssignableFrom(type))
-      {
-        List list = (List) f.get(obj);
-        String inferredName = f.getName();
-        addList(obj, prefix, inferredName, list, names);
-      }
-      else if (ZFormWrapper.class.isAssignableFrom(type))
-      {
-        ZFormWrapper fe = (ZFormWrapper) f.get(obj);
-        String inferredName = f.getName();
-        addFormWrapper(obj, prefix, inferredName, fe, names);
-      }
-      /*else
-      {
-        log.warn("unsupported form value type: " + obj.getClass() + "." + f.getName() + " " + type);
-      }*/
-    }
-  }
-
-
-  private void addMethods(String prefix, Class clazz, Object obj, Set<String> names) throws Exception
-  {
-    for (Method m : clazz.getDeclaredMethods())
-    {
-      if (!m.isAccessible())
-      {
-        m.setAccessible(true);
-      }
-
-      if (m.getName().startsWith("get") && m.getParameterTypes().length == 0 && Modifier.isPublic(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())
-          && !m.getName().equals("getClass"))
-      {
-        Class type = m.getReturnType();
-        // ORDER given by extends relation
-        // first
-        if (ZOperation.class.isAssignableFrom(type))
-        {
-          ZOperation op = (ZOperation) m.invoke(obj);
-          String inferredName = ZReflectionUtil.removePrefixName("get", m.getName());
-          addOperation(obj, prefix, inferredName, op, names);
-        }
-        // second
-        else if (ZProperty.class.isAssignableFrom(type))
-        {
-          ZProperty prop = (ZProperty) m.invoke(obj);
-          String inferredName = ZReflectionUtil.removePrefixName("get", m.getName());
-          addProperty(obj, prefix, inferredName, prop, names);
-        }
-        else if (ZIForm.class.isAssignableFrom(type))
-        {
-          ZIForm fe = (ZIForm) m.invoke(obj);
-          String inferredName = ZReflectionUtil.removePrefixName("get", m.getName());
-          addForm(obj, prefix, inferredName, fe, names);
-        }
-        else if (List.class.isAssignableFrom(type))
-        {
-          List l = (List) m.invoke(obj);
-          String inferredName = ZReflectionUtil.removePrefixName("get", m.getName());
-          addList(obj, prefix, inferredName, l, names);
-        }
-        else if (ZFormWrapper.class.isAssignableFrom(type))
-        {
-          ZFormWrapper fe = (ZFormWrapper) m.invoke(obj);
-          String inferredName = ZReflectionUtil.removePrefixName("get", m.getName());
-          addFormWrapper(obj, prefix, inferredName, fe, names);
-        }
-        /*       else
-               {
-                 log.warn("unsupported form value type: " + obj.getClass() + "." + m.getName() + " " + type);
-               }*/
-      }
-    }
-  }
-
-
-  private void addForm(Object obj, String prefix, String inferredName, ZIForm form, Set<String> names)
-  {
-    if (form == null)
-    {
-      throw new RuntimeException("null value in " + obj.getClass() + "." + inferredName);
-    }
-
-    String formName = prefix + inferredName;
-    if (!duplicateName(obj, formName, names))
-    {
-      forms.add(new ZFormWrapper(form, formName, enforcePrefix));
-    }
-  }
-
-
-  private void addFormWrapper(Object obj, String prefix, String inferredName, ZFormWrapper wrap, Set<String> names)
-  {
-    if (wrap == null)
-    {
-      throw new RuntimeException("null value in " + obj.getClass() + "." + inferredName);
-    }
-
-    String wrapName = computeName(wrap.getName(), prefix, inferredName);
-    if (!duplicateName(obj, wrapName, names))
-    {
-      wrap.setName(wrapName);
-      forms.add(wrap);
-    }
-  }
-
-
-  private String computeName(String name, String prefix, String inferredName)
-  {
     if (name == null)
     {
       return prefix + inferredName;
     }
     if (enforcePrefix && !name.startsWith(prefix))
     {
+      int idx = name.lastIndexOf(PROP_SEPARATOR);
+      if (idx > 0)
+      {
+        String nameOld = name.substring(idx + 1);
+        String ret = prefix + nameOld;
+        return ret;
+      }
       return prefix + name;
     }
     return name;
   }
 
 
-  private void addOperation(Object obj, String prefix, String inferredName, ZOperation op, Set<String> names)
+  private static String computeName(String prefix, String inferredName, int idx, int cnt)
   {
-    if (op == null)
-    {
-      throw new RuntimeException("null value in " + obj.getClass() + "." + inferredName);
-    }
-
-    String opName = computeName(op.getName(), prefix, inferredName);
-    if (!duplicateName(obj, opName, names))
-    {
-      op.setName(opName);
-      if (op.getAllowedValue() == null)
-      {
-        op.setAllowedValue(opName);
-      }
-      operations.add(new ZOperationWrapper(opName, op));
-    }
-  }
-
-
-  private void addProperty(Object obj, String prefix, String inferredName, ZProperty prop, Set<String> names)
-  {
-    if (prop == null)
-    {
-      throw new RuntimeException("null value in " + obj.getClass() + "." + inferredName);
-    }
-
-    String propName = computeName(prop.getName(), prefix, inferredName);
-    if (!duplicateName(obj, propName, names))
-    {
-      prop.setName(propName);
-      properties.add(new ZPropertyWrapper(propName, prop));
-    }
-  }
-
-
-  private List<ZFormWrapper> addList(Object obj, String prefix, String inferredName, List list, Set<String> names)
-  {
-    if (list == null)
-    {
-      throw new RuntimeException("null value in List property " + obj.getClass() + "." + inferredName);
-    }
-
-    List<ZFormWrapper> ret = new ArrayList<ZFormWrapper>();
-    int listSize = list.size();
-    for (int i = 0; i < listSize; i++)
-    {
-      Object crt = list.get(i);
-      if (crt instanceof ZIForm)
-      {
-        ZIForm fe = (ZIForm) crt;
-        String feName = prefix + inferredName + LIST_SEPARATOR + i + LIST_SEPARATOR + listSize;
-        if (!duplicateName(obj, feName, names))
-        {
-          ZFormWrapper fw = new ZFormWrapper(fe, feName, enforcePrefix);
-          forms.add(fw);
-          ret.add(fw);
-        }
-      }
-      else
-      {
-        break;
-      }
-    }
-    return ret;
-  }
-
-
-  private boolean duplicateName(Object obj, String name, Set<String> names)
-  {
-    if (names.contains(name))
-    {
-      return true;
-    }
-    else
-    {
-      names.add(name);
-      return false;
-    }
-  }
-
-
-  public String getName()
-  {
-    return name;
+    return prefix + inferredName + LIST_SEPARATOR + idx + LIST_SEPARATOR + cnt;
   }
 
 
   public Set<ZProperty> getPropertiesByName(final Set<String> propNames)
   {
     final Set<ZProperty> ret = new HashSet<ZProperty>();
-    ZIFormVisitor visitor = new ZIFormVisitor()
+    ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
-      public void visit(ZPropertyWrapper prop)
+      public void visit(ZProperty prop)
       {
-        String name = prop.getProperty().getName();
+        String name = prop.getName();
         if (propNames.contains(name))
         {
-          ret.add(prop.getProperty());
+          ret.add(prop);
         }
-      }
-
-
-      public void visit(ZOperationWrapper op)
-      {
       }
     };
 
-    visitDepthFirst(visitor);
+    walker.visitDepthFirst(obj, visitor);
 
     return ret;
-  }
-
-
-  public void setName(String name)
-  {
-    this.name = name;
   }
 
 
@@ -403,120 +291,183 @@ public final class ZFormWrapper implements ZIFormVisitable
    */
   public ZFormMembers readFromValues(ZFormValues formValues)
   {
-    updateListElements(formValues);
+    //    initFormLists(formValues);
+
     final List<ZOperation> operations = new ArrayList<ZOperation>();
     final List<ZProperty> properties = new ArrayList<ZProperty>();
+    final List<ZFormList> lists = new ArrayList<ZFormList>();
     final Map<String, String[]> values = formValues.getValues();
-    ZIFormVisitor visitor = new ZIFormVisitor()
+    ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
-      public void visit(ZPropertyWrapper prop)
+      public void visit(ZProperty prop)
       {
-        String name = prop.getProperty().getName();
+        String name = prop.getName();
         String[] param = values.get(name);
         if (param != null)
         {
-          prop.getProperty().setStringValues(param);
-          properties.add(prop.getProperty());
+          prop.setStringValues(param);
+          properties.add(prop);
         }
       }
 
 
-      public void visit(ZOperationWrapper op)
+      public void visit(ZOperation op)
       {
-        String name = op.getOperation().getName();
+        String name = op.getName();
         String[] param = values.get(name);
         if (param != null)
         {
-          op.getOperation().setStringValues(param);
-          operations.add(op.getOperation());
+          op.setStringValues(param);
+          operations.add(op);
         }
+      }
+
+
+      public void before(String fieldName, ZFormList<ZIForm> list)
+      {
+        String prefix = list.getName() + LIST_SEPARATOR;
+        for (String key : values.keySet())
+        {
+          if (key.startsWith(prefix))
+          {
+            int idx1 = key.indexOf(LIST_SEPARATOR, prefix.length());
+            if (idx1 < 0)
+            {
+              continue;
+            }
+            int idx2 = key.indexOf(PROP_SEPARATOR, idx1);
+            if (idx2 < 0)
+            {
+              continue;
+            }
+            String idxTxt = key.substring(idx1 + 1, idx2);
+            try
+            {
+              int size = Integer.parseInt(idxTxt);
+              if (size < 0 || size > 1000)
+              {
+                //DOS Attack?
+                continue;
+              }
+              if (list.size() != size)
+              {
+                list.clear();
+                for (int i = 0; i < size; i++)
+                {
+                  list.add(list.createForm(i, size));
+                }
+              }
+              break;
+            }
+            catch (NumberFormatException e)
+            {
+
+            }
+          }
+        }
+        super.before(fieldName, list);
+      }
+
+
+      public void before(String fieldName, ZForm form)
+      {
+        if (form.getForm() != null)
+        {
+          return;
+        }
+
+        String prefix = form.getName() + PROP_SEPARATOR;
+        for (String key : values.keySet())
+        {
+          if (key.startsWith(prefix))
+          {
+            form.setForm(form.createForm());
+            break;
+          }
+        }
+
+        super.before(fieldName, form);
       }
     };
 
-    visitDepthFirst(visitor);
+    walker.visitDepthFirst(obj, visitor);
 
-    return new ZFormMembers(properties, operations);
+    return new ZFormMembers(properties, operations, lists);
   }
 
 
-  /**
-   * creates ListElement subforms based on the passed values.
-   * @param formValues
-   */
-  private void updateListElements(ZFormValues formValues)
-  {
-    Set<String> processedListNames = new HashSet<String>();
-    try
-    {
-      String formPrefix = name.length() == 0 ? "" : name + PROP_SEPARATOR;
-      int formPrefixIdx = formPrefix.length();
-      for (Map.Entry<String, String[]> en : formValues.getValues().entrySet())
-      {
-        String propName = en.getKey();
-        int idx1 = propName.indexOf(LIST_SEPARATOR, formPrefixIdx);
-        if (idx1 < 0)
-        {
-          //not a list property
-          continue;
-        }
-        String fieldName = propName.substring(formPrefixIdx, idx1);
-        if (processedListNames.contains(fieldName))
-        {
-          continue;
-        }
-        int idx2 = propName.indexOf(LIST_SEPARATOR, idx1 + 1);
-        int idx3 = propName.indexOf(PROP_SEPARATOR, idx2 + 1);
-        String indexName = propName.substring(idx1 + 1, idx2);
-        String sizeName = propName.substring(idx2 + 1, idx3);
-        int size = Integer.valueOf(sizeName);
-        Field field = ZReflectionUtil.getField(obj.getClass(), fieldName);
-        List list = (List) field.get(obj);
-        if (list.size() == size)
-        {
-          //list initialized by program
-          processedListNames.add(fieldName);
-          continue;
-        }
-        String methodName = ZReflectionUtil.computePrefixName("init", fieldName);
-        try
-        {
-          String prefix = formPrefix + fieldName + LIST_SEPARATOR;
-          List<ZFormWrapper> formList = new ArrayList<ZFormWrapper>(forms);
-          for (ZFormWrapper fw : formList)
-          {
-            if (fw.getName().startsWith(prefix))
-            {
-              forms.remove(fw);
-            }
-          }
-          Method listInitializer = obj.getClass().getMethod(methodName, int.class);
-          list.clear();
-          listInitializer.invoke(obj, size);
-          list = (List) field.get(obj);
-          List<ZFormWrapper> newForms = addList(obj, formPrefix, fieldName, list, processedListNames);
-          for (ZFormWrapper fw : newForms)
-          {
-            fw.updateListElements(formValues);
-          }
-        }
-        catch (NoSuchMethodException e)
-        {
-          //OK, need no initializer
-        }
-        processedListNames.add(fieldName);
-      }
-    }
-    catch (Exception e)
-    {
-      throw new RuntimeException("cannot initialize lists " + obj, e);
-    }
-  }
-
+  //  /**
+  //   * creates ListElement subforms based on the passed values.
+  //   * @param formValues
+  //   */
+  //  private void initFormLists(ZFormValues formValues)
+  //  {
+  //    Set<String> processedListNames = new HashSet<String>();
+  //    try
+  //    {
+  //      String formPrefix = name.length() == 0 ? "" : name + PROP_SEPARATOR;
+  //      int formPrefixIdx = formPrefix.length();
+  //      for (Map.Entry<String, String[]> en : formValues.getValues().entrySet())
+  //      {
+  //        String propName = en.getKey();
+  //        int idx1 = propName.indexOf(LIST_SEPARATOR, formPrefixIdx);
+  //        if (idx1 < 0)
+  //        {
+  //          //not a list property
+  //          continue;
+  //        }
+  //        String fieldName = propName.substring(formPrefixIdx, idx1);
+  //        if (processedListNames.contains(fieldName))
+  //        {
+  //          continue;
+  //        }
+  //        int idx2 = propName.indexOf(LIST_SEPARATOR, idx1 + 1);
+  //        int idx3 = propName.indexOf(PROP_SEPARATOR, idx2 + 1);
+  //        String indexName = propName.substring(idx1 + 1, idx2);
+  //        String sizeName = propName.substring(idx2 + 1, idx3);
+  //        int size = Integer.valueOf(sizeName);
+  //        Field field = ZReflectionUtil.getField(obj.getClass(), fieldName);
+  //        ZFormList<ZIForm> list = (ZFormList<ZIForm>) field.get(obj);
+  //        //        if (list.size() == size)
+  //        //        {
+  //        //          //list initialized by program
+  //        //          processedListNames.add(fieldName);
+  //        //          continue;
+  //        //        }
+  //        String prefix = formPrefix + fieldName + LIST_SEPARATOR;
+  //        List<ZFormWrapper> formList = new ArrayList<ZFormWrapper>(forms);
+  //        for (ZFormWrapper fw : formList)
+  //        {
+  //          if (fw.getName().startsWith(prefix))
+  //          {
+  //            forms.remove(fw);
+  //          }
+  //        }
+  //        list.clear();
+  //        for (int i = 0; i < size; i++)
+  //        {
+  //          ZIForm element = list.createListElement();
+  //          list.add(element);
+  //        }
+  //
+  //        List<ZFormWrapper> newForms = addFormList(obj, formPrefix, fieldName, list, processedListNames);
+  //        for (ZFormWrapper fw : newForms)
+  //        {
+  //          fw.updateListElements(formValues);
+  //        }
+  //        processedListNames.add(fieldName);
+  //      }
+  //    }
+  //    catch (Exception e)
+  //    {
+  //      throw new RuntimeException("cannot initialize lists " + obj, e);
+  //    }
+  //  }
 
   @Override
   public String toString()
   {
-    return getClass().getName() + "+" + name;
+    return "[" + getClass().getName() + " " + obj + "]";
   }
 
 
@@ -525,94 +476,18 @@ public final class ZFormWrapper implements ZIFormVisitable
     final HashMap<String, String[]> values = formValues.getValues();
     values.clear();
 
-    ZIFormVisitor visitor = new ZIFormVisitor()
+    ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
-      public void visit(ZPropertyWrapper prop)
+      public void visit(ZProperty prop)
       {
-        if (!prop.getProperty().isEmpty())
+        if (!prop.isEmpty())
         {
-          values.put(prop.getProperty().getName(), prop.getProperty().getStringValues());
+          values.put(prop.getName(), prop.getStringValues());
         }
-      }
-
-
-      public void visit(ZOperationWrapper op)
-      {
-        // operations are not written
       }
     };
 
-    visitDepthFirst(visitor);
-  }
-
-
-  // public void validate() throws Exception
-  // {
-  // ZIFormVisitor visitor = new ZIFormVisitor()
-  // {
-  // public void visit(ZProperty prop) throws Exception
-  // {
-  // prop.revalidate();
-  // }
-  //
-  //
-  // public void visit(ZOperation op) throws Exception
-  // {
-  // op.revalidate();
-  // }
-  // };
-  // visitDepthFirst(visitor);
-  // }
-
-  public List<ZFormWrapper> getForms()
-  {
-    return forms;
-  }
-
-
-  public List<ZOperationWrapper> getOperations()
-  {
-    return operations;
-  }
-
-
-  public List<ZPropertyWrapper> getProperties()
-  {
-    return properties;
-  }
-
-
-  public void visitDepthFirst(ZIFormVisitor vis)
-  {
-    for (ZFormWrapper form : forms)
-    {
-      form.visitDepthFirst(vis);
-    }
-    for (ZPropertyWrapper prop : properties)
-    {
-      vis.visit(prop);
-    }
-    for (ZOperationWrapper op : operations)
-    {
-      vis.visit(op);
-    }
-  }
-
-
-  public void visitBreadthFirst(ZIFormVisitor vis)
-  {
-    for (ZPropertyWrapper prop : properties)
-    {
-      vis.visit(prop);
-    }
-    for (ZOperationWrapper op : operations)
-    {
-      vis.visit(op);
-    }
-    for (ZFormWrapper form : forms)
-    {
-      form.visitBreadthFirst(vis);
-    }
+    walker.visitDepthFirst(obj, visitor);
   }
 
 
@@ -627,21 +502,28 @@ public final class ZFormWrapper implements ZIFormVisitable
   {
     final List<ZProperty> properties = new ArrayList<ZProperty>();
     final List<ZOperation> operations = new ArrayList<ZOperation>();
-    ZIFormVisitor vis = new ZIFormVisitor()
+    final List<ZFormList> lists = new ArrayList<ZFormList>();
+    ZIFormVisitor vis = new ZAbstractFormVisitor()
     {
-      public void visit(ZPropertyWrapper prop)
+      public void visit(ZProperty prop)
       {
-        properties.add(prop.getProperty());
+        properties.add(prop);
       }
 
 
-      public void visit(ZOperationWrapper op)
+      public void visit(ZOperation op)
       {
-        operations.add(op.getOperation());
+        operations.add(op);
+      }
+
+
+      public void visit(ZFormList list)
+      {
+        lists.add(list);
       }
     };
-    this.visitDepthFirst(vis);
-    ZFormMembers ret = new ZFormMembers(properties, operations);
+    walker.visitDepthFirst(obj, vis);
+    ZFormMembers ret = new ZFormMembers(properties, operations, lists);
     return ret;
   }
 
@@ -650,11 +532,11 @@ public final class ZFormWrapper implements ZIFormVisitable
   {
     final ZScriptDependency ret = new ZScriptDependency();
 
-    ZIFormVisitor vis = new ZIFormVisitor()
+    ZIFormVisitor vis = new ZAbstractFormVisitor()
     {
-      public void visit(ZPropertyWrapper prop)
+      public void visit(ZProperty prop)
       {
-        List<ZIValidator> validators = prop.getProperty().getValidators();
+        List<ZIValidator> validators = prop.getValidators();
         for (ZIValidator val : validators)
         {
           ZScript script = ZFormWrapper.getAnnotation(val.getClass(), ZScript.class);
@@ -666,9 +548,9 @@ public final class ZFormWrapper implements ZIFormVisitable
       }
 
 
-      public void visit(ZOperationWrapper op)
+      public void visit(ZOperation op)
       {
-        List<ZIValidator> validators = op.getOperation().getValidators();
+        List<ZIValidator> validators = op.getValidators();
         for (ZIValidator val : validators)
         {
           ZScript script = ZFormWrapper.getAnnotation(val.getClass(), ZScript.class);
@@ -680,7 +562,7 @@ public final class ZFormWrapper implements ZIFormVisitable
       }
     };
 
-    this.visitDepthFirst(vis);
+    walker.visitDepthFirst(obj, vis);
     return ret;
   }
 
@@ -698,56 +580,53 @@ public final class ZFormWrapper implements ZIFormVisitable
 
   public void setWriteable(final boolean b)
   {
-    ZIFormVisitor visitor = new ZIFormVisitor()
+    ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
-      public void visit(ZPropertyWrapper prop)
+      public void visit(ZProperty prop)
       {
-        prop.getProperty().setWriteable(b);
+        prop.setWriteable(b);
       }
 
 
-      public void visit(ZOperationWrapper op)
+      public void visit(ZOperation op)
       {
-        op.getOperation().setWriteable(b);
+        op.setWriteable(b);
       }
     };
-    this.visitDepthFirst(visitor);
+    walker.visitDepthFirst(obj, visitor);
   }
 
 
   public void setReadable(final boolean b)
   {
-    ZIFormVisitor visitor = new ZIFormVisitor()
+    ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
-      public void visit(ZPropertyWrapper prop)
+      public void visit(ZProperty prop)
       {
-        prop.getProperty().setReadable(b);
+        prop.setReadable(b);
       }
 
 
-      public void visit(ZOperationWrapper op)
+      public void visit(ZOperation op)
       {
-        op.getOperation().setReadable(b);
+        op.setReadable(b);
       }
+
     };
-    this.visitDepthFirst(visitor);
+    walker.visitDepthFirst(obj, visitor);
   }
 
 
   public void setRequired(final boolean b)
   {
-    ZIFormVisitor visitor = new ZIFormVisitor()
+    ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
-      public void visit(ZPropertyWrapper prop)
+      public void visit(ZProperty prop)
       {
-        prop.getProperty().setRequired(b);
-      }
-
-
-      public void visit(ZOperationWrapper op)
-      {
+        super.visit(prop);
+        prop.setRequired(b);
       }
     };
-    this.visitDepthFirst(visitor);
+    walker.visitDepthFirst(obj, visitor);
   }
 }

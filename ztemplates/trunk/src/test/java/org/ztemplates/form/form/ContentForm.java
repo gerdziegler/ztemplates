@@ -12,12 +12,18 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.form.impl;
+package org.ztemplates.form.form;
 
-interface ZIFormVisitor
+import org.ztemplates.form.ZIForm;
+import org.ztemplates.property.ZStringProperty;
+
+public class ContentForm implements ZIForm
 {
-  public void visit(ZPropertyWrapper prop);
+  private final ZStringProperty prop = new ZStringProperty();
 
 
-  public void visit(ZOperationWrapper op);
+  public ZStringProperty getProp()
+  {
+    return prop;
+  }
 }

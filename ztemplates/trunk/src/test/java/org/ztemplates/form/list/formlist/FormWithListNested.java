@@ -12,14 +12,30 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.form.list;
+package org.ztemplates.form.list.formlist;
 
+import org.ztemplates.form.ZFormList;
 import org.ztemplates.form.ZIForm;
 import org.ztemplates.property.ZStringProperty;
 
-public class FormModelWithListNested2 implements ZIForm
+public class FormWithListNested implements ZIForm
 {
+  private final ZFormList<FormWithListNested> modelsNested = new ZFormList<FormWithListNested>("myModelName")
+  {
+    @Override
+    public FormWithListNested createForm(int idx, int size)
+    {
+      return new FormWithListNested();
+    }
+  };
+
   private final ZStringProperty prop = new ZStringProperty();
+
+
+  public ZFormList<FormWithListNested> getModelsNested()
+  {
+    return modelsNested;
+  }
 
 
   public ZStringProperty getProp()

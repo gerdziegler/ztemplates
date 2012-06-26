@@ -20,13 +20,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.form.ZINamedFormElement;
 import org.ztemplates.json.ZExposeJson;
 import org.ztemplates.marshaller.ZIMarshaller;
 import org.ztemplates.marshaller.ZMarshallerException;
 import org.ztemplates.validation.ZIValidator;
 import org.ztemplates.validation.ZRequiredValidator;
 
-public class ZProperty<T>
+public class ZProperty<T> implements ZINamedFormElement
 {
   protected static final long serialVersionUID = 1L;
 

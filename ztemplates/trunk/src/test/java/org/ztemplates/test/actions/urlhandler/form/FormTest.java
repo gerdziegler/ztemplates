@@ -22,6 +22,8 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.form.impl.ZFormWrapper;
+import org.ztemplates.form.mirr.ZFormMirror;
+import org.ztemplates.form.mirr.ZFormMirrorFactory;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
 import org.ztemplates.test.mock.ZMock;
 import org.ztemplates.test.mock.ZMockServiceRepository;
@@ -32,6 +34,8 @@ public class FormTest extends TestCase
   static Logger log = Logger.getLogger(FormTest.class);
 
   ZIUrlHandler up;
+
+  ZFormMirrorFactory formMirrorFactory = new ZFormMirrorFactory();
 
 
   protected void setUp() throws Exception
@@ -116,10 +120,12 @@ public class FormTest extends TestCase
     FormWithPublicFields form = new FormWithPublicFields();
     ZMockServiceRepository repo = ZMock.getMock();
     repo.setServletService(new ZMockServletService());
-    ZFormWrapper mirr = new ZFormWrapper(form);
+    ZFormMirror mirr = formMirrorFactory.createFormMirror(form);
     assertEquals(1, mirr.getOperations().size());
     assertEquals(1, mirr.getProperties().size());
     assertEquals(1, mirr.getForms().size());
+    assertEquals(0, mirr.getFormHolders().size());
+    assertEquals(0, mirr.getFormLists().size());
 
   }
 
