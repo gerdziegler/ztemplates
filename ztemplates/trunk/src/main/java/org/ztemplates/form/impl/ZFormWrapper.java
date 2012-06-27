@@ -395,7 +395,6 @@ public final class ZFormWrapper
             {
               map.put(name, map.createForm(name));
             }
-            break;
           }
         }
         super.before(fieldName, map);

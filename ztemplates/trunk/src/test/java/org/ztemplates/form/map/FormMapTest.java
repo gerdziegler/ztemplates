@@ -97,6 +97,26 @@ public class FormMapTest extends TestCase
   }
 
 
+  public void testAssignMultipleValueToPropertyFactoryCall() throws Exception
+  {
+    String value = "katze";
+    ZFormValues formValues = new ZFormValues();
+    formValues.getValues().put("models_test1_prop", new String[]
+    {
+        value
+    });
+    formValues.getValues().put("models_test2_prop", new String[]
+    {
+        value + "1"
+    });
+    FormWithMap f = new FormWithMap();
+    ZFormWrapper formWrapper = new ZFormWrapper(f);
+    formWrapper.readFromValues(formValues);
+    assertEquals(value, f.getModels().get("test1").getProp().getValue());
+    assertEquals(value + "1", f.getModels().get("test2").getProp().getValue());
+  }
+
+
   public void testAssignValueToExistingNestedProperty() throws Exception
   {
     String value = "katze";
