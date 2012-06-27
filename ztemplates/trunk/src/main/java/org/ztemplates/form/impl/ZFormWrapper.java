@@ -214,7 +214,7 @@ public final class ZFormWrapper
       {
         String crtName = computeName(form.getName(), prefixStack.peek(), fieldName, enforcePrefix);
         prefixStack.push(crtName);
-        form.setName(name);
+        form.setName(crtName);
       }
 
 

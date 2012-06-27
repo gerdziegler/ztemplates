@@ -22,6 +22,7 @@ public class FormTest extends TestCase
       });
 
     ZFormWrapper wrapper = new ZFormWrapper(f);
+    assertEquals("form", f.getForm().getName());
     wrapper.readFromValues(formValues);
     assertEquals(value, f.getForm().getForm().getProp().getValue());
   }
