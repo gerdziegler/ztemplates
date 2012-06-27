@@ -4,6 +4,7 @@ import java.util.Stack;
 
 import org.ztemplates.form.ZForm;
 import org.ztemplates.form.ZFormList;
+import org.ztemplates.form.ZFormMap;
 import org.ztemplates.form.ZIForm;
 import org.ztemplates.form.visitor.ZFormWalker;
 import org.ztemplates.form.visitor.ZIFormVisitor;
@@ -23,40 +24,35 @@ public class ZFormMirrorFactory
 
     ZIFormVisitor visitor = new ZIFormVisitor()
       {
+        @Override
         public void before(String fieldName, ZProperty prop)
-        {
-        }
-
-
-        public void visit(ZProperty prop)
         {
           ZIPropertyContainer cont = (ZIPropertyContainer) mirrorStack.peek();
           cont.getProperties().add(prop);
         }
 
 
+        @Override
         public void after(String fieldName, ZProperty prop)
         {
         }
 
 
+        @Override
         public void before(String fieldName, ZOperation op)
-        {
-        }
-
-
-        public void visit(ZOperation op)
         {
           ZIOperationContainer cont = (ZIOperationContainer) mirrorStack.peek();
           cont.getOperations().add(op);
         }
 
 
+        @Override
         public void after(String fieldName, ZOperation op)
         {
         }
 
 
+        @Override
         public void before(String fieldName, ZIForm form)
         {
           ZIFormContainer cont = (ZIFormContainer) mirrorStack.peek();
@@ -66,6 +62,7 @@ public class ZFormMirrorFactory
         }
 
 
+        @Override
         public void before(String fieldName, ZIForm form, int idx, int cnt)
         {
           ZIFormContainer cont = (ZIFormContainer) mirrorStack.peek();
@@ -75,23 +72,21 @@ public class ZFormMirrorFactory
         }
 
 
-        public void visit(ZIForm form)
-        {
-        }
-
-
+        @Override
         public void after(String fieldName, ZIForm form, int idx, int cnt)
         {
           mirrorStack.pop();
         }
 
 
+        @Override
         public void after(String fieldName, ZIForm form)
         {
           mirrorStack.pop();
         }
 
 
+        @Override
         public void before(String fieldName, ZFormList<ZIForm> list)
         {
           ZIFormListContainer cont = (ZIFormListContainer) mirrorStack.peek();
@@ -101,17 +96,31 @@ public class ZFormMirrorFactory
         }
 
 
-        public void visit(ZFormList<ZIForm> list)
-        {
-        }
-
-
+        @Override
         public void after(String fieldName, ZFormList<ZIForm> list)
         {
           mirrorStack.pop();
         }
 
 
+        @Override
+        public void before(String fieldName, ZFormMap<ZIForm> map)
+        {
+          ZIFormMapContainer cont = (ZIFormMapContainer) mirrorStack.peek();
+          ZFormMapMirror mirror = new ZFormMapMirror(map);
+          cont.getFormMaps().add(mirror);
+          mirrorStack.push(mirror);
+        }
+
+
+        @Override
+        public void after(String fieldName, ZFormMap<ZIForm> map)
+        {
+          mirrorStack.pop();
+        }
+
+
+        @Override
         public void before(String fieldName, ZForm form)
         {
           ZIFormHolderContainer cont = (ZIFormHolderContainer) mirrorStack.peek();
@@ -121,17 +130,14 @@ public class ZFormMirrorFactory
         }
 
 
-        public void visit(ZForm form)
-        {
-        }
-
-
+        @Override
         public void after(String fieldName, ZForm form)
         {
           mirrorStack.pop();
         }
+
       };
-    walker.visitDepthFirst(form, visitor);
+    walker.visit(form, visitor);
     return formMirror;
   }
 

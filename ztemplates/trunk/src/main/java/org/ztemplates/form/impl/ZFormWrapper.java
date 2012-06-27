@@ -26,6 +26,7 @@ import java.util.Stack;
 import org.apache.log4j.Logger;
 import org.ztemplates.form.ZForm;
 import org.ztemplates.form.ZFormList;
+import org.ztemplates.form.ZFormMap;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIForm;
@@ -114,44 +115,39 @@ public final class ZFormWrapper
 
     ZIFormVisitor visitor = new ZIFormVisitor()
     {
+      @Override
       public void before(String fieldName, ZProperty prop)
       {
         String crtName = computeName(prop.getName(), prefixStack.peek(), fieldName, enforcePrefix);
         prefixStack.push(crtName);
+        prop.setName(crtName);
       }
 
 
-      public void visit(ZProperty prop)
-      {
-        prop.setName(prefixStack.peek());
-      }
-
-
+      @Override
       public void after(String fieldName, ZProperty prop)
       {
         prefixStack.pop();
       }
 
 
+      @Override
       public void before(String fieldName, ZOperation op)
       {
         String crtName = computeName(op.getName(), prefixStack.peek(), fieldName, enforcePrefix);
         prefixStack.push(crtName);
+        op.setName(crtName);
       }
 
 
-      public void visit(ZOperation op)
-      {
-        op.setName(prefixStack.peek());
-      }
-
-
+      @Override
       public void after(String fieldName, ZOperation op)
       {
         prefixStack.pop();
       }
 
 
+      @Override
       public void before(String fieldName, ZIForm form)
       {
         String crtName = computeName(null, prefixStack.peek(), fieldName, enforcePrefix);
@@ -159,6 +155,7 @@ public final class ZFormWrapper
       }
 
 
+      @Override
       public void before(String fieldName, ZIForm form, int idx, int cnt)
       {
         String crtName = computeName(prefixStack.peek(), fieldName, idx, cnt);
@@ -166,62 +163,68 @@ public final class ZFormWrapper
       }
 
 
-      public void visit(ZIForm form)
-      {
-      }
-
-
+      @Override
       public void after(String fieldName, ZIForm form, int idx, int cnt)
       {
         prefixStack.pop();
       }
 
 
+      @Override
       public void after(String fieldName, ZIForm form)
       {
         prefixStack.pop();
       }
 
 
+      @Override
       public void before(String fieldName, ZFormList<ZIForm> list)
       {
         String crtName = computeName(list.getName(), prefixStack.peek(), fieldName, enforcePrefix);
         prefixStack.push(crtName);
+        list.setName(crtName);
       }
 
 
-      public void visit(ZFormList<ZIForm> list)
-      {
-        list.setName(prefixStack.peek());
-      }
-
-
+      @Override
       public void after(String fieldName, ZFormList<ZIForm> list)
       {
         prefixStack.pop();
       }
 
 
+      @Override
+      public void before(String fieldName, ZFormMap<ZIForm> map)
+      {
+        String crtName = computeName(map.getName(), prefixStack.peek(), fieldName, enforcePrefix);
+        prefixStack.push(crtName);
+        map.setName(crtName);
+      }
+
+
+      @Override
+      public void after(String fieldName, ZFormMap<ZIForm> map)
+      {
+        prefixStack.pop();
+      }
+
+
+      @Override
       public void before(String fieldName, ZForm form)
       {
         String crtName = computeName(form.getName(), prefixStack.peek(), fieldName, enforcePrefix);
         prefixStack.push(crtName);
-      }
-
-
-      public void visit(ZForm form)
-      {
-        String name = prefixStack.peek();
         form.setName(name);
       }
 
 
+      @Override
       public void after(String fieldName, ZForm form)
       {
         prefixStack.pop();
       }
     };
-    walker.visitDepthFirst(obj, visitor);
+    walker.visit(obj, visitor);
   }
 
 
@@ -266,7 +269,8 @@ public final class ZFormWrapper
     final Set<ZProperty> ret = new HashSet<ZProperty>();
     ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
-      public void visit(ZProperty prop)
+      @Override
+      public void before(String fieldName, ZProperty prop)
       {
         String name = prop.getName();
         if (propNames.contains(name))
@@ -276,7 +280,7 @@ public final class ZFormWrapper
       }
     };
 
-    walker.visitDepthFirst(obj, visitor);
+    walker.visit(obj, visitor);
 
     return ret;
   }
@@ -299,7 +303,8 @@ public final class ZFormWrapper
     final Map<String, String[]> values = formValues.getValues();
     ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
-      public void visit(ZProperty prop)
+      @Override
+      public void before(String fieldName, ZProperty prop)
       {
         String name = prop.getName();
         String[] param = values.get(name);
@@ -311,7 +316,8 @@ public final class ZFormWrapper
       }
 
 
-      public void visit(ZOperation op)
+      @Override
+      public void before(String fieldName, ZOperation op)
       {
         String name = op.getName();
         String[] param = values.get(name);
@@ -323,6 +329,7 @@ public final class ZFormWrapper
       }
 
 
+      @Override
       public void before(String fieldName, ZFormList<ZIForm> list)
       {
         String prefix = list.getName() + LIST_SEPARATOR;
@@ -369,6 +376,33 @@ public final class ZFormWrapper
       }
 
 
+      @Override
+      public void before(String fieldName, ZFormMap<ZIForm> map)
+      {
+        String prefix = map.getName() + PROP_SEPARATOR;
+        for (String key : values.keySet())
+        {
+          if (key.startsWith(prefix))
+          {
+            int idx1 = key.indexOf(PROP_SEPARATOR, prefix.length());
+            if (idx1 < 0)
+            {
+              continue;
+            }
+            String name = key.substring(prefix.length(), idx1);
+            ZIForm crtForm = map.get(name);
+            if (crtForm == null)
+            {
+              map.put(name, map.createForm(name));
+            }
+            break;
+          }
+        }
+        super.before(fieldName, map);
+      }
+
+
+      @Override
       public void before(String fieldName, ZForm form)
       {
         if (form.getForm() != null)
@@ -390,7 +424,7 @@ public final class ZFormWrapper
       }
     };
 
-    walker.visitDepthFirst(obj, visitor);
+    walker.visit(obj, visitor);
 
     return new ZFormMembers(properties, operations, lists);
   }
@@ -478,7 +512,8 @@ public final class ZFormWrapper
 
     ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
-      public void visit(ZProperty prop)
+      @Override
+      public void before(String name, ZProperty prop)
       {
         if (!prop.isEmpty())
         {
@@ -487,7 +522,7 @@ public final class ZFormWrapper
       }
     };
 
-    walker.visitDepthFirst(obj, visitor);
+    walker.visit(obj, visitor);
   }
 
 
@@ -505,24 +540,27 @@ public final class ZFormWrapper
     final List<ZFormList> lists = new ArrayList<ZFormList>();
     ZIFormVisitor vis = new ZAbstractFormVisitor()
     {
-      public void visit(ZProperty prop)
+      @Override
+      public void before(String name, ZProperty prop)
       {
         properties.add(prop);
       }
 
 
-      public void visit(ZOperation op)
+      @Override
+      public void before(String name, ZOperation op)
       {
         operations.add(op);
       }
 
 
-      public void visit(ZFormList list)
+      @Override
+      public void before(String name, ZFormList list)
       {
         lists.add(list);
       }
     };
-    walker.visitDepthFirst(obj, vis);
+    walker.visit(obj, vis);
     ZFormMembers ret = new ZFormMembers(properties, operations, lists);
     return ret;
   }
@@ -534,7 +572,8 @@ public final class ZFormWrapper
 
     ZIFormVisitor vis = new ZAbstractFormVisitor()
     {
-      public void visit(ZProperty prop)
+      @Override
+      public void before(String name, ZProperty prop)
       {
         List<ZIValidator> validators = prop.getValidators();
         for (ZIValidator val : validators)
@@ -548,7 +587,8 @@ public final class ZFormWrapper
       }
 
 
-      public void visit(ZOperation op)
+      @Override
+      public void before(String name, ZOperation op)
       {
         List<ZIValidator> validators = op.getValidators();
         for (ZIValidator val : validators)
@@ -562,7 +602,7 @@ public final class ZFormWrapper
       }
     };
 
-    walker.visitDepthFirst(obj, vis);
+    walker.visit(obj, vis);
     return ret;
   }
 
@@ -582,18 +622,20 @@ public final class ZFormWrapper
   {
     ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
-      public void visit(ZProperty prop)
+      @Override
+      public void before(String name, ZProperty prop)
       {
         prop.setWriteable(b);
       }
 
 
-      public void visit(ZOperation op)
+      @Override
+      public void before(String name, ZOperation op)
       {
         op.setWriteable(b);
       }
     };
-    walker.visitDepthFirst(obj, visitor);
+    walker.visit(obj, visitor);
   }
 
 
@@ -601,19 +643,21 @@ public final class ZFormWrapper
   {
     ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
-      public void visit(ZProperty prop)
+      @Override
+      public void before(String name, ZProperty prop)
       {
         prop.setReadable(b);
       }
 
 
-      public void visit(ZOperation op)
+      @Override
+      public void before(String name, ZOperation op)
       {
         op.setReadable(b);
       }
 
     };
-    walker.visitDepthFirst(obj, visitor);
+    walker.visit(obj, visitor);
   }
 
 
@@ -621,12 +665,12 @@ public final class ZFormWrapper
   {
     ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
-      public void visit(ZProperty prop)
+      @Override
+      public void before(String name, ZProperty prop)
       {
-        super.visit(prop);
         prop.setRequired(b);
       }
     };
-    walker.visitDepthFirst(obj, visitor);
+    walker.visit(obj, visitor);
   }
 }

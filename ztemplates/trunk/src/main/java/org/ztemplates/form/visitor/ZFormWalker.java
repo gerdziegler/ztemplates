@@ -2,16 +2,18 @@ package org.ztemplates.form.visitor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Map;
 
 import org.ztemplates.form.ZForm;
 import org.ztemplates.form.ZFormList;
+import org.ztemplates.form.ZFormMap;
 import org.ztemplates.form.ZIForm;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 
 public class ZFormWalker
 {
-  public void visitBreadthFirst(ZIForm obj, ZIFormVisitor vis)
+  public void visit(ZIForm obj, ZIFormVisitor vis)
   {
     try
     {
@@ -35,7 +37,6 @@ public class ZFormWalker
           {
             ZOperation op = (ZOperation) f.get(obj);
             vis.before(fieldName, op);
-            vis.visit(op);
             vis.after(fieldName, op);
           }
           // second
@@ -43,28 +44,24 @@ public class ZFormWalker
           {
             ZProperty prop = (ZProperty) f.get(obj);
             vis.before(fieldName, prop);
-            vis.visit(prop);
             vis.after(fieldName, prop);
           }
           else if (ZIForm.class.isAssignableFrom(type))
           {
             ZIForm fe = (ZIForm) f.get(obj);
             vis.before(fieldName, fe);
-            vis.visit(fe);
-            visitBreadthFirst(fe, vis);
+            visit(fe, vis);
             vis.after(fieldName, fe);
           }
           else if (ZForm.class.isAssignableFrom(type))
           {
             ZForm fe = (ZForm) f.get(obj);
             vis.before(fieldName, fe);
-            vis.visit(fe);
             ZIForm form = fe.getForm();
             if (form != null)
             {
               vis.before(fieldName, form);
-              vis.visit(form);
-              visitBreadthFirst(form, vis);
+              visit(form, vis);
               vis.after(fieldName, form);
             }
             vis.after(fieldName, fe);
@@ -73,14 +70,27 @@ public class ZFormWalker
           {
             ZFormList<ZIForm> list = (ZFormList<ZIForm>) f.get(obj);
             vis.before(fieldName, list);
-            vis.visit(list);
             int cnt = list.size();
             for (int i = 0; i < cnt; i++)
             {
               ZIForm form = list.get(i);
               vis.before(fieldName, form, i, cnt);
-              visitBreadthFirst(form, vis);
+              visit(form, vis);
               vis.after(fieldName, form, i, cnt);
+            }
+            vis.after(fieldName, list);
+          }
+          else if (ZFormMap.class.isAssignableFrom(type))
+          {
+            ZFormMap<ZIForm> list = (ZFormMap<ZIForm>) f.get(obj);
+            vis.before(fieldName, list);
+            for (Map.Entry<String, ZIForm> en : list.entrySet())
+            {
+              String name = en.getKey();
+              ZIForm form = en.getValue();
+              vis.before(name, form);
+              visit(form, vis);
+              vis.after(name, form);
             }
             vis.after(fieldName, list);
           }
@@ -91,11 +101,5 @@ public class ZFormWalker
     {
       throw new RuntimeException("" + obj, e);
     }
-  }
-
-
-  public void visitDepthFirst(ZIForm obj, ZIFormVisitor vis)
-  {
-    visitBreadthFirst(obj, vis);
   }
 }

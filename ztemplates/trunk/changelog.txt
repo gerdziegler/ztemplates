@@ -9,7 +9,8 @@ snapshot available from [https://oss.sonatype.org/content/repositories/snapshots
 
 __ztemplates-3.0.0-SNAPSHOT (Not yet released)__ 
 
-* added support for ZForm and ZFormList in forms, to allow dynamic forms.
+* added support for ZFormMap in forms, to allow dynamic forms.
+* added support for ZForm to allow dynamic forms.
 * modified ZProperty, ZSelectProperty and ZFormSelect to use ZIFormatter and ZIMarshaller
 * added ZIMarshaller and ZIFormatter and diverse implementations for modular and reusable Properties  
 * change ZIFormAction no longer has a type parameter 
