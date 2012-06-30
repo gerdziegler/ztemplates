@@ -30,10 +30,27 @@ public abstract class ZFormMap<T extends ZIForm> implements SortedMap<String, T>
 
 
   public ZFormMap(String name,
-      Comparator<String> comparator)
+      final Comparator<T> valueComparator)
   {
     this.name = name;
-    this.forms = comparator == null ? new TreeMap<String, T>() : new TreeMap<String, T>(comparator);
+    if (valueComparator == null)
+    {
+      this.forms = new TreeMap<String, T>();
+    }
+    else
+    {
+      Comparator<String> keyComp = new Comparator<String>()
+      {
+        @Override
+        public int compare(String o1, String o2)
+        {
+          T val1 = get(o1);
+          T val2 = get(o1);
+          return valueComparator.compare(val1, val2);
+        }
+      };
+      this.forms = new TreeMap<String, T>(keyComp);
+    }
   }
 
 
@@ -49,9 +66,9 @@ public abstract class ZFormMap<T extends ZIForm> implements SortedMap<String, T>
   }
 
 
-  public ZFormMap(Comparator<String> comparator)
+  public ZFormMap(Comparator<T> valueComparator)
   {
-    this(null, comparator);
+    this(null, valueComparator);
   }
 
 
@@ -104,9 +121,21 @@ public abstract class ZFormMap<T extends ZIForm> implements SortedMap<String, T>
   }
 
 
+  public T putCreateKey(Integer index, T value)
+  {
+    return put(createKey(index), value);
+  }
+
+
   public String createKey(Long index)
   {
     return createKey("", index);
+  }
+
+
+  public T putCreateKey(Long index, T value)
+  {
+    return put(createKey(index), value);
   }
 
 
@@ -122,9 +151,21 @@ public abstract class ZFormMap<T extends ZIForm> implements SortedMap<String, T>
   }
 
 
+  public T putCreateKey(String name, Integer index, T value)
+  {
+    return put(createKey(name, index), value);
+  }
+
+
   public String createKey(String name, Long index)
   {
     return name + String.format("%1$0" + keyWidth + "d", index);
+  }
+
+
+  public T putCreateKey(String name, Long index, T value)
+  {
+    return put(createKey(name, index), value);
   }
 
 
