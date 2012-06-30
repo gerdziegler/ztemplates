@@ -26,6 +26,17 @@ public class FormMapTest extends TestCase
   private ZFormMirrorFactory formMirrorFactory = new ZFormMirrorFactory();
 
 
+  //  public void test_createKey() throws Exception
+  //  {
+  //    FormWithMap f = new FormWithMap();
+  //    String key = f.getModels().createKey("katze", 0);
+  //    for (int i = 0; i < 112; i++)
+  //    {
+  //      System.out.println(String.format("%1$03d", i));
+  //    }
+  //    assertEquals("r00katze", key);
+  //  }
+
   public void testAdd() throws Exception
   {
     FormWithMap f = new FormWithMap();
