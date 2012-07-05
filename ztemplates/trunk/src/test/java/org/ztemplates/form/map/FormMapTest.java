@@ -195,7 +195,7 @@ public class FormMapTest extends TestCase
     assertEquals(0, mirr.getOperations().size());
     assertEquals(0, mirr.getFormHolders().size());
     assertEquals(0, mirr.getForms().size());
-    assertEquals(1, mirr.getFormMaps().size());
+    assertEquals(1, mirr.getFormLists().size());
   }
 
 

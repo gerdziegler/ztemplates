@@ -103,9 +103,9 @@ public class ZFormMirrorFactory
         @Override
         public void before(String fieldName, ZFormList map)
         {
-          ZIFormMapContainer cont = (ZIFormMapContainer) mirrorStack.peek();
-          ZFormMapMirror mirror = new ZFormMapMirror(map);
-          cont.getFormMaps().add(mirror);
+          ZIFormListContainer cont = (ZIFormListContainer) mirrorStack.peek();
+          ZFormListMirror mirror = new ZFormListMirror(map);
+          cont.getFormLists().add(mirror);
           mirrorStack.push(mirror);
         }
 

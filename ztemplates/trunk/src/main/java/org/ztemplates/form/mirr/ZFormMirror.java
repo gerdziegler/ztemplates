@@ -8,7 +8,7 @@ import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 
 public class ZFormMirror implements ZIFormMirror, ZIPropertyContainer, ZIOperationContainer, ZIFormContainer, ZIFormHolderContainer,
-    ZIFormMapContainer
+    ZIFormListContainer
 {
   private final ZIForm form;
 
@@ -20,7 +20,7 @@ public class ZFormMirror implements ZIFormMirror, ZIPropertyContainer, ZIOperati
 
   private final List<ZFormHolderMirror> formHolders = new ArrayList<ZFormHolderMirror>();
 
-  private final List<ZFormMapMirror> formMaps = new ArrayList<ZFormMapMirror>();
+  private final List<ZFormListMirror> formLists = new ArrayList<ZFormListMirror>();
 
 
   public ZFormMirror(ZIForm form)
@@ -48,9 +48,9 @@ public class ZFormMirror implements ZIFormMirror, ZIPropertyContainer, ZIOperati
   }
 
 
-  public List<ZFormMapMirror> getFormMaps()
+  public List<ZFormListMirror> getFormLists()
   {
-    return formMaps;
+    return formLists;
   }
 
 

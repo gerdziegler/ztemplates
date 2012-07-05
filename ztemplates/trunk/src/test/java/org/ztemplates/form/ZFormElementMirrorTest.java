@@ -35,7 +35,7 @@ public class ZFormElementMirrorTest extends TestCase
     assertEquals(1, mirr.getOperations().size());
     assertEquals(1, mirr.getForms().size());
     assertEquals(0, mirr.getFormHolders().size());
-    assertEquals(0, mirr.getFormMaps().size());
+    assertEquals(0, mirr.getFormLists().size());
 
     assertEquals("predefined", mirr.getProperties().get(0).getName());
     assertEquals("op1", mirr.getOperations().get(0).getName());

@@ -5,14 +5,14 @@ import java.util.List;
 
 import org.ztemplates.form.ZFormList;
 
-public class ZFormMapMirror implements ZIFormMirror, ZIFormContainer
+public class ZFormListMirror implements ZIFormMirror, ZIFormContainer
 {
   private final ZFormList map;
 
   private final List<ZFormMirror> forms = new ArrayList<ZFormMirror>();
 
 
-  public <K> ZFormMapMirror(ZFormList map)
+  public <K> ZFormListMirror(ZFormList map)
   {
     super();
     this.map = map;
