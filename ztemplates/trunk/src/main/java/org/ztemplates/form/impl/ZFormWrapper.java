@@ -25,16 +25,17 @@ import java.util.Stack;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.form.ZForm;
-import org.ztemplates.form.ZFormList;
 import org.ztemplates.form.ZFormMap;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.ZIdForm;
 import org.ztemplates.form.mirr.ZFormMirror;
 import org.ztemplates.form.mirr.ZIFormMirror;
 import org.ztemplates.form.visitor.ZAbstractFormVisitor;
 import org.ztemplates.form.visitor.ZFormWalker;
 import org.ztemplates.form.visitor.ZIFormVisitor;
+import org.ztemplates.marshaller.ZMarshallerException;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 import org.ztemplates.render.ZScript;
@@ -177,24 +178,23 @@ public final class ZFormWrapper
       }
 
 
+      //      @Override
+      //      public void before(String fieldName, ZFormList<ZIForm> list)
+      //      {
+      //        String crtName = computeName(list.getName(), prefixStack.peek(), fieldName, enforcePrefix);
+      //        prefixStack.push(crtName);
+      //        list.setName(crtName);
+      //      }
+      //
+      //
+      //      @Override
+      //      public void after(String fieldName, ZFormList<ZIForm> list)
+      //      {
+      //        prefixStack.pop();
+      //      }
+
       @Override
-      public void before(String fieldName, ZFormList<ZIForm> list)
-      {
-        String crtName = computeName(list.getName(), prefixStack.peek(), fieldName, enforcePrefix);
-        prefixStack.push(crtName);
-        list.setName(crtName);
-      }
-
-
-      @Override
-      public void after(String fieldName, ZFormList<ZIForm> list)
-      {
-        prefixStack.pop();
-      }
-
-
-      @Override
-      public void before(String fieldName, ZFormMap<ZIForm> map)
+      public void before(String fieldName, ZFormMap map)
       {
         String crtName = computeName(map.getName(), prefixStack.peek(), fieldName, enforcePrefix);
         prefixStack.push(crtName);
@@ -203,7 +203,7 @@ public final class ZFormWrapper
 
 
       @Override
-      public void after(String fieldName, ZFormMap<ZIForm> map)
+      public void after(String fieldName, ZFormMap map)
       {
         prefixStack.pop();
       }
@@ -299,7 +299,7 @@ public final class ZFormWrapper
 
     final List<ZOperation> operations = new ArrayList<ZOperation>();
     final List<ZProperty> properties = new ArrayList<ZProperty>();
-    final List<ZFormList> lists = new ArrayList<ZFormList>();
+    final List<ZFormMap> lists = new ArrayList<ZFormMap>();
     final Map<String, String[]> values = formValues.getValues();
     ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
@@ -329,55 +329,54 @@ public final class ZFormWrapper
       }
 
 
+      //      @Override
+      //      public void before(String fieldName, ZFormList<ZIForm> list)
+      //      {
+      //        String prefix = list.getName() + LIST_SEPARATOR;
+      //        for (String key : values.keySet())
+      //        {
+      //          if (key.startsWith(prefix))
+      //          {
+      //            int idx1 = key.indexOf(LIST_SEPARATOR, prefix.length());
+      //            if (idx1 < 0)
+      //            {
+      //              continue;
+      //            }
+      //            int idx2 = key.indexOf(PROP_SEPARATOR, idx1);
+      //            if (idx2 < 0)
+      //            {
+      //              continue;
+      //            }
+      //            String idxTxt = key.substring(idx1 + 1, idx2);
+      //            try
+      //            {
+      //              int size = Integer.parseInt(idxTxt);
+      //              if (size < 0 || size > 1000)
+      //              {
+      //                //DOS Attack?
+      //                continue;
+      //              }
+      //              if (list.size() != size)
+      //              {
+      //                list.clear();
+      //                for (int i = 0; i < size; i++)
+      //                {
+      //                  list.add(list.createForm(i, size));
+      //                }
+      //              }
+      //              break;
+      //            }
+      //            catch (NumberFormatException e)
+      //            {
+      //
+      //            }
+      //          }
+      //        }
+      //        super.before(fieldName, list);
+      //      }
+
       @Override
-      public void before(String fieldName, ZFormList<ZIForm> list)
-      {
-        String prefix = list.getName() + LIST_SEPARATOR;
-        for (String key : values.keySet())
-        {
-          if (key.startsWith(prefix))
-          {
-            int idx1 = key.indexOf(LIST_SEPARATOR, prefix.length());
-            if (idx1 < 0)
-            {
-              continue;
-            }
-            int idx2 = key.indexOf(PROP_SEPARATOR, idx1);
-            if (idx2 < 0)
-            {
-              continue;
-            }
-            String idxTxt = key.substring(idx1 + 1, idx2);
-            try
-            {
-              int size = Integer.parseInt(idxTxt);
-              if (size < 0 || size > 1000)
-              {
-                //DOS Attack?
-                continue;
-              }
-              if (list.size() != size)
-              {
-                list.clear();
-                for (int i = 0; i < size; i++)
-                {
-                  list.add(list.createForm(i, size));
-                }
-              }
-              break;
-            }
-            catch (NumberFormatException e)
-            {
-
-            }
-          }
-        }
-        super.before(fieldName, list);
-      }
-
-
-      @Override
-      public void before(String fieldName, ZFormMap<ZIForm> map)
+      public <K> void before(String fieldName, ZFormMap<ZIdForm<K>, K> map)
       {
         String prefix = map.getName() + PROP_SEPARATOR;
         for (String key : values.keySet())
@@ -389,11 +388,28 @@ public final class ZFormWrapper
             {
               continue;
             }
-            String name = key.substring(prefix.length(), idx1);
-            ZIForm crtForm = map.get(name);
+            String formattedId = key.substring(prefix.length(), idx1);
+            K id;
+            try
+            {
+              id = map.getMarshaller().unmarshal(formattedId);
+            }
+            catch (ZMarshallerException e)
+            {
+              throw new RuntimeException("", e);
+            }
+            ZIForm crtForm = map.getFormWithId(id);
             if (crtForm == null)
             {
-              map.put(name, map.createForm(name));
+              ZIdForm<K> form = null;
+              if (map.getFactory() != null)
+              {
+                form = map.getFactory().createForm(id);
+              }
+              if (form != null)
+              {
+                map.add(form);
+              }
             }
           }
         }
@@ -536,7 +552,7 @@ public final class ZFormWrapper
   {
     final List<ZProperty> properties = new ArrayList<ZProperty>();
     final List<ZOperation> operations = new ArrayList<ZOperation>();
-    final List<ZFormList> lists = new ArrayList<ZFormList>();
+    final List<ZFormMap> lists = new ArrayList<ZFormMap>();
     ZIFormVisitor vis = new ZAbstractFormVisitor()
     {
       @Override
@@ -554,9 +570,9 @@ public final class ZFormWrapper
 
 
       @Override
-      public void before(String name, ZFormList list)
+      public void before(String name, ZFormMap map)
       {
-        lists.add(list);
+        lists.add(map);
       }
     };
     walker.visit(obj, vis);

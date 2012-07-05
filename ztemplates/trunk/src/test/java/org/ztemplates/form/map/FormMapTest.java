@@ -41,11 +41,11 @@ public class FormMapTest extends TestCase
   {
     FormWithMap f = new FormWithMap();
     assertNull(f.getModels().getName());
-    f.getModels().put("test1", new FormWithMapNested());
-    assertNull(f.getModels().get("test1").getProp().getName(), f.getModels().get("test1").getProp().getName());
+    f.getModels().add(new FormWithMapNested("test1"));
+    assertNull(f.getModels().getFormWithId("test1").getProp().getName(), f.getModels().getFormWithId("test1").getProp().getName());
     ZFormWrapper wrapper = new ZFormWrapper(f);
     assertEquals("models", f.getModels().getName());
-    assertEquals("models_test1_prop", f.getModels().get("test1").getProp().getName());
+    assertEquals("models_test1_prop", f.getModels().getFormWithId("test1").getProp().getName());
   }
 
 
@@ -53,10 +53,10 @@ public class FormMapTest extends TestCase
   {
     FormWithMap f = new FormWithMap();
     ZFormWrapper wrapper = new ZFormWrapper(f);
-    f.getModels().put("test1", new FormWithMapNested());
-    f.getModels().put("test2", new FormWithMapNested());
-    assertEquals("models_test1_prop", f.getModels().get("test1").getProp().getName());
-    assertEquals("models_test2_prop", f.getModels().get("test2").getProp().getName());
+    f.getModels().add(new FormWithMapNested("test1"));
+    f.getModels().add(new FormWithMapNested("test2"));
+    assertEquals("models_test1_prop", f.getModels().getFormWithId("test1").getProp().getName());
+    assertEquals("models_test2_prop", f.getModels().getFormWithId("test2").getProp().getName());
   }
 
 
@@ -64,16 +64,16 @@ public class FormMapTest extends TestCase
   {
     FormWithMap f = new FormWithMap();
     ZFormWrapper wrapper = new ZFormWrapper(f);
-    f.getModels().put("test1", new FormWithMapNested());
+    f.getModels().add(new FormWithMapNested("test1"));
     assertEquals("models", f.getModels().getName());
-    assertEquals("models_test1_prop", f.getModels().get("test1").getProp().getName());
-    assertEquals("models_test1_modelsNested", f.getModels().get("test1").getModelsNested().getName());
+    assertEquals("models_test1_prop", f.getModels().getFormWithId("test1").getProp().getName());
+    assertEquals("models_test1_modelsNested", f.getModels().getFormWithId("test1").getModelsNested().getName());
 
-    f.getModels().put("test2", new FormWithMapNested());
-    assertEquals("models_test1_prop", f.getModels().get("test1").getProp().getName());
-    assertEquals("models_test1_modelsNested", f.getModels().get("test1").getModelsNested().getName());
-    assertEquals("models_test2_prop", f.getModels().get("test2").getProp().getName());
-    assertEquals("models_test2_modelsNested", f.getModels().get("test2").getModelsNested().getName());
+    f.getModels().add(new FormWithMapNested("test2"));
+    assertEquals("models_test1_prop", f.getModels().getFormWithId("test1").getProp().getName());
+    assertEquals("models_test1_modelsNested", f.getModels().getFormWithId("test1").getModelsNested().getName());
+    assertEquals("models_test2_prop", f.getModels().getFormWithId("test2").getProp().getName());
+    assertEquals("models_test2_modelsNested", f.getModels().getFormWithId("test2").getModelsNested().getName());
   }
 
 
@@ -86,10 +86,10 @@ public class FormMapTest extends TestCase
         value
     });
     FormWithMap f = new FormWithMap();
-    f.getModels().put("test1", new FormWithMapNested());
+    f.getModels().add(new FormWithMapNested("test1"));
     ZFormWrapper formWrapper = new ZFormWrapper(f);
     formWrapper.readFromValues(formValues);
-    assertEquals(value, f.getModels().get("test1").getProp().getValue());
+    assertEquals(value, f.getModels().getFormWithId("test1").getProp().getValue());
   }
 
 
@@ -104,7 +104,7 @@ public class FormMapTest extends TestCase
     FormWithMap f = new FormWithMap();
     ZFormWrapper formWrapper = new ZFormWrapper(f);
     formWrapper.readFromValues(formValues);
-    assertEquals(value, f.getModels().get("test1").getProp().getValue());
+    assertEquals(value, f.getModels().getFormWithId("test1").getProp().getValue());
   }
 
 
@@ -123,8 +123,8 @@ public class FormMapTest extends TestCase
     FormWithMap f = new FormWithMap();
     ZFormWrapper formWrapper = new ZFormWrapper(f);
     formWrapper.readFromValues(formValues);
-    assertEquals(value, f.getModels().get("test1").getProp().getValue());
-    assertEquals(value + "1", f.getModels().get("test2").getProp().getValue());
+    assertEquals(value, f.getModels().getFormWithId("test1").getProp().getValue());
+    assertEquals(value + "1", f.getModels().getFormWithId("test2").getProp().getValue());
   }
 
 
@@ -137,12 +137,12 @@ public class FormMapTest extends TestCase
         value
     });
     FormWithMap f = new FormWithMap();
-    FormWithMapNested nested = new FormWithMapNested();
-    f.getModels().put("test1", nested);
-    nested.getModelsNested().put("nest1", new FormWithMapNested());
+    FormWithMapNested nested = new FormWithMapNested("test1");
+    f.getModels().add(nested);
+    nested.getModelsNested().add(new FormWithMapNested("test1"));
     ZFormWrapper formWrapper = new ZFormWrapper(f);
     formWrapper.readFromValues(formValues);
-    assertEquals(value, f.getModels().get("test1").getModelsNested().get("nest1").getProp().getValue());
+    assertEquals(value, f.getModels().getFormWithId("test1").getModelsNested().getFormWithId("nest1").getProp().getValue());
   }
 
 
@@ -157,7 +157,7 @@ public class FormMapTest extends TestCase
     FormWithMap f = new FormWithMap();
     ZFormWrapper formWrapper = new ZFormWrapper(f);
     formWrapper.readFromValues(formValues);
-    assertEquals(value, f.getModels().get("test1").getModelsNested().get("nest1").getProp().getValue());
+    assertEquals(value, f.getModels().getFormWithId("test1").getModelsNested().getFormWithId("nest1").getProp().getValue());
   }
 
 
@@ -165,17 +165,17 @@ public class FormMapTest extends TestCase
   {
     FormWithMap f = new FormWithMap();
     f.getModels().setName("katze");
-    FormWithMapNested nested = new FormWithMapNested();
-    f.getModels().put("matze", nested);
+    FormWithMapNested nested = new FormWithMapNested("matze");
+    f.getModels().add(nested);
     nested.getModelsNested().setName("latze");
-    FormWithMapNested nested2 = new FormWithMapNested();
-    nested.getModelsNested().put("zatze", nested2);
+    FormWithMapNested nested2 = new FormWithMapNested("zatze");
+    nested.getModelsNested().add(nested2);
     ZFormWrapper wrapper = new ZFormWrapper(f);
     assertEquals("katze", f.getModels().getName());
-    assertEquals("katze_matze_latze_zatze_prop", f.getModels().get("matze").getModelsNested().get("zatze").getProp().getName());
+    assertEquals("katze_matze_latze_zatze_prop", f.getModels().getFormWithId("matze").getModelsNested().getFormWithId("zatze").getProp().getName());
     f.getModels().setName("batze");
     String nestedName = "batze_matze_latze_zatze_prop";
-    assertEquals(nestedName, f.getModels().get("matze").getModelsNested().get("zatze").getProp().getName());
+    assertEquals(nestedName, f.getModels().getFormWithId("matze").getModelsNested().getFormWithId("zatze").getProp().getName());
     String value = "katze";
     ZFormValues formValues = new ZFormValues();
     formValues.getValues().put(nestedName, new String[]
@@ -183,7 +183,7 @@ public class FormMapTest extends TestCase
         value
     });
     wrapper.readFromValues(formValues);
-    assertEquals(value, f.getModels().get("matze").getModelsNested().get("zatze").getProp().getValue());
+    assertEquals(value, f.getModels().getFormWithId("matze").getModelsNested().getFormWithId("zatze").getProp().getValue());
   }
 
 
@@ -191,7 +191,6 @@ public class FormMapTest extends TestCase
   {
     FormWithMap f = new FormWithMap();
     ZFormMirror mirr = formMirrorFactory.createFormMirror(f);
-    assertEquals(0, mirr.getFormLists().size());
     assertEquals(0, mirr.getProperties().size());
     assertEquals(0, mirr.getOperations().size());
     assertEquals(0, mirr.getFormHolders().size());
@@ -212,7 +211,7 @@ public class FormMapTest extends TestCase
         value
     });
     wrapper.readFromValues(formValues);
-    assertEquals(value, f.getModels().get("batze").getProp().getValue());
+    assertEquals(value, f.getModels().getFormWithId("batze").getProp().getValue());
   }
 
 }

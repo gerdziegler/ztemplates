@@ -125,7 +125,7 @@ public class FormTest extends TestCase
     assertEquals(1, mirr.getProperties().size());
     assertEquals(1, mirr.getForms().size());
     assertEquals(0, mirr.getFormHolders().size());
-    assertEquals(0, mirr.getFormLists().size());
+    assertEquals(0, mirr.getFormMaps().size());
 
   }
 

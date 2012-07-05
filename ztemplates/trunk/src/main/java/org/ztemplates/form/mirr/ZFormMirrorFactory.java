@@ -3,7 +3,6 @@ package org.ztemplates.form.mirr;
 import java.util.Stack;
 
 import org.ztemplates.form.ZForm;
-import org.ztemplates.form.ZFormList;
 import org.ztemplates.form.ZFormMap;
 import org.ztemplates.form.ZIForm;
 import org.ztemplates.form.visitor.ZFormWalker;
@@ -86,25 +85,23 @@ public class ZFormMirrorFactory
         }
 
 
-        @Override
-        public void before(String fieldName, ZFormList<ZIForm> list)
-        {
-          ZIFormListContainer cont = (ZIFormListContainer) mirrorStack.peek();
-          ZFormListMirror formListMirror = new ZFormListMirror(list);
-          cont.getFormLists().add(formListMirror);
-          mirrorStack.push(formListMirror);
-        }
+        //        @Override
+        //        public void before(String fieldName, ZFormList<ZIForm> list)
+        //        {
+        //          ZIFormListContainer cont = (ZIFormListContainer) mirrorStack.peek();
+        //          ZFormListMirror formListMirror = new ZFormListMirror(list);
+        //          cont.getFormLists().add(formListMirror);
+        //          mirrorStack.push(formListMirror);
+        //        }
 
-
-        @Override
-        public void after(String fieldName, ZFormList<ZIForm> list)
-        {
-          mirrorStack.pop();
-        }
-
+        //        @Override
+        //        public void after(String fieldName, ZFormList<ZIForm> list)
+        //        {
+        //          mirrorStack.pop();
+        //        }
 
         @Override
-        public void before(String fieldName, ZFormMap<ZIForm> map)
+        public void before(String fieldName, ZFormMap map)
         {
           ZIFormMapContainer cont = (ZIFormMapContainer) mirrorStack.peek();
           ZFormMapMirror mirror = new ZFormMapMirror(map);
@@ -114,7 +111,7 @@ public class ZFormMirrorFactory
 
 
         @Override
-        public void after(String fieldName, ZFormMap<ZIForm> map)
+        public void after(String fieldName, ZFormMap map)
         {
           mirrorStack.pop();
         }

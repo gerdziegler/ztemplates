@@ -25,12 +25,12 @@ public class ZFormMembers
 
   private final List<ZOperation> operations;
 
-  private final List<ZFormList> lists;
+  private final List<ZFormMap> lists;
 
 
   public ZFormMembers(List<ZProperty> properties,
       List<ZOperation> operations,
-      List<ZFormList> lists)
+      List<ZFormMap> lists)
   {
     super();
     this.properties = properties;
@@ -51,7 +51,7 @@ public class ZFormMembers
   }
 
 
-  public List<ZFormList> getLists()
+  public List<ZFormMap> getLists()
   {
     return lists;
   }

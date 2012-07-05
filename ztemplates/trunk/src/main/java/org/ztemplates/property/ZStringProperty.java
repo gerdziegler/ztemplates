@@ -4,30 +4,19 @@
  */
 package org.ztemplates.property;
 
+import org.ztemplates.marshaller.ZStringMarshaller;
+
 public class ZStringProperty extends ZProperty<String>
 {
   public ZStringProperty()
   {
+    super(new ZStringMarshaller());
   }
 
 
   public ZStringProperty(String name)
   {
-    super();
+    super(new ZStringMarshaller());
     setName(name);
-  }
-
-
-  @Override
-  public String parse(String formattedValue)
-  {
-    return formattedValue;
-  }
-
-
-  @Override
-  public String format(String obj)
-  {
-    return obj;
   }
 }

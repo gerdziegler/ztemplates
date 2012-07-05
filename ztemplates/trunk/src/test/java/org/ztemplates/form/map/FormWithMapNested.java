@@ -15,24 +15,35 @@
 package org.ztemplates.form.map;
 
 import org.ztemplates.form.ZFormMap;
-import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.ZIdForm;
+import org.ztemplates.form.ZIdFormFactory;
+import org.ztemplates.marshaller.ZStringMarshaller;
 import org.ztemplates.property.ZStringProperty;
 
-public class FormWithMapNested implements ZIForm
+public class FormWithMapNested implements ZIdForm<String>
 {
-  private final ZFormMap<FormWithMapNested> modelsNested = new ZFormMap<FormWithMapNested>()
+  private final ZStringProperty id = new ZStringProperty();
+
+  private final ZFormMap<FormWithMapNested, String> modelsNested = new ZFormMap<FormWithMapNested, String>(new ZIdFormFactory<FormWithMapNested, String>()
   {
     @Override
-    public FormWithMapNested createForm(String name)
+    public FormWithMapNested createForm(String id)
     {
-      return new FormWithMapNested();
+      return new FormWithMapNested(id);
     }
-  };
+  }, new ZStringMarshaller());
 
   private final ZStringProperty prop = new ZStringProperty();
 
 
-  public ZFormMap<FormWithMapNested> getModelsNested()
+  public FormWithMapNested(String id)
+  {
+    super();
+    this.id.setValue(id);
+  }
+
+
+  public ZFormMap<FormWithMapNested, String> getModelsNested()
   {
     return modelsNested;
   }
@@ -41,5 +52,12 @@ public class FormWithMapNested implements ZIForm
   public ZStringProperty getProp()
   {
     return prop;
+  }
+
+
+  @Override
+  public String getId()
+  {
+    return id.getValue();
   }
 }

@@ -6,7 +6,7 @@ package org.ztemplates.property;
  * @author gerd
  *
  */
-public class ZPropertyException extends Exception
+public class ZPropertyException extends RuntimeException
 {
   private final ZProperty[] properties;
 

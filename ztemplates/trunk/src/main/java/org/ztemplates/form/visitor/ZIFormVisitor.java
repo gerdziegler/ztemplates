@@ -15,9 +15,9 @@
 package org.ztemplates.form.visitor;
 
 import org.ztemplates.form.ZForm;
-import org.ztemplates.form.ZFormList;
 import org.ztemplates.form.ZFormMap;
 import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.ZIdForm;
 import org.ztemplates.property.ZOperation;
 import org.ztemplates.property.ZProperty;
 
@@ -44,10 +44,7 @@ public interface ZIFormVisitor
   public void before(String fieldName, ZForm form);
 
 
-  public void before(String fieldName, ZFormList<ZIForm> list);
-
-
-  public void before(String fieldName, ZFormMap<ZIForm> map);
+  public <K> void before(String fieldName, ZFormMap<ZIdForm<K>, K> map);
 
 
   public void after(String fieldName, ZIForm form, int idx, int cnt);
@@ -59,9 +56,5 @@ public interface ZIFormVisitor
   public void after(String fieldName, ZForm form);
 
 
-  public void after(String fieldName, ZFormList<ZIForm> list);
-
-
-  public void after(String fieldName, ZFormMap<ZIForm> map);
-
+  public <K> void after(String fieldName, ZFormMap<ZIdForm<K>, K> map);
 }

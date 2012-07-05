@@ -1,13 +1,14 @@
 package org.ztemplates.form;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
+import org.apache.log4j.Logger;
 import org.ztemplates.form.impl.ZFormWrapper;
+import org.ztemplates.marshaller.ZIMarshaller;
 
 /**
  * 
@@ -15,9 +16,11 @@ import org.ztemplates.form.impl.ZFormWrapper;
  *
  * @param <T>
  */
-public abstract class ZFormMap<T extends ZIForm> implements SortedMap<String, T>, ZINamedFormElement
+public class ZFormMap<T extends ZIdForm<K>, K> implements List<T>, ZINamedFormElement
 {
-  private final SortedMap<String, T> forms;
+  static final Logger log = Logger.getLogger(ZFormMap.class);
+
+  private final List<T> forms = new ArrayList<T>();
 
   private String name;
 
@@ -25,50 +28,38 @@ public abstract class ZFormMap<T extends ZIForm> implements SortedMap<String, T>
 
   private int keyWidth = 3;
 
+  private ZIdFormFactory<T, K> factory;
 
-  public abstract T createForm(String name);
+  private final ZIMarshaller<K> marshaller;
 
 
   public ZFormMap(String name,
-      final Comparator<T> valueComparator)
+      ZIdFormFactory<T, K> factory,
+      ZIMarshaller<K> marshaller)
   {
     this.name = name;
-    if (valueComparator == null)
-    {
-      this.forms = new TreeMap<String, T>();
-    }
-    else
-    {
-      Comparator<String> keyComp = new Comparator<String>()
-      {
-        @Override
-        public int compare(String o1, String o2)
-        {
-          T val1 = get(o1);
-          T val2 = get(o1);
-          return valueComparator.compare(val1, val2);
-        }
-      };
-      this.forms = new TreeMap<String, T>(keyComp);
-    }
+    this.factory = factory;
+    this.marshaller = marshaller;
   }
 
 
-  public ZFormMap(String name)
+  public ZFormMap(String name,
+      ZIMarshaller<K> marshaller)
   {
-    this(name, null);
+    this(name, null, marshaller);
   }
 
 
-  public ZFormMap()
+  public ZFormMap(ZIMarshaller<K> marshaller)
   {
-    this(null, null);
+    this(null, null, marshaller);
   }
 
 
-  public ZFormMap(Comparator<T> valueComparator)
+  public ZFormMap(ZIdFormFactory<T, K> factory,
+      ZIMarshaller<K> marshaller)
   {
-    this(null, valueComparator);
+    this(null, factory, marshaller);
   }
 
 
@@ -121,39 +112,15 @@ public abstract class ZFormMap<T extends ZIForm> implements SortedMap<String, T>
   }
 
 
-  public T putCreateKey(Integer index, T value)
-  {
-    return put(createKey(index), value);
-  }
-
-
   public String createKey(Long index)
   {
     return createKey("", index);
   }
 
 
-  public T putCreateKey(Long index, T value)
-  {
-    return put(createKey(index), value);
-  }
-
-
-  /**
-   * utility for creating sortable indexes
-   * @param name
-   * @param index
-   * @return
-   */
   public String createKey(String name, Integer index)
   {
     return name + String.format("%1$0" + keyWidth + "d", index);
-  }
-
-
-  public T putCreateKey(String name, Integer index, T value)
-  {
-    return put(createKey(name, index), value);
   }
 
 
@@ -163,171 +130,235 @@ public abstract class ZFormMap<T extends ZIForm> implements SortedMap<String, T>
   }
 
 
-  public T putCreateKey(String name, Long index, T value)
-  {
-    return put(createKey(name, index), value);
-  }
-
-
-  private void rename(Map<? extends String, ? extends T> m)
+  private void rename(Collection<? extends T> list)
   {
     if (name == null)
     {
       return;
     }
-    for (Map.Entry<? extends String, ? extends T> en : m.entrySet())
+    for (T form : list)
     {
-      String key = en.getKey();
-      T form = en.getValue();
-      rename(key, form);
+      rename(form);
     }
   }
 
 
-  private void rename(String key, T form)
+  private void rename(T form)
   {
     if (name == null)
     {
       return;
     }
-    String newPrefix = name + ZFormWrapper.PROP_SEPARATOR + key;
+    String newPrefix = name + ZFormWrapper.PROP_SEPARATOR + marshaller.marshal(form.getId());
     ZFormWrapper wrapper = new ZFormWrapper(form, newPrefix, enforceNaming);
   }
 
 
+  public T getFormWithId(K id)
+  {
+    for (T t : forms)
+    {
+      if (id.equals(t.getId()))
+      {
+        return t;
+      }
+    }
+    return null;
+  }
+
+
+  public ZIdFormFactory<T, K> getFactory()
+  {
+    return factory;
+  }
+
+
+  public void setFactory(ZIdFormFactory<T, K> factory)
+  {
+    this.factory = factory;
+  }
+
+
+  public ZIMarshaller<K> getMarshaller()
+  {
+    return marshaller;
+  }
+
+
+  public boolean containsFormWithId(K id)
+  {
+    for (T form : forms)
+    {
+      if (id.equals(form.getId()))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
   //---------------------------------------------------------------------------------------------------------------
-  //--- MAP MODIFY -----------------------------------------------------------------------------------------------
+  //--- LIST MODIFY -----------------------------------------------------------------------------------------------
   //---------------------------------------------------------------------------------------------------------------
 
-  @Override
-  public T put(String key, T value)
+  public boolean add(T e)
   {
-    rename(key, value);
-    return forms.put(key, value);
+    boolean ret = forms.add(e);
+    rename(e);
+    return ret;
   }
 
 
-  @Override
-  public T remove(Object key)
+  public void add(int index, T element)
   {
-    return forms.remove(key);
+    forms.add(index, element);
+    rename(element);
   }
 
 
-  @Override
-  public void putAll(Map<? extends String, ? extends T> m)
+  public T remove(int index)
   {
-    rename(m);
-    forms.putAll(m);
+    T ret = forms.remove(index);
+    return ret;
   }
 
 
-  @Override
+  public boolean remove(Object o)
+  {
+    boolean ret = forms.remove(o);
+    return ret;
+  }
+
+
+  public boolean addAll(Collection<? extends T> c)
+  {
+    boolean ret = forms.addAll(c);
+    if (ret)
+    {
+      rename(c);
+    }
+    return ret;
+  }
+
+
+  public boolean addAll(int index, Collection<? extends T> c)
+  {
+    boolean ret = forms.addAll(index, c);
+    if (ret)
+    {
+      rename(c);
+    }
+    return ret;
+  }
+
+
+  public boolean removeAll(Collection<?> c)
+  {
+    boolean ret = forms.removeAll(c);
+    return ret;
+  }
+
+
+  public boolean retainAll(Collection<?> c)
+  {
+    boolean ret = forms.retainAll(c);
+    return ret;
+  }
+
+
   public void clear()
   {
     forms.clear();
   }
 
 
-  //---------------------------------------------------------------------------------------------------------------
-  //--- MAP READ -------------------------------------------------------------------------------------------------
-  //---------------------------------------------------------------------------------------------------------------
+  public T set(int index, T element)
+  {
+    T ret = forms.set(index, element);
+    rename(element);
+    return ret;
+  }
 
-  @Override
+
+  //---------------------------------------------------------------------------------------------------------------
+  //--- LIST READONLY ---------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------------------------
+  public boolean containsAll(Collection<?> c)
+  {
+    return forms.containsAll(c);
+  }
+
+
   public int size()
   {
     return forms.size();
   }
 
 
-  @Override
   public boolean isEmpty()
   {
     return forms.isEmpty();
   }
 
 
-  @Override
-  public boolean containsKey(Object key)
+  public boolean contains(Object o)
   {
-    return forms.containsKey(key);
-
+    return forms.contains(o);
   }
 
 
-  @Override
-  public boolean containsValue(Object value)
+  public Iterator<T> iterator()
   {
-    return forms.containsValue(value);
+    return forms.iterator();
   }
 
 
-  @Override
-  public T get(Object key)
+  public Object[] toArray()
   {
-    return forms.get(key);
+    return forms.toArray();
   }
 
 
-  @Override
-  public Set<String> keySet()
+  public <T> T[] toArray(T[] a)
   {
-    return forms.keySet();
+    return (T[]) forms.toArray();
   }
 
 
-  @Override
-  public Collection<T> values()
+  public T get(int index)
   {
-    return forms.values();
+    return forms.get(index);
   }
 
 
-  @Override
-  public Set<java.util.Map.Entry<String, T>> entrySet()
+  public int indexOf(Object o)
   {
-    return forms.entrySet();
+    return forms.indexOf(o);
   }
 
 
-  @Override
-  public Comparator<? super String> comparator()
+  public int lastIndexOf(Object o)
   {
-    return forms.comparator();
+    return forms.lastIndexOf(o);
   }
 
 
-  @Override
-  public SortedMap<String, T> subMap(String fromKey, String toKey)
+  public ListIterator<T> listIterator()
   {
-    return forms.subMap(fromKey, toKey);
+    return forms.listIterator();
   }
 
 
-  @Override
-  public SortedMap<String, T> headMap(String toKey)
+  public ListIterator<T> listIterator(int index)
   {
-    return forms.headMap(toKey);
+    return forms.listIterator(index);
   }
 
 
-  @Override
-  public SortedMap<String, T> tailMap(String fromKey)
+  public List<T> subList(int fromIndex, int toIndex)
   {
-    return forms.tailMap(fromKey);
+    return forms.subList(fromIndex, toIndex);
   }
 
-
-  @Override
-  public String firstKey()
-  {
-    return firstKey();
-  }
-
-
-  @Override
-  public String lastKey()
-  {
-    return lastKey();
-  }
 }
