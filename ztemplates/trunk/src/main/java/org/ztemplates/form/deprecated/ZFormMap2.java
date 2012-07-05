@@ -1,4 +1,4 @@
-package org.ztemplates.form;
+package org.ztemplates.form.deprecated;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.ztemplates.form.ZIForm;
+import org.ztemplates.form.ZINamedFormElement;
 import org.ztemplates.form.impl.ZFormWrapper;
 
 /**
