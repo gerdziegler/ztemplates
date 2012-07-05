@@ -14,7 +14,7 @@
  */
 package org.ztemplates.form.map;
 
-import org.ztemplates.form.ZFormMap;
+import org.ztemplates.form.ZFormList;
 import org.ztemplates.form.ZIdForm;
 import org.ztemplates.form.ZIdFormFactory;
 import org.ztemplates.marshaller.ZStringMarshaller;
@@ -24,7 +24,7 @@ public class FormWithMapNested implements ZIdForm<String>
 {
   private final ZStringProperty id = new ZStringProperty();
 
-  private final ZFormMap<FormWithMapNested, String> modelsNested = new ZFormMap<FormWithMapNested, String>(new ZIdFormFactory<FormWithMapNested, String>()
+  private final ZFormList<FormWithMapNested, String> modelsNested = new ZFormList<FormWithMapNested, String>(new ZIdFormFactory<FormWithMapNested, String>()
   {
     @Override
     public FormWithMapNested createForm(String id)
@@ -43,7 +43,7 @@ public class FormWithMapNested implements ZIdForm<String>
   }
 
 
-  public ZFormMap<FormWithMapNested, String> getModelsNested()
+  public ZFormList<FormWithMapNested, String> getModelsNested()
   {
     return modelsNested;
   }

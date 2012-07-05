@@ -1,7 +1,7 @@
 package org.ztemplates.form.visitor;
 
 import org.ztemplates.form.ZForm;
-import org.ztemplates.form.ZFormMap;
+import org.ztemplates.form.ZFormList;
 import org.ztemplates.form.ZIForm;
 import org.ztemplates.form.ZIdForm;
 import org.ztemplates.property.ZOperation;
@@ -60,7 +60,7 @@ public class ZAbstractFormVisitor implements ZIFormVisitor
 
 
   @Override
-  public <K> void before(String fieldName, ZFormMap<ZIdForm<K>, K> map)
+  public <K> void before(String fieldName, ZFormList<ZIdForm<K>, K> map)
   {
 
   }
@@ -88,7 +88,7 @@ public class ZAbstractFormVisitor implements ZIFormVisitor
 
 
   @Override
-  public <K> void after(String fieldName, ZFormMap<ZIdForm<K>, K> map)
+  public <K> void after(String fieldName, ZFormList<ZIdForm<K>, K> map)
   {
 
   }

@@ -3,7 +3,7 @@ package org.ztemplates.form.mirr;
 import java.util.Stack;
 
 import org.ztemplates.form.ZForm;
-import org.ztemplates.form.ZFormMap;
+import org.ztemplates.form.ZFormList;
 import org.ztemplates.form.ZIForm;
 import org.ztemplates.form.visitor.ZFormWalker;
 import org.ztemplates.form.visitor.ZIFormVisitor;
@@ -101,7 +101,7 @@ public class ZFormMirrorFactory
         //        }
 
         @Override
-        public void before(String fieldName, ZFormMap map)
+        public void before(String fieldName, ZFormList map)
         {
           ZIFormMapContainer cont = (ZIFormMapContainer) mirrorStack.peek();
           ZFormMapMirror mirror = new ZFormMapMirror(map);
@@ -111,7 +111,7 @@ public class ZFormMirrorFactory
 
 
         @Override
-        public void after(String fieldName, ZFormMap map)
+        public void after(String fieldName, ZFormList map)
         {
           mirrorStack.pop();
         }

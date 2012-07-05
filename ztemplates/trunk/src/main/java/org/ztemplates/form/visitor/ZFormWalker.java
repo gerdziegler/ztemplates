@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import org.ztemplates.form.ZForm;
-import org.ztemplates.form.ZFormMap;
+import org.ztemplates.form.ZFormList;
 import org.ztemplates.form.ZIForm;
 import org.ztemplates.form.ZIdForm;
 import org.ztemplates.property.ZOperation;
@@ -79,9 +79,9 @@ public class ZFormWalker
           //            }
           //            vis.after(fieldName, list);
           //          }
-          else if (ZFormMap.class.isAssignableFrom(type))
+          else if (ZFormList.class.isAssignableFrom(type))
           {
-            ZFormMap list = (ZFormMap) f.get(obj);
+            ZFormList list = (ZFormList) f.get(obj);
             vis.before(fieldName, list);
             for (Object listElem : list)
             {

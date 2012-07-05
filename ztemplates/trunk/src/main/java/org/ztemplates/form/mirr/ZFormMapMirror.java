@@ -3,23 +3,23 @@ package org.ztemplates.form.mirr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ztemplates.form.ZFormMap;
+import org.ztemplates.form.ZFormList;
 
 public class ZFormMapMirror implements ZIFormMirror, ZIFormContainer
 {
-  private final ZFormMap map;
+  private final ZFormList map;
 
   private final List<ZFormMirror> forms = new ArrayList<ZFormMirror>();
 
 
-  public <K> ZFormMapMirror(ZFormMap map)
+  public <K> ZFormMapMirror(ZFormList map)
   {
     super();
     this.map = map;
   }
 
 
-  public ZFormMap getMap()
+  public ZFormList getMap()
   {
     return map;
   }

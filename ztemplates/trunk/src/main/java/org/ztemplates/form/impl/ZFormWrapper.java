@@ -25,7 +25,7 @@ import java.util.Stack;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.form.ZForm;
-import org.ztemplates.form.ZFormMap;
+import org.ztemplates.form.ZFormList;
 import org.ztemplates.form.ZFormMembers;
 import org.ztemplates.form.ZFormValues;
 import org.ztemplates.form.ZIForm;
@@ -194,7 +194,7 @@ public final class ZFormWrapper
       //      }
 
       @Override
-      public void before(String fieldName, ZFormMap map)
+      public void before(String fieldName, ZFormList map)
       {
         String crtName = computeName(map.getName(), prefixStack.peek(), fieldName, enforcePrefix);
         prefixStack.push(crtName);
@@ -203,7 +203,7 @@ public final class ZFormWrapper
 
 
       @Override
-      public void after(String fieldName, ZFormMap map)
+      public void after(String fieldName, ZFormList map)
       {
         prefixStack.pop();
       }
@@ -299,7 +299,7 @@ public final class ZFormWrapper
 
     final List<ZOperation> operations = new ArrayList<ZOperation>();
     final List<ZProperty> properties = new ArrayList<ZProperty>();
-    final List<ZFormMap> lists = new ArrayList<ZFormMap>();
+    final List<ZFormList> lists = new ArrayList<ZFormList>();
     final Map<String, String[]> values = formValues.getValues();
     ZIFormVisitor visitor = new ZAbstractFormVisitor()
     {
@@ -376,7 +376,7 @@ public final class ZFormWrapper
       //      }
 
       @Override
-      public <K> void before(String fieldName, ZFormMap<ZIdForm<K>, K> map)
+      public <K> void before(String fieldName, ZFormList<ZIdForm<K>, K> map)
       {
         String prefix = map.getName() + PROP_SEPARATOR;
         for (String key : values.keySet())
@@ -552,7 +552,7 @@ public final class ZFormWrapper
   {
     final List<ZProperty> properties = new ArrayList<ZProperty>();
     final List<ZOperation> operations = new ArrayList<ZOperation>();
-    final List<ZFormMap> lists = new ArrayList<ZFormMap>();
+    final List<ZFormList> lists = new ArrayList<ZFormList>();
     ZIFormVisitor vis = new ZAbstractFormVisitor()
     {
       @Override
@@ -570,7 +570,7 @@ public final class ZFormWrapper
 
 
       @Override
-      public void before(String name, ZFormMap map)
+      public void before(String name, ZFormList map)
       {
         lists.add(map);
       }

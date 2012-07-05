@@ -16,9 +16,9 @@ import org.ztemplates.marshaller.ZIMarshaller;
  *
  * @param <T>
  */
-public class ZFormMap<T extends ZIdForm<K>, K> implements List<T>, ZINamedFormElement
+public class ZFormList<T extends ZIdForm<K>, K> implements List<T>, ZINamedFormElement
 {
-  static final Logger log = Logger.getLogger(ZFormMap.class);
+  static final Logger log = Logger.getLogger(ZFormList.class);
 
   private final List<T> forms = new ArrayList<T>();
 
@@ -33,7 +33,7 @@ public class ZFormMap<T extends ZIdForm<K>, K> implements List<T>, ZINamedFormEl
   private final ZIMarshaller<K> marshaller;
 
 
-  public ZFormMap(String name,
+  public ZFormList(String name,
       ZIdFormFactory<T, K> factory,
       ZIMarshaller<K> marshaller)
   {
@@ -43,20 +43,20 @@ public class ZFormMap<T extends ZIdForm<K>, K> implements List<T>, ZINamedFormEl
   }
 
 
-  public ZFormMap(String name,
+  public ZFormList(String name,
       ZIMarshaller<K> marshaller)
   {
     this(name, null, marshaller);
   }
 
 
-  public ZFormMap(ZIMarshaller<K> marshaller)
+  public ZFormList(ZIMarshaller<K> marshaller)
   {
     this(null, null, marshaller);
   }
 
 
-  public ZFormMap(ZIdFormFactory<T, K> factory,
+  public ZFormList(ZIdFormFactory<T, K> factory,
       ZIMarshaller<K> marshaller)
   {
     this(null, factory, marshaller);
