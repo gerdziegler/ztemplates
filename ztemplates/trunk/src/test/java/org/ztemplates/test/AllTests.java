@@ -39,6 +39,7 @@ import org.ztemplates.test.actions.urlhandler.match.handler.tail.TailParseTreeTe
 import org.ztemplates.test.actions.urlhandler.match.matchtree.MatchTreeTest;
 import org.ztemplates.test.actions.urlhandler.match.test1.TreeTest;
 import org.ztemplates.test.actions.urlhandler.match.test2.TreeTest2;
+import org.ztemplates.test.actions.urlhandler.namedform.NamedFormTest;
 import org.ztemplates.test.actions.urlhandler.prop.plain.PropTest;
 import org.ztemplates.test.actions.urlhandler.repository.nested.NestedHandlerTest;
 import org.ztemplates.test.actions.urlhandler.repository.simple.UrlHandlerRepositoryTest;
@@ -136,6 +137,7 @@ public class AllTests extends TestSuite
     suite.addTestSuite(ZRenderClassRepositoryTest.class);
     suite.addTestSuite(ZExposedMethodRepositoryTest.class);
     suite.addTestSuite(FormTest.class);
+    suite.addTestSuite(NamedFormTest.class);
 
     // suite.addTestSuite(ZTemplatesInternalArchitectureTest.class);
 

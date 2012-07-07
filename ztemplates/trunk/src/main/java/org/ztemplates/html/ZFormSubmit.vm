@@ -1,1 +1,3 @@
+#if($property.readable)
 <input type="submit" id="${id}" name="${name}" value="${allowedValue}" #if(${style})style="${style}"#end #if(${cssClass})class="${cssClass}"#end #if($property.required)required="required"#end #if(!$property.writeable)readonly="readonly"#end $!{htmlAttributes}></input>
+#end
