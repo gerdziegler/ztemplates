@@ -1,1 +1,4 @@
-<textarea id="${id}" name="${name}" #if(${style})style="${style}"#end #if(${cssClass})class="${cssClass}"#end #if(!$property.writeable)readonly="readonly"#end #if($property.required)required="required"#end #if($rows)rows="${rows}"#end #if($cols)cols="${cols}"#end #if($wrap)wrap="${wrap}"#end $!{htmlAttributes}>$!{value}</textarea>
+<textarea id="${id}" #if(!$property.writeable) name="${name}_disabled" readonly="readonly" disabled="disabled" #else name="${name}" #end #if(${style})style="${style}"#end #if(${cssClass})class="${cssClass}"#end  #if($property.required)required="required"#end #if($rows)rows="${rows}"#end #if($cols)cols="${cols}"#end #if($wrap)wrap="${wrap}"#end $!{htmlAttributes}>$!{value}</textarea>
+#if(!$property.writeable)
+<input type="hidden" name="${name}" value="$!{value}"/>
+#end
