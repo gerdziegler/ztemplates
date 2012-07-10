@@ -20,13 +20,16 @@ import org.ztemplates.render.ZRenderer;
 import org.ztemplates.render.velocity.ZVelocityRenderer;
 
 @ZRenderer(ZVelocityRenderer.class)
-public final class ZFormSubmit extends ZPropertyHtml
+public final class ZFormLink extends ZPropertyHtml
 {
   @ZExpose
   final String value;
 
+  @ZExpose
+  String href = "javascript:void(0);";
 
-  public ZFormSubmit(String id,
+
+  public ZFormLink(String id,
       final ZOperation prop,
       String text)
   {
@@ -35,14 +38,14 @@ public final class ZFormSubmit extends ZPropertyHtml
   }
 
 
-  public ZFormSubmit(final ZOperation prop,
+  public ZFormLink(final ZOperation prop,
       String text)
   {
     this(computeId(prop), prop, text);
   }
 
 
-  public ZFormSubmit(String id,
+  public ZFormLink(String id,
       final ZOperation prop)
   {
     super(id, prop);
@@ -50,8 +53,20 @@ public final class ZFormSubmit extends ZPropertyHtml
   }
 
 
-  public ZFormSubmit(final ZOperation prop)
+  public ZFormLink(final ZOperation prop)
   {
     this(computeId(prop), prop);
+  }
+
+
+  public String getHref()
+  {
+    return href;
+  }
+
+
+  public void setHref(String href)
+  {
+    this.href = href;
   }
 }

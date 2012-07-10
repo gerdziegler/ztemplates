@@ -1,0 +1,3 @@
+#if($property.readable)
+<a id="${id}" href="${href}" #if(${style})style="${style}"#end #if(${cssClass})class="${cssClass}"#end $!{htmlAttributes}>${value}</a>
+#end
