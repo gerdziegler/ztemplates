@@ -94,6 +94,12 @@ public class ZMessagesJSON extends JSONObject
   //    }
   //  }
 
+  public ZMessages getMessages()
+  {
+    return messages;
+  }
+
+
   private JSONArray createGlobalMessagesJSON(ZMessages messages) throws JSONException
   {
     JSONArray globalMessagesJSON = new JSONArray();

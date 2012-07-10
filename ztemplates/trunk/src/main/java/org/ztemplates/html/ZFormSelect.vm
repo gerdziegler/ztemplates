@@ -1,4 +1,4 @@
-<select id="${id}" #if(!$property.writeable) name="${name}_disabled readonly="readonly" disabled="disabled" #else name="${name}" #end size="${size}" #if(${style})style="${style}"#end #if(${cssClass})class="${cssClass}"#end  #if($property.required)required="required"#end $!{htmlAttributes}>
+<select id="${id}" #if(!$property.writeable) name="${name}_disabled" readonly="readonly" disabled="disabled" #else name="${name}" #end size="${size}" #if(${style})style="${style}"#end #if(${cssClass})class="${cssClass}"#end  #if($property.required)required="required"#end $!{htmlAttributes}>
 #foreach($option in $options)
 <option value="$!{option.key}" #if($option.selected) selected="selected"#end class="ztemplates-input-option $!{cssClass}">$!{option.value}</option>
 #end
