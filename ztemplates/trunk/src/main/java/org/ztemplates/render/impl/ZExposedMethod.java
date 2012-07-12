@@ -2,6 +2,8 @@ package org.ztemplates.render.impl;
 
 import java.lang.reflect.Method;
 
+import org.ztemplates.render.ZIRenderDecorator;
+
 public class ZExposedMethod implements ZIExposedValue
 {
   private final String name;
@@ -10,13 +12,19 @@ public class ZExposedMethod implements ZIExposedValue
 
   private final boolean render;
 
+  private final Class<? extends ZIRenderDecorator> decorator;
 
-  public ZExposedMethod(String name, Method method, boolean render)
+
+  public ZExposedMethod(String name,
+      Method method,
+      boolean render,
+      Class<? extends ZIRenderDecorator> decorator)
   {
     super();
     this.name = name;
     this.method = method;
     this.render = render;
+    this.decorator = decorator;
   }
 
 
@@ -57,5 +65,11 @@ public class ZExposedMethod implements ZIExposedValue
   public boolean isRender()
   {
     return render;
+  }
+
+
+  public Class<? extends ZIRenderDecorator> getDecorator()
+  {
+    return decorator;
   }
 }

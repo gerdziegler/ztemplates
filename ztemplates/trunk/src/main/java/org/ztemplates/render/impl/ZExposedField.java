@@ -2,6 +2,8 @@ package org.ztemplates.render.impl;
 
 import java.lang.reflect.Field;
 
+import org.ztemplates.render.ZIRenderDecorator;
+
 public class ZExposedField implements ZIExposedValue
 {
   private final String name;
@@ -10,15 +12,19 @@ public class ZExposedField implements ZIExposedValue
 
   private final boolean render;
 
+  private final Class<? extends ZIRenderDecorator> decorator;
+
 
   public ZExposedField(String name,
       Field field,
-      boolean render)
+      boolean render,
+      Class<? extends ZIRenderDecorator> decorator)
   {
     super();
     this.name = name;
     this.field = field;
     this.render = render;
+    this.decorator = decorator != ZIRenderDecorator.class ? decorator : null;
   }
 
 
@@ -63,5 +69,11 @@ public class ZExposedField implements ZIExposedValue
   public boolean isRender()
   {
     return render;
+  }
+
+
+  public Class<? extends ZIRenderDecorator> getDecorator()
+  {
+    return decorator;
   }
 }

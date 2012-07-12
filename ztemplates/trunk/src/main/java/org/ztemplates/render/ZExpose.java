@@ -53,4 +53,7 @@ public @interface ZExpose
    * @return
    */
   boolean render() default false;
+
+
+  Class<? extends ZIRenderDecorator> decorator() default ZIRenderDecorator.class;
 }

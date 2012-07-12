@@ -1,5 +1,7 @@
 package org.ztemplates.render.impl;
 
+import org.ztemplates.render.ZIRenderDecorator;
+
 public interface ZIExposedValue
 {
 
@@ -10,5 +12,8 @@ public interface ZIExposedValue
 
 
   public abstract boolean isRender();
+
+
+  public abstract Class<? extends ZIRenderDecorator> getDecorator();
 
 }

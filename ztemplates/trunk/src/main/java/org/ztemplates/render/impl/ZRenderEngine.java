@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.render.ZIRenderDecorator;
 import org.ztemplates.render.ZIRenderEngine;
 import org.ztemplates.render.ZIRenderedObject;
 import org.ztemplates.render.ZIRenderer;
@@ -179,14 +180,16 @@ public class ZRenderEngine implements ZIRenderEngine
   {
     Map<String, Object> values = new HashMap<String, Object>();
 
-    List<ZIExposedValue> exposedMethods = exposedMethodRepository.getExposedValues(obj.getClass());
+    List<ZIExposedValue> exposedValues = exposedMethodRepository.getExposedValues(obj.getClass());
 
-    for (ZIExposedValue m : exposedMethods)
+    for (ZIExposedValue ev : exposedValues)
     {
-      Object val = m.getValue(obj);
-      values.put(m.getName() + "Bean", val);
-      if (m.isRender())
+      Object val = ev.getValue(obj);
+      values.put(ev.getName() + "Bean", val);
+      if (ev.isRender())
       {
+        ZIRenderDecorator decorator = ev.getDecorator() == null ? null : ev.getDecorator().newInstance();
+
         if (val instanceof Collection)
         {
           Collection oldVal = (Collection) val;
@@ -194,6 +197,10 @@ public class ZRenderEngine implements ZIRenderEngine
           for (Object crt : oldVal)
           {
             String rendered = render(crt);
+            if (decorator != null)
+            {
+              rendered = decorator.decorate(rendered);
+            }
             newVal.add(rendered);
           }
           val = newVal;
@@ -203,11 +210,15 @@ public class ZRenderEngine implements ZIRenderEngine
           if (val != null)
           {
             String rendered = render(val);
+            if (decorator != null)
+            {
+              rendered = decorator.decorate(rendered);
+            }
             val = rendered;
           }
         }
       }
-      values.put(m.getName(), val);
+      values.put(ev.getName(), val);
     }
 
     return values;

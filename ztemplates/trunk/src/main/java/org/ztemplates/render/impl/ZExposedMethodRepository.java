@@ -91,8 +91,7 @@ public class ZExposedMethodRepository implements ZIExposedMethodRepository
         }
         else
         {
-          boolean render = exp != null && exp.render();
-          ZExposedMethod em = new ZExposedMethod(key, m, render);
+          ZExposedMethod em = new ZExposedMethod(key, m, exp.render(), exp.decorator());
           map.put(em.getName(), em);
         }
       }
@@ -114,7 +113,7 @@ public class ZExposedMethodRepository implements ZIExposedMethodRepository
           // fields from derived classes first, skip overridden fields
           if (!map.containsKey(name))
           {
-            ZExposedField em = new ZExposedField(name, f, exp.render());
+            ZExposedField em = new ZExposedField(name, f, exp.render(), exp.decorator());
             map.put(em.getName(), em);
           }
         }
