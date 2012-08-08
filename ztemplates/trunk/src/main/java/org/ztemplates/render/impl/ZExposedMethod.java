@@ -24,7 +24,7 @@ public class ZExposedMethod implements ZIExposedValue
     this.name = name;
     this.method = method;
     this.render = render;
-    this.decorator = decorator;
+    this.decorator = decorator.isInterface() ? null : decorator;
   }
 
 

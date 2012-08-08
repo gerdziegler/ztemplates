@@ -1,11 +1,12 @@
 package org.ztemplates.web.script.zscript;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.ztemplates.actions.ZMatch;
-import org.ztemplates.impl.util.StreamUtil;
 import org.ztemplates.web.ZTemplates;
 
 @ZMatch(value = "/ztemplates/zscript.js")
@@ -21,11 +22,11 @@ public class ZScriptScriptAction
 
   public void after() throws Exception
   {
-    byte[] script = StreamUtil.readStream(getClass().getResourceAsStream("zscript.js"));
     HttpServletResponse resp = ZTemplates.getServletService().getResponse();
     resp.setContentType("text/javascript");
+    InputStream in = getClass().getResourceAsStream("zscript.js");
     OutputStream out = resp.getOutputStream();
-    out.write(script);
+    IOUtils.copy(in, out);
     out.flush();
   }
 }

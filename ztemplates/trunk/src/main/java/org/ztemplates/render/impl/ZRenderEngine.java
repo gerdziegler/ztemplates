@@ -188,7 +188,11 @@ public class ZRenderEngine implements ZIRenderEngine
       values.put(ev.getName() + "Bean", val);
       if (ev.isRender())
       {
-        ZIRenderDecorator decorator = ev.getDecorator() == null ? null : ev.getDecorator().newInstance();
+        ZIRenderDecorator decorator = null;
+        if (ev.getDecorator() != null)
+        {
+          decorator = ev.getDecorator().newInstance();
+        }
 
         if (val instanceof Collection)
         {
@@ -199,7 +203,7 @@ public class ZRenderEngine implements ZIRenderEngine
             String rendered = render(crt);
             if (decorator != null)
             {
-              rendered = decorator.decorate(rendered);
+              rendered = decorator.decorate(val, rendered);
             }
             newVal.add(rendered);
           }
@@ -212,7 +216,7 @@ public class ZRenderEngine implements ZIRenderEngine
             String rendered = render(val);
             if (decorator != null)
             {
-              rendered = decorator.decorate(rendered);
+              rendered = decorator.decorate(val, rendered);
             }
             val = rendered;
           }

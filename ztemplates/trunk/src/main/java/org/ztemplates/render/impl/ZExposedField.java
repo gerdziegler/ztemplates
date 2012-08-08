@@ -24,7 +24,7 @@ public class ZExposedField implements ZIExposedValue
     this.name = name;
     this.field = field;
     this.render = render;
-    this.decorator = decorator != ZIRenderDecorator.class ? decorator : null;
+    this.decorator = decorator.isInterface() ? null : decorator;
   }
 
 
