@@ -12,7 +12,7 @@
  *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.spring.web.services;
+package org.ztemplates.spring.services;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;

@@ -12,7 +12,7 @@
  * @author www.gerdziegler.de
  */
 
-package org.ztemplates.spring.web.services;
+package org.ztemplates.spring.services;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
