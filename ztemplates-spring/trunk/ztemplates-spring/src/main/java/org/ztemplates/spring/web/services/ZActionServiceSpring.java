@@ -9,7 +9,7 @@
  * governing permissions and limitations under the License. 20.11.2007 @author
  * www.gerdziegler.de
  */
-package org.ztemplates.web.spring;
+package org.ztemplates.spring.web.services;
 
 import java.util.Map;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 Gerd Ziegler (www.gerdziegler.de)
+ * Copyright 2008 Gerd Ziegler (www.gerdziegler.de)
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -9,44 +9,40 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- * 07.01.2007
+ *
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.spring;
+package org.ztemplates.spring.web.services;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.ztemplates.web.ZIEncryptionService;
+import org.ztemplates.web.ZIMessageService;
 import org.ztemplates.web.ZTemplates;
 
 /**
- * Spring proxy for ZIEncryptionService
+ * Spring proxy for ZIMessageService
  * 
  * @author gerd
  * 
  */
-
-@Component(ZIEncryptionService.SPRING_NAME)
+@Component(ZIMessageService.SPRING_NAME)
 @Scope("request")
-public class ZEncryptionServiceSpring implements ZIEncryptionService
+public class ZMessageServiceWebSpring implements ZIMessageService
 {
-  private final ZIEncryptionService service;
+  static final Logger log = Logger.getLogger(ZMessageServiceWebSpring.class);
+
+  private final ZIMessageService service;
 
 
-  public ZEncryptionServiceSpring()
+  public ZMessageServiceWebSpring()
   {
-    this.service = ZTemplates.getEncryptionService();
+    this.service = ZTemplates.getMessageService();
   }
 
 
-  public String encrypt(String s) throws Exception
+  public String getMessage(String bundleName, String messageId, Object... parameters)
   {
-    return service.encrypt(s);
-  }
-
-
-  public String decrypt(String s) throws Exception
-  {
-    return service.decrypt(s);
+    return service.getMessage(bundleName, messageId, parameters);
   }
 }

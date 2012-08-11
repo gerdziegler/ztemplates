@@ -10,7 +10,7 @@
  * www.gerdziegler.de
  */
 
-package org.ztemplates.web.spring;
+package org.ztemplates.spring.web.services;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -1,4 +1,4 @@
-package org.ztemplates.web.spring;
+package org.ztemplates.spring.web.services;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

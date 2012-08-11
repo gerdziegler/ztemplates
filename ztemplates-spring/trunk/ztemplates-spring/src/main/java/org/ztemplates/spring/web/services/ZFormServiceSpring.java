@@ -12,7 +12,7 @@
  * 
  * @author www.gerdziegler.de
  */
-package org.ztemplates.web.spring;
+package org.ztemplates.spring.web.services;
 
 import java.io.Serializable;
 

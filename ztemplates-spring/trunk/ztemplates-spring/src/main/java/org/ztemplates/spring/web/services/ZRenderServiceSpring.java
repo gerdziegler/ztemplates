@@ -10,7 +10,7 @@
  * www.gerdziegler.de
  */
 
-package org.ztemplates.web.spring;
+package org.ztemplates.spring.web.services;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
