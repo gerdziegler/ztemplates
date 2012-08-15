@@ -9,6 +9,7 @@ snapshot available from [https://oss.sonatype.org/content/repositories/snapshots
 
 __ztemplates-3.0.0-SNAPSHOT (Not yet released)__ 
 
+* extracted freemarker features to separate jar module: ztemplates-freemarker
 * extracted spring features to separate jar module: ztemplates-spring
 * added ZIRenderDecorator to annotation @ZRender to allow a decorator to be called when exposing with render=true
 * added support for ZFormMap in forms, to allow dynamic forms.
