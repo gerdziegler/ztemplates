@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.actions.ZActionApplication;
 import org.ztemplates.actions.ZIFormAction;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.ZMatch;
@@ -51,8 +52,6 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
   private final ZISecurityProvider security;
 
-  //  private final ZISecureUrlDecorator secureUrlDecorator;
-
   // private final ZIActionApplicationContext applicationContext;
 
   private final ZMatchTree tree;
@@ -63,16 +62,19 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
   private Stack<ZBeginNested> nested;
 
+  private ZActionApplication actionApplication;
+
 
   public ZTreeUrlHandler(ZMatchTree tree,
       ZISecurityProvider security,
-      //      ZISecureUrlDecorator secureUrlDecorator,
-      String encoding)
+      String encoding,
+      ZActionApplication actionApplication)
   {
     super();
     this.encoding = encoding != null ? encoding : "ISO-8859-1";
     this.security = security;
     this.tree = tree;
+    this.actionApplication = actionApplication;
     //    this.secureUrlDecorator = secureUrlDecorator;
     // this.applicationContext = applicationContext;
   }
@@ -317,7 +319,7 @@ public class ZTreeUrlHandler implements ZIUrlHandler
 
   private Object createActionPojo(Class clazz) throws Exception
   {
-    return ZReflectionUtil.newInstance(clazz);
+    return actionApplication.getObjectFactory().newInstance(clazz);
   }
 
 

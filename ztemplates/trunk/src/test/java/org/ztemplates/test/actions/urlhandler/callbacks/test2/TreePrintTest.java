@@ -22,10 +22,14 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassRepository;
+import org.ztemplates.actions.ZActionApplication;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTreeFactory;
+import org.ztemplates.commons.ZIObjectFactory;
+import org.ztemplates.commons.ZObjectFactory;
 import org.ztemplates.test.ZTestUrlHandlerFactory;
+import org.ztemplates.web.standalone.ZTemplatesStandaloneApplicationContext;
 
 public class TreePrintTest extends TestCase
 {
@@ -41,13 +45,15 @@ public class TreePrintTest extends TestCase
   {
     super.setUp();
     classRepo = ZClassRepository.create(TreePrintTest.class);
-    // ZTestApplicationContext applicationContext = new
-    // ZTestApplicationContext(classRepo);
+    ZIObjectFactory objectFactory = new ZObjectFactory();
+    ZTemplatesStandaloneApplicationContext applicationContext = new ZTemplatesStandaloneApplicationContext(classRepo);
+    ZActionApplication actionApplication = new ZActionApplication(applicationContext, classRepo, objectFactory);
 
     proc = new ZTreeUrlHandler(
         new ZMatchTreeFactory().createMatchTree(classRepo),
         ZTestUrlHandlerFactory.defaultSecurityService,
-        null);
+        null,
+        actionApplication);
   }
 
 

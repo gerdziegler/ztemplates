@@ -15,7 +15,7 @@ package org.ztemplates.web.request.impl;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.util.impl.ZReflectionUtil;
+import org.ztemplates.commons.ZIObjectFactory;
 import org.ztemplates.render.ZIRenderedObject;
 import org.ztemplates.render.ZRenderApplication;
 import org.ztemplates.render.impl.ZIWebRenderContext;
@@ -49,6 +49,8 @@ public class ZRenderServiceImpl implements ZIRenderService
   private int crtId = 0;
 
   private final ZRenderEngine renderEngine;
+
+  private ZIObjectFactory objectFactory;
 
 
   public ZRenderServiceImpl(final ZRenderApplication application,
@@ -88,6 +90,7 @@ public class ZRenderServiceImpl implements ZIRenderService
     ZIJavaScriptProcessor javaScriptProcessor = new ZCachingJavaScriptProcessor(cachingJavaScriptProcessorContext);
     ctx = new ZWebRenderContextImpl(application, contextPath, javaScriptProcessor, cssProcessor);
     renderEngine = new ZRenderEngine(ctx);
+    objectFactory = application.getObjectFactory();
   }
 
 
@@ -172,7 +175,7 @@ public class ZRenderServiceImpl implements ZIRenderService
 
   public <T extends ZIActiveView> T createActiveView(Class<T> clazz) throws Exception
   {
-    return ZReflectionUtil.newInstance(clazz);
+    return objectFactory.newInstance(clazz);
   }
 
 

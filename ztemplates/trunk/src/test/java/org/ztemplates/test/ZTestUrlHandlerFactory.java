@@ -20,11 +20,15 @@ import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassPathItem;
 import org.zclasspath.ZIClassRepository;
 import org.zclasspath.ZJavaClassPath;
+import org.ztemplates.actions.ZActionApplication;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTreeFactory;
+import org.ztemplates.commons.ZIObjectFactory;
+import org.ztemplates.commons.ZObjectFactory;
+import org.ztemplates.web.standalone.ZTemplatesStandaloneApplicationContext;
 
 /**
  * 
@@ -74,11 +78,14 @@ public class ZTestUrlHandlerFactory
   public static ZIUrlHandler create(String pojoPackage, ZISecurityProvider security, String encoding) throws Exception
   {
     List<ZIClassPathItem> items = ZJavaClassPath.getItems();
-    ZIClassRepository classRepository = ZClassRepository.create(items, pojoPackage);
+    ZIClassRepository classRepo = ZClassRepository.create(items, pojoPackage);
+    ZIObjectFactory objectFactory = new ZObjectFactory();
+    ZTemplatesStandaloneApplicationContext applicationContext = new ZTemplatesStandaloneApplicationContext(classRepo);
+    ZActionApplication actionApplication = new ZActionApplication(applicationContext, classRepo, objectFactory);
     // ZTestApplicationContext applicationContext = new
     // ZTestApplicationContext(classRepository);
-    ZMatchTree matchTree = new ZMatchTreeFactory().createMatchTree(classRepository);
-    ZIUrlHandler ret = new ZTreeUrlHandler(matchTree, security, encoding);
+    ZMatchTree matchTree = new ZMatchTreeFactory().createMatchTree(classRepo);
+    ZIUrlHandler ret = new ZTreeUrlHandler(matchTree, security, encoding, actionApplication);
     return ret;
   }
 }

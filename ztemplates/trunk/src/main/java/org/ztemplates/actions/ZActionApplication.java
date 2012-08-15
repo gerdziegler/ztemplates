@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTreeFactory;
+import org.ztemplates.commons.ZIObjectFactory;
 
 public class ZActionApplication
 {
@@ -18,16 +19,32 @@ public class ZActionApplication
 
   private Set<String> passThroughRead = new HashSet<String>();
 
+  private ZIObjectFactory objectFactory;
+
 
   public ZActionApplication(ZIActionApplicationContext applicationContext,
-      ZIClassRepository classRepository) throws Exception
+      ZIClassRepository classRepository,
+      ZIObjectFactory objectFactory) throws Exception
   {
     this.applicationContext = applicationContext;
+    this.objectFactory = objectFactory;
     ZMatchTreeFactory matchTreeFactory = new ZMatchTreeFactory();
     this.matchTree = matchTreeFactory.createMatchTree(classRepository);
 
     String matchTreeInfo = matchTree.toConsoleString();
     log.info(matchTreeInfo);
+  }
+
+
+  public ZIObjectFactory getObjectFactory()
+  {
+    return objectFactory;
+  }
+
+
+  public void setObjectFactory(ZIObjectFactory objectFactory)
+  {
+    this.objectFactory = objectFactory;
   }
 
 

@@ -8,6 +8,7 @@ import org.zclasspath.ZClassRepository;
 import org.zclasspath.ZIClassPathFilter;
 import org.zclasspath.ZIClassRepository;
 import org.zclasspath.ZJavaClassPath;
+import org.ztemplates.actions.ZActionApplication;
 import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.actions.ZISecurityProvider;
 import org.ztemplates.actions.ZIUrlFactory;
@@ -134,7 +135,8 @@ public class ZTemplatesStandalone implements ZIServiceRepository
     {
       throw new Exception("no ztemplates application found for applicationName: '" + applicationName + "'");
     }
-    ZIActionApplicationContext applicationContext = application.getActionApplication().getApplicationContext();
+    ZActionApplication actionApplication = application.getActionApplication();
+    ZIActionApplicationContext applicationContext = actionApplication.getApplicationContext();
 
     String scheme = "http";
     String httpsPrefix = applicationContext.getInitParameter(ZMatch.Protocol.HTTPS.getContextParameterName());
@@ -144,8 +146,8 @@ public class ZTemplatesStandalone implements ZIServiceRepository
     String encryptSalt = applicationContext.getInitParameter("encryptSalt");
     String encoding = applicationContext.getEncoding();
 
-    ZMatchTree matchTree = application.getActionApplication().getMatchTree();
-    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityProvider, encoding);
+    ZMatchTree matchTree = actionApplication.getMatchTree();
+    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityProvider, encoding, actionApplication);
     ZIUrlFactory urlFactory = new ZUrlFactory(encoding);
     ZIServletService servletService = null;
 

@@ -2,6 +2,7 @@ package org.ztemplates.web.request.impl;
 
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.ZIActionApplicationContext;
+import org.ztemplates.commons.ZIObjectFactory;
 import org.ztemplates.render.ZIRenderApplicationContext;
 import org.ztemplates.web.ZIApplicationService;
 import org.ztemplates.web.application.ZApplication;
@@ -39,5 +40,12 @@ public class ZApplicationServiceImpl implements ZIApplicationService
   public ZIJavaScriptRepository getJavaScriptRepository()
   {
     return application.getJavaScriptRepository();
+  }
+
+
+  @Override
+  public ZIObjectFactory getObjectFactory()
+  {
+    return application.getActionApplication().getObjectFactory();
   }
 }

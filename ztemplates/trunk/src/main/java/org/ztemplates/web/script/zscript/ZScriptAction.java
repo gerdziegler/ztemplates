@@ -1,6 +1,8 @@
 package org.ztemplates.web.script.zscript;
 
 import org.ztemplates.actions.ZMatch;
+import org.ztemplates.commons.ZIObjectFactory;
+import org.ztemplates.web.ZIApplicationService;
 import org.ztemplates.web.ZTemplates;
 
 @ZMatch(value = "/ztemplates/zscript/${name}.js")
@@ -19,13 +21,17 @@ public class ZScriptAction
 
   public void after() throws Exception
   {
-    ZIJavaScriptRepository repo = ZTemplates.getApplicationService().getJavaScriptRepository();
+    ZIApplicationService applicationService = ZTemplates.getApplicationService();
+    ZIJavaScriptRepository repo = applicationService.getJavaScriptRepository();
+    ZIObjectFactory objectFactory = applicationService.getObjectFactory();
     ZIJavaScriptDefinition def = repo.getDefinitions().get(name);
     if (def == null)
     {
       throw new Exception("javascript-definition not found: " + name);
     }
-    ZTemplates.getServletService().render(def.getContent(), "text/javascript", def.getEncoding());
+
+    Object instance = objectFactory.newInstance(def.getClazz());
+    ZTemplates.getServletService().render(instance, "text/javascript", def.getEncoding());
   }
 
 

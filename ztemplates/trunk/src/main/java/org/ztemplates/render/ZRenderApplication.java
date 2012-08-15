@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.zclasspath.ZIClassRepository;
+import org.ztemplates.commons.ZIObjectFactory;
 import org.ztemplates.render.impl.ZCssEngine;
 import org.ztemplates.render.impl.ZCssIdRepository;
 import org.ztemplates.render.impl.ZExposedMethodRepository;
@@ -22,20 +23,22 @@ public class ZRenderApplication
 
   private final ZITemplateNameRepository templateNameRepository;
 
-  // private final ZIScriptRepository scriptRepository;
-
   private final ZExposedMethodRepository exposedMethodRepository;
 
   private final ZCssEngine cssEngine;
 
   private final ZIClassRepository classRepository;
 
+  private ZIObjectFactory objectFactory;
+
 
   public ZRenderApplication(ZIRenderApplicationContext applicationContext,
-      ZIClassRepository classRepository) throws Exception
+      ZIClassRepository classRepository,
+      ZIObjectFactory objectFactory) throws Exception
   {
     this.applicationContext = applicationContext;
     this.classRepository = classRepository;
+    this.objectFactory = objectFactory;
     ZCssIdRepository cssIdRepository = new ZCssIdRepository(classRepository);
     cssIdRepository.preload();
     this.cssIdRepository = cssIdRepository;
@@ -90,6 +93,18 @@ public class ZRenderApplication
     }
 
     cssEngine = new ZCssEngine(this);
+  }
+
+
+  public ZIObjectFactory getObjectFactory()
+  {
+    return objectFactory;
+  }
+
+
+  public void setObjectFactory(ZIObjectFactory objectFactory)
+  {
+    this.objectFactory = objectFactory;
   }
 
 

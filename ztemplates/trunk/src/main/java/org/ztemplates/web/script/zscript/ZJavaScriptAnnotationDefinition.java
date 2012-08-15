@@ -2,9 +2,6 @@ package org.ztemplates.web.script.zscript;
 
 import java.io.Serializable;
 
-import org.ztemplates.actions.util.impl.ZReflectionUtil;
-import org.ztemplates.web.ZTemplates;
-
 public class ZJavaScriptAnnotationDefinition implements Serializable, ZIJavaScriptDefinition
 {
   private static final long serialVersionUID = 1L;
@@ -41,23 +38,16 @@ public class ZJavaScriptAnnotationDefinition implements Serializable, ZIJavaScri
   /*
    * (non-Javadoc)
    * 
-   * @see org.ztemplates.web.script.zscript.ZIJavaScriptDefinition#getContent()
-   */
-  public String getContent() throws Exception
-  {
-    Object instance = ZReflectionUtil.newInstance(clazz);
-
-    return ZTemplates.getRenderService().render(instance);
-  }
-
-
-  /*
-   * (non-Javadoc)
-   * 
    * @see org.ztemplates.web.script.zscript.ZIJavaScriptDefinition#getEncoding()
    */
   public String getEncoding()
   {
     return encoding;
+  }
+
+
+  public Class getClazz()
+  {
+    return clazz;
   }
 }

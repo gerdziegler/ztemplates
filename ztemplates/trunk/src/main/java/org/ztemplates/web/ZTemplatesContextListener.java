@@ -25,6 +25,8 @@ import org.zclasspath.ZIClassPathItem;
 import org.zclasspath.ZIClassRepository;
 import org.zclasspath.ZWebappClassPath;
 import org.ztemplates.actions.ZActionApplication;
+import org.ztemplates.commons.ZIObjectFactory;
+import org.ztemplates.commons.ZObjectFactory;
 import org.ztemplates.render.ZRenderApplication;
 import org.ztemplates.web.application.ZApplication;
 import org.ztemplates.web.application.ZApplicationContextWebImpl;
@@ -116,8 +118,9 @@ public class ZTemplatesContextListener implements ServletContextListener
 
       ZCachingJavaScriptProcessorData.setInstance(applicationContext, new ZCachingJavaScriptProcessorData());
       ZCachingCssProcessorData.setInstance(applicationContext, new ZCachingCssProcessorData());
-      ZActionApplication actionApplication = new ZActionApplication(applicationContext, classRepository);
-      ZRenderApplication renderApplication = new ZRenderApplication(applicationContext, classRepository);
+      ZIObjectFactory objectFactory = new ZObjectFactory();
+      ZActionApplication actionApplication = new ZActionApplication(applicationContext, classRepository, objectFactory);
+      ZRenderApplication renderApplication = new ZRenderApplication(applicationContext, classRepository, objectFactory);
       ZApplication application = new ZApplication(classRepository, javaScriptRepository, actionApplication, renderApplication);
       ZApplicationRepositoryWeb.setApplication(ctx, application);
 

@@ -6,7 +6,7 @@ public interface ZIJavaScriptDefinition
   public String getName();
 
 
-  public String getContent() throws Exception;
+  public Class getClazz();
 
 
   public String getEncoding();

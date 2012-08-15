@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.ztemplates.actions.ZActionApplication;
 import org.ztemplates.actions.ZIActionApplicationContext;
 import org.ztemplates.actions.ZIUrlFactory;
 import org.ztemplates.actions.ZMatch;
@@ -74,7 +75,8 @@ public class ZServiceRepositoryWebapp implements ZIServiceRepository
     applicationService = new ZApplicationServiceImpl(application);
     securityService = serviceFactory.createSecurityService(application);
 
-    ZIActionApplicationContext applicationContext = application.getActionApplication().getApplicationContext();
+    ZActionApplication actionApplication = application.getActionApplication();
+    ZIActionApplicationContext applicationContext = actionApplication.getApplicationContext();
 
     String scheme = request.getScheme();
     String httpsPrefix = applicationContext.getInitParameter(ZMatch.Protocol.HTTPS.getContextParameterName());
@@ -84,7 +86,7 @@ public class ZServiceRepositoryWebapp implements ZIServiceRepository
     response.setCharacterEncoding(encoding);
     ZMatchTree matchTree = application.getActionApplication().getMatchTree();
 
-    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityService.getSecurityProvider(), encoding);
+    ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityService.getSecurityProvider(), encoding, actionApplication);
     ZIUrlFactory urlFactory = new ZUrlFactory(encoding);
     actionService = new ZActionServiceImpl(urlHandler, urlFactory, contextPath, scheme, httpPrefix, httpsPrefix);
 
