@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.ZIActionApplicationContext;
+import org.ztemplates.commons.ZIObjectFactory;
 import org.ztemplates.render.ZIRenderApplicationContext;
 import org.ztemplates.web.ZIApplicationService;
 import org.ztemplates.web.ZTemplates;
@@ -51,4 +52,10 @@ public class ZApplicationServiceSpring implements ZIApplicationService
     return service.getJavaScriptRepository();
   }
 
+
+  @Override
+  public ZIObjectFactory getObjectFactory()
+  {
+    return service.getObjectFactory();
+  }
 }

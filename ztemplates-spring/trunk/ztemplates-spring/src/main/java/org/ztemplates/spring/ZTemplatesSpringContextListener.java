@@ -41,9 +41,10 @@ public class ZTemplatesSpringContextListener implements ServletContextListener
   {
     log.info("ztemplates spring initializing...");
     ZApplication application = ZApplicationRepositoryWeb.getApplication(ctx);
-    ZIObjectFactory objectFactory = application.getObjectFactory();
-    ZSpringObjectFactory springObjectFactory = new ZSpringObjectFactory(objectFactory);
-    application.setObjectFactory(springObjectFactory);
+    ZIObjectFactory actionObjectFactory = application.getActionApplication().getObjectFactory();
+    application.getActionApplication().setObjectFactory(new ZSpringObjectFactory(actionObjectFactory));
+    ZIObjectFactory renderObjectFactory = application.getRenderApplication().getObjectFactory();
+    application.getRenderApplication().setObjectFactory(new ZSpringObjectFactory(renderObjectFactory));
     log.info("ztemplates spring initialized");
   }
 
