@@ -18,10 +18,10 @@ zscript.define('$def.name', '${contextPath}/ztemplates/zscript/${def.name}.js');
 zscript.setLoaded('${def.name}');
 #end
 
-#foreach($def in $definitions)
+#foreach($def in $definitionsContent)
 
 
-$def.content
+$def
 
 
 #end
