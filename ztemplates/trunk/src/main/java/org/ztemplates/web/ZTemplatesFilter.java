@@ -15,202 +15,42 @@
 package org.ztemplates.web;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.actions.ZMatch;
-import org.ztemplates.web.application.ZApplication;
-import org.ztemplates.web.application.ZApplicationRepositoryWeb;
-import org.ztemplates.web.application.ZHttpUtil;
-import org.ztemplates.web.application.ZIServiceFactory;
-import org.ztemplates.web.request.ZServiceRepositoryWebapp;
 
-public class ZTemplatesFilter implements Filter
+@Deprecated
+public class ZTemplatesFilter extends ZTemplatesWebFilter
 {
   private static final Logger log = Logger.getLogger(ZTemplatesFilter.class);
-
-  private FilterConfig filterConfig = null;
 
 
   public void init(FilterConfig filterConfig) throws ServletException
   {
-    this.filterConfig = filterConfig;
+    log.warn("deprecated: do not use " + getClass() + " anymore.");
+    log.warn("please use " + getClass().getSuperclass().getName() + " instead.");
+    super.init(filterConfig);
   }
 
 
   public void destroy()
   {
-    this.filterConfig = null;
+    super.destroy();
+    log.warn("deprecated: do not use " + getClass() + " anymore.");
+    log.warn("please use " + getClass().getSuperclass().getName() + " instead.");
   }
 
 
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
   {
-    HttpServletRequest req = (HttpServletRequest) request;
-    HttpServletResponse resp = (HttpServletResponse) response;
-    try
-    {
-      ZApplication application = ZApplicationRepositoryWeb.getApplication(req.getSession().getServletContext());
-      Set<String> passThroughRead = application.getActionApplication().getPassThroughRead();
-
-      String uri = req.getRequestURI();
-      if (passThroughRead.contains(uri))
-      {
-        chain.doFilter(request, response);
-      }
-      else
-      {
-        ZHttpUtil.printParameters(req);
-
-        boolean processed = processRequest(application, req, resp);
-        if (!processed)
-        {
-          Set<String> passThroughWrite = new HashSet<String>(passThroughRead);
-          // synchronized (passThroughWrite)
-          {
-            passThroughWrite.add(uri);
-            //no need to synchronize as assignment ist atomar
-            application.getActionApplication().setPassThroughRead(passThroughWrite);
-            //            passThroughRead = passThroughWrite;// new
-            // HashSet<String>(passThroughWrite);
-          }
-          chain.doFilter(request, response);
-        }
-      }
-    }
-    catch (Exception e)
-    {
-      filterConfig.getServletContext().log("error in filter " + req.getRequestURI(), e);
-    }
+    log.warn("deprecated: do not use " + getClass() + " anymore.");
+    log.warn("please use " + getClass().getSuperclass().getName() + " instead.");
+    super.doFilter(request, response, chain);
   }
 
-
-  private boolean processRequest(ZApplication application, HttpServletRequest req, HttpServletResponse resp) throws Exception
-  {
-    String url = req.getRequestURI();
-    if (log.isDebugEnabled())
-    {
-      log.debug("processing " + url);
-    }
-    long begin = System.currentTimeMillis();
-    boolean ret = false;
-
-    ZIServiceFactory serviceFactory = application.getServiceFactory();
-
-    ZServiceRepositoryWebapp serviceRepository = new ZServiceRepositoryWebapp(application, serviceFactory, req, resp);
-    ZTemplates.setServiceRepository(serviceRepository);
-    try
-    {
-      Map httpParamMap = req.getParameterMap();
-      Map<String, String[]> paramMap = new HashMap<String, String[]>(httpParamMap);
-      paramMap = normalizeJQueryArrayParameterNames(paramMap);
-
-      String requestEncoding = req.getCharacterEncoding();
-      if (requestEncoding == null)
-      {
-        requestEncoding = "ISO-8859-1";
-      }
-      String myEncoding = serviceRepository.getServletService().getEncoding();
-      decodeRequestParam(paramMap, requestEncoding, myEncoding);
-
-      ZMatch.Protocol protocol = computeProtocol(req);
-
-      Object handler = serviceRepository.getActionService().process(protocol, url, paramMap);
-      ret = handler != null;
-      return ret;
-    }
-    catch (Throwable e)
-    {
-      log.error("", e);
-      serviceRepository.getExceptionService().handle(req, resp, e);
-      ret = true;
-    }
-    finally
-    {
-      ZTemplates.setServiceRepository(null);
-      if (log.isDebugEnabled())
-      {
-        long time = System.currentTimeMillis() - begin;
-        if (ret)
-        {
-          // if (time > 0)
-          {
-            String msg = url + " [" + time + " ms]";
-            log.info(msg);
-            System.out.println(msg);
-          }
-        }
-      }
-    }
-    return ret;
-  }
-
-
-  private ZMatch.Protocol computeProtocol(HttpServletRequest req)
-  {
-    String scheme = req.getScheme();
-    if (scheme.equalsIgnoreCase("https"))
-    {
-      return ZMatch.Protocol.HTTPS;
-    }
-    if (scheme.equalsIgnoreCase("http"))
-    {
-      return ZMatch.Protocol.HTTP;
-    }
-    return ZMatch.Protocol.DEFAULT;
-  }
-
-
-  private Map<String, String[]> normalizeJQueryArrayParameterNames(Map<String, String[]> paramMap)
-  {
-    Map<String, String[]> ret = new HashMap<String, String[]>();
-    for (Map.Entry<String, String[]> en : paramMap.entrySet())
-    {
-      String key = en.getKey();
-      if (key.endsWith("[]"))
-      {
-        key = key.substring(0, key.length() - 2);
-      }
-      ret.put(key, en.getValue());
-    }
-    return ret;
-  }
-
-
-  /**
-   * decode parameters from ISO-8859-1 to encoding for this app
-   * 
-   * @param paramMap
-   * @param myEncoding
-   * @throws UnsupportedEncodingException
-   */
-  private void decodeRequestParam(Map<String, String[]> paramMap, String requestEncoding, String myEncoding) throws UnsupportedEncodingException
-  {
-    if (myEncoding == null || requestEncoding.equalsIgnoreCase(myEncoding))
-    {
-      return;
-    }
-    for (String[] param : paramMap.values())
-    {
-      for (int i = 0; i < param.length; i++)
-      {
-        String text = param[i];
-        text = new String(text.getBytes(requestEncoding), myEncoding);
-        param[i] = text;
-      }
-    }
-  }
 }

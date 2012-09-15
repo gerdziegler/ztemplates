@@ -9,32 +9,44 @@
  * governing permissions and limitations under the License. @author
  * www.gerdziegler.de
  */
-package org.ztemplates.web.velocity;
+package org.ztemplates.velocity;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 import org.apache.log4j.Logger;
-import org.ztemplates.velocity.ZTemplatesVelocityContextListener;
+import org.ztemplates.render.ZIRenderApplicationContext;
+import org.ztemplates.render.velocity.ZVelocityRenderer;
+import org.ztemplates.web.application.ZApplication;
+import org.ztemplates.web.application.ZApplicationRepositoryWeb;
 
-@Deprecated
-public class ZVelocityContextListener extends ZTemplatesVelocityContextListener
+public class ZTemplatesVelocityContextListener implements ServletContextListener
 {
-  private static final Logger log = Logger.getLogger(ZVelocityContextListener.class);
+  private static final Logger log = Logger.getLogger(ZTemplatesVelocityContextListener.class);
 
 
   public void contextInitialized(ServletContextEvent servletContextEvent)
   {
-    log.warn("deprecated: do not use " + getClass() + " anymore.");
-    log.warn("please use " + getClass().getSuperclass().getName() + " instead.");
-    super.contextInitialized(servletContextEvent);
+    log.info("initializing velocity...");
+    ServletContext servletContext = servletContextEvent.getServletContext();
+    try
+    {
+      ZApplication application = ZApplicationRepositoryWeb.getApplication(servletContext);
+      ZIRenderApplicationContext renderApplicationContext = application.getRenderApplication().getApplicationContext();
+      ZVelocityRenderer.init(renderApplicationContext);
+      log.info("velocity initialized");
+    }
+    catch (Exception e)
+    {
+      log.error("error while initializing velocity:", e);
+    }
   }
 
 
-  public void contextDestroyed(ServletContextEvent ev)
+  public void contextDestroyed(ServletContextEvent arg0)
   {
-    super.contextDestroyed(ev);
-    log.warn("deprecated: do not use " + getClass() + " anymore.");
-    log.warn("please use " + getClass().getSuperclass().getName() + " instead.");
+    log.info("velocity destroyed");
   }
 
   // private static Properties getVelocityProperties(ServletContext

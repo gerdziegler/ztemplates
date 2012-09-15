@@ -55,6 +55,7 @@ import org.ztemplates.test.reflection.ReflectionUtilTest;
 import org.ztemplates.test.render.css.CssTest;
 import org.ztemplates.test.render.impl.ReplaceUtilTest;
 import org.ztemplates.test.render.impl.opt.ZRenderClassRepositoryTest;
+import org.ztemplates.test.render.maps.MapTestPojoTest;
 import org.ztemplates.test.render.methodrepo.ZExposedMethodRepositoryTest;
 import org.ztemplates.test.render.script.basic.ScriptTest;
 import org.ztemplates.test.render.script.basic2.BasicScript2Test;
@@ -138,6 +139,7 @@ public class AllTests extends TestSuite
     suite.addTestSuite(ZExposedMethodRepositoryTest.class);
     suite.addTestSuite(FormTest.class);
     suite.addTestSuite(NamedFormTest.class);
+    suite.addTestSuite(MapTestPojoTest.class);
 
     // suite.addTestSuite(ZTemplatesInternalArchitectureTest.class);
 

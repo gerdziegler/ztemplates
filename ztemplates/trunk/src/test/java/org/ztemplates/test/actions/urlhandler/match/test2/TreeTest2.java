@@ -45,6 +45,7 @@ public class TreeTest2 extends TestCase
 
   public void testParseTree() throws Exception
   {
-    ZMatchTree tree = new ZMatchTreeFactory().createMatchTree(classRepo);
+    ZMatchTree matchTree = new ZMatchTree();
+    new ZMatchTreeFactory(classRepo).addToMatchTree(matchTree);
   }
 }

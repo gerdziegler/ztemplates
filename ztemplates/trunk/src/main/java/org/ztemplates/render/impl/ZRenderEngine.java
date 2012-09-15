@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.ztemplates.render.ZIRenderDecorator;
@@ -194,7 +195,23 @@ public class ZRenderEngine implements ZIRenderEngine
           decorator = ev.getDecorator().newInstance();
         }
 
-        if (val instanceof Collection)
+        if (val instanceof Map)
+        {
+          Map oldVal = (Map) val;
+          Map newVal = new TreeMap();
+          for (Object key : oldVal.keySet())
+          {
+            Object crt = oldVal.get(key);
+            String rendered = render(crt);
+            if (decorator != null)
+            {
+              rendered = decorator.decorate(val, rendered);
+            }
+            newVal.put(key, rendered);
+          }
+          val = newVal;
+        }
+        else if (val instanceof Collection)
         {
           Collection oldVal = (Collection) val;
           Collection newVal = new ArrayList();

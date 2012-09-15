@@ -29,56 +29,57 @@ public class TailParseTreeTest extends TestCase
 
   ZIClassRepository classRepo;
 
-  ZMatchTree han;
+  ZMatchTree matchTree;
 
 
   protected void setUp() throws Exception
   {
     super.setUp();
     classRepo = ZClassRepository.create(TailParseTreeTest.class);
-    han = new ZMatchTreeFactory().createMatchTree(classRepo);
+    matchTree = new ZMatchTree();
+    new ZMatchTreeFactory(classRepo).addToMatchTree(matchTree);
   }
 
 
   protected void tearDown() throws Exception
   {
     classRepo = null;
-    han = null;
+    matchTree = null;
     super.tearDown();
   }
 
 
   public void testTail1() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path6/123");
+    ZMatchedUrl proc = matchTree.match("/path6/123");
     assertNotNull(proc);
   }
 
 
   public void testTail2() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path6/123/456");
+    ZMatchedUrl proc = matchTree.match("/path6/123/456");
     assertNotNull(proc);
   }
 
 
   public void testTail3() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path6123/456/sdfsdf");
+    ZMatchedUrl proc = matchTree.match("/path6123/456/sdfsdf");
     assertNotNull(proc);
   }
 
 
   public void testTail4() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path7/123/456/sdfsdf");
+    ZMatchedUrl proc = matchTree.match("/path7/123/456/sdfsdf");
     assertNotNull(proc);
   }
 
 
   public void testTail5() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path7123/456/sdfsdf");
+    ZMatchedUrl proc = matchTree.match("/path7123/456/sdfsdf");
     assertNull(proc);
   }
 }

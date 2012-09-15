@@ -25,6 +25,7 @@ import org.zclasspath.ZIClassRepository;
 import org.ztemplates.actions.ZActionApplication;
 import org.ztemplates.actions.urlhandler.ZIUrlHandler;
 import org.ztemplates.actions.urlhandler.tree.ZTreeUrlHandler;
+import org.ztemplates.actions.urlhandler.tree.match.ZMatchTree;
 import org.ztemplates.actions.urlhandler.tree.match.ZMatchTreeFactory;
 import org.ztemplates.commons.ZIObjectFactory;
 import org.ztemplates.commons.ZObjectFactory;
@@ -48,9 +49,11 @@ public class TreePrintTest extends TestCase
     ZIObjectFactory objectFactory = new ZObjectFactory();
     ZTemplatesStandaloneApplicationContext applicationContext = new ZTemplatesStandaloneApplicationContext(classRepo);
     ZActionApplication actionApplication = new ZActionApplication(applicationContext, classRepo, objectFactory);
+    ZMatchTree matchTree = new ZMatchTree();
+    new ZMatchTreeFactory(classRepo).addToMatchTree(matchTree);
 
     proc = new ZTreeUrlHandler(
-        new ZMatchTreeFactory().createMatchTree(classRepo),
+        matchTree,
         ZTestUrlHandlerFactory.defaultSecurityService,
         null,
         actionApplication);

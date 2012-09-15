@@ -1,0 +1,148 @@
+/*
+ * Copyright 2007 Gerd Ziegler (www.gerdziegler.de)
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ * @author www.gerdziegler.de
+ */
+
+package org.ztemplates.web;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.ztemplates.actions.ZMatch;
+import org.ztemplates.web.application.ZApplication;
+import org.ztemplates.web.application.ZApplicationRepositoryWeb;
+import org.ztemplates.web.application.ZIServiceFactory;
+import org.ztemplates.web.request.ZServiceRepositoryWebapp;
+
+public class ZTemplatesWebInfrastructureFilter implements Filter
+{
+  private static final Logger log = Logger.getLogger(ZTemplatesWebInfrastructureFilter.class);
+
+  private FilterConfig filterConfig = null;
+
+
+  public void init(FilterConfig filterConfig) throws ServletException
+  {
+    this.filterConfig = filterConfig;
+  }
+
+
+  public void destroy()
+  {
+    this.filterConfig = null;
+  }
+
+
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
+  {
+    HttpServletRequest req = (HttpServletRequest) request;
+    HttpServletResponse resp = (HttpServletResponse) response;
+    try
+    {
+      ZApplication application = ZApplicationRepositoryWeb.getApplication(req.getSession().getServletContext());
+      ZIServiceFactory serviceFactory = application.getServiceFactory();
+      ZServiceRepositoryWebapp serviceRepository = new ZServiceRepositoryWebapp(application, serviceFactory, req, resp);
+      ZTemplates.setServiceRepository(serviceRepository);
+      try
+      {
+        chain.doFilter(request, response);
+      }
+      catch (Throwable e)
+      {
+        log.error("", e);
+        serviceRepository.getExceptionService().handle(req, resp, e);
+      }
+      finally
+      {
+        ZTemplates.setServiceRepository(null);
+      }
+    }
+    catch (Exception e)
+    {
+      filterConfig.getServletContext().log("error in filter " + req.getRequestURI(), e);
+      throw new ServletException("", e);
+    }
+  }
+
+
+  private void processRequest(ZApplication application, HttpServletRequest req, HttpServletResponse resp) throws Exception
+  {
+  }
+
+
+  private ZMatch.Protocol computeProtocol(HttpServletRequest req)
+  {
+    String scheme = req.getScheme();
+    if (scheme.equalsIgnoreCase("https"))
+    {
+      return ZMatch.Protocol.HTTPS;
+    }
+    if (scheme.equalsIgnoreCase("http"))
+    {
+      return ZMatch.Protocol.HTTP;
+    }
+    return ZMatch.Protocol.DEFAULT;
+  }
+
+
+  private Map<String, String[]> normalizeJQueryArrayParameterNames(Map<String, String[]> paramMap)
+  {
+    Map<String, String[]> ret = new HashMap<String, String[]>();
+    for (Map.Entry<String, String[]> en : paramMap.entrySet())
+    {
+      String key = en.getKey();
+      if (key.endsWith("[]"))
+      {
+        key = key.substring(0, key.length() - 2);
+      }
+      ret.put(key, en.getValue());
+    }
+    return ret;
+  }
+
+
+  /**
+   * decode parameters from ISO-8859-1 to encoding for this app
+   * 
+   * @param paramMap
+   * @param myEncoding
+   * @throws UnsupportedEncodingException
+   */
+  private void decodeRequestParam(Map<String, String[]> paramMap, String requestEncoding, String myEncoding) throws UnsupportedEncodingException
+  {
+    if (myEncoding == null || requestEncoding.equalsIgnoreCase(myEncoding))
+    {
+      return;
+    }
+    for (String[] param : paramMap.values())
+    {
+      for (int i = 0; i < param.length; i++)
+      {
+        String text = param[i];
+        text = new String(text.getBytes(requestEncoding), myEncoding);
+        param[i] = text;
+      }
+    }
+  }
+}

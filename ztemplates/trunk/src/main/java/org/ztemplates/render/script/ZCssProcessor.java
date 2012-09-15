@@ -21,7 +21,7 @@ public class ZCssProcessor implements ZICssProcessor
 
   public String computeHtmlTags(List<String> cssExposed, ZICssPreprocessor preprocessor, String ztemplatesCssDigest) throws Exception
   {
-    List<String> preprocessed = preprocessor.preprocessCss(cssExposed);
+    //    List<String> preprocessed = preprocessor.preprocessCss(cssExposed);
     StringBuilder sb = new StringBuilder();
 
     for (String cssPath : cssExposed)

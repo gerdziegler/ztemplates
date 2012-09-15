@@ -60,8 +60,9 @@ public class TreeTest extends TestCase
 
   public void testParseTree() throws Exception
   {
-    ZMatchTree tree = new ZMatchTreeFactory().createMatchTree(classRepo);
-    List<ZMatchTreeNode> roots = tree.getRoots();
-    assertNotNull(tree.toConsoleString(), roots.get(0).getChildren().get(0).getHandler());
+    ZMatchTree matchTree = new ZMatchTree();
+    new ZMatchTreeFactory(classRepo).addToMatchTree(matchTree);
+    List<ZMatchTreeNode> roots = matchTree.getRoots();
+    assertNotNull(matchTree.toConsoleString(), roots.get(0).getChildren().get(0).getHandler());
   }
 }

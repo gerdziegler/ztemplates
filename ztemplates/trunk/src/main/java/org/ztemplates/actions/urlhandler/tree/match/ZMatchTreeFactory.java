@@ -9,10 +9,19 @@ import org.ztemplates.actions.urlhandler.tree.term.ZTreeTermList;
 
 public class ZMatchTreeFactory
 {
-  public ZMatchTree createMatchTree(ZIClassRepository classRepository) throws Exception
+  private final ZIClassRepository classRepository;
+
+
+  public ZMatchTreeFactory(ZIClassRepository classRepository)
+  {
+    super();
+    this.classRepository = classRepository;
+  }
+
+
+  public void addToMatchTree(ZMatchTree matchTree) throws Exception
   {
     ZTreeTermFactory factory = new ZTreeTermFactory();
-    ZMatchTree ret = new ZMatchTree();
     for (Class c : classRepository.getClassesAnnotatedWith(ZMatch.class))
     {
       ZMatch m = (ZMatch) c.getAnnotation(ZMatch.class);
@@ -21,11 +30,10 @@ public class ZMatchTreeFactory
         List<ZTreeTermList> terms = factory.expand(classRepository, c);
         for (ZTreeTermList crt : terms)
         {
-          ret.add(crt);
+          matchTree.add(crt);
         }
       }
     }
-    ret.sort();
-    return ret;
+    matchTree.sort();
   }
 }

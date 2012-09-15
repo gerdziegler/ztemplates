@@ -29,49 +29,50 @@ public class ParseTreeTest extends TestCase
 
   ZIClassRepository classRepo;
 
-  ZMatchTree han;
+  ZMatchTree matchTree;
 
 
   protected void setUp() throws Exception
   {
     super.setUp();
     classRepo = ZClassRepository.create(ParseTreeTest.class);
-    han = new ZMatchTreeFactory().createMatchTree(classRepo);
+    matchTree = new ZMatchTree();
+    new ZMatchTreeFactory(classRepo).addToMatchTree(matchTree);
   }
 
 
   protected void tearDown() throws Exception
   {
     classRepo = null;
-    han = null;
+    matchTree = null;
     super.tearDown();
   }
 
 
   public void testParseTree() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path1/path2");
+    ZMatchedUrl proc = matchTree.match("/path1/path2");
     assertNotNull(proc);
   }
 
 
   public void testParseTree2() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path2/path2");
+    ZMatchedUrl proc = matchTree.match("/path2/path2");
     assertNull(proc);
   }
 
 
   public void testParseTree3() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path1/path3");
+    ZMatchedUrl proc = matchTree.match("/path1/path3");
     assertNull(proc);
   }
 
 
   public void testParseTree4() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path3/v3-id");
+    ZMatchedUrl proc = matchTree.match("/path3/v3-id");
     assertNotNull(proc);
     assertEquals("v3", proc.getValues().get(0));
   }
@@ -79,7 +80,7 @@ public class ParseTreeTest extends TestCase
 
   public void testParseTree5() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path4/klo-x-id-a-klo/katze");
+    ZMatchedUrl proc = matchTree.match("/path4/klo-x-id-a-klo/katze");
     assertNotNull(proc);
     assertEquals("x", proc.getValues().get(0));
     assertEquals("a", proc.getValues().get(1));
@@ -88,14 +89,14 @@ public class ParseTreeTest extends TestCase
 
   public void testParseTree6EmptyVariable() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path4/klo--id-a-klo/katze");
+    ZMatchedUrl proc = matchTree.match("/path4/klo--id-a-klo/katze");
     assertNull(proc);
   }
 
 
   public void testParseTree7() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path5/klo-x");
+    ZMatchedUrl proc = matchTree.match("/path5/klo-x");
     assertNotNull(proc);
     assertEquals("x", proc.getValues().get(0));
   }
@@ -103,7 +104,7 @@ public class ParseTreeTest extends TestCase
 
   public void testParseTree8() throws Exception
   {
-    ZMatchedUrl proc = han.match("/path5/klo-");
+    ZMatchedUrl proc = matchTree.match("/path5/klo-");
     assertNull(proc);
   }
 }

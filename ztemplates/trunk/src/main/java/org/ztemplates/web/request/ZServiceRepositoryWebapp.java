@@ -71,25 +71,21 @@ public class ZServiceRepositoryWebapp implements ZIServiceRepository
     this.application = application;
     this.serviceFactory = serviceFactory;
     String contextPath = request.getContextPath();
-
     applicationService = new ZApplicationServiceImpl(application);
     securityService = serviceFactory.createSecurityService(application);
-
     ZActionApplication actionApplication = application.getActionApplication();
     ZIActionApplicationContext applicationContext = actionApplication.getApplicationContext();
-
     String scheme = request.getScheme();
     String httpsPrefix = applicationContext.getInitParameter(ZMatch.Protocol.HTTPS.getContextParameterName());
     String httpPrefix = applicationContext.getInitParameter(ZMatch.Protocol.HTTP.getContextParameterName());
-    //    String defaultPrefix = applicationContext.getInitParameter(ZMatch.Protocol.DEFAULT.getContextParameterName());
     String encoding = applicationContext.getEncoding();
     response.setCharacterEncoding(encoding);
     ZMatchTree matchTree = application.getActionApplication().getMatchTree();
 
     ZIUrlHandler urlHandler = new ZTreeUrlHandler(matchTree, securityService.getSecurityProvider(), encoding, actionApplication);
     ZIUrlFactory urlFactory = new ZUrlFactory(encoding);
-    actionService = new ZActionServiceImpl(urlHandler, urlFactory, contextPath, scheme, httpPrefix, httpsPrefix);
 
+    this.actionService = new ZActionServiceImpl(urlHandler, urlFactory, contextPath, scheme, httpPrefix, httpsPrefix);
     this.renderService = new ZRenderServiceImpl(application.getRenderApplication(), contextPath);
     this.servletService = new ZServletServiceImpl(request, response, actionService, renderService, encoding);
     this.formService = new ZFormServiceImpl(servletService, applicationService.getActionApplicationContext());

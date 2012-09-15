@@ -48,8 +48,9 @@ public class TreeCollision2Test extends TestCase
   {
     try
     {
-      ZMatchTree tree = new ZMatchTreeFactory().createMatchTree(classRepo);
-      fail("collision not found: " + tree.toConsoleString());
+      ZMatchTree matchTree = new ZMatchTree();
+      new ZMatchTreeFactory(classRepo).addToMatchTree(matchTree);
+      fail("collision not found: " + matchTree.toConsoleString());
     }
     catch (ZUrlCollisionException e)
     {

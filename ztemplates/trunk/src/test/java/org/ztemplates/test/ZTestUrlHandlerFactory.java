@@ -84,7 +84,8 @@ public class ZTestUrlHandlerFactory
     ZActionApplication actionApplication = new ZActionApplication(applicationContext, classRepo, objectFactory);
     // ZTestApplicationContext applicationContext = new
     // ZTestApplicationContext(classRepository);
-    ZMatchTree matchTree = new ZMatchTreeFactory().createMatchTree(classRepo);
+    ZMatchTree matchTree = new ZMatchTree();
+    new ZMatchTreeFactory(classRepo).addToMatchTree(matchTree);
     ZIUrlHandler ret = new ZTreeUrlHandler(matchTree, security, encoding, actionApplication);
     return ret;
   }

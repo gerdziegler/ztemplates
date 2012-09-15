@@ -28,8 +28,10 @@ public class ZActionApplication
   {
     this.applicationContext = applicationContext;
     this.objectFactory = objectFactory;
-    ZMatchTreeFactory matchTreeFactory = new ZMatchTreeFactory();
-    this.matchTree = matchTreeFactory.createMatchTree(classRepository);
+    this.matchTree = new ZMatchTree();
+
+    ZMatchTreeFactory matchTreeFactory = new ZMatchTreeFactory(classRepository);
+    matchTreeFactory.addToMatchTree(matchTree);
 
     String matchTreeInfo = matchTree.toConsoleString();
     log.info(matchTreeInfo);

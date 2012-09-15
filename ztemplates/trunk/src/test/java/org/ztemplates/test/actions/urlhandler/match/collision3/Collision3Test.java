@@ -47,7 +47,9 @@ public class Collision3Test extends TestCase
   {
     try
     {
-      ZMatchTree tree = new ZMatchTreeFactory().createMatchTree(classRepo);
+      ZMatchTree tree = new ZMatchTree();
+
+      new ZMatchTreeFactory(classRepo).addToMatchTree(tree);
       fail("");
     }
     catch (Exception e)
