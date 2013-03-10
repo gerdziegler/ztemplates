@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import org.ztemplates.actions.ZMatch;
 import org.ztemplates.web.ZTemplates;
 
-@ZMatch("/res*{resourcePath}")
+@ZMatch("/ztemplates/res*{resourcePath}")
 public class ZResAction
 {
   protected static Logger log = Logger.getLogger(ZResAction.class);
